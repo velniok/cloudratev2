@@ -11,7 +11,7 @@ const router = new Router()
 router.post('/upload', upload.single('image'), (req, res) => {
     try {
         res.status(200).json({
-            url: `images/${req.file.filename}`
+            url: req.file.path
         })
     } catch (err) {
         console.log(err)
