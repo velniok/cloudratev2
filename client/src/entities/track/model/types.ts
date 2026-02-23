@@ -5,5 +5,5 @@ export interface ITrack {
     title: string
     artist: string
     rating: number
-    reviews: IReview[]
+    reviews?: IReview[]
 }
