@@ -13,11 +13,4 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 
 app.use('/api', router)
 
-// app.listen(process.env.PORT || 5000, async (err) => {
-//     if (err) {
-//         return console.log(err)
-//     }
-//     console.log(`SERVER OK, PORT = ${process.env.PORT || 5000}`)
-// })
-
-export default app
+module.exports = app

@@ -4,6 +4,7 @@ interface ImportMeta {
 
 interface ImportMetaEnv {
   readonly VITE_API_URL: string;
+  readonly VITE_UPLOAD_URL: string;
 }
 
 declare module '*.scss' {

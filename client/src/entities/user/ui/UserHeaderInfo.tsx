@@ -2,8 +2,8 @@ import { type FC } from "react"
 import { Badges, Button, EditIcon, LinkIcon } from "@/shared/ui"
 import type { IUser } from "../model/types"
 import styles from "./UserHeaderInfo.module.scss"
-import { API_URL } from "@/shared/config"
 import { useNavigate } from "react-router-dom"
+import { UPLOAD_URL } from "@/shared/config"
 
 interface UserHeaderInfoProps {
     user: IUser | null
@@ -17,7 +17,7 @@ export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
         <div className={styles.inner}>
             {
                 user?.avatarUrl ?
-                    <img src={`${API_URL}${user.avatarUrl}`} alt={`${user.nickname}`} className={styles.avatar} />
+                    <img src={`${UPLOAD_URL}${user.avatarUrl}`} alt={`${user.nickname}`} className={styles.avatar} />
                 :
                 <div className={styles.avatar}></div>
             }

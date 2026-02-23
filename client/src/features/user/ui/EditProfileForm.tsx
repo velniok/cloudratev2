@@ -3,11 +3,11 @@ import styles from './EditProfileForm.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
 import { IUser } from '@/entities/user'
-import { API_URL } from '@/shared/config'
 import { updateAvatarApi } from '../api/updateUserApi'
 import { useAppDispatch, useAppSelector } from '@/shared/lib'
 import { updateUserThunk } from '../model/slice'
 import { selectUserUpdateError } from '../model/selectors'
+import { UPLOAD_URL } from '@/shared/config'
 
 interface EditProfileFormProps {
     user: IUser
@@ -99,7 +99,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 <h3 className={styles.title}>ОСНОВНАЯ ИНФОРМАЦИЯ</h3>
                 <div className={styles.formWrapper}>
                     <div className={styles.editAvatar}>
-                        <img src={`${API_URL}${avatarUrl}`} alt="" className={styles.avatar} />
+                        <img src={`${UPLOAD_URL}${avatarUrl}`} alt="" className={styles.avatar} />
                         <div className={styles.content}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
                             <Button color='default' padding='14px 20px 10px 20px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>
