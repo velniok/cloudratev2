@@ -1,0 +1,30 @@
+.card {
+
+    transition: transform 0.3s;
+
+    &:hover {
+        transform: translateY(-4px);
+
+        & .cover {
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 12px var(--accent-color-glow);
+        }
+    }
+}
+
+.title {
+    font-family: var(--second-family);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.artist {
+    color: var(--text-secondary);
+
+    transition: opacity 0.3s;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}

@@ -1,0 +1,24 @@
+.cover {
+    width: 200px;
+    height: 200px;
+    background-color: var(--gray-color);
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+
+    transition: border 0.3s, box-shadow 0.3s;
+
+    &.hovered {
+        border: 1px solid var(--accent-color);
+        box-shadow: 0 0 12px var(--accent-color-glow);
+        cursor: pointer;
+    }
+
+    &.maxSize {
+        width: 320px;
+        height: 320px;
+    }
+
+    &.mb-16 {
+        margin-bottom: 16px;
+    }
+}

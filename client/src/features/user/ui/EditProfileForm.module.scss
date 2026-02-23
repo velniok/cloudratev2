@@ -1,0 +1,42 @@
+.title {
+    margin-bottom: 32px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--second-family);
+    color: var(--text-secondary);
+}
+
+.formWrapper {
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 24px;
+}
+
+.editAvatar {
+    display: flex;
+    align-items: center;
+    column-gap: 24px;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 12px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+}
+
+.sub {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.bottom {
+    display: flex;
+    column-gap: 16px;
+}

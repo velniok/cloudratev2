@@ -1,0 +1,47 @@
+import { type FC } from "react"
+import { Badges, Button, EditIcon, LinkIcon } from "@/shared/ui"
+import type { IUser } from "../model/types"
+import styles from "./UserHeaderInfo.module.scss"
+import { API_URL } from "@/shared/config"
+import { useNavigate } from "react-router-dom"
+
+interface UserHeaderInfoProps {
+    user: IUser | null
+}
+
+export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
+
+    const navigate = useNavigate()
+
+    return (
+        <div className={styles.inner}>
+            {
+                user?.avatarUrl ?
+                    <img src={`${API_URL}${user.avatarUrl}`} alt={`${user.nickname}`} className={styles.avatar} />
+                :
+                <div className={styles.avatar}></div>
+            }
+            <div className={styles.info}>
+                <h2 className={styles.nickname}>
+                    {user?.nickname}
+                    {
+                        user?.role !== 'user' && <Badges>{user?.role}</Badges>
+                    }
+                    </h2>
+                <p className={styles.username}>{user?.email}</p>
+                <a href="#!" className={styles.soundcloud}>
+                    <LinkIcon />
+                    SoundCloud
+                </a>
+                <div className={styles.editButton}>
+                    <Button color="default" padding="10px 20px 10px 20px" onClick={() => navigate('edit')}>
+                        <div className={styles.buttonInner}>
+                            <EditIcon />
+                            <span className={styles.buttonText}>Изменить профиль</span>
+                        </div>
+                    </Button>
+                </div>
+            </div>
+        </div>
+    )
+}

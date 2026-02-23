@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    }
+    // "files": [],
+    // "references": [
+    //     { "path": "./tsconfig.app.json" },
+    //     { "path": "./tsconfig.node.json" }
+    // ],
+}

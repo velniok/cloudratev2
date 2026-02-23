@@ -1,0 +1,111 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(3, 3, 3, 0.8);
+    border-right: 1px solid var(--border-subtle);
+    padding: 24px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 32px;
+
+    transition: opacity 0.3s;
+  
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.logo__text {
+    padding-top: 4px;
+    font-family: var(--second-family);
+    color: var(--accent-color);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+}
+
+.nav {
+
+    &__title {
+        font-size: 12px;
+        font-family: var(--second-family);
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        padding-left: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        row-gap: 8px;
+    }
+
+    &__item {
+        color: var(--text-secondary);
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 12px;
+
+        transition: color 0.3s, background-color 0.3s;
+
+        &:hover {
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+
+        &.active {
+            background-color: var(--accent-color-dim);
+            color: var(--accent-color);
+            cursor: default;
+
+            & .nav__link {
+                cursor: default;
+            }
+        }
+    }
+
+    &__link {
+        display: flex;
+        align-items: center;
+        column-gap: 16px;
+        padding: 16px;
+        border-radius: 12px;
+    }
+}
+
+.navBottom {
+    margin-top: auto;
+}
+
+.nonAuth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    row-gap: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 16px;
+
+    &__text {
+        font-size: 12px;
+    }
+
+    &__link {
+        width: 100%;
+    }
+}
