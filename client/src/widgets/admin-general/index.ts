@@ -1,0 +1,1 @@
+export { AdminGeneral } from './ui/AdminGeneral'

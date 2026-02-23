@@ -22,6 +22,7 @@
   --lightgray-color: #222222;
   --text-primary: #FFFFFF;
   --text-secondary: #888888;
+  --text-tertiary: #444444;
   --border-subtle: #1A1A1A;
   --border-highlight: #333333;
 
@@ -66,6 +67,7 @@ ul {
 }
 
 .container {
+  position: relative;
   margin: 0 auto;
   max-width: 1610px;
   padding: 0 15px;

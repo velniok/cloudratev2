@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useLocation } from "react-router-dom"
 import { useEffect } from "react"
 
 import "./styles/main.scss"
@@ -12,13 +12,17 @@ import { UserPage } from "@/pages/user-page"
 import { EditProfilePage } from "@/pages/edit-profile-page"
 import { RegPage } from "@/pages/reg-page"
 import { LoginPage } from "@/pages/login-page"
+import { AdminPanelPage } from "@/pages/admin-panel-page"
+import { AdminSidebar } from "@/widgets/admin-sidebar"
 
 import { useAppDispatch } from "@/shared/lib"
 import { authThunk } from "@/features/auth"
+import { AdminArtistsPage } from "@/pages/admin-artists-page"
 
 function App() {
 
     const dispatch = useAppDispatch()
+    const pathname = useLocation().pathname
 
     useEffect(() => {
         if (window.localStorage.token) {
@@ -28,7 +32,9 @@ function App() {
 
     return (
         <div className="app-shell">
-            <Sidebar />
+            {
+                pathname.slice(0, 6) !== '/admin' ?  <Sidebar /> : <AdminSidebar />
+            }
             <main>
                 <Routes>
                     <Route path="/" element={<HomePage />} />
@@ -41,6 +47,9 @@ function App() {
 
                     <Route path="/registration" element={<RegPage />} />
                     <Route path="/login" element={<LoginPage />} />
+
+                    <Route path="/admin" element={<AdminPanelPage />} />
+                    <Route path="/admin/artists" element={<AdminArtistsPage />} />
                 </Routes>
             </main>
         </div>

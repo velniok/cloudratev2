@@ -6,5 +6,10 @@ export { ProfileIcon } from "./ProfileIcon"
 export { InfoIcon } from "./InfoIcon"
 export { EyeIcon } from "./EyeIcon"
 export { LogoutIcon } from "./LogoutIcon"
-export { AdminPanel } from "./AdminPanel"
+export { AdminPanelIcon } from "./AdminPanelIcon"
 export { EditIcon } from './EditIcon'
+export { TrackIcon } from './TrackIcon'
+export { UsersIcon } from './UsersIcon'
+export { DashboardIcon } from './DashboardIcon'
+export { DeleteIcon } from './DeleteIcon'
+export { PlusIcon } from './PlusIcon'

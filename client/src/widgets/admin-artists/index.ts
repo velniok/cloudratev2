@@ -1,0 +1,1 @@
+export { AdminArtists } from './ui/AdminArtists'

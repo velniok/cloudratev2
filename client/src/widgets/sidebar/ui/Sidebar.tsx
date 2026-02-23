@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom"
 import styles from "./Sidebar.module.scss"
-import { AdminPanel, Button, HomeIcon, InfoIcon, LogoIcon, LogoutIcon, NewsIcon, ProfileIcon, SearchIcon } from "../../../shared/ui"
+import { AdminPanelIcon, Button, HomeIcon, InfoIcon, LogoIcon, LogoutIcon, NewsIcon, ProfileIcon, SearchIcon } from "../../../shared/ui"
 import { useAppDispatch, useAppSelector } from "../../../shared/lib"
 import { selectAuthStatus, selectAuthUser } from "../../../features/auth"
 import { logout } from "../../../features/auth"
@@ -57,7 +57,7 @@ export const Sidebar = () => {
                             authUser?.role === 'admin' &&
                             <li className={`${styles.nav__item} ${ pathname === '/admin' ? styles.active : ''}`}>
                                 <Link to={'/admin'} className={styles.nav__link}>
-                                    <AdminPanel />
+                                    <AdminPanelIcon />
                                     Админ-панель
                                 </Link>
                             </li>
