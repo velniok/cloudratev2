@@ -28,6 +28,7 @@ export const Input: FC<InputProps> = ({ label, placeholder, type, value, onChang
             <div className={styles.inputWrapper}>
                 <input
                     type={`${showPass ? "text" : type}`}
+                    autoComplete="off"
                     className={`${styles.input} ${isGray ? styles.gray : ''} ${error ? styles.error : ''}`}
                     placeholder={`${placeholder}`}
                     value={value}

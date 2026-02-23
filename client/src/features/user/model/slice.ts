@@ -40,12 +40,22 @@ const initialState: IUserState = {
 const userSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {},
+    reducers: {
+        clearUpdateError: (state) => {
+            state.updateError = null
+        },
+        initUpdateSlice: (state) => {
+            state.updateStatus = 'idle'
+            state.updateError = null
+        }
+    },
     extraReducers: (builder) => {
         builder 
             .addCase(getOneUserThunk.pending, (state) => {
                 state.getStatus = 'loading',
                 state.getError = null
+                state.updateError = null
+                state.updateStatus = 'idle'
             })
             .addCase(getOneUserThunk.fulfilled, (state, action) => {
                 state.getStatus = 'success',
@@ -72,5 +82,8 @@ const userSlice = createSlice({
             })
     }
 })
+
+export const { clearUpdateError } = userSlice.actions
+export const { initUpdateSlice } = userSlice.actions
 
 export const UserReducer = userSlice.reducer

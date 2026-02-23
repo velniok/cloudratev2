@@ -1,12 +1,12 @@
 import { Button, Input, Title } from '@/shared/ui'
 import styles from './EditProfileForm.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
+import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { IUser } from '@/entities/user'
 import { updateAvatarApi } from '../api/updateUserApi'
 import { useAppDispatch, useAppSelector } from '@/shared/lib'
-import { updateUserThunk } from '../model/slice'
-import { selectUserUpdateError } from '../model/selectors'
+import { clearUpdateError, initUpdateSlice, updateUserThunk } from '../model/slice'
+import { selectUserUpdateError, selectUserUpdateStatus } from '../model/selectors'
 
 interface EditProfileFormProps {
     user: IUser
@@ -16,8 +16,12 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
 
     const dispatch = useAppDispatch()
     const error = useAppSelector(selectUserUpdateError)
-    const status = useAppSelector(selectUserUpdateError)
+    const status = useAppSelector(selectUserUpdateStatus)
     const navigate = useNavigate()
+
+    if (status === 'success') {
+        navigate(`/user/${user.id}`)
+    }
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -36,6 +40,9 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     }
 
     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (error) {
+            dispatch(clearUpdateError())
+        }
         setEmail(e.target.value)
     }
 
@@ -80,10 +87,6 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 password: password
             }
         }))
-        
-        if (status === 'error') {
-            navigate(`/user/${user.id}`)
-        }
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {
