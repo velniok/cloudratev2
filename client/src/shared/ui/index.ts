@@ -7,3 +7,4 @@ export { Button } from "./button"
 export { Badges } from './badges'
 export { Skeleton } from './skeleton'
 export { Input } from './input'
+export { Notification } from './notification'

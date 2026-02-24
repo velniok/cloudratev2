@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { IUser } from '@/entities/user'
 import { updateAvatarApi } from '../api/updateUserApi'
-import { useAppDispatch, useAppSelector } from '@/shared/lib'
+import { useAppDispatch, useAppSelector, useNotification } from '@/shared/lib'
 import { clearUpdateError, initUpdateSlice, updateUserThunk } from '../model/slice'
 import { selectUserUpdateError, selectUserUpdateStatus } from '../model/selectors'
 
@@ -17,9 +17,11 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const dispatch = useAppDispatch()
     const error = useAppSelector(selectUserUpdateError)
     const status = useAppSelector(selectUserUpdateStatus)
+    const { notify } = useNotification() 
     const navigate = useNavigate()
 
     if (status === 'success') {
+        notify('Профиль изменён', 'Ваш профиль успешно изменён', 'edit')
         navigate(`/user/${user.id}`)
     }
 

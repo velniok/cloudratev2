@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import "./styles/main.scss"
 
 import { Sidebar } from "@/widgets/sidebar"
+import { AdminSidebar } from "@/widgets/admin-sidebar"
 
 import { HomePage } from "@/pages/home-page"
 import { TrackPage } from "@/pages/track-page"
@@ -13,11 +14,12 @@ import { EditProfilePage } from "@/pages/edit-profile-page"
 import { RegPage } from "@/pages/reg-page"
 import { LoginPage } from "@/pages/login-page"
 import { AdminPanelPage } from "@/pages/admin-panel-page"
-import { AdminSidebar } from "@/widgets/admin-sidebar"
+import { AdminArtistsPage } from "@/pages/admin-artists-page"
 
 import { useAppDispatch } from "@/shared/lib"
+import { Notification } from "@/shared/ui"
+
 import { authThunk } from "@/features/auth"
-import { AdminArtistsPage } from "@/pages/admin-artists-page"
 
 function App() {
 
@@ -52,6 +54,7 @@ function App() {
                     <Route path="/admin/artists" element={<AdminArtistsPage />} />
                 </Routes>
             </main>
+            <Notification />
         </div>
     )
 }
