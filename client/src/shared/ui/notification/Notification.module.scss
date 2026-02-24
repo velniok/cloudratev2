@@ -1,5 +1,6 @@
 .list {
     position: fixed;
+    z-index: 9999999;
     bottom: 32px;
     right: 32px;
     display: flex;
@@ -8,6 +9,7 @@
 }
 
 .item {
+    width: 315px;
     display: flex;
     column-gap: 12px;
     align-items: center;
@@ -22,32 +24,32 @@
     }
 
     &.success {
-        box-shadow: 0 0 24px rgba(16, 185, 129, 0.15);
-        border: 1px solid #10B981;
-        color: #10B981;
+        box-shadow: 0 0 24px var(--green-color-dim);
+        border: 1px solid var(--green-color);
+        color: var(--green-color);
 
         & .icon {
-          background-color: rgba(16, 185, 129, 0.15);
+          background-color: var(--green-color-dim);
         }
     }
 
     &.delete {
         border: 1px solid var(--accent-color);
-        box-shadow: 0 0 24px rgba(230, 46, 60, 0.15);
+        box-shadow: 0 0 24px var(--accent-color-dim);
         color: var(--accent-color);
 
         & .icon {
-            background-color: rgba(230, 46, 60, 0.15);
+            background-color: var(--accent-color-dim);
         }
     }
 
     &.edit {
-        border: 1px solid #F59E0B;
-        box-shadow: 0 0 24px rgba(245, 158, 11, 0.15);
-        color: #F59E0B;
+        border: 1px solid var(--yellow-color);
+        box-shadow: 0 0 24px var(--yellow-color-dim);
+        color: var(--yellow-color);
 
         & .icon {
-            background-color: rgba(245, 158, 11, 0.15);
+            background-color: var(--yellow-color-dim);
         }
     }
 }

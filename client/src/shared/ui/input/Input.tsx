@@ -6,14 +6,16 @@ interface InputProps {
     label: string
     placeholder: string
     type: string
-    value: string
+    value?: string
     onChange?: (e: ChangeEvent<HTMLInputElement>) => void
     error?: string | null
     eyeIcon?: boolean
     isGray?: boolean
+    labelFontSize?: string
+    inputFontSize?: string
 }
 
-export const Input: FC<InputProps> = ({ label, placeholder, type, value, onChange, error, eyeIcon, isGray }) => {
+export const Input: FC<InputProps> = ({ label, placeholder, type, value, onChange, error, eyeIcon, isGray, labelFontSize, inputFontSize }) => {
 
     const [showPass, setShowPass] = useState<boolean>(false)
 
@@ -24,7 +26,7 @@ export const Input: FC<InputProps> = ({ label, placeholder, type, value, onChang
 
     return (
         <div className={styles.wrapper}>
-            <label className={styles.label}>{label}</label>
+            <label className={styles.label} style={{ fontSize: `${labelFontSize}` }}>{label}</label>
             <div className={styles.inputWrapper}>
                 <input
                     type={`${showPass ? "text" : type}`}
@@ -33,6 +35,7 @@ export const Input: FC<InputProps> = ({ label, placeholder, type, value, onChang
                     placeholder={`${placeholder}`}
                     value={value}
                     onChange={onChange}
+                    style={{ fontSize: `${inputFontSize}` }}
                 />
                 {
                     eyeIcon && <div className={styles.eyeIcon}>

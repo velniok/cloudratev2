@@ -1,104 +1,88 @@
-import { Button, DeleteIcon, EditIcon, Input, PlusIcon, Rating, SuccessIcon, Title } from '@/shared/ui'
+import { Button, DeleteIcon, EditIcon, Modal, PlusIcon, Table, Title } from '@/shared/ui'
 import styles from './AdminArtists.module.scss'
-import { useState } from 'react'
 import { useNotification } from '@/shared/lib'
+import { IArtist } from '@/entities/artist'
+import { useState } from 'react'
 
 export const AdminArtists = () => {
 
     const { notify } = useNotification()
+
+    const [createArtist, setCreateArtist] = useState<boolean>(false)
+
+    const artists: IArtist[] = [
+        {
+            id: '1',
+            name: 'тёмный принц',
+            soundcloudURL: '123',
+            avgRating: 53,
+            tracks: [
+                {
+                    id: 1,
+                    title: 'песня птиц',
+                    artist: 'тёмный принц',
+                    rating: 23
+                }
+            ]
+        },
+        {
+            id: '2',
+            name: 'tewiq',
+            soundcloudURL: '123',
+            avgRating: 35,
+            tracks: [
+                {
+                    id: 1,
+                    title: 'песня птиц',
+                    artist: 'тёмный принц',
+                    rating: 23
+                },
+                {
+                    id: 2,
+                    title: 'песня птиц',
+                    artist: 'тёмный принц',
+                    rating: 23
+                }
+            ]
+        }
+    ]
 
     return (
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>АРТИСТЫ</Title>
                 <div className={styles.top}>
-                    <Button color='accent' padding='10px 20px 10px 20px' onClick={() => notify('Артист создан', 'Новый артист успешно создан', 'success')}>
+                    <Button color='accent' padding='10px 20px 10px 20px' onClick={() => setCreateArtist(true)}>
                         <div className={styles.buttonInner}>
                             <PlusIcon />
                             <div className={styles.buttonText}>Добавить артиста</div>
                         </div>
                     </Button>
                 </div>
-                <div className={styles.tableContainer}>
-                    <table className={styles.table}>
-                        <thead className={styles.tableHeader}>
-                            <tr className={styles.tableRow}>
-                                <th className={styles.tableHead}>Артист</th>
-                                <th className={styles.tableHead}>Треки</th>
-                                <th className={styles.tableHead}>Рейтинг</th>
-                                <th className={styles.tableHead}>Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody className={styles.tableBody}>
-                            <tr className={styles.tableRow}>
-                                <td className={styles.tableData}>
-                                    <div className={styles.artist}>
-                                        <div className={styles.artistAvatar}></div>
-                                        <p className={styles.artistNickname}>Темный принц</p>
-                                    </div>
-                                </td>
-                                <td className={styles.tableData}>12</td>
-                                <td className={styles.tableData}>
-                                    <Rating>64</Rating>
-                                </td>
-                                <td className={styles.tableData}>
-                                    <div className={styles.action}>
-                                        <div className={styles.button} onClick={() => notify('Артист изменён', 'Данные артиста успешно обновлены', 'edit')}>
-                                            <EditIcon />
-                                        </div>
-                                        <div className={styles.button} onClick={() => notify('Артист удалён', 'Артист успешно удалён', 'delete')}>
-                                            <DeleteIcon />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className={styles.tableRow}>
-                                <td className={styles.tableData}>
-                                    <div className={styles.artist}>
-                                        <div className={styles.artistAvatar}></div>
-                                        <p className={styles.artistNickname}>Королевский XVII</p>
-                                    </div>
-                                </td>
-                                <td className={styles.tableData}>10</td>
-                                <td className={styles.tableData}>
-                                    <Rating>54</Rating>
-                                </td>
-                                <td className={styles.tableData}>
-                                    <div className={styles.action}>
-                                        <div className={styles.button}>
-                                            <EditIcon />
-                                        </div>
-                                        <div className={styles.button}>
-                                            <DeleteIcon />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className={styles.tableRow}>
-                                <td className={styles.tableData}>
-                                    <div className={styles.artist}>
-                                        <div className={styles.artistAvatar}></div>
-                                        <p className={styles.artistNickname}>tewiq</p>
-                                    </div>
-                                </td>
-                                <td className={styles.tableData}>15</td>
-                                <td className={styles.tableData}>
-                                    <Rating>32</Rating>
-                                </td>
-                                <td className={styles.tableData}>
-                                    <div className={styles.action}>
-                                        <div className={styles.button}>
-                                            <EditIcon />
-                                        </div>
-                                        <div className={styles.button}>
-                                            <DeleteIcon />
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    header={ ['артист', 'треки', 'рейтинг', 'действия'] }
+                    tableName={'artist'}
+                    data={artists}
+                    actions={[
+                        {
+                            name: 'edit',
+                            func: () => (
+                            <div onClick={() => notify('Артист изменён', 'Данные артиста успешно обновлены', 'edit')}>
+                                <EditIcon />
+                            </div>
+                            )
+                        },
+                        {
+                            name: 'delete',
+                            func: () => (
+                            <div onClick={() => notify('Артист удалён', 'Артист успешно удалён', 'delete')}>
+                                <DeleteIcon />
+                            </div>
+                            )
+                        },
+                    ]}
+                />
+                <Modal modalOpen={createArtist} modalClose={() => setCreateArtist(false)} />
             </div>
         </div>
     )
