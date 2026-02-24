@@ -2,50 +2,19 @@ import { Button, DeleteIcon, EditIcon, Modal, PlusIcon, Table, Title } from '@/s
 import styles from './AdminArtists.module.scss'
 import { useNotification } from '@/shared/lib'
 import { IArtist } from '@/entities/artist'
-import { useState } from 'react'
+import { FC, useState } from 'react'
+import { TStatus } from '@/shared/types'
 
-export const AdminArtists = () => {
+interface AdminArtistsProps {
+    artistList: IArtist[]
+    artistListStatus: TStatus
+}
+
+export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStatus }) => {
 
     const { notify } = useNotification()
 
     const [createArtist, setCreateArtist] = useState<boolean>(false)
-
-    const artists: IArtist[] = [
-        {
-            id: '1',
-            name: 'тёмный принц',
-            soundcloudURL: '123',
-            avgRating: 53,
-            tracks: [
-                {
-                    id: 1,
-                    title: 'песня птиц',
-                    artist: 'тёмный принц',
-                    rating: 23
-                }
-            ]
-        },
-        {
-            id: '2',
-            name: 'tewiq',
-            soundcloudURL: '123',
-            avgRating: 35,
-            tracks: [
-                {
-                    id: 1,
-                    title: 'песня птиц',
-                    artist: 'тёмный принц',
-                    rating: 23
-                },
-                {
-                    id: 2,
-                    title: 'песня птиц',
-                    artist: 'тёмный принц',
-                    rating: 23
-                }
-            ]
-        }
-    ]
 
     return (
         <div className={styles.wrapper}>
@@ -59,29 +28,34 @@ export const AdminArtists = () => {
                         </div>
                     </Button>
                 </div>
-                <Table
-                    header={ ['артист', 'треки', 'рейтинг', 'действия'] }
-                    tableName={'artist'}
-                    data={artists}
-                    actions={[
-                        {
-                            name: 'edit',
-                            func: () => (
-                            <div onClick={() => notify('Артист изменён', 'Данные артиста успешно обновлены', 'edit')}>
-                                <EditIcon />
-                            </div>
-                            )
-                        },
-                        {
-                            name: 'delete',
-                            func: () => (
-                            <div onClick={() => notify('Артист удалён', 'Артист успешно удалён', 'delete')}>
-                                <DeleteIcon />
-                            </div>
-                            )
-                        },
-                    ]}
-                />
+                {
+                    artistListStatus === 'success'
+                    ?
+                    <Table
+                        header={ ['артист', 'треки', 'рейтинг', 'действия'] }
+                        tableName={'artist'}
+                        data={artistList}
+                        actions={[
+                            {
+                                name: 'edit',
+                                func: () => (
+                                <div onClick={() => notify('Артист изменён', 'Данные артиста успешно обновлены', 'edit')}>
+                                    <EditIcon />
+                                </div>
+                                )
+                            },
+                            {
+                                name: 'delete',
+                                func: () => (
+                                <div onClick={() => notify('Артист удалён', 'Артист успешно удалён', 'delete')}>
+                                    <DeleteIcon />
+                                </div>
+                                )
+                            },
+                        ]}
+                    />
+                    : <>Загрузка...</>
+                }
                 <Modal modalOpen={createArtist} modalClose={() => setCreateArtist(false)} />
             </div>
         </div>

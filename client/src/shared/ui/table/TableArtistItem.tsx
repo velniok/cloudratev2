@@ -17,7 +17,8 @@ export const TableArtistItem: FC<TableArtistItemProps> = ({ artist, actions }) =
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
                 <div className={styles.artist}>
-                    <div className={styles.artist__avatar}></div>
+                    <img src={`${artist.avatarUrl}`} alt="" className={styles.artist__avatar} />
+                    {/* <div className={styles.artist__avatar}></div> */}
                     <p className={styles.artist__nickname}>{artist.name}</p>
                 </div>
             </td>

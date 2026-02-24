@@ -1,4 +1,5 @@
 const upload = require('../config/multer')
+const ArtistControlers = require('../controllers/ArtistControlers')
 const AuthControllers = require('../controllers/AuthControllers')
 const UserControllers = require('../controllers/UserControllers')
 const checkAuth = require('../middlewares/checkAuth')
@@ -27,5 +28,8 @@ router.get('/auth/me', checkAuth, AuthControllers.authMe)
 
 router.get('/user/getOne/:userId', UserControllers.getOne)
 router.patch('/user/update/:userId', UserControllers.update)
+
+router.post('/artist/create', ArtistControlers.create)
+router.get('/artist/get', ArtistControlers.get)
 
 module.exports = router
