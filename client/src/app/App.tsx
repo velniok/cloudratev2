@@ -20,6 +20,7 @@ import { useAppDispatch, useNotification } from "@/shared/lib"
 import { Notification } from "@/shared/ui"
 
 import { authThunk } from "@/features/auth"
+import { AdminTracksPage } from "@/pages/admin-tracks-page"
 
 function App() {
 
@@ -55,6 +56,7 @@ function App() {
 
                     <Route path="/admin" element={<AdminPanelPage />} />
                     <Route path="/admin/artists" element={<AdminArtistsPage />} />
+                    <Route path="/admin/tracks" element={<AdminTracksPage />} />
                 </Routes>
             </main>
             <Notification />

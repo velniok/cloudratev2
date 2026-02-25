@@ -1,6 +1,7 @@
 const upload = require('../config/multer')
-const ArtistControlers = require('../controllers/ArtistControlers')
+const ArtistControllers = require('../controllers/ArtistControllers')
 const AuthControllers = require('../controllers/AuthControllers')
+const TrackControllers = require('../controllers/TrackControllers')
 const UserControllers = require('../controllers/UserControllers')
 const checkAuth = require('../middlewares/checkAuth')
 const registerValidation = require('../middlewares/validators/authValidators')
@@ -29,10 +30,13 @@ router.get('/auth/me', checkAuth, AuthControllers.authMe)
 router.get('/user/getOne/:userId', UserControllers.getOne)
 router.patch('/user/update/:userId', UserControllers.update)
 
-router.post('/artist/create', ArtistControlers.create)
-router.get('/artist/get', ArtistControlers.get)
-router.get('/artist/getOne/:id', ArtistControlers.getOne)
-router.patch('/artist/update/:id', ArtistControlers.update)
-router.delete('/artist/delete/:id', ArtistControlers.delete)
+router.post('/artist/create', ArtistControllers.create)
+router.get('/artist/get', ArtistControllers.get)
+router.get('/artist/getOne/:id', ArtistControllers.getOne)
+router.patch('/artist/update/:id', ArtistControllers.update)
+router.delete('/artist/delete/:id', ArtistControllers.delete)
+
+router.post('/track/create', TrackControllers.create)
+router.get('/track/get', TrackControllers.get)
 
 module.exports = router

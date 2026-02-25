@@ -1,0 +1,19 @@
+.wrapper {
+    margin-top: 32px;
+}
+
+.top {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.buttonInner {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+}
+
+.buttonText {
+    padding-top: 4px;
+}

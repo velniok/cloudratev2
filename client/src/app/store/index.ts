@@ -3,12 +3,14 @@ import { AuthReducer } from "../../features/auth/model/slice";
 import { UserReducer } from "../../features/user/model/slice";
 import { notificationReducer } from "@/shared/model";
 import { artistReducer } from "@/features/artist";
+import { trackReducer } from "@/features/track";
 
 const rootReducer = combineReducers({
     notification: notificationReducer,
     auth: AuthReducer,
     user: UserReducer,
     artist: artistReducer,
+    track: trackReducer,
 })
 
 export const store = configureStore({

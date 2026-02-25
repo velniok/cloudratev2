@@ -4,11 +4,12 @@ import { IArtist } from '@/entities/artist'
 import { TableArtistItem } from './TableArtistItem'
 import { TStatus } from '@/shared/types'
 import { TableSkeleton } from './TableSkeleton'
+import { ITrack } from '@/entities/track'
+import { TableTrackItem } from './TableTrackItem'
 
 interface TableProps {
     header: string[]
-    tableName: string
-    data: IArtist[]
+    data: IArtist[] | ITrack[]
     dataStatus: TStatus
     actions: {
         name: string
@@ -16,7 +17,7 @@ interface TableProps {
     }[]
 }
 
-export const Table: FC<TableProps> = ({ header, tableName, data, actions, dataStatus }) => {
+export const Table: FC<TableProps> = ({ header, data, dataStatus, actions }) => {
 
     return (
         <div className={styles.wrapper}>
@@ -32,25 +33,23 @@ export const Table: FC<TableProps> = ({ header, tableName, data, actions, dataSt
                 </thead>
                 <tbody className={styles.table__body}>
                     {
-                        tableName === 'artist'
+                        dataStatus === 'success'
                         ?
-                        <>
-                        {
-                            dataStatus === 'success' ?
-                            <>
-                            {
-                                data.map((artist) => {
-                                    return <TableArtistItem actions={actions} artist={artist} key={artist.id} />
-                                })
+                        data.map((item: IArtist | ITrack) => {
+                            console.log(item)
+                            switch (item.kind) {
+                                case 'artist':
+                                    return <TableArtistItem artist={item} key={item.id} actions={actions} />
+                                case 'track':
+                                    return <TableTrackItem track={item} key={item.id} actions={actions} />
+                                default:
+                                    return null    
                             }
-                            </>
-                            :
-                            Array.from({ length: 7 }).map((_, index) => {
-                                return <TableSkeleton key={index} />
-                            })
-                        }
-                        </>
-                        : <></>
+                        })
+                        :
+                        Array.from({ length: 7 }).map((_, index) => {
+                            return <TableSkeleton key={index} />
+                        })
                     }
                 </tbody>
             </table>

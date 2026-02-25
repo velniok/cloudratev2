@@ -14,8 +14,6 @@ interface AdminArtistsProps {
 
 export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStatus }) => {
 
-    const { notify } = useNotification()
-
     const [createArtist, setCreateArtist] = useState<boolean>(false)
     const [updateArtist, setUpdateArtist] = useState<boolean>(false)
     const [deleteArtist, setDeleteArtist] = useState<boolean>(false)
@@ -45,7 +43,6 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                 </div>
                 <Table
                     header={ ['артист', 'треки', 'рейтинг', 'действия'] }
-                    tableName={'artist'}
                     data={artistList}
                     dataStatus={artistListStatus}
                     actions={[
