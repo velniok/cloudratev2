@@ -5,7 +5,7 @@ import { ArtistTopTracks } from "@/widgets/artist-top-tracks"
 export const ArtistPage = () => {
 
     const artist: IArtist = {
-        id: 'darkprinceee',
+        id: 1,
         name: 'темный принц',
         soundcloudUrl: 'https://soundcloud.com/darkprinceee',
         avatarUrl: "https://res.cloudinary.com/dgtigjrl5/image/upload/v1771949859/images/qyov8f6vhm7w4zglc8ac.jpg",
