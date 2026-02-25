@@ -6,18 +6,21 @@ export const LatestRatedTracks = () => {
 
     const tracks: ITrack[] = [
         {
+            kind: 'track',
             id: 1,
             title: 'овердоз',
             artist: 'темный принц',
             rating: 52,
         },
         {
+            kind: 'track',
             id: 2,
             title: 'sv moscow',
             artist: 'королевский XVII',
             rating: 32,
         },
         {
+            kind: 'track',
             id: 3,
             title: 'попал',
             artist: 'tewiq',

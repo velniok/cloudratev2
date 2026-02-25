@@ -5,6 +5,7 @@ import { TrackReviews } from "@/widgets/track-reviews"
 export const TrackPage = () => {
 
     const track: ITrack = {
+        kind: 'track',
         id: 1,
         title: "овердоз",
         artist: "темный принц",
