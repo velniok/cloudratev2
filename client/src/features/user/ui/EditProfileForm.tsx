@@ -1,12 +1,12 @@
 import { Button, Input, Title } from '@/shared/ui'
 import styles from './EditProfileForm.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
 import { IUser } from '@/entities/user'
-import { updateAvatarApi } from '../api/updateUserApi'
 import { useAppDispatch, useAppSelector, useNotification } from '@/shared/lib'
-import { clearUpdateError, initUpdateSlice, updateUserThunk } from '../model/slice'
-import { selectUserUpdateError, selectUserUpdateStatus } from '../model/selectors'
+import { clearUpdateError, updateUserThunk } from '../model/slice'
+import { selectUserUpdateError } from '../model/selectors'
+import { updateAvatarApi } from '@/shared/api'
 
 interface EditProfileFormProps {
     user: IUser
@@ -16,14 +16,8 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
 
     const dispatch = useAppDispatch()
     const error = useAppSelector(selectUserUpdateError)
-    const status = useAppSelector(selectUserUpdateStatus)
     const { notify } = useNotification() 
     const navigate = useNavigate()
-
-    if (status === 'success') {
-        notify('Профиль изменён', 'Ваш профиль успешно изменён', 'edit')
-        navigate(`/user/${user.id}`)
-    }
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -88,7 +82,12 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 avatarUrl: avatarUrl,
                 password: password
             }
-        }))
+        })).unwrap()
+            .then(() => {
+                notify('Профиль изменён', 'Ваш профиль успешно изменён', 'edit')
+                navigate(`/user/${user.id}`)
+            })
+            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {

@@ -34,6 +34,8 @@ export const NotificationItem: FC<NotificationItemProps> = ({ notification }) =>
                     ? <DeleteIcon />
                     : notification.type === 'edit'
                     ? <EditIcon />
+                    : notification.type === 'error'
+                    ? <InfoIcon />
                     : <InfoIcon />
                 }
             </div>

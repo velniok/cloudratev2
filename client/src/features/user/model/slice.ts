@@ -15,7 +15,6 @@ export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { id: number },
             return rejectWithValue(err.response.data)
         }
     }
-    return rejectWithValue({ message: "Сетевая ошибка" })
 })
 
 export const updateUserThunk = createAsyncThunk<{ user: IUser }, IUpdateUserReq, { rejectValue: { message: string } }>('user/updateUserThunk', async (params, { rejectWithValue }) => {

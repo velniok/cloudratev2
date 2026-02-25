@@ -1,7 +1,7 @@
 import type { ITrack } from "../../track"
 
 export interface IArtist {
-    id: string
+    id: number
     name: string
     avatarUrl: string
     soundcloudUrl: string

@@ -16,7 +16,7 @@ import { LoginPage } from "@/pages/login-page"
 import { AdminPanelPage } from "@/pages/admin-panel-page"
 import { AdminArtistsPage } from "@/pages/admin-artists-page"
 
-import { useAppDispatch } from "@/shared/lib"
+import { useAppDispatch, useNotification } from "@/shared/lib"
 import { Notification } from "@/shared/ui"
 
 import { authThunk } from "@/features/auth"
@@ -24,11 +24,14 @@ import { authThunk } from "@/features/auth"
 function App() {
 
     const dispatch = useAppDispatch()
+    const { notify } = useNotification()
     const pathname = useLocation().pathname
 
     useEffect(() => {
         if (window.localStorage.token) {
-            dispatch(authThunk())
+            dispatch(authThunk()).unwrap()
+                .then()
+                .catch((err: { message: string}) => notify(err.message, 'Попробуйте еще раз', 'error'))
         }
     }, [])
 

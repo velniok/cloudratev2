@@ -52,6 +52,16 @@
             background-color: var(--yellow-color-dim);
         }
     }
+
+    &.error {
+        border: 1px solid var(--accent-color);
+        box-shadow: 0 0 24px var(--accent-color-dim);
+        color: var(--accent-color);
+
+        & .icon {
+            background-color: var(--accent-color-dim);
+        }
+    }
 }
 
 .icon {

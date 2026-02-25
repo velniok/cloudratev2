@@ -5,7 +5,7 @@ export interface INotification {
     type: TNotificationTypes
 }
 
-export type TNotificationTypes = 'success' | 'delete' | 'edit'
+export type TNotificationTypes = 'success' | 'delete' | 'edit' | 'error'
 
 export interface INotificationState {
     notification: INotification[] | null

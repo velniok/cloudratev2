@@ -33,6 +33,23 @@ class ArtistControllers {
             })
         }
     }
+
+    async delete(req, res) {
+        try {
+            const artistId = req.params.id
+
+            await pool.query('DELETE FROM artists WHERE id = $1', [artistId])
+
+            res.status(200).json({
+                message: 'Артист удален'
+            })
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({
+                message: "Не удалость удалить артиста"
+            })
+        }
+    }
 }
 
 module.exports = new ArtistControllers()

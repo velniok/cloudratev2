@@ -7,7 +7,7 @@ interface TableArtistItemProps {
     artist: IArtist
     actions: {
         name: string
-        func: () => ReactNode
+        func: (id: number) => ReactNode
     }[]
 }
 
@@ -17,20 +17,31 @@ export const TableArtistItem: FC<TableArtistItemProps> = ({ artist, actions }) =
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
                 <div className={styles.artist}>
-                    <img src={`${artist.avatarUrl}`} alt="" className={styles.artist__avatar} />
-                    {/* <div className={styles.artist__avatar}></div> */}
+                    {
+                        artist.avatarUrl
+                        ?
+                        <img src={`${artist.avatarUrl}`} alt="" className={styles.artist__avatar} />
+                        :
+                        <div className={styles.artist__avatar}></div>
+                    }
                     <p className={styles.artist__nickname}>{artist.name}</p>
                 </div>
             </td>
             <td className={styles.table__data}>{artist.tracks.length}</td>
             <td className={styles.table__data}>
-                <Rating>{artist.avgRating}</Rating>
+                {
+                    artist.avgRating
+                    ?
+                    <Rating>{artist.avgRating}</Rating>
+                    :
+                    <Rating>?</Rating>
+                }
             </td>
             <td className={styles.table__data}>
                 <div className={styles.action}>
                     {
-                        actions.map((action) => {
-                            return <div className={`${styles.action__button} ${styles[action.name]}`}>{action.func()}</div>
+                        actions.map((action, index) => {
+                            return <div key={index} className={`${styles.action__button} ${styles[action.name]}`}>{action.func(artist.id)}</div>
                         })
                     }
                 </div>

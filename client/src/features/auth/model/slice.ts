@@ -15,7 +15,6 @@ export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq, { rejectVa
             return rejectWithValue(err.response.data)
         }
     }
-    return rejectWithValue({ message: 'Сетевая ошибка' })
 })
 
 export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: { message: string } }>('auth/loginThunk', async (params, { rejectWithValue }) => {
@@ -28,7 +27,6 @@ export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: {
             return rejectWithValue(err.response.data)
         }
     }
-    return rejectWithValue({ message: 'Сетевая ошибка' })
 })
 
 export const authThunk = createAsyncThunk<{ user: IUser }, void, { rejectValue: { message: string } }>('auth/authThunk', async (_, { rejectWithValue }) => {
@@ -36,9 +34,10 @@ export const authThunk = createAsyncThunk<{ user: IUser }, void, { rejectValue: 
         const { data } = await authUser()
         return data
     } catch (err) {
-        console.log(err)
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
     }
-    return rejectWithValue({ message: 'Сетевая ошибка' })
 })
 
 const initialState: IAuthState = {
