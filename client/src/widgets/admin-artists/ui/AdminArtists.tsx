@@ -1,11 +1,10 @@
 import { Button, DeleteIcon, EditIcon, Modal, PlusIcon, Table, Title } from '@/shared/ui'
 import styles from './AdminArtists.module.scss'
-import { useAppDispatch, useNotification } from '@/shared/lib'
+import { useNotification } from '@/shared/lib'
 import { IArtist } from '@/entities/artist'
 import { FC, useState } from 'react'
 import { TStatus } from '@/shared/types'
-import { ArtistCreateForm } from '@/features/artist'
-import { deleteArtistThunk } from '@/features/artist/model/slice'
+import { ArtistCreateForm, ArtistDeleteModal } from '@/features/artist'
 
 interface AdminArtistsProps {
     artistList: IArtist[]
@@ -14,14 +13,15 @@ interface AdminArtistsProps {
 
 export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStatus }) => {
 
-    const dispatch = useAppDispatch()
     const { notify } = useNotification()
 
     const [createArtist, setCreateArtist] = useState<boolean>(false)
+    const [deleteArtist, setDeleteArtist] = useState<boolean>(false)
+    const [artistId, setArtistId] = useState<number | null>(null)
 
     const hundleDeleteArtist = (id: number) => {
-        dispatch(deleteArtistThunk({ id: id }))
-        notify('Артист удалён', 'Артист успешно удалён', 'delete')
+        setArtistId((prev) => prev = id)
+        setDeleteArtist(true)
     }
 
     return (
@@ -60,8 +60,11 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                         },
                     ]}
                 />
-                <Modal modalOpen={createArtist} modalClose={() => setCreateArtist(false)}>
+                <Modal width='520px' modalTitle='Новый артист' modalDesc='Заполните информацию об артисте' modalOpen={createArtist} modalClose={() => setCreateArtist(false)}>
                     <ArtistCreateForm modalClose={() => setCreateArtist(false)} />
+                </Modal>
+                <Modal width='420px' modalTitle='Удалить артиста?' modalDesc='Это действие нельзя отменить' modalOpen={deleteArtist} modalClose={() => setDeleteArtist(false)}>
+                    <ArtistDeleteModal modalClose={() => setDeleteArtist(false)} artistId={artistId} />
                 </Modal>
             </div>
         </div>
