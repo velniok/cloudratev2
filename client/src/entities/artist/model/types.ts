@@ -4,7 +4,7 @@ export interface IArtist {
     id: string
     name: string
     avatarUrl: string
-    soundcloudURL: string
+    soundcloudUrl: string
     avgRating?: number
     tracks: ITrack[]
 }

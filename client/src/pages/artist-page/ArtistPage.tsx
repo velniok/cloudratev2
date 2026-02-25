@@ -7,7 +7,8 @@ export const ArtistPage = () => {
     const artist: IArtist = {
         id: 'darkprinceee',
         name: 'темный принц',
-        soundcloudURL: 'https://soundcloud.com/darkprinceee',
+        soundcloudUrl: 'https://soundcloud.com/darkprinceee',
+        avatarUrl: "https://res.cloudinary.com/dgtigjrl5/image/upload/v1771949859/images/qyov8f6vhm7w4zglc8ac.jpg",
         tracks: [
             {
                 id: 1,
