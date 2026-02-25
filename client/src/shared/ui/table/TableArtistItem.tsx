@@ -34,7 +34,7 @@ export const TableArtistItem: FC<TableArtistItemProps> = ({ artist, actions }) =
                     ?
                     <Rating>{artist.avgRating}</Rating>
                     :
-                    <Rating>?</Rating>
+                    <Rating>0</Rating>
                 }
             </td>
             <td className={styles.table__data}>

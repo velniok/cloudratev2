@@ -1,18 +1,31 @@
 import { Button, Input, ProfileIcon } from '@/shared/ui'
-import styles from './ArtistCreateForm.module.scss'
-import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
+import styles from './ArtistUpdateForm.module.scss'
 import { useAppDispatch, useNotification } from '@/shared/lib'
+import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { updateAvatarApi } from '@/shared/api'
-import { createArtistThunk } from '../model/slice'
+import { getOneArtistThunk, updateArtistThunk } from '../model/slice'
 
-interface ArtistCreateFormProps {
+interface ArtistUpdateFormProps {
     modalClose: () => void
+    artistId: number
+    setArtistId: (id: number | null) => void
 }
 
-export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose }) => {
+export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artistId, setArtistId }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
+
+    useEffect(() => {
+        if (artistId) {
+            dispatch(getOneArtistThunk({ id: artistId })).unwrap()
+                .then((res) => {
+                    setName(res.artist.name)
+                    setAvatarUrl(res.artist.avatarUrl)
+                    setSoundcloudUrl(res.artist.soundcloudUrl)
+                })
+        }
+    }, [artistId])
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -36,23 +49,24 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose }) => {
 
     const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        dispatch(createArtistThunk({
-            name: name,
-            avatarUrl: avatarUrl,
-            soundcloudUrl: soundcloudUrl,
+        dispatch(updateArtistThunk({
+            id: artistId,
+            req: {
+                name: name,
+                avatarUrl: avatarUrl,
+                soundcloudUrl: soundcloudUrl,
+            }
         })).unwrap()
             .then(() => {
-                notify('Артист создан', 'Новый артист успешно добавлен', 'success')
+                notify('Артист изменён', 'Артист успешно изменён', 'edit')
                 hundleCancel(e)
             })
+            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         modalClose()
-        setName('')
-        setAvatarUrl('')
-        setSoundcloudUrl('')
     }
 
     return (
@@ -60,7 +74,7 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose }) => {
             <div className={styles.content}>
                 <div className={styles.inputList}>
                     <div className={styles.editAvatar}>
-                        {
+                         {
                             avatarUrl
                             ?
                             <img src={`${avatarUrl}`} alt="" className={styles.avatar} />
@@ -99,7 +113,7 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose }) => {
             </div>
             <div className={styles.footer}>
                 <Button fontSize='12px' color='default' padding='12px 20px 10px 20px' onClick={hundleCancel}>ОТМЕНА</Button>
-                <Button fontSize='12px' color='accent' padding='12px 20px 10px 20px' onClick={handleSubmit}>СОЗДАТЬ АРТИСТА</Button>
+                <Button fontSize='12px' color='accent' padding='12px 20px 10px 20px' onClick={handleSubmit}>СОХРАНИТЬ ИЗМЕНЕНИЯ</Button>
             </div>
         </form>
     )

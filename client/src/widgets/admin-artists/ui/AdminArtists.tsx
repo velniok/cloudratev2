@@ -5,6 +5,7 @@ import { IArtist } from '@/entities/artist'
 import { FC, useState } from 'react'
 import { TStatus } from '@/shared/types'
 import { ArtistCreateForm, ArtistDeleteModal } from '@/features/artist'
+import { ArtistUpdateForm } from '@/features/artist/ui/ArtistUpdateForm'
 
 interface AdminArtistsProps {
     artistList: IArtist[]
@@ -16,8 +17,14 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
     const { notify } = useNotification()
 
     const [createArtist, setCreateArtist] = useState<boolean>(false)
+    const [updateArtist, setUpdateArtist] = useState<boolean>(false)
     const [deleteArtist, setDeleteArtist] = useState<boolean>(false)
     const [artistId, setArtistId] = useState<number | null>(null)
+
+    const hundleUpdateArtist = (id: number) => {
+        setArtistId((prev) => prev = id)
+        setUpdateArtist(true)
+    }
 
     const hundleDeleteArtist = (id: number) => {
         setArtistId((prev) => prev = id)
@@ -44,8 +51,8 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                     actions={[
                         {
                             name: 'edit',
-                            func: () => (
-                            <div onClick={() => notify('Артист изменён', 'Данные артиста успешно обновлены', 'edit')}>
+                            func: (id) => (
+                            <div onClick={() => hundleUpdateArtist(id)}>
                                 <EditIcon />
                             </div>
                             )
@@ -60,10 +67,31 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                         },
                     ]}
                 />
-                <Modal width='520px' modalTitle='Новый артист' modalDesc='Заполните информацию об артисте' modalOpen={createArtist} modalClose={() => setCreateArtist(false)}>
+                <Modal
+                    width='520px'
+                    modalTitle='Новый артист'
+                    modalDesc='Заполните информацию об артисте'
+                    modalOpen={createArtist}
+                    modalClose={() => setCreateArtist(false)}
+                >
                     <ArtistCreateForm modalClose={() => setCreateArtist(false)} />
                 </Modal>
-                <Modal width='420px' modalTitle='Удалить артиста?' modalDesc='Это действие нельзя отменить' modalOpen={deleteArtist} modalClose={() => setDeleteArtist(false)}>
+                <Modal
+                    width='520px'
+                    modalTitle='Редактировать артиста'
+                    modalDesc='Измените данные артиста'
+                    modalOpen={updateArtist}
+                    modalClose={() => setUpdateArtist(false)}
+                >
+                    <ArtistUpdateForm modalClose={() => setUpdateArtist(false)} artistId={artistId} setArtistId={setArtistId} />
+                </Modal>
+                <Modal
+                    width='420px'
+                    modalTitle='Удалить артиста?'
+                    modalDesc='Это действие нельзя отменить'
+                    modalOpen={deleteArtist}
+                    modalClose={() => setDeleteArtist(false)}
+                >
                     <ArtistDeleteModal modalClose={() => setDeleteArtist(false)} artistId={artistId} />
                 </Modal>
             </div>

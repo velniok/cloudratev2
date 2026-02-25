@@ -10,6 +10,14 @@ export const createArtistApi = (params: IArtistReq) => {
     return axios.post<{ artist: IArtist }>('/artist/create', params)
 }
 
+export const getOneArtistApi = (params: { id: number }) => {
+    return axios.get<{ artist: IArtist }>(`/artist/getOne/${params.id}`)
+}
+
+export const updateArtistApi = (params: { id: number, req: IArtistReq }) => {
+    return axios.patch<{ artist: IArtist }>(`/artist/update/${params.id}`, params.req)
+}
+
 export const deleteArtistApi = (params: { id: number }) => {
     return axios.delete(`/artist/delete/${params.id}`)
 }

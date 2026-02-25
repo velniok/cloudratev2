@@ -20,7 +20,7 @@ class ArtistControllers {
 
     async get(req, res) {
         try {
-            const artistsRes = await pool.query('SELECT * FROM artists')
+            const artistsRes = await pool.query('SELECT * FROM artists ORDER BY id')
             const artists = artistsRes.rows.map((artist) => {
                 return mapToCamelCase(artist)
             })
@@ -30,6 +30,39 @@ class ArtistControllers {
             console.log(err)
             res.status(500).json({
                 message: "Не удалость получить артистов"
+            })
+        }
+    }
+
+    async getOne(req, res) {
+        try {
+            const artistId = req.params.id
+
+            const artistRes = await pool.query('SELECT * FROM artists WHERE id = $1', [artistId])
+            const artist = mapToCamelCase(artistRes.rows[0])
+
+            res.status(200).json({artist})
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({
+                message: "Не удалость получить артиста"
+            })
+        }
+    }
+
+    async update(req, res) {
+        try {
+            const artistId = req.params.id
+            const { name, avatarUrl, soundcloudUrl } = req.body
+
+            const artistRes = await pool.query('UPDATE artists SET name = $2, avatar_url = $3, soundcloud_url = $4 WHERE id = $1 RETURNING *', [artistId, name, avatarUrl, soundcloudUrl])
+            const artist = mapToCamelCase(artistRes.rows[0])
+
+            res.status(200).json({artist})
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({
+                message: "Не удалось изменить артиста"
             })
         }
     }

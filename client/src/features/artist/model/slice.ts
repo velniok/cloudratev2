@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createArtistApi, deleteArtistApi, getArtistsApi } from "../api/artistApi";
+import { createArtistApi, deleteArtistApi, getArtistsApi, getOneArtistApi, updateArtistApi } from "../api/artistApi";
 import { IArtist } from "@/entities/artist";
 import axios from "axios";
 import { IArtistState } from "./artistSliceTypes";
@@ -27,6 +27,28 @@ export const createArtistThunk = createAsyncThunk<{ artist: IArtist }, IArtistRe
     }
 })
 
+export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number }, { rejectValue: { message: string } }>('/artist/getOneArtistThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await getOneArtistApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
+export const updateArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number, req: IArtistReq }, { rejectValue: { message: string } }>('/artist/updateArtistThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await updateArtistApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
 export const deleteArtistThunk = createAsyncThunk<void, { id: number }, { rejectValue: { message: string } }>('artist/deleteArtistThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await deleteArtistApi(params)
@@ -41,6 +63,8 @@ export const deleteArtistThunk = createAsyncThunk<void, { id: number }, { reject
 const initialState: IArtistState = {
     artistList: null,
     artistListStatus: 'idle',
+    artist: null,
+    artistStatus: 'idle',
     error: null
 }
 
@@ -76,6 +100,42 @@ const artistSlice = createSlice({
             state.error = null
         })
         .addCase(createArtistThunk.rejected, (state) => {
+            state.artistList = null,
+            state.artistListStatus = 'error',
+            state.error = null
+        })
+
+        .addCase(getOneArtistThunk.pending, (state) => {
+            state.artist = null
+            state.artistStatus = 'loading',
+            state.error = null
+        })
+        .addCase(getOneArtistThunk.fulfilled, (state, action) => {
+            state.artist = action.payload.artist
+            state.artistStatus = 'success'
+            state.error = null
+        })
+        .addCase(getOneArtistThunk.rejected, (state) => {
+            state.artist = null,
+            state.artistStatus = 'error',
+            state.error = null
+        })
+
+        .addCase(updateArtistThunk.pending, (state) => {
+            state.artistListStatus = 'loading',
+            state.error = null
+        })
+        .addCase(updateArtistThunk.fulfilled, (state, action) => {
+            state.artistList = state.artistList.map((artist) => {
+                if (artist.id === action.payload.artist.id) {
+                    return artist = action.payload.artist
+                }
+                return artist
+            })
+            state.artistListStatus = 'success'
+            state.error = null
+        })
+        .addCase(updateArtistThunk.rejected, (state) => {
             state.artistList = null,
             state.artistListStatus = 'error',
             state.error = null

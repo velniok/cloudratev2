@@ -31,6 +31,8 @@ router.patch('/user/update/:userId', UserControllers.update)
 
 router.post('/artist/create', ArtistControlers.create)
 router.get('/artist/get', ArtistControlers.get)
+router.get('/artist/getOne/:id', ArtistControlers.getOne)
+router.patch('/artist/update/:id', ArtistControlers.update)
 router.delete('/artist/delete/:id', ArtistControlers.delete)
 
 module.exports = router

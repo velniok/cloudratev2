@@ -16,7 +16,7 @@ export const ArtistDeleteModal: FC<ArtistDeleteModalProps> = ({ modalClose, arti
 
     const hundleSumbit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        dispatch(deleteArtistThunk({ id: artistId }))
+        dispatch(deleteArtistThunk({ id: artistId })).unwrap()
             .then(() => {
                 notify('Артист удалён', 'Артист успешно удалён', 'delete')
                 modalClose()

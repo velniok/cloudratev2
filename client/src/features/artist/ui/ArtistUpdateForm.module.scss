@@ -1,0 +1,51 @@
+.content {
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.inputList {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+}
+
+.editAvatar {
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    border: 1px dashed var(--border-highlight);
+    background-color: var(--bg-secondary);
+
+    & svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.avatarInput {
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+}
+
+.sub {
+    color: var(--text-tertiary);
+    font-size: 12px;
+}
+
+.footer {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 10px;
+}
