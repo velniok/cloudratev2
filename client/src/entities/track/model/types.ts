@@ -7,7 +7,7 @@ export interface ITrack {
     title: string
     coverUrl?: string
     artist: string
-    artists: IArtist[]
+    artists?: IArtist[]
     rating?: number
     reviews?: IReview[]
 }
