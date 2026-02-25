@@ -13,7 +13,7 @@ export const ArtistHeaderInfo: FC<ArtistHeaderInfoProps> = ({ artist }) => {
             <div className={styles.avatar}></div>
             <div className={styles.info}>
                 <h2 className={styles.name}>{artist.name}</h2>
-                <a href={`${artist.soundcloudURL}`} className={styles.soundcloud}>
+                <a href={`${artist.soundcloudUrl}`} className={styles.soundcloud}>
                 <LinkIcon />
                 SoundCloud
                 </a>
