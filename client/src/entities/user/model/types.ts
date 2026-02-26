@@ -1,8 +1,9 @@
 export interface IUser {
-    id: number,
-    nickname: string,
-    email: string,
-    password: string,
-    role: string
-    avatarUrl: string
+    id: number
+    createdAt: Date
+    role: 'user' | 'admin'
+    nickname: string
+    email: string
+    password: string
+    avatarUrl: string | null
 }

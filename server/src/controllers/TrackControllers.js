@@ -48,6 +48,26 @@ class TrackControllers {
         }
     }
 
+    async getOne(req, res) {
+        try {
+            const trackId = req.params.id
+
+            const trackRes = await pool.query('SELECT * FROM tracks WHERE id = $1', [trackId])
+            const track = mapToCamelCase(trackRes.rows[0])
+
+            const artistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [track.artistIds]);
+            const artists = artistsRes.rows.map(mapToCamelCase);
+            track.artists = artists
+
+            res.status(200).json({track})
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({
+                message: "Не удалось получит трек"
+            }) 
+        }
+    }
+
     async delete(req, res) {
         try {
             const trackId = req.params.id

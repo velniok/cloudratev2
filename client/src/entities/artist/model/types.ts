@@ -3,9 +3,10 @@ import type { ITrack } from "../../track"
 export interface IArtist {
     kind: 'artist'
     id: number
+    createdAt: Date
     name: string
-    avatarUrl: string
+    avatarUrl: string | null
     soundcloudUrl: string
-    avgRating?: number
-    tracks?: ITrack[]
+    rating: number
+    tracks: ITrack[]
 }

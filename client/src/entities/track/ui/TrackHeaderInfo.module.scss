@@ -19,35 +19,43 @@
 }
 
 .artist {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
+
+    &__list {
+        display: flex;
+        column-gap: 12px;
+        margin-bottom: 8px;
+    }
+
+    &__item {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__avatar {
+        width: 48px;
+        height: 48px;
+        background-color: var(--gray-color);
+        border-radius: 50%;
+        border: 1px solid var(--border-subtle);
+    }
+    
+    &__name {
+        padding-top: 4px;
+        font-family: var(--second-family);
+        font-size: 18px;
+        color: var(--text-secondary);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+    }
 }
 
-.avatar {
-    width: 48px;
-    height: 48px;
-    background-color: var(--gray-color);
-    border-radius: 50%;
-    border: 1px solid var(--border-subtle);
-}
-
-.name {
-    padding-top: 4px;
-    font-family: var(--second-family);
-    font-size: 18px;
-    color: var(--accent-color);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
 
 .title {
     font-size: 56px;
     font-weight: 700;
     font-family: var(--second-family);
-    text-transform: uppercase;
     margin-bottom: 12px;
 }
 

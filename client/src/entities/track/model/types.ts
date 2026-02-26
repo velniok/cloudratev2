@@ -4,10 +4,11 @@ import type { IReview } from "../../review"
 export interface ITrack {
     kind: 'track'
     id: number
+    createdAt: Date
     title: string
-    coverUrl?: string
+    coverUrl: string | null
+    rating: number
     artistIds: string[]
     artists?: IArtist[]
-    rating?: number
     reviews?: IReview[]
 }

@@ -41,6 +41,21 @@ class ArtistControllers {
             const artistRes = await pool.query('SELECT * FROM artists WHERE id = $1', [artistId])
             const artist = mapToCamelCase(artistRes.rows[0])
 
+            const tracksRes = await pool.query('SELECT * FROM tracks WHERE $1 = ANY(artist_ids)', [artistId])
+            const tracks = tracksRes.rows.map(mapToCamelCase)
+
+            const allArtistIds = [...new Set(tracks.flatMap(track => track.artistIds))];
+
+            const trackArtistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [allArtistIds]);
+            const trackArtists = trackArtistsRes.rows.map(mapToCamelCase);
+
+            const result = tracks.map(track => ({
+                ...track,
+                artists: trackArtists.filter(artist => track.artistIds.includes(artist.id))
+            }));
+
+            artist.tracks = result
+
             res.status(200).json({artist})
         } catch (err) {
             console.log(err)

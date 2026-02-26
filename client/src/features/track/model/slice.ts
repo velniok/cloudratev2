@@ -1,14 +1,24 @@
 import { ITrack } from "@/entities/track";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { createTrackApi, deleteTrackApi, getTracksApi } from "../api/trackApi";
-import { error } from "console";
+import { createTrackApi, deleteTrackApi, getOneTrackApi, getTracksApi } from "../api/trackApi";
 import { ITrackState } from "./trackSliceTypes";
 import { ITrackReq } from "../api/trackApiTypes";
 
 export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[] }, void, { rejectValue: { message: string } }>('/track/getTracksThunk', async (_, { rejectWithValue }) => {
     try {
         const { data } = await getTracksApi()
+        return data
+    } catch (err) {
+            if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
+export const getOneTrackThunk = createAsyncThunk<{ track: ITrack }, { id: number }, { rejectValue: { message: string } }>('/track/getOneTrackThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await getOneTrackApi(params)
         return data
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
@@ -42,6 +52,8 @@ export const deleteTrackThunk = createAsyncThunk<void, { id: number }, { rejectV
 const initialState: ITrackState = {
     trackList: null,
     trackListStatus: 'idle',
+    track: null,
+    trackStatus: 'idle',
     error: null
 }
 
@@ -62,6 +74,19 @@ const trackSlice = createSlice({
             .addCase(getTracksThunk.rejected, (state) => {
                 state.trackList = null,
                 state.trackListStatus = 'error'
+            })
+
+            .addCase(getOneTrackThunk.pending, (state) => {
+                state.track = null,
+                state.trackStatus = 'loading'
+            })
+            .addCase(getOneTrackThunk.fulfilled, (state, action) => {
+                state.track = action.payload.track
+                state.trackStatus = 'success'
+            })
+            .addCase(getOneTrackThunk.rejected, (state) => {
+                state.track = null,
+                state.trackStatus = 'error'
             })
 
             .addCase(createTrackThunk.pending, (state) => {

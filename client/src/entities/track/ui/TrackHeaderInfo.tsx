@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './TrackHeaderInfo.module.scss'
 import type { ITrack } from '../model/types'
 import { Cover } from '@/shared/ui'
@@ -10,14 +10,30 @@ interface TrackHeaderInfoProps {
 
 export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
 
+    const navigate = useNavigate()
+
     return (
         <div className={styles.inner}>
-            <Cover size={`maxSize`} />
+            <Cover size={`maxSize`} url={track.coverUrl} />
             <div className={styles.info}>
-                <Link to={'/artist'} className={styles.artist}>
-                    <div className={styles.avatar}></div>
-                    <h3 className={styles.name}>123</h3>
-                </Link>
+                <ul className={styles.artist__list}>
+                    {
+                        track.artists.map((artist) => {
+                            return (
+                                <li key={artist.id} className={styles.artist__item} onClick={() => navigate(`/artist/${artist.id}`)}>
+                                    {
+                                        artist.avatarUrl
+                                        ?
+                                        <img src={`${artist.avatarUrl}`} alt="" className={styles.artist__avatar} />
+                                        :
+                                        <div className={styles.artist__avatar}></div>
+                                    }
+                                    <h3 className={styles.artist__name}>{artist.name}</h3>
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
                 <h2 className={styles.title}>{track.title}</h2>
                 <div className={styles.rating}>
                     <p className={styles.rating__num}>{track.rating}</p>

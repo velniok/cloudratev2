@@ -1,33 +1,25 @@
-import type { ITrack } from "@/entities/track"
+import { getOneTrackThunk, selectTrack, selectTrackStatus } from "@/features/track"
+import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { TrackHeader } from "@/widgets/track-header"
 import { TrackReviews } from "@/widgets/track-reviews"
+import { useEffect } from "react"
+import { useParams } from "react-router-dom"
 
 export const TrackPage = () => {
 
-    const track: ITrack = {
-        kind: 'track',
-        id: 1,
-        title: "овердоз",
-        artistIds: ['1'],
-        rating: 52,
-        reviews: [
-            {
-                id: 1,
-                nickname: "velniok",
-                review: "Отличный продакшн, бас пробивает как надо. Текст немного слабоват, но для жанра вполне годно. Сведение на уровне топовых релизов недели. Слишком вторично. Слышали это уже сотню раз. Артисту нужно искать свой уникальный тембр, а не копировать западные тренды 2021 года."
-            },
-            {
-                id: 2,
-                nickname: "user123",
-                review: "Отличный продакшн, бас пробивает как надо. Текст немного слабоват, но для жанра вполне годно. Сведение на уровне топовых релизов недели. Слишком вторично. Слышали это уже сотню раз. Артисту нужно искать свой уникальный тембр, а не копировать западные тренды 2021 года."
-            }
-        ]
-    }
+    const dispatch = useAppDispatch()
+    const id = useParams<{ id: string }>().id
+    const track = useAppSelector(selectTrack)
+    const trackStatus = useAppSelector(selectTrackStatus)
+
+    useEffect(() => {
+        dispatch(getOneTrackThunk({ id: Number(id) }))
+    }, [id])
 
     return (
         <>
-            <TrackHeader track={track} />
-            <TrackReviews reviews={track.reviews} />
+            <TrackHeader track={track} trackStatus={trackStatus} />
+            {/* <TrackReviews reviews={track.reviews} /> */}
         </>
     )
 }

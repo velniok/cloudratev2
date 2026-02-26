@@ -20,12 +20,21 @@
 }
 
 .artist {
-    margin-bottom: 12px;
-    color: var(--text-secondary);
 
-    transition: opacity 0.3s;
+    &__list {
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+    }
 
-    &:hover {
-        opacity: 0.7;
+    &__item {
+        cursor: pointer;
+        color: var(--text-secondary);
+    
+        transition: opacity 0.3s;
+    
+        &:hover {
+            opacity: 0.7;
+        }
     }
 }

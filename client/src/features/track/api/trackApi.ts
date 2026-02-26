@@ -6,6 +6,10 @@ export const getTracksApi = () => {
     return axios.get<{ tracks: ITrack[] }>('/track/get')
 }
 
+export const getOneTrackApi = (params: { id: number }) => {
+    return axios.get<{ track: ITrack }>(`/track/getOne/${params.id}`)
+}
+
 export const createTrackApi = (params: ITrackReq) => {
     return axios.post<{ track: ITrack }>('/track/create', params)
 }

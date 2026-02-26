@@ -45,8 +45,8 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomePage />} />
 
-                    <Route path="/track" element={<TrackPage />} />
-                    <Route path="/artist" element={<ArtistPage />} />
+                    <Route path="/track/:id" element={<TrackPage />} />
+                    <Route path="/artist/:id" element={<ArtistPage />} />
 
                     <Route path="/user/:userId" element={<UserPage />} />
                     <Route path="/user/:userId/edit" element={<EditProfilePage />} />

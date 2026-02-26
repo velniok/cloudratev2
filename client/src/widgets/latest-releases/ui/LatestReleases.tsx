@@ -1,35 +1,19 @@
 import { TrackCard, type ITrack } from "@/entities/track"
 import { Title } from "@/shared/ui"
 import styles from "./LatestReleases.module.scss"
+import { useAppDispatch, useAppSelector } from "@/shared/lib"
+import { getTracksThunk, selectTrackList, selectTrackListStatus } from "@/features/track"
+import { useEffect } from "react"
 
 export const LatestReleases = () => {
 
-    const tracks: ITrack[] = [
-        {
-            kind: 'track',
-            id: 1,
-            title: 'овердоз',
-            artistIds: ['1'],
-            artists: [],
-            rating: 52,
-        },
-        {
-            kind: 'track',
-            id: 2,
-            title: 'sv moscow',
-            artistIds: ['1'],
-            artists: [],
-            rating: 32,
-        },
-        {
-            kind: 'track',
-            id: 3,
-            title: 'попал',
-            artistIds: ['1'],
-            artists: [],
-            rating: 67,
-        },
-    ]
+    const dispatch = useAppDispatch()
+    const trackList = useAppSelector(selectTrackList)
+    const trackListStatus = useAppSelector(selectTrackListStatus)
+
+    useEffect(() => {
+        dispatch(getTracksThunk())
+    }, [])
 
     return (
         <section className={styles.section}>
@@ -37,9 +21,17 @@ export const LatestReleases = () => {
                 <Title>СВЕЖИЕ РЕЛИЗЫ</Title>
                 <div className={styles.list}>
                     {
-                        tracks.map((track) => {
-                            return <TrackCard key={track.id} track={track} />
-                        })
+                        trackListStatus === 'success'
+                        ?
+                        <>
+                        {
+                            trackList.map((track) => {
+                                return <TrackCard key={track.id} track={track} />
+                            })
+                        }
+                        </>
+                        :
+                        <>загрузка</>
                     }
                 </div>
             </div>
