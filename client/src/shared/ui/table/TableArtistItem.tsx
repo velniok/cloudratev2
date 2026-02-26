@@ -29,13 +29,7 @@ export const TableArtistItem: FC<TableArtistItemProps> = ({ artist, actions }) =
             </td>
             <td className={styles.table__data}>{artist.tracks.length}</td>
             <td className={styles.table__data}>
-                {
-                    artist.avgRating
-                    ?
-                    <Rating>{artist.avgRating}</Rating>
-                    :
-                    <Rating>0</Rating>
-                }
+                <Rating>{artist.avgRating}</Rating>
             </td>
             <td className={styles.table__data}>
                 <div className={styles.action}>

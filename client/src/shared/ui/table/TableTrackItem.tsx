@@ -41,13 +41,7 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
                 </ul>
             </td>
             <td className={styles.table__data}>
-                {
-                    track.rating
-                    ?
-                    <Rating>{track.rating}</Rating>
-                    :
-                    <Rating>0</Rating>
-                }
+                <Rating>{track.avgRating}</Rating>
             </td>
             <td className={styles.table__data}>
                 <div className={styles.action}>

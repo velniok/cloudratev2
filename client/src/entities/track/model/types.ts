@@ -7,7 +7,7 @@ export interface ITrack {
     createdAt: Date
     title: string
     coverUrl: string | null
-    rating: number
+    avgRating: number
     artistIds: string[]
     artists?: IArtist[]
     reviews?: IReview[]

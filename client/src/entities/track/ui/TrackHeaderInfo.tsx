@@ -36,7 +36,7 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
                 </ul>
                 <h2 className={styles.title}>{track.title}</h2>
                 <div className={styles.rating}>
-                    <p className={styles.rating__num}>{track.rating}</p>
+                    <p className={styles.rating__num}>{track.avgRating}</p>
                     <div className={styles.rating__info}>
                         <p className={styles.rating__title}>СРЕДНИЙ БАЛЛ</p>
                         <p className={styles.rating__desc}>На основе 128 оценок</p>

@@ -31,7 +31,7 @@ export const TrackCard: FC<TrackCardProps> = ({ track }) => {
                     })
                 }
             </ul>
-            <Rating>{track.rating}</Rating>
+            <Rating>{track.avgRating}</Rating>
         </div>
     )
 }
