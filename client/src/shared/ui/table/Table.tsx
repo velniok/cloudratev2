@@ -36,7 +36,6 @@ export const Table: FC<TableProps> = ({ header, data, dataStatus, actions }) => 
                         dataStatus === 'success'
                         ?
                         data.map((item: IArtist | ITrack) => {
-                            console.log(item)
                             switch (item.kind) {
                                 case 'artist':
                                     return <TableArtistItem artist={item} key={item.id} actions={actions} />

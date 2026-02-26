@@ -33,6 +33,7 @@ router.patch('/user/update/:userId', UserControllers.update)
 router.post('/artist/create', ArtistControllers.create)
 router.get('/artist/get', ArtistControllers.get)
 router.get('/artist/getOne/:id', ArtistControllers.getOne)
+router.get('/artist/search', ArtistControllers.search)
 router.patch('/artist/update/:id', ArtistControllers.update)
 router.delete('/artist/delete/:id', ArtistControllers.delete)
 

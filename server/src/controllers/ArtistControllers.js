@@ -67,6 +67,23 @@ class ArtistControllers {
         }
     }
 
+    async search(req, res) {
+        try {
+            const { search } = req.query
+            const artistsRes = await pool.query(`SELECT * FROM artists WHERE REPLACE(LOWER(name), 'ё', 'е') ILIKE REPLACE(LOWER($1), 'ё', 'е')`, [`%${search}%`])
+            const artists = artistsRes.rows.map((artist) => {
+                return mapToCamelCase(artist)
+            })
+
+            res.status(200).json({artists})
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({
+                message: "Не удалось найти артиста"
+            }) 
+        }
+    }
+
     async delete(req, res) {
         try {
             const artistId = req.params.id

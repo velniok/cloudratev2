@@ -15,6 +15,23 @@
 
 .inputWrapper {
     position: relative;
+
+    &.search {
+        
+        & svg {
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 14px;
+            color: var(--text-secondary);
+        }
+
+        & .input {
+            padding-left: 42px;
+        }
+    }
 }
 
 .input {

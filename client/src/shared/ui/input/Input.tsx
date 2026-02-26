@@ -1,6 +1,6 @@
-import { useState, type ChangeEvent, type FC, type MouseEvent } from "react"
+import { ReactNode, useState, type ChangeEvent, type FC, type MouseEvent } from "react"
 import styles from "./Input.module.scss"
-import { EyeIcon, InfoIcon } from "../icon"
+import { EyeIcon, InfoIcon, SearchIcon } from "../icon"
 
 interface InputProps {
     label: string
@@ -13,9 +13,13 @@ interface InputProps {
     isGray?: boolean
     labelFontSize?: string
     inputFontSize?: string
+    isSearch?: boolean
+    onFocus?: () => void
+    onBlur?: () => void
+    children?: ReactNode
 }
 
-export const Input: FC<InputProps> = ({ label, placeholder, type, value, onChange, error, eyeIcon, isGray, labelFontSize, inputFontSize }) => {
+export const Input: FC<InputProps> = ({ children, label, isSearch, placeholder, type, value, onFocus, onBlur, onChange, error, eyeIcon, isGray, labelFontSize, inputFontSize }) => {
 
     const [showPass, setShowPass] = useState<boolean>(false)
 
@@ -27,7 +31,11 @@ export const Input: FC<InputProps> = ({ label, placeholder, type, value, onChang
     return (
         <div className={styles.wrapper}>
             <label className={styles.label} style={{ fontSize: `${labelFontSize}` }}>{label}</label>
-            <div className={styles.inputWrapper}>
+            {children}
+            <div className={`${styles.inputWrapper} ${isSearch ? styles.search : ''}`}>
+                {
+                    isSearch && <SearchIcon />
+                }
                 <input
                     type={`${showPass ? "text" : type}`}
                     autoComplete="off"
@@ -36,6 +44,8 @@ export const Input: FC<InputProps> = ({ label, placeholder, type, value, onChang
                     value={value}
                     onChange={onChange}
                     style={{ fontSize: `${inputFontSize}` }}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
                 />
                 {
                     eyeIcon && <div className={styles.eyeIcon}>

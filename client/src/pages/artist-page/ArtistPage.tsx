@@ -15,7 +15,7 @@ export const ArtistPage = () => {
                 kind: 'track',
                 id: 1,
                 title: "овердоз",
-                artist: "темный принц",
+                artistIds: ['1'],
                 artists: [],
                 rating: 52,
             }

@@ -15,7 +15,7 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
     return (
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
-                <div className={styles.artist}>
+                <div className={styles.track}>
                     {
                         track.coverUrl
                         ?
@@ -31,9 +31,9 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
                     {
                         track.artists.map((artist) => {
                             return (
-                                <li className={styles.track__artistItem}>
-                                    <img src={`${artist.avatarUrl}`} alt="" className={styles.artist__avatar} />
-                                    <p className={styles.artist__nickname}>{artist.name}</p>
+                                <li key={artist.id} className={styles.track__artistItem}>
+                                    <img src={`${artist.avatarUrl}`} alt="" className={styles.track__artistAvatar} />
+                                    <p className={styles.track__artistNickname}>{artist.name}</p>
                                 </li>
                             )
                         })

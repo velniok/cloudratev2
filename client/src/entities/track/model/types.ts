@@ -6,7 +6,7 @@ export interface ITrack {
     id: number
     title: string
     coverUrl?: string
-    artist: string
+    artistIds: string[]
     artists?: IArtist[]
     rating?: number
     reviews?: IReview[]

@@ -1,0 +1,29 @@
+.search {
+    
+    &__item {
+        border-radius: 12px;
+        cursor: pointer;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        column-gap: 10px;
+
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: var(--accent-color-dim);
+        }
+    }
+
+    &__avatar {
+        width: 30px;
+        height: 30px;
+        background-color: var(--gray-color);
+        border-radius: 50%;
+    }
+
+    &__name {
+        font-family: var(--second-family);
+        font-size: 12px;
+    }
+}

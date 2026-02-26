@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createArtistApi, deleteArtistApi, getArtistsApi, getOneArtistApi, updateArtistApi } from "../api/artistApi";
+import { createArtistApi, deleteArtistApi, getArtistsApi, getOneArtistApi, searchArtistsApi, updateArtistApi } from "../api/artistApi";
 import { IArtist } from "@/entities/artist";
 import axios from "axios";
 import { IArtistState } from "./artistSliceTypes";
@@ -41,6 +41,17 @@ export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: numbe
 export const updateArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number, req: IArtistReq }, { rejectValue: { message: string } }>('/artist/updateArtistThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await updateArtistApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
+export const searchArtistsThunk = createAsyncThunk<{ artists: IArtist[] }, { query: string }, { rejectValue: { message: string } }>('/artist/searchArtistsThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await searchArtistsApi(params.query)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -136,6 +147,21 @@ const artistSlice = createSlice({
             state.error = null
         })
         .addCase(updateArtistThunk.rejected, (state) => {
+            state.artistList = null,
+            state.artistListStatus = 'error',
+            state.error = null
+        })
+
+        .addCase(searchArtistsThunk.pending, (state) => {
+            state.artistListStatus = 'loading',
+            state.error = null
+        })
+        .addCase(searchArtistsThunk.fulfilled, (state, action) => {
+            state.artistList = action.payload.artists
+            state.artistListStatus = 'success',
+            state.error = null
+        })
+        .addCase(searchArtistsThunk.rejected, (state) => {
             state.artistList = null,
             state.artistListStatus = 'error',
             state.error = null

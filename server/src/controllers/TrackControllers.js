@@ -4,10 +4,14 @@ const mapToCamelCase = require("../utils/toCamelCase")
 class TrackControllers {
     async create(req, res) {
         try {
-            const { title, coverUrl, artist } = req.body
+            const { title, coverUrl, artistIds } = req.body
 
-            const newTrackRes = await pool.query('INSERT INTO tracks (title, cover_url, artist) VALUES ($1, $2, $3) RETURNING *', [title, coverUrl, artist])
+            const newTrackRes = await pool.query('INSERT INTO tracks (title, cover_url, artist_ids) VALUES ($1, $2, $3) RETURNING *', [title, coverUrl, artistIds])
             const track = mapToCamelCase(newTrackRes.rows[0])
+
+            const artistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [artistIds]);
+            const artists = artistsRes.rows.map(mapToCamelCase);
+            track.artists = artists
 
             res.status(201).json({track})
         } catch (err) {
@@ -25,19 +29,17 @@ class TrackControllers {
                 return mapToCamelCase(track)
             })
 
-            for (let track of tracks) {
-                const artistIds = track.artistIds
-                const placeholders = artistIds.map((_, index) => `$${index + 1}`).join(',');
-                const artistsRes = await pool.query(`SELECT * FROM artists WHERE id IN (${placeholders})`, artistIds)
-                const artists = artistsRes.rows.map((artist) => {
-                    return mapToCamelCase(artist)
-                })
-                track.artists = artists
-            }
+            const allArtistIds = [...new Set(tracks.flatMap(track => track.artistIds))];
 
-            console.log(tracks)
+            const artistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [allArtistIds]);
+            const artists = artistsRes.rows.map(mapToCamelCase);
 
-            res.status(200).json({tracks})
+            const result = tracks.map(track => ({
+                ...track,
+                artists: artists.filter(artist => track.artistIds.includes(artist.id))
+            }));
+
+            res.status(200).json({tracks: result})
         } catch (err) {
             console.log(err)
             res.status(500).json({

@@ -18,6 +18,10 @@ export const updateArtistApi = (params: { id: number, req: IArtistReq }) => {
     return axios.patch<{ artist: IArtist }>(`/artist/update/${params.id}`, params.req)
 }
 
+export const searchArtistsApi = (query: string) => {
+    return axios.get<{ artists: IArtist[] }>('/artist/search', { params: { search: query } })
+}
+
 export const deleteArtistApi = (params: { id: number }) => {
     return axios.delete(`/artist/delete/${params.id}`)
 }

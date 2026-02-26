@@ -8,7 +8,7 @@ export const TrackPage = () => {
         kind: 'track',
         id: 1,
         title: "овердоз",
-        artist: "темный принц",
+        artistIds: ['1'],
         rating: 52,
         reviews: [
             {
