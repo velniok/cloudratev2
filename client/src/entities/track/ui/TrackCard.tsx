@@ -18,7 +18,7 @@ export const TrackCard: FC<TrackCardProps> = ({ track }) => {
                 <Cover isHovered={isHovered} mb={'mb-16'} />
             </Link>
             <h3 className={styles.title}>{track.title}</h3>
-            <Link to={'/artist'} className={styles.artist}>{track.artist}</Link>
+            <Link to={'/artist'} className={styles.artist}>123</Link>
             <Rating>{track.rating}</Rating>
         </div>
     )

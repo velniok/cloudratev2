@@ -16,7 +16,7 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
             <div className={styles.info}>
                 <Link to={'/artist'} className={styles.artist}>
                     <div className={styles.avatar}></div>
-                    <h3 className={styles.name}>{track.artist}</h3>
+                    <h3 className={styles.name}>123</h3>
                 </Link>
                 <h2 className={styles.title}>{track.title}</h2>
                 <div className={styles.rating}>
