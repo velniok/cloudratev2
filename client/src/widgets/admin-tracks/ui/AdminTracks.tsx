@@ -4,6 +4,7 @@ import { FC, useState } from 'react'
 import { ITrack } from '@/entities/track'
 import { TStatus } from '@/shared/types'
 import { TrackCreateForm } from '@/features/track/ui/TrackCreateForm'
+import { TrackDeleteModal } from '@/features/track/ui/TrackDeleteModal'
 
 interface AdminTracksProps {
     trackList: ITrack[]
@@ -13,6 +14,14 @@ interface AdminTracksProps {
 export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }) => {
 
     const [createTrack, setCreateTrack] = useState<boolean>(false)
+    const [deleteTrack, setDeleteTrack] = useState<boolean>(false)
+
+    const [trackId, setTrackId] = useState<number | null>(null)
+
+    const hundleDeleteTrack = (id) => {
+        setDeleteTrack(true)
+        setTrackId((prev) => prev = id)
+    }
 
     return (
         <div className={styles.wrapper}>
@@ -42,7 +51,7 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }
                         {
                             name: 'delete',
                             func: (id) => (
-                            <div>
+                            <div onClick={() => hundleDeleteTrack(id)}>
                                 <DeleteIcon />
                             </div>
                             )
@@ -57,6 +66,15 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }
                     modalClose={() => setCreateTrack(false)}
                 >
                     <TrackCreateForm modalClose={() => setCreateTrack(false)} />
+                </Modal>
+                <Modal
+                    width='420px'
+                    modalTitle='Удалить трек?'
+                    modalDesc='Это действие нельзя отменить'
+                    modalOpen={deleteTrack}
+                    modalClose={() => setDeleteTrack(false)}
+                >
+                    <TrackDeleteModal modalClose={() => setDeleteTrack(false)} trackId={trackId} />
                 </Modal>
             </div>
         </div>

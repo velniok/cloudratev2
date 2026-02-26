@@ -1,10 +1,9 @@
-import { Button, ImgIcon, Input, SearchIcon, SearchItem, SearchItemSkeleton } from '@/shared/ui'
+import { Button, ImgIcon, Input, SearchItem, SearchItemSkeleton } from '@/shared/ui'
 import styles from './TrackCreateForm.module.scss'
 import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector, useNotification } from '@/shared/lib'
 import { updateAvatarApi } from '@/shared/api'
-import { searchArtistsThunk } from '@/features/artist/model/slice'
-import { selectArtistList, selectArtistListStatus } from '@/features/artist'
+import { searchArtistsThunk, selectArtistList, selectArtistListStatus } from '@/features/artist'
 import { IArtist } from '@/entities/artist'
 import { createTrackThunk } from '../model/slice'
 

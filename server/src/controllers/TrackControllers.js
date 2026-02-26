@@ -47,6 +47,23 @@ class TrackControllers {
             }) 
         }
     }
+
+    async delete(req, res) {
+        try {
+            const trackId = req.params.id
+
+            await pool.query('DELETE FROM tracks WHERE id = $1', [trackId])
+
+            res.status(200).json({
+                message: 'Трек успешно удален'
+            })
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({
+                message: "Не удалось удалить трек"
+            }) 
+        }
+    }
 }
 
 module.exports = new TrackControllers()

@@ -39,5 +39,6 @@ router.delete('/artist/delete/:id', ArtistControllers.delete)
 
 router.post('/track/create', TrackControllers.create)
 router.get('/track/get', TrackControllers.get)
+router.delete('/track/delete/:id', TrackControllers.delete)
 
 module.exports = router

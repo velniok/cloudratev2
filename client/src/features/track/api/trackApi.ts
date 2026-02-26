@@ -9,3 +9,7 @@ export const getTracksApi = () => {
 export const createTrackApi = (params: ITrackReq) => {
     return axios.post<{ track: ITrack }>('/track/create', params)
 }
+
+export const deleteTrackApi = (params: { id: number }) => {
+    return axios.delete(`/track/delete/${params.id}`)
+}

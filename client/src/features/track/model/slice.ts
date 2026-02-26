@@ -1,7 +1,7 @@
 import { ITrack } from "@/entities/track";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { createTrackApi, getTracksApi } from "../api/trackApi";
+import { createTrackApi, deleteTrackApi, getTracksApi } from "../api/trackApi";
 import { error } from "console";
 import { ITrackState } from "./trackSliceTypes";
 import { ITrackReq } from "../api/trackApiTypes";
@@ -20,6 +20,17 @@ export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[] }, void, { rej
 export const createTrackThunk = createAsyncThunk<{ track: ITrack }, ITrackReq, { rejectValue: { message: string } }>('/track/createTrackThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await createTrackApi(params)
+        return data
+    } catch (err) {
+            if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
+export const deleteTrackThunk = createAsyncThunk<void, { id: number }, { rejectValue: { message: string } }>('/track/deleteTrackThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await deleteTrackApi(params)
         return data
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
@@ -61,6 +72,18 @@ const trackSlice = createSlice({
                 state.trackListStatus = 'success'
             })
             .addCase(createTrackThunk.rejected, (state) => {
+                state.trackList = null,
+                state.trackListStatus = 'error'
+            })
+
+            .addCase(deleteTrackThunk.pending, (state) => {
+                state.trackListStatus = 'loading'
+            })
+            .addCase(deleteTrackThunk.fulfilled, (state, action) => {
+                state.trackList = state.trackList.filter((track) => track.id !== action.meta.arg.id)
+                state.trackListStatus = 'success'
+            })
+            .addCase(deleteTrackThunk.rejected, (state) => {
                 state.trackList = null,
                 state.trackListStatus = 'error'
             })

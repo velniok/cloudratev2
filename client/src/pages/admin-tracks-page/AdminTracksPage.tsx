@@ -1,5 +1,4 @@
-import { selectTrackList, selectTrackListStatus } from "@/features/track"
-import { getTracksThunk } from "@/features/track/model/slice"
+import { getTracksThunk, selectTrackList, selectTrackListStatus } from "@/features/track"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { AdminTracks } from "@/widgets/admin-tracks"
 import { useEffect } from "react"

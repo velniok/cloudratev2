@@ -1,6 +1,5 @@
-import { selectArtistListStatus } from "@/features/artist"
+import { getArtistsThunk, selectArtistListStatus } from "@/features/artist"
 import { selectArtistList } from "@/features/artist/model/selectors"
-import { getArtistsThunk } from "@/features/artist/model/slice"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { AdminArtists } from "@/widgets/admin-artists"
 import { useEffect } from "react"
