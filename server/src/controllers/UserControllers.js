@@ -1,52 +1,23 @@
 const pool = require("../config/db")
 const bcrypt = require('bcrypt')
 const mapToCamelCase = require("../utils/toCamelCase")
+const UserServices = require("../services/UserServices")
+const ReviewServices = require("../services/ReviewServices")
 
 class UserControllers {
     async getOne(req, res) {
         try {
             const userId = req.params.userId
-            
-            const userRes = await pool.query("SELECT * FROM users WHERE id = $1", [userId])
-            const user = mapToCamelCase(userRes.rows[0])
+            const user = await UserServices.getUserById(userId)
 
-            const reviewsRes = await pool.query('SELECT * FROM reviews WHERE user_id = $1', [userId])
-            const reviews = reviewsRes.rows.map(mapToCamelCase)
+            if (!user) return res.status(404).json({ message: "Пользователь не найден" })
 
-            const allTrackIds = [...new Set(reviews.flatMap(review => review.trackId))]
-            const tracksRes = await pool.query('SELECT * FROM tracks WHERE id = ANY($1)', [allTrackIds])
-            const tracks = tracksRes.rows.map(mapToCamelCase)
-
-            const allArtistIds = [...new Set(tracks.flatMap(track => track.artistIds))]
-            const artistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [allArtistIds])
-            const artists = artistsRes.rows.map(mapToCamelCase)
-            
-            const tracksWithArtists = tracks.map(track => ({
-                ...track,
-                artists: artists.filter(artist => track.artistIds.includes(artist.id))
-            }))
-            
-            const result = reviews.map(review => ({
-                ...review,
-                track: tracksWithArtists.find(track => track.id === review.trackId)
-            }))
-
-
-
-            user.reviews = result
-
-            if (!user) {
-                return res.status(404).json({
-                    message: "Пользователь не найден"
-                })
-            }
+            user.reviews = await ReviewServices.getReviewsByUserId(userId)
 
             res.status(200).json({user})
         } catch (err) {
             console.log(err)
-            res.status(500).json({
-                message: 'Не удалось получить пользователя'
-            })
+            res.status(500).json({ message: 'Не удалось получить пользователя' })
         }
     }
 

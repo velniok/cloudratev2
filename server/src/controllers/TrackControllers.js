@@ -1,17 +1,11 @@
-const pool = require("../config/db")
-const mapToCamelCase = require("../utils/toCamelCase")
+const ReviewServices = require("../services/ReviewServices")
+const TrackServices = require("../services/TrackServices")
 
 class TrackControllers {
     async create(req, res) {
         try {
             const { title, coverUrl, artistIds } = req.body
-
-            const newTrackRes = await pool.query('INSERT INTO tracks (title, cover_url, artist_ids) VALUES ($1, $2, $3) RETURNING *', [title, coverUrl, artistIds])
-            const track = mapToCamelCase(newTrackRes.rows[0])
-
-            const artistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [artistIds]);
-            const artists = artistsRes.rows.map(mapToCamelCase);
-            track.artists = artists
+            const track = await TrackServices.createTrack([title, coverUrl, artistIds])
 
             res.status(201).json({track})
         } catch (err) {
@@ -24,28 +18,9 @@ class TrackControllers {
 
     async get(req, res) {
         try {
-            const tracksRes = await pool.query('SELECT * FROM tracks')
-            const tracks = tracksRes.rows.map((track) => {
-                return mapToCamelCase(track)
-            })
+            const tracks = await TrackServices.getAllTracks()
 
-            const allArtistIds = [...new Set(tracks.flatMap(track => track.artistIds))];
-
-            const artistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [allArtistIds]);
-            const artists = artistsRes.rows.map(mapToCamelCase);
-
-            const allTrackIds = [...new Set(tracks.flatMap(track => track.id))];
-
-            const reviewsRes = await pool.query('SELECT * FROM reviews WHERE track_id = ANY($1)', [allTrackIds])
-            const reviews = reviewsRes.rows.map(mapToCamelCase)
-
-            const result = tracks.map(track => ({
-                ...track,
-                artists: artists.filter(artist => track.artistIds.includes(artist.id)),
-                reviews: reviews.filter(review => track.id === review.trackId)
-            }));
-
-            res.status(200).json({tracks: result})
+            res.status(200).json({tracks})
         } catch (err) {
             console.log(err)
             res.status(500).json({
@@ -57,27 +32,8 @@ class TrackControllers {
     async getOne(req, res) {
         try {
             const trackId = req.params.id
-
-            const trackRes = await pool.query('SELECT * FROM tracks WHERE id = $1', [trackId])
-            const track = mapToCamelCase(trackRes.rows[0])
-
-            const artistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [track.artistIds]);
-            const artists = artistsRes.rows.map(mapToCamelCase);
-            track.artists = artists
-
-            const reviewsRes = await pool.query('SELECT * FROM reviews WHERE track_id = $1', [trackId])
-            const reviews = reviewsRes.rows.map(mapToCamelCase)
-
-            const allUserIds = reviews.flatMap(review => review.userId)
-            const usersRes = await pool.query('SELECT * FROM users WHERE id = ANY($1)', [allUserIds])
-            const users = usersRes.rows.map(mapToCamelCase)
-            
-            const result = reviews.map(review => ({
-                ...review,
-                user: users.find(user => user.id === review.userId)
-            }))
-            
-            track.reviews = result
+            const track = await TrackServices.getTrackById(trackId)
+            track.reviews = await ReviewServices.getReviewsByTrackId(trackId)
 
             res.status(200).json({track})
         } catch (err) {
@@ -91,8 +47,7 @@ class TrackControllers {
     async delete(req, res) {
         try {
             const trackId = req.params.id
-
-            await pool.query('DELETE FROM tracks WHERE id = $1', [trackId])
+            await TrackServices.deleteTrackById(trackId)
 
             res.status(200).json({
                 message: 'Трек успешно удален'

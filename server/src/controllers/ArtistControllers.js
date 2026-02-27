@@ -1,13 +1,10 @@
-const pool = require("../config/db")
-const mapToCamelCase = require("../utils/toCamelCase")
+const ArtistServices = require("../services/ArtistServices")
 
 class ArtistControllers {
     async create(req, res) {
         try {
             const { name, soundcloudUrl, avatarUrl } = req.body
-
-            const newArtistRes = await pool.query('INSERT INTO artists (name, soundcloud_url, avatar_url) VALUES ($1, $2, $3) RETURNING *', [name, soundcloudUrl, avatarUrl])
-            const artist = mapToCamelCase(newArtistRes.rows[0])
+            const artist = await ArtistServices.createArtist([name, soundcloudUrl, avatarUrl])
 
             res.status(201).json({artist})
         } catch (err) {
@@ -20,10 +17,7 @@ class ArtistControllers {
 
     async get(req, res) {
         try {
-            const artistsRes = await pool.query('SELECT * FROM artists ORDER BY id')
-            const artists = artistsRes.rows.map((artist) => {
-                return mapToCamelCase(artist)
-            })
+            const artists = await ArtistServices.getAllArtists()
 
             res.status(200).json({artists})
         } catch (err) {
@@ -37,24 +31,7 @@ class ArtistControllers {
     async getOne(req, res) {
         try {
             const artistId = req.params.id
-
-            const artistRes = await pool.query('SELECT * FROM artists WHERE id = $1', [artistId])
-            const artist = mapToCamelCase(artistRes.rows[0])
-
-            const tracksRes = await pool.query('SELECT * FROM tracks WHERE $1 = ANY(artist_ids)', [artistId])
-            const tracks = tracksRes.rows.map(mapToCamelCase)
-
-            const allArtistIds = [...new Set(tracks.flatMap(track => track.artistIds))];
-
-            const trackArtistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [allArtistIds]);
-            const trackArtists = trackArtistsRes.rows.map(mapToCamelCase);
-
-            const result = tracks.map(track => ({
-                ...track,
-                artists: trackArtists.filter(artist => track.artistIds.includes(artist.id))
-            }));
-
-            artist.tracks = result
+            const artist = await ArtistServices.getArtistById(artistId)
 
             res.status(200).json({artist})
         } catch (err) {
@@ -69,9 +46,7 @@ class ArtistControllers {
         try {
             const artistId = req.params.id
             const { name, avatarUrl, soundcloudUrl } = req.body
-
-            const artistRes = await pool.query('UPDATE artists SET name = $2, avatar_url = $3, soundcloud_url = $4 WHERE id = $1 RETURNING *', [artistId, name, avatarUrl, soundcloudUrl])
-            const artist = mapToCamelCase(artistRes.rows[0])
+            const artist = await ArtistServices.updateArtistById(artistId, [name, avatarUrl, soundcloudUrl])
 
             res.status(200).json({artist})
         } catch (err) {
@@ -85,10 +60,7 @@ class ArtistControllers {
     async search(req, res) {
         try {
             const { search } = req.query
-            const artistsRes = await pool.query(`SELECT * FROM artists WHERE REPLACE(LOWER(name), 'ё', 'е') ILIKE REPLACE(LOWER($1), 'ё', 'е')`, [`%${search}%`])
-            const artists = artistsRes.rows.map((artist) => {
-                return mapToCamelCase(artist)
-            })
+            const artists = await ArtistServices.searchArtistsByName(search)
 
             res.status(200).json({artists})
         } catch (err) {
@@ -102,8 +74,7 @@ class ArtistControllers {
     async delete(req, res) {
         try {
             const artistId = req.params.id
-
-            await pool.query('DELETE FROM artists WHERE id = $1', [artistId])
+            await ArtistServices.deleteArtistById(artistId)
 
             res.status(200).json({
                 message: 'Артист удален'

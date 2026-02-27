@@ -3,9 +3,18 @@ const toCamelCase = (str) => {
 }
 
 const mapToCamelCase = (obj) => {
-    return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [toCamelCase(key), value])
-  )
+    if (Array.isArray(obj)) {
+        return obj.map(mapToCamelCase)
+    }
+    if (obj !== null && typeof obj === 'object') {
+        return Object.fromEntries(
+        Object.entries(obj).map(([key, value]) => [
+            toCamelCase(key),
+            mapToCamelCase(value)
+        ])
+        )
+    }
+    return obj
 }
 
 module.exports = mapToCamelCase
