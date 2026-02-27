@@ -1,5 +1,5 @@
 import type { FC } from "react"
-import { TrackCard, type ITrack } from "@/entities/track"
+import { TrackCard, TrackCardSekelton, type ITrack } from "@/entities/track"
 import { Title } from "@/shared/ui"
 import styles from "./ArtistTopTracks.module.scss"
 import { TStatus } from "@/shared/types"
@@ -28,7 +28,9 @@ export const ArtistTopTracks: FC<ArtistTopTracksProps> = ({ artist, artistStatus
                         }
                         </>
                         :
-                        <>Загрузка</>
+                        Array.from({ length: 5 }).map((_, index) => {
+                            return <TrackCardSekelton key={index} />
+                        })
                     }
                 </div>
             </div>

@@ -1,28 +1,38 @@
 import { Title } from '@/shared/ui'
 import styles from './AdminGeneral.module.scss'
+import { FC } from 'react'
+import { TStatus } from '@/shared/types'
+import { GeneralItem, IGeneral } from '@/entities/general'
+import { GeneralItemSkeleton } from '@/entities/general/ui/GeneralItemSkeleton'
 
-export const AdminGeneral = () => {
+interface AdminGeneralProps {
+    general: IGeneral
+    generalStatus: TStatus
+}
+
+export const AdminGeneral: FC<AdminGeneralProps> = ({ general, generalStatus }) => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>АДМИН-ПАНЕЛЬ</Title>
                 <ul className={styles.statsList}>
-                    <li className={styles.statsItem}>
-                        <h3 className={styles.statsTitle}>Пользователи</h3>
-                        <p className={styles.statsCount}>10</p>
-                    </li>
-                    <li className={styles.statsItem}>
-                        <h3 className={styles.statsTitle}>Артисты</h3>
-                        <p className={styles.statsCount}>13</p>
-                    </li>
-                    <li className={styles.statsItem}>
-                        <h3 className={styles.statsTitle}>Треки</h3>
-                        <p className={styles.statsCount}>24</p>
-                    </li>
-                    <li className={styles.statsItem}>
-                        <h3 className={styles.statsTitle}>Оценки</h3>
-                        <p className={styles.statsCount}>3</p>
-                    </li>
+                {
+                    generalStatus === 'success'
+                    ?
+                    <>
+                        <GeneralItem title='Пользователи' count={general.users} />
+                        <GeneralItem title='Артисты' count={general.artists} />
+                        <GeneralItem title='Треки' count={general.tracks} />
+                        <GeneralItem title='Оценки' count={general.reviews} />
+                    </>
+                    :
+                    <>
+                        <GeneralItemSkeleton title='Пользователи' />
+                        <GeneralItemSkeleton title='Артисты' />
+                        <GeneralItemSkeleton title='Треки' />
+                        <GeneralItemSkeleton title='Оценки'/>
+                    </>
+                }
                 </ul>
             </div>
         </div>

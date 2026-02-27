@@ -1,8 +1,12 @@
 .skeleton {
     display: inline-block;
-    animation: shimmer 3s infinite linear;
+    animation: shimmer 5s infinite linear;
     background: linear-gradient(90deg, var(--gray-color) 0%, var(--bg-secondary) 50%, var(--gray-color) 100%);
     background-size: 1000px 100%;
+
+    &.black {
+        background: linear-gradient(90deg, var(--bg-color) 0%, var(--bg-secondary) 50%, var(--bg-color) 100%);
+    }
 }
 
 @keyframes shimmer {

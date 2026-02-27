@@ -8,7 +8,7 @@ export interface ITrack {
     title: string
     coverUrl: string | null
     avgRating: number
-    artistIds: string[]
+    artistIds: number[]
     artists?: IArtist[]
     reviews: IReview[] | []
 }

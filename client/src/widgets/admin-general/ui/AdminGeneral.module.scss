@@ -8,32 +8,3 @@
     grid-template-columns: repeat(4, 1fr);
     column-gap: 24px;
 }
-
-.statsItem {
-    padding: 24px;
-    background-color: var(--gray-color);
-    border: 1px solid var(--border-subtle);
-    border-radius: 12px;
-
-    transition: border 0.3s;
-
-    &:hover {
-        border: 1px solid var(--border-highlight);
-    }
-}
-
-.statsTitle {
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    font-family: var(--second-family);
-    letter-spacing: 0.05rem;
-    font-size: 12px;
-    font-weight: 600;
-    margin-bottom: 8px;
-}
-
-.statsCount {
-    font-family: var(--second-family);
-    font-size: 32px;
-    font-weight: 600;
-}

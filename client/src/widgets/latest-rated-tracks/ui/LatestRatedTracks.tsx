@@ -1,4 +1,4 @@
-import { TrackCard, type ITrack } from "@/entities/track"
+import { TrackCard, TrackCardSekelton, type ITrack } from "@/entities/track"
 import { Title } from "@/shared/ui"
 import styles from "./LatestRatedTracks.module.scss"
 import { FC } from "react"
@@ -24,12 +24,14 @@ export const LatestRatedTracks: FC<LatestRatedTracksProps> = ({ user, userStatus
                         <>
                         {
                             user.reviews.map((review: IReview) => {
-                                return <TrackCard key={review.id} track={review.track} />
+                                return <TrackCard key={review.id} review={review} track={review.track} />
                             })
                         }
                         </>
                         :
-                        <>Загрузка</>
+                        Array.from({ length: 5 }).map((_, index) => {
+                            return <TrackCardSekelton key={index} />
+                        })
                     }
                 </div>
             </div>

@@ -3,12 +3,14 @@ import styles from "./TrackCard.module.scss"
 import { Link, useNavigate } from "react-router-dom"
 import type { ITrack } from "../model/types"
 import { Cover, Rating } from "@/shared/ui"
+import { IReview } from "@/entities/review"
 
 interface TrackCardProps {
     track: ITrack
+    review?: IReview
 }
 
-export const TrackCard: FC<TrackCardProps> = ({ track }) => {
+export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
 
     const navigate = useNavigate()
 
@@ -31,7 +33,18 @@ export const TrackCard: FC<TrackCardProps> = ({ track }) => {
                     })
                 }
             </ul>
-            <Rating>{track.avgRating}</Rating>
+            <Rating>
+                {
+                    review ?
+                    <>
+                        {review.rating}
+                    </>
+                    :
+                    <>
+                        {track.avgRating}
+                    </>
+                }
+            </Rating>
         </div>
     )
 }
