@@ -1,14 +1,18 @@
 import type { FC } from "react"
 import styles from "./Cover.module.scss"
+import { ProfileIcon } from "../icon"
 
 interface CoverProps {
     isHovered?: boolean
-    size?: string
+    width: string
+    height: string
+    borderRadius: string
     mb?: string
     url?: string
+    isInput?: boolean
 }
 
-export const Cover: FC<CoverProps> = ({ isHovered, size, mb, url }) => {
+export const Cover: FC<CoverProps> = ({ isHovered, mb, url, width, height, borderRadius, isInput }) => {
     return (
         <>
         {
@@ -20,17 +24,32 @@ export const Cover: FC<CoverProps> = ({ isHovered, size, mb, url }) => {
                 className={`
                     ${styles.cover}
                     ${mb ? styles[mb] : ''}
-                    ${size ? styles[size] : ''}
                     ${isHovered ? styles.hovered : ''}
-                `}/>
+                    ${isInput ? styles.input : ''}
+                `}
+                style={{
+                    width: width,
+                    height: height,
+                    borderRadius: borderRadius,
+                }}
+            />
             :
-            <div className=
-                {`
+            <div 
+                className={`
                     ${styles.cover}
                     ${mb ? styles[mb] : ''}
-                    ${size ? styles[size] : ''}
                     ${isHovered ? styles.hovered : ''}
-                `}>
+                    ${isInput ? styles.input : ''}
+                `}
+                style={{
+                    width: width,
+                    height: height,
+                    borderRadius: borderRadius,
+                }}
+            >
+                {
+                    isInput && <ProfileIcon />
+                }
             </div>
         }
         </>

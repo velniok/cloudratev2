@@ -2,21 +2,33 @@ import type { FC } from "react"
 import { ReviewCard, type IReview } from "@/entities/review"
 import { Title } from "@/shared/ui"
 import styles from "./TrackReviews.module.scss"
+import { TStatus } from "@/shared/types"
+import { ITrack } from "@/entities/track"
 
 interface TrackReviewsProps {
-    reviews: IReview[]
+    track: ITrack
+    trackStatus: TStatus
 }
 
-export const TrackReviews: FC<TrackReviewsProps> = ({ reviews }) => {
+export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
+
     return (
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>Обзоры пользователей</Title>
                 <div className={styles.list}>
                     {
-                        reviews.map((review) => {
-                            return <ReviewCard key={review.id} review={review} />
-                        })
+                        trackStatus === 'success'
+                        ?
+                        <>
+                        {
+                            track.reviews.map((review: IReview) => {
+                                return <ReviewCard key={review.id} review={review} />
+                            })
+                        }
+                        </>
+                        :
+                        <>Загрузка</>
                     }
                 </div>
             </div>

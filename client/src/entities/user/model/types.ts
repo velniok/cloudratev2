@@ -1,3 +1,5 @@
+import { IReview } from "@/entities/review"
+
 export interface IUser {
     id: number
     createdAt: Date
@@ -6,4 +8,5 @@ export interface IUser {
     email: string
     password: string
     avatarUrl: string | null
+    reviews: IReview[] | []
 }

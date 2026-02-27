@@ -1,4 +1,4 @@
-import { Button, ImgIcon, Input, SearchItem, SearchItemSkeleton } from '@/shared/ui'
+import { Button, Cover, Input, SearchItem, SearchItemSkeleton } from '@/shared/ui'
 import styles from './TrackCreateForm.module.scss'
 import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector, useNotification } from '@/shared/lib'
@@ -89,15 +89,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
             <div className={styles.content}>
                 <div className={styles.inputList}>
                     <div className={styles.editCover}>
-                        {
-                            coverUrl
-                            ?
-                            <img src={`${coverUrl}`} alt="" className={styles.cover} />
-                            :
-                            <div className={styles.cover}>
-                                <ImgIcon />
-                            </div>
-                        }
+                        <Cover width='64px' height='64px' borderRadius='12px' url={coverUrl} isInput={true} />
                         <div className={styles.coverInput}>
                             <input ref={inputRef} hidden type="file" onChange={hundleCoverChange} />
                             <Button fontSize='12px' color='default' padding='12px 16px 8px 16px' onClick={() => inputRef.current?.click()}>Загрузить новую обложку</Button>
@@ -134,7 +126,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
                                 addArtist.map((artist) => {
                                     return (
                                         <li key={artist.id} className={styles.addArtistItem} onClick={() => onClickRemoveArtist(artist.id)}>
-                                            <img src={`${artist.avatarUrl}`} alt="" className={styles.addArtistAvatar} />
+                                            <Cover width='22px' height='22px' borderRadius='50%' url={artist.avatarUrl} />
                                             <p className={styles.addArtistName}>{artist.name}</p>
                                         </li>
                                     )

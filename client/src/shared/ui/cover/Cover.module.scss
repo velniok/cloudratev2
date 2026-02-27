@@ -1,8 +1,5 @@
 .cover {
-    width: 200px;
-    height: 200px;
     background-color: var(--gray-color);
-    border-radius: 12px;
     border: 1px solid var(--border-subtle);
 
     transition: border 0.3s, box-shadow 0.3s;
@@ -13,12 +10,24 @@
         cursor: pointer;
     }
 
-    &.maxSize {
-        width: 320px;
-        height: 320px;
-    }
-
     &.mb-16 {
         margin-bottom: 16px;
     }
+
+    &.input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-tertiary);
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    border: 1px dashed var(--border-highlight);
+    background-color: var(--bg-secondary);
+
+    & svg {
+        width: 24px;
+        height: 24px;
+    }
+}
 }

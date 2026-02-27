@@ -12,7 +12,7 @@ export const UserPage = () => {
     const { notify } = useNotification()
     const userId = useParams().userId
     const user = useAppSelector(selectUser)
-    const getStatus = useAppSelector(selectUserGetStatus)
+    const userStatus = useAppSelector(selectUserGetStatus)
 
     useEffect(() => {
         dispatch(getOneUserThunk({ id: +userId }))
@@ -22,8 +22,8 @@ export const UserPage = () => {
 
     return (
         <>
-            <UserHeader user={user} getStatus={getStatus} />
-            <LatestRatedTracks />
+            <UserHeader user={user} userStatus={userStatus} />
+            <LatestRatedTracks user={user} userStatus={userStatus} />
         </>
     )
 }

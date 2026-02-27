@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react'
 import { Rating } from '../rating'
 import styles from './Table.module.scss'
 import { IArtist } from '@/entities/artist'
+import { Cover } from '../cover'
 
 interface TableArtistItemProps {
     artist: IArtist
@@ -17,13 +18,7 @@ export const TableArtistItem: FC<TableArtistItemProps> = ({ artist, actions }) =
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
                 <div className={styles.artist}>
-                    {
-                        artist.avatarUrl
-                        ?
-                        <img src={`${artist.avatarUrl}`} alt="" className={styles.artist__avatar} />
-                        :
-                        <div className={styles.artist__avatar}></div>
-                    }
+                    <Cover width='40px' height='40px' borderRadius='6px' url={artist.avatarUrl} />
                     <p className={styles.artist__nickname}>{artist.name}</p>
                 </div>
             </td>

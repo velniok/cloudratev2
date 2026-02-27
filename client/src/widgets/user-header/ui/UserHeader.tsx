@@ -6,15 +6,15 @@ import { UserHeaderInfoSkeleton } from "@/entities/user"
 
 interface UserHeaderProps {
     user: IUser | null
-    getStatus: TStatus
+    userStatus: TStatus
 }
 
-export const UserHeader: FC<UserHeaderProps> = ({ user, getStatus }) => {
+export const UserHeader: FC<UserHeaderProps> = ({ user, userStatus }) => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
                 {
-                    getStatus === 'success' ?
+                    userStatus === 'success' ?
                     <>
                         <UserHeaderInfo user={user} />
                     </>

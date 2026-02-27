@@ -23,7 +23,6 @@
     &__list {
         display: flex;
         column-gap: 12px;
-        margin-bottom: 8px;
     }
 
     &__item {
@@ -32,19 +31,11 @@
         align-items: center;
         gap: 12px;
     }
-
-    &__avatar {
-        width: 48px;
-        height: 48px;
-        background-color: var(--gray-color);
-        border-radius: 50%;
-        border: 1px solid var(--border-subtle);
-    }
     
     &__name {
         padding-top: 4px;
         font-family: var(--second-family);
-        font-size: 18px;
+        font-size: 14px;
         color: var(--text-secondary);
         font-weight: 700;
         letter-spacing: 0.05em;
@@ -53,10 +44,10 @@
 
 
 .title {
-    font-size: 56px;
+    font-size: 44px;
     font-weight: 700;
     font-family: var(--second-family);
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .rating {
@@ -67,21 +58,6 @@
     padding: 8px 20px 8px 8px;
     border-radius: 999px;
     border: 2px solid var(--border-subtle);
-}
-
-.rating__num {
-    font-family: var(--second-family);
-    font-size: 16px;
-    font-weight: 700;
-    background-color: var(--bg-secondary);
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid var(--border-highlight);
-    padding-top: 4px;
 }
 
 .rating__title {

@@ -34,9 +34,15 @@ class TrackControllers {
             const artistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [allArtistIds]);
             const artists = artistsRes.rows.map(mapToCamelCase);
 
+            const allTrackIds = [...new Set(tracks.flatMap(track => track.id))];
+
+            const reviewsRes = await pool.query('SELECT * FROM reviews WHERE track_id = ANY($1)', [allTrackIds])
+            const reviews = reviewsRes.rows.map(mapToCamelCase)
+
             const result = tracks.map(track => ({
                 ...track,
-                artists: artists.filter(artist => track.artistIds.includes(artist.id))
+                artists: artists.filter(artist => track.artistIds.includes(artist.id)),
+                reviews: reviews.filter(review => track.id === review.trackId)
             }));
 
             res.status(200).json({tracks: result})
@@ -58,6 +64,20 @@ class TrackControllers {
             const artistsRes = await pool.query('SELECT * FROM artists WHERE id = ANY($1)', [track.artistIds]);
             const artists = artistsRes.rows.map(mapToCamelCase);
             track.artists = artists
+
+            const reviewsRes = await pool.query('SELECT * FROM reviews WHERE track_id = $1', [trackId])
+            const reviews = reviewsRes.rows.map(mapToCamelCase)
+
+            const allUserIds = reviews.flatMap(review => review.userId)
+            const usersRes = await pool.query('SELECT * FROM users WHERE id = ANY($1)', [allUserIds])
+            const users = usersRes.rows.map(mapToCamelCase)
+            
+            const result = reviews.map(review => ({
+                ...review,
+                user: users.find(user => user.id === review.userId)
+            }))
+            
+            track.reviews = result
 
             res.status(200).json({track})
         } catch (err) {

@@ -1,4 +1,4 @@
-import { Button, Input, Title } from '@/shared/ui'
+import { Button, Cover, Input, Title } from '@/shared/ui'
 import styles from './EditProfileForm.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
@@ -102,7 +102,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 <h3 className={styles.title}>ОСНОВНАЯ ИНФОРМАЦИЯ</h3>
                 <div className={styles.formWrapper}>
                     <div className={styles.editAvatar}>
-                        <img src={`${avatarUrl}`} alt="" className={styles.avatar} />
+                        <Cover url={avatarUrl} width='150px' height='150px' borderRadius='12px' isInput={true} />
                         <div className={styles.content}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
                             <Button color='default' padding='14px 20px 10px 20px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>

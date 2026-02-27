@@ -1,5 +1,5 @@
 import { type FC } from "react"
-import { Badges, Button, EditIcon, LinkIcon } from "@/shared/ui"
+import { Badges, Button, Cover, EditIcon, LinkIcon } from "@/shared/ui"
 import type { IUser } from "../model/types"
 import styles from "./UserHeaderInfo.module.scss"
 import { useNavigate } from "react-router-dom"
@@ -14,12 +14,7 @@ export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
 
     return (
         <div className={styles.inner}>
-            {
-                user?.avatarUrl ?
-                    <img src={`${user.avatarUrl}`} alt={`${user.nickname}`} className={styles.avatar} />
-                :
-                <div className={styles.avatar}></div>
-            }
+            <Cover width="150px" height="150px" borderRadius="24px" url={user.avatarUrl} />
             <div className={styles.info}>
                 <h2 className={styles.nickname}>
                     {user?.nickname}

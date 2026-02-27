@@ -1,4 +1,4 @@
-import { Button, Input, ProfileIcon } from '@/shared/ui'
+import { Button, Cover, Input, ProfileIcon } from '@/shared/ui'
 import styles from './ArtistCreateForm.module.scss'
 import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
 import { useAppDispatch, useNotification } from '@/shared/lib'
@@ -60,15 +60,7 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose }) => {
             <div className={styles.content}>
                 <div className={styles.inputList}>
                     <div className={styles.editAvatar}>
-                        {
-                            avatarUrl
-                            ?
-                            <img src={`${avatarUrl}`} alt="" className={styles.avatar} />
-                            :
-                            <div className={styles.avatar}>
-                                <ProfileIcon />
-                            </div>
-                        }
+                        <Cover width='64px' height='64px' borderRadius='12px' url={avatarUrl} isInput={true} />
                         <div className={styles.avatarInput}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
                             <Button fontSize='12px' color='default' padding='12px 16px 8px 16px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>

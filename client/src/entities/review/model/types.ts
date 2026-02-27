@@ -1,5 +1,11 @@
+import { ITrack } from "@/entities/track"
+import { IUser } from "@/entities/user"
+
 export interface IReview {
     id: number
-    nickname: string
-    review: string
+    text: string
+    userId: number
+    user?: IUser
+    trackId: number
+    track?: ITrack
 }

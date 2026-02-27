@@ -2,6 +2,7 @@ import { ITrack } from '@/entities/track'
 import styles from './Table.module.scss'
 import { FC, ReactNode } from 'react'
 import { Rating } from '../rating'
+import { Cover } from '../cover'
 
 interface TableTrackItemProps {
     track: ITrack
@@ -16,13 +17,7 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
                 <div className={styles.track}>
-                    {
-                        track.coverUrl
-                        ?
-                        <img src={`${track.coverUrl}`} alt="" className={styles.track__cover} />
-                        :
-                        <div className={styles.track__cover}></div>
-                    }
+                    <Cover width='40px' height='40px' borderRadius='6px' url={track.coverUrl} />
                     <p className={styles.track__title}>{track.title}</p>
                 </div>
             </td>
@@ -32,7 +27,7 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
                         track.artists.map((artist) => {
                             return (
                                 <li key={artist.id} className={styles.track__artistItem}>
-                                    <img src={`${artist.avatarUrl}`} alt="" className={styles.track__artistAvatar} />
+                                    <Cover width='32px' height='32px' borderRadius='50%' url={artist.avatarUrl} />
                                     <p className={styles.track__artistNickname}>{artist.name}</p>
                                 </li>
                             )

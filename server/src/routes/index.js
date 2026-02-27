@@ -1,6 +1,7 @@
 const upload = require('../config/multer')
 const ArtistControllers = require('../controllers/ArtistControllers')
 const AuthControllers = require('../controllers/AuthControllers')
+const ReviewControllers = require('../controllers/ReviewControllers')
 const TrackControllers = require('../controllers/TrackControllers')
 const UserControllers = require('../controllers/UserControllers')
 const checkAuth = require('../middlewares/checkAuth')
@@ -41,5 +42,7 @@ router.post('/track/create', TrackControllers.create)
 router.get('/track/get', TrackControllers.get)
 router.get('/track/getOne/:id', TrackControllers.getOne)
 router.delete('/track/delete/:id', TrackControllers.delete)
+
+router.post('/review/create', ReviewControllers.create)
 
 module.exports = router

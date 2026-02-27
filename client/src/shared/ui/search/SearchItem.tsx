@@ -1,6 +1,7 @@
 import { IArtist } from '@/entities/artist'
 import styles from './SearchItem.module.scss'
 import { FC } from 'react'
+import { Cover } from '../cover'
 
 interface SearchItemProps {
     data: IArtist
@@ -10,12 +11,7 @@ interface SearchItemProps {
 export const SearchItem: FC<SearchItemProps> = ({ data, onClick }) => {
     return (
         <li className={styles.search__item} onClick={() => onClick(data)}>
-            {
-                data.avatarUrl ?
-                <img src={`${data.avatarUrl}`} alt="" className={styles.search__avatar} />
-                :
-                <div className={styles.search__avatar}></div>
-            }
+            <Cover width='30px' height='30px' borderRadius='50%' url={data.avatarUrl} />
             <p className={styles.search__name}>{data.name}</p>
         </li> 
     )

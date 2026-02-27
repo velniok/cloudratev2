@@ -16,23 +16,6 @@
     column-gap: 16px;
 }
 
-.cover {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-tertiary);
-    width: 64px;
-    height: 64px;
-    border-radius: 12px;
-    border: 1px dashed var(--border-highlight);
-    background-color: var(--bg-secondary);
-
-    & svg {
-        width: 24px;
-        height: 24px;
-    }
-}
-
 .coverInput {
     display: flex;
     flex-direction: column;

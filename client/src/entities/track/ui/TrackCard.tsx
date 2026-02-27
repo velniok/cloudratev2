@@ -17,7 +17,7 @@ export const TrackCard: FC<TrackCardProps> = ({ track }) => {
     return (
         <div className={styles.card} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <Link to={`/track/${track.id}`}>
-                <Cover isHovered={isHovered} mb={'mb-16'} url={track.coverUrl} />
+                <Cover isHovered={isHovered} mb={'mb-16'} url={track.coverUrl} width="200px" height="200px" borderRadius="12px" />
             </Link>
             <h3 className={styles.title}>{track.title}</h3>
             <ul className={styles.artist__list}>
