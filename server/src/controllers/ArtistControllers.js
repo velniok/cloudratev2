@@ -1,89 +1,75 @@
 const ArtistServices = require("../services/ArtistServices")
 
 class ArtistControllers {
-    async create(req, res) {
+    async create(req, res, next) {
         try {
             const { name, soundcloudUrl, avatarUrl } = req.body
             const artist = await ArtistServices.createArtist([name, soundcloudUrl, avatarUrl])
 
-            res.status(201).json({artist})
+            res.status(201).json({ artist })
         } catch (err) {
             console.log(err)
-            res.status(500).json({
-                message: "Не удалось создать артиста"
-            })
+            next(err)
         }
     }
 
-    async get(req, res) {
+    async get(req, res, next) {
         try {
             const artists = await ArtistServices.getAllArtists()
 
-            res.status(200).json({artists})
+            res.status(200).json({ artists })
         } catch (err) {
             console.log(err)
-            res.status(500).json({
-                message: "Не удалость получить артистов"
-            })
+            next(err)
         }
     }
 
-    async getOne(req, res) {
+    async getOne(req, res, next) {
         try {
             const artistId = req.params.id
             const artist = await ArtistServices.getArtistById(artistId)
 
-            res.status(200).json({artist})
+            res.status(200).json({ artist })
         } catch (err) {
             console.log(err)
-            res.status(500).json({
-                message: "Не удалость получить артиста"
-            })
+            next(err)
         }
     }
 
-    async update(req, res) {
+    async update(req, res, next) {
         try {
             const artistId = req.params.id
             const { name, avatarUrl, soundcloudUrl } = req.body
             const artist = await ArtistServices.updateArtistById(artistId, [name, avatarUrl, soundcloudUrl])
 
-            res.status(200).json({artist})
+            res.status(200).json({ artist })
         } catch (err) {
             console.log(err)
-            res.status(500).json({
-                message: "Не удалось изменить артиста"
-            })
+            next(err)
         }
     }
 
-    async search(req, res) {
+    async search(req, res, next) {
         try {
             const { search } = req.query
             const artists = await ArtistServices.searchArtistsByName(search)
 
-            res.status(200).json({artists})
+            res.status(200).json({ artists })
         } catch (err) {
             console.log(err)
-            res.status(500).json({
-                message: "Не удалось найти артиста"
-            }) 
+            next(err)
         }
     }
 
-    async delete(req, res) {
+    async delete(req, res, next) {
         try {
             const artistId = req.params.id
             await ArtistServices.deleteArtistById(artistId)
 
-            res.status(200).json({
-                message: 'Артист удален'
-            })
+            res.status(200).json({ message: 'Артист удален' })
         } catch (err) {
             console.log(err)
-            res.status(500).json({
-                message: "Не удалость удалить артиста"
-            })
+            next(err)
         }
     }
 }

@@ -14,9 +14,11 @@ export const EditProfilePage = () => {
     const getStatus = useAppSelector(selectUserGetStatus)
 
     useEffect(() => {
-        dispatch(getOneUserThunk({ id: +userId }))
-            .then()
-            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
+        if (getStatus !== 'success') {
+            dispatch(getOneUserThunk({ id: +userId }))
+                .then()
+                .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
+        }
     }, [userId])
 
     return (

@@ -23,7 +23,7 @@ export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
                         <>
                         {
                             track.reviews.map((review: IReview) => {
-                                return <ReviewCard key={review.id} review={review} />
+                                if (review.text) return <ReviewCard key={review.id} review={review} />
                             })
                         }
                         </>

@@ -27,6 +27,11 @@ class TrackServices {
             SELECT
                 t.*,
                 (
+                    SELECT ROUND(AVG(r.rating)::numeric)
+                    FROM reviews r
+                    WHERE r.track_id = t.id
+                ) as avg_rating,
+                (
                     SELECT json_agg(row_to_json(a))
                     FROM artists a
                     WHERE a.id = ANY(t.artist_ids)
@@ -40,6 +45,11 @@ class TrackServices {
         const trackRes = await pool.query(`
             SELECT
                 t.*,
+                (
+                    SELECT ROUND(AVG(r.rating)::numeric)
+                    FROM reviews r
+                    WHERE r.track_id = t.id
+                ) as avg_rating,
                 (
                     SELECT json_agg(row_to_json(a))
                     FROM artists a

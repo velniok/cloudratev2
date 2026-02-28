@@ -53,8 +53,6 @@ const userSlice = createSlice({
             .addCase(getOneUserThunk.pending, (state) => {
                 state.getStatus = 'loading',
                 state.getError = null
-                state.updateError = null
-                state.updateStatus = 'idle'
             })
             .addCase(getOneUserThunk.fulfilled, (state, action) => {
                 state.getStatus = 'success',

@@ -5,8 +5,11 @@ const GeneralControllers = require('../controllers/GeneralControllers')
 const ReviewControllers = require('../controllers/ReviewControllers')
 const TrackControllers = require('../controllers/TrackControllers')
 const UserControllers = require('../controllers/UserControllers')
+const checkAdmin = require('../middlewares/checkAdmin')
 const checkAuth = require('../middlewares/checkAuth')
+const checkUser = require('../middlewares/checkUser')
 const registerValidation = require('../middlewares/validators/authValidators')
+const userValidation = require('../middlewares/validators/userValidators')
 
 const Router = require('express').Router
 
@@ -30,22 +33,22 @@ router.post('/auth/login', AuthControllers.login)
 router.get('/auth/me', checkAuth, AuthControllers.authMe)
 
 router.get('/user/getOne/:userId', UserControllers.getOne)
-router.patch('/user/update/:userId', UserControllers.update)
+router.patch('/user/update/:userId', checkUser, userValidation, UserControllers.update)
 
-router.post('/artist/create', ArtistControllers.create)
+router.post('/artist/create', checkAdmin, ArtistControllers.create)
 router.get('/artist/get', ArtistControllers.get)
 router.get('/artist/getOne/:id', ArtistControllers.getOne)
 router.get('/artist/search', ArtistControllers.search)
-router.patch('/artist/update/:id', ArtistControllers.update)
-router.delete('/artist/delete/:id', ArtistControllers.delete)
+router.patch('/artist/update/:id', checkAdmin, ArtistControllers.update)
+router.delete('/artist/delete/:id', checkAdmin, ArtistControllers.delete)
 
-router.post('/track/create', TrackControllers.create)
+router.post('/track/create', checkAdmin, TrackControllers.create)
 router.get('/track/get', TrackControllers.get)
 router.get('/track/getOne/:id', TrackControllers.getOne)
-router.delete('/track/delete/:id', TrackControllers.delete)
+router.delete('/track/delete/:id', checkAdmin, TrackControllers.delete)
 
 router.post('/review/create', ReviewControllers.create)
 
-router.get('/general/get', GeneralControllers.get)
+router.get('/general/get', checkAdmin, GeneralControllers.get)
 
 module.exports = router

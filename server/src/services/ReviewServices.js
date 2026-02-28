@@ -2,6 +2,27 @@ const pool = require("../config/db")
 const mapToCamelCase = require("../utils/toCamelCase")
 
 class ReviewServices {
+
+    async reviewCreate(value) {
+        const newReviewRes = await pool.query(`
+            INSERT INTO reviews
+            (
+                text,
+                rating,
+                user_id,
+                track_id,
+                criteria1,
+                criteria2,
+                criteria3,
+                criteria4,
+                criteria5
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            RETURNING *
+        `, value)
+        return mapToCamelCase(newReviewRes.rows[0])
+    }
+
     async getReviewsByTrackId(id) {
         const reviewsRes = await pool.query(`
             SELECT
