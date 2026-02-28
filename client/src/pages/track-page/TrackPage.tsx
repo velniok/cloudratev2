@@ -1,5 +1,6 @@
 import { getOneTrackThunk, selectTrack, selectTrackStatus } from "@/features/track"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
+import { TrackGrade } from "@/widgets/track-grade"
 import { TrackHeader } from "@/widgets/track-header"
 import { TrackReviews } from "@/widgets/track-reviews"
 import { useEffect } from "react"
@@ -19,6 +20,7 @@ export const TrackPage = () => {
     return (
         <>
             <TrackHeader track={track} trackStatus={trackStatus} />
+            <TrackGrade track={track} />
             <TrackReviews track={track} trackStatus={trackStatus} />
         </>
     )

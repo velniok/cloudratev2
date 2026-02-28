@@ -10,4 +10,11 @@
     align-items: center;
     border: 1px solid var(--border-highlight);
     font-family: var(--font-family);
+
+    &.big {
+        width: 72px;
+        height: 72px;
+        border: 2px solid var(--border-highlight);
+        font-size: 22px;
+    }
 }

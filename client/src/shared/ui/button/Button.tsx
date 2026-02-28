@@ -5,7 +5,7 @@ interface ButtonProps {
     children: ReactNode
     padding: string
     onClick?: (e: MouseEvent<HTMLButtonElement>) => void
-    color: string
+    color: 'accent' | 'default'
     fontSize?: string
 }
 

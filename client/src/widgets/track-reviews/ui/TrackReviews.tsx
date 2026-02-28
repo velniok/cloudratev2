@@ -15,7 +15,7 @@ export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
-                <Title>Обзоры пользователей</Title>
+                <Title>ОБЗОРЫ ПОЛЬЗОВАТЕЛЕЙ</Title>
                 <div className={styles.list}>
                     {
                         trackStatus === 'success'

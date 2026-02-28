@@ -5,20 +5,36 @@ class ReviewServices {
 
     async reviewCreate(value) {
         const newReviewRes = await pool.query(`
-            INSERT INTO reviews
-            (
-                text,
-                rating,
-                user_id,
-                track_id,
-                criteria1,
-                criteria2,
-                criteria3,
-                criteria4,
-                criteria5
+            WITH user_check AS (
+                SELECT id
+                FROM reviews
+                WHERE track_id = $4 AND user_id = $3
+            ),
+            inserted AS (
+                INSERT INTO reviews
+                (
+                    text,
+                    rating,
+                    user_id,
+                    track_id,
+                    criteria1,
+                    criteria2,
+                    criteria3,
+                    criteria4,
+                    criteria5
+                )
+                SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9
+                WHERE NOT EXISTS (SELECT 1 FROM user_check)
+                RETURNING *
             )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-            RETURNING *
+            SELECT
+                CASE WHEN EXISTS (SELECT 1 FROM user_check)
+                THEN 'user_taken'
+                ELSE 'ok' END as status,
+                (
+                    SELECT row_to_json(r)
+                    FROM inserted r
+                ) as review
         `, value)
         return mapToCamelCase(newReviewRes.rows[0])
     }
