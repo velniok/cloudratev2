@@ -6,10 +6,12 @@ import { TStatus } from '@/shared/types'
 import { TableSkeleton } from './TableSkeleton'
 import { ITrack } from '@/entities/track'
 import { TableTrackItem } from './TableTrackItem'
+import { IUser } from '@/entities/user'
+import { TableUserItem } from './TableUserItem'
 
 interface TableProps {
     header: string[]
-    data: IArtist[] | ITrack[]
+    data: IArtist[] | ITrack[] | IUser[]
     dataStatus: TStatus
     actions: {
         name: string
@@ -35,12 +37,14 @@ export const Table: FC<TableProps> = ({ header, data, dataStatus, actions }) => 
                     {
                         dataStatus === 'success'
                         ?
-                        data.map((item: IArtist | ITrack) => {
+                        data.map((item: IArtist | ITrack | IUser) => {
                             switch (item.kind) {
                                 case 'artist':
                                     return <TableArtistItem artist={item} key={item.id} actions={actions} />
                                 case 'track':
                                     return <TableTrackItem track={item} key={item.id} actions={actions} />
+                                case 'user':
+                                    return <TableUserItem user={item} key={item.id} actions={actions} />
                                 default:
                                     return null    
                             }

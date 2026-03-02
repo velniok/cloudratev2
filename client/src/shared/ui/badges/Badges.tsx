@@ -3,10 +3,11 @@ import styles from './Badges.module.scss'
 
 interface BadgesProps {
     children: ReactNode
+    role?: string
 }
 
-export const Badges: FC<BadgesProps> = ({ children }) => {
+export const Badges: FC<BadgesProps> = ({ children, role }) => {
     return (
-        <span className={styles.badges}>{children}</span>
+        <span className={`${styles.badges} ${role ? styles[role] : ''}`}>{children}</span>
     )
 }

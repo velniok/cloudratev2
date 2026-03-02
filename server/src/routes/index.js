@@ -33,6 +33,7 @@ router.post('/auth/login', AuthControllers.login)
 router.get('/auth/me', checkAuth, AuthControllers.authMe)
 
 router.get('/user/getOne/:userId', UserControllers.getOne)
+router.get('/user/get', UserControllers.getAll)
 router.patch('/user/update/:userId', checkUser, userValidation, UserControllers.update)
 
 router.post('/artist/create', checkAdmin, ArtistControllers.create)

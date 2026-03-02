@@ -4,6 +4,14 @@ const mapToCamelCase = require("../utils/toCamelCase")
 
 class UserServices {
 
+    async getAllUsers() {
+        const usersRes = await pool.query(`
+            SELECT *
+            FROM users
+        `)
+        return usersRes.rows.map(mapToCamelCase)
+    }
+
     async getUserById(id) {
         const userRes = await pool.query(`
             SELECT *

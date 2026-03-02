@@ -1,6 +1,7 @@
 import { IReview } from "@/entities/review"
 
 export interface IUser {
+    kind: 'user'
     id: number
     createdAt: Date
     role: 'user' | 'admin'

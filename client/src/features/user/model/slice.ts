@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getOneUser } from "../api/getUserApi";
+import { getOneUser, getUsersApi } from "../api/getUserApi";
 import axios from "axios";
 import type { IUserState } from "./userSliceTypes";
 import type { IUser } from "@/entities/user";
@@ -9,6 +9,17 @@ import { updateUserApi } from "../api/updateUserApi";
 export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { id: number }, { rejectValue: { message: string } }>('user/getOneUserThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getOneUser(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
+    }
+})
+
+export const getUsersThunk = createAsyncThunk<{ users: IUser[] }, void, { rejectValue: { message: string } }>('user/getUsersThunk', async (_, { rejectWithValue }) => {
+    try {
+        const { data } = await getUsersApi()
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -33,7 +44,10 @@ const initialState: IUserState = {
     updateStatus: 'idle',
     user: null,
     updateError: null,
-    getError: null
+    getError: null,
+    userList: null,
+    userListStatus: 'idle',
+    userListError: null
 }
 
 const userSlice = createSlice({
@@ -62,6 +76,20 @@ const userSlice = createSlice({
             .addCase(getOneUserThunk.rejected, (state, action) => {
                 state.getStatus = 'error',
                 state.getError = action.payload?.message ?? 'Неизвестная ошибка'
+            })
+
+            .addCase(getUsersThunk.pending, (state) => {
+                state.userListStatus = 'loading',
+                state.userListError = null
+            })
+            .addCase(getUsersThunk.fulfilled, (state, action) => {
+                state.userListStatus = 'success',
+                state.userList = action.payload.users,
+                state.userListError = null
+            })
+            .addCase(getUsersThunk.rejected, (state, action) => {
+                state.userListStatus = 'error',
+                state.userListError = action.payload?.message ?? 'Неизвестная ошибка'
             })
 
             .addCase(updateUserThunk.pending, (state) => {

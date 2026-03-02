@@ -4,6 +4,18 @@ const AppError = require('../utils/AppError')
 const { validationResult } = require('express-validator')
 
 class UserControllers {
+
+    async getAll(req, res, next) {
+        try {
+            const users = await UserServices.getAllUsers()
+
+            res.status(200).json({users})
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
     async getOne(req, res, next) {
         try {
             const userId = req.params.userId

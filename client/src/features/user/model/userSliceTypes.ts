@@ -7,4 +7,7 @@ export interface IUserState {
     user: IUser | null
     updateError: string | null
     getError: string | null
+    userList: IUser[] | null
+    userListStatus: TStatus
+    userListError: string | null
 }
