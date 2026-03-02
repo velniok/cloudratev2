@@ -1,5 +1,5 @@
 import type { FC } from "react"
-import { ReviewCard, type IReview } from "@/entities/review"
+import { ReviewCard, ReviewCardSkeleton, type IReview } from "@/entities/review"
 import { Title } from "@/shared/ui"
 import styles from "./TrackReviews.module.scss"
 import { TStatus } from "@/shared/types"
@@ -28,7 +28,9 @@ export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
                         }
                         </>
                         :
-                        <>Загрузка</>
+                        Array.from({ length: 3 }).map((_, index) => {
+                            return <ReviewCardSkeleton key={index} />
+                        })
                     }
                 </div>
             </div>

@@ -20,7 +20,7 @@ export const TrackPage = () => {
     return (
         <>
             <TrackHeader track={track} trackStatus={trackStatus} />
-            <TrackGrade track={track} />
+            <TrackGrade track={track} trackStatus={trackStatus} />
             <TrackReviews track={track} trackStatus={trackStatus} />
         </>
     )
