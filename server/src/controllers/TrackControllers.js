@@ -38,6 +38,20 @@ class TrackControllers {
         }
     }
 
+    async update(req, res, next) {
+        try {
+            const trackId = req.params.id
+            const { title, coverUrl } = req.body
+
+            const track = await TrackServices.updateTrackById(trackId, [title, coverUrl])
+            
+            res.status(200).json({ track })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
     async delete(req, res, next) {
         try {
             const trackId = req.params.id

@@ -3,6 +3,7 @@ import { Rating } from '../rating'
 import styles from './Table.module.scss'
 import { IArtist } from '@/entities/artist'
 import { Cover } from '../cover'
+import { Link } from 'react-router-dom'
 
 interface TableArtistItemProps {
     artist: IArtist
@@ -17,14 +18,20 @@ export const TableArtistItem: FC<TableArtistItemProps> = ({ artist, actions }) =
     return (
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
-                <div className={styles.artist}>
+                <Link to={`/artist/${artist.id}`} className={styles.artist}>
                     <Cover width='40px' height='40px' borderRadius='6px' url={artist.avatarUrl} />
                     <p className={styles.artist__nickname}>{artist.name}</p>
-                </div>
+                </Link>
             </td>
-            <td className={styles.table__data}>{artist.tracks.length}</td>
             <td className={styles.table__data}>
-                <Rating>{artist.avgRating}</Rating>
+                {
+                    artist.tracks ? artist.tracks.length : 'Треков нет'
+                }
+            </td>
+            <td className={styles.table__data}>
+                {
+                    artist.avgRating ? <Rating>{artist.avgRating}</Rating> : 'Нет оценок'
+                }
             </td>
             <td className={styles.table__data}>
                 <div className={styles.action}>

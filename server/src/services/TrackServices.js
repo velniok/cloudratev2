@@ -37,6 +37,7 @@ class TrackServices {
                     WHERE a.id = ANY(t.artist_ids)
                 ) as artists
             FROM tracks t
+            ORDER BY id
         `)
         return tracksRes.rows.map(mapToCamelCase)
     }
@@ -58,6 +59,18 @@ class TrackServices {
             FROM tracks t
             WHERE id = $1
         `, [id])
+        return mapToCamelCase(trackRes.rows[0])
+    }
+
+    async updateTrackById(id, values) {
+        const trackRes = await pool.query(`
+            UPDATE tracks
+            SET
+                title = $1,
+                cover_url = $2
+            WHERE id = $3
+            RETURNING *
+        `, [...values, id])
         return mapToCamelCase(trackRes.rows[0])
     }
 

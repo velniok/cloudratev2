@@ -1,9 +1,9 @@
 import { ITrack } from "@/entities/track";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { createTrackApi, deleteTrackApi, getOneTrackApi, getTracksApi } from "../api/trackApi";
+import { createTrackApi, deleteTrackApi, getOneTrackApi, getTracksApi, updateTrackApi } from "../api/trackApi";
 import { ITrackState } from "./trackSliceTypes";
-import { ITrackReq } from "../api/trackApiTypes";
+import { ITrackReq, ITrackUpdateReq } from "../api/trackApiTypes";
 
 export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[] }, void, { rejectValue: { message: string } }>('/track/getTracksThunk', async (_, { rejectWithValue }) => {
     try {
@@ -33,6 +33,17 @@ export const createTrackThunk = createAsyncThunk<{ track: ITrack }, ITrackReq, {
         return data
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
+export const updateTrackThunk = createAsyncThunk<{ track: ITrack }, ITrackUpdateReq, { rejectValue: { message: string } }>('/track/updateTrackThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await updateTrackApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         } 
     }
@@ -97,6 +108,24 @@ const trackSlice = createSlice({
                 state.trackListStatus = 'success'
             })
             .addCase(createTrackThunk.rejected, (state) => {
+                state.trackList = null,
+                state.trackListStatus = 'error'
+            })
+
+            .addCase(updateTrackThunk.pending, (state) => {
+                state.trackListStatus = 'loading'
+            })
+            .addCase(updateTrackThunk.fulfilled, (state, action) => {
+                state.trackList = state.trackList.map(track => {
+                    if (track.id === action.meta.arg.id) {
+                        track.title = action.meta.arg.req.title
+                        track.coverUrl = action.meta.arg.req.coverUrl
+                    }
+                    return track
+                })
+                state.trackListStatus = 'success'
+            })
+            .addCase(updateTrackThunk.rejected, (state) => {
                 state.trackList = null,
                 state.trackListStatus = 'error'
             })

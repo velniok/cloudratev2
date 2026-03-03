@@ -3,6 +3,7 @@ import styles from './Table.module.scss'
 import { FC, ReactNode } from 'react'
 import { Rating } from '../rating'
 import { Cover } from '../cover'
+import { Link } from 'react-router-dom'
 
 interface TableTrackItemProps {
     track: ITrack
@@ -16,10 +17,10 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
     return (
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
-                <div className={styles.track}>
+                <Link to={`/track/${track.id}`} className={styles.track}>
                     <Cover width='40px' height='40px' borderRadius='6px' url={track.coverUrl} />
                     <p className={styles.track__title}>{track.title}</p>
-                </div>
+                </Link>
             </td>
             <td className={styles.table__data}>
                 <ul className={styles.track__artistList}>
@@ -36,7 +37,9 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
                 </ul>
             </td>
             <td className={styles.table__data}>
-                <Rating>{track.avgRating}</Rating>
+                {
+                    track.avgRating ? <Rating>{track.avgRating}</Rating> : 'Оценок нет'
+                }
             </td>
             <td className={styles.table__data}>
                 <div className={styles.action}>

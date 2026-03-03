@@ -14,8 +14,19 @@ class ArtistServices {
 
     async getAllArtists() {
         const artistsRes = await pool.query(`
-            SELECT *
-            FROM artists
+            SELECT
+                a.*,
+                (
+                    SELECT json_agg(row_to_json(t))
+                    FROM tracks t
+                    WHERE a.id = ANY(t.artist_ids)
+                ) as tracks,
+                (
+                    SELECT ROUND(AVG(r.rating)::numeric)
+                    FROM reviews r, tracks t
+                    WHERE r.track_id = t.id AND a.id = ANY(t.artist_ids)
+                ) as avg_rating
+            FROM artists a
             ORDER BY id
         `)
         return artistsRes.rows.map(mapToCamelCase)

@@ -46,6 +46,7 @@ router.delete('/artist/delete/:id', checkAdmin, ArtistControllers.delete)
 router.post('/track/create', checkAdmin, TrackControllers.create)
 router.get('/track/get', TrackControllers.get)
 router.get('/track/getOne/:id', TrackControllers.getOne)
+router.patch('/track/update/:id', TrackControllers.update)
 router.delete('/track/delete/:id', checkAdmin, TrackControllers.delete)
 
 router.post('/review/create', ReviewControllers.create)

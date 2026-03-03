@@ -3,8 +3,7 @@ import styles from './AdminTracks.module.scss'
 import { FC, useState } from 'react'
 import { ITrack } from '@/entities/track'
 import { TStatus } from '@/shared/types'
-import { TrackCreateForm } from '@/features/track/ui/TrackCreateForm'
-import { TrackDeleteModal } from '@/features/track/ui/TrackDeleteModal'
+import { TrackCreateForm, TrackDeleteModal, TrackUpdateForm } from '@/features/track'
 
 interface AdminTracksProps {
     trackList: ITrack[]
@@ -14,13 +13,20 @@ interface AdminTracksProps {
 export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }) => {
 
     const [createTrack, setCreateTrack] = useState<boolean>(false)
+    const [updateTrack, setUpdateTrack] = useState<boolean>(false)
     const [deleteTrack, setDeleteTrack] = useState<boolean>(false)
 
     const [trackId, setTrackId] = useState<number | null>(null)
+    const [track, setTrack] = useState<ITrack | null>(null)
 
-    const hundleDeleteTrack = (id) => {
-        setDeleteTrack(true)
+    const hundleDeleteTrack = (id: number) => {
         setTrackId((prev) => prev = id)
+        setDeleteTrack(true)
+    }
+
+    const hundleUpdateTrack = (id: number) => {
+        setTrack((prev) => prev = trackList.filter(track => track.id === id)[0])
+        setUpdateTrack(true)
     }
 
     return (
@@ -43,7 +49,7 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }
                         {
                             name: 'edit',
                             func: (id) => (
-                            <div>
+                            <div onClick={() => hundleUpdateTrack(id)}>
                                 <EditIcon />
                             </div>
                             )
@@ -66,6 +72,17 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }
                     modalClose={() => setCreateTrack(false)}
                 >
                     <TrackCreateForm modalClose={() => setCreateTrack(false)} />
+                </Modal>
+                <Modal
+                    width='520px'
+                    modalTitle='Редактировать трек'
+                    modalDesc='Измените данные трека'
+                    modalOpen={updateTrack}
+                    modalClose={() => setUpdateTrack(false)}
+                >
+                    {
+                        track && <TrackUpdateForm track={track} modalClose={() => setUpdateTrack(false)} />
+                    }
                 </Modal>
                 <Modal
                     width='420px'

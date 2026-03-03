@@ -138,8 +138,10 @@ const artistSlice = createSlice({
         })
         .addCase(updateArtistThunk.fulfilled, (state, action) => {
             state.artistList = state.artistList.map((artist) => {
-                if (artist.id === action.payload.artist.id) {
-                    return artist = action.payload.artist
+                if (artist.id === action.meta.arg.id) {
+                    artist.name = action.meta.arg.req.name
+                    artist.avatarUrl = action.meta.arg.req.avatarUrl
+                    artist.soundcloudUrl = action.meta.arg.req.soundcloudUrl
                 }
                 return artist
             })

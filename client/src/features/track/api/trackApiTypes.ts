@@ -3,3 +3,11 @@ export interface ITrackReq {
     coverUrl: string
     artistIds: string[]
 }
+
+export interface ITrackUpdateReq {
+    id: number
+    req: {
+        title: string
+        coverUrl: string
+    }
+}

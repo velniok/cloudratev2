@@ -1,59 +1,51 @@
 import { Button, Cover, Input } from '@/shared/ui'
-import styles from './ArtistUpdateForm.module.scss'
-import { useAppDispatch, useNotification } from '@/shared/lib'
+import styles from './TrackUpdateForm.module.scss'
 import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { updateAvatarApi } from '@/shared/api'
-import { updateArtistThunk } from '../model/slice'
-import { IArtist } from '@/entities/artist'
+import { ITrack } from '@/entities/track'
+import { useAppDispatch, useNotification } from '@/shared/lib'
+import { updateTrackThunk } from '../model/slice'
 
-interface ArtistUpdateFormProps {
+interface TrackUpdateFormProps {
     modalClose: () => void
-    artist: IArtist
+    track: ITrack
 }
 
-export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist }) => {
+export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
-
-    useEffect(() => {
-        setName(artist.name)
-        setAvatarUrl(artist.avatarUrl)
-        setSoundcloudUrl(artist.soundcloudUrl)
-    }, [artist])
-
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const [name, setName] = useState<string>('')
-    const [avatarUrl, setAvatarUrl] = useState<string>('')
-    const [soundcloudUrl, setSoundcloudUrl] = useState<string>('')
-    
+    useEffect(() => {
+        setTitle(track.title)
+        setCoverUrl(track.coverUrl)
+    }, [track])
+
+    const [title, setTitle] = useState<string>('')
+    const [coverUrl, setCoverUrl] = useState<string>('')
+
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         const { data } = await updateAvatarApi(file)
-        setAvatarUrl(data.url)
+        setCoverUrl(data.url)
     }
 
-    const hundleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value)
-    }
-
-    const hundleChangeSoundcloudUrl = (e: ChangeEvent<HTMLInputElement>) => {
-        setSoundcloudUrl(e.target.value)
+    const hundleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+        setTitle(e.target.value)
     }
 
     const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        dispatch(updateArtistThunk({
-            id: artist.id,
+        dispatch(updateTrackThunk({
+            id: track.id,
             req: {
-                name: name,
-                avatarUrl: avatarUrl,
-                soundcloudUrl: soundcloudUrl,
+                title: title,
+                coverUrl: coverUrl,
             }
         })).unwrap()
             .then(() => {
-                notify('Артист изменён', 'Артист успешно изменён', 'edit')
+                notify('Трек изменён', 'Трек успешно изменён', 'edit')
                 hundleCancel(e)
             })
             .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
@@ -69,7 +61,7 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
             <div className={styles.content}>
                 <div className={styles.inputList}>
                     <div className={styles.editAvatar}>
-                        <Cover width='64px' height='64px' borderRadius='12px' url={avatarUrl} isInput={true} />
+                        <Cover width='64px' height='64px' borderRadius='12px' url={coverUrl} isInput={true} />
                         <div className={styles.avatarInput}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
                             <Button fontSize='12px' color='default' padding='12px 16px 8px 16px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>
@@ -77,24 +69,14 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
                         </div>
                     </div>
                     <Input
-                        label='НИКНЕЙМ АРТИСТА'
-                        placeholder='Введите никнейм артиста'
+                        label='НАЗВАНИЕ ТРЕКА'
+                        placeholder='Введите новое название трека'
                         type='text'
                         labelFontSize='10px'
                         inputFontSize='14px'
                         isGray={true}
-                        value={name}
-                        onChange={hundleChangeName}
-                    />
-                    <Input
-                        label='SOUNDCLOUD артиста'
-                        placeholder='Введите SoundCloud артиста'
-                        type='text'
-                        labelFontSize='10px'
-                        inputFontSize='14px'
-                        isGray={true}
-                        value={soundcloudUrl}
-                        onChange={hundleChangeSoundcloudUrl}
+                        value={title}
+                        onChange={hundleChangeTitle}
                     />
                 </div>
             </div>

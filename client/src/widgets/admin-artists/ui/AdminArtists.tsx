@@ -17,10 +17,12 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
     const [createArtist, setCreateArtist] = useState<boolean>(false)
     const [updateArtist, setUpdateArtist] = useState<boolean>(false)
     const [deleteArtist, setDeleteArtist] = useState<boolean>(false)
+
     const [artistId, setArtistId] = useState<number | null>(null)
+    const [artist, setArtist] = useState<IArtist | null>(null)
 
     const hundleUpdateArtist = (id: number) => {
-        setArtistId((prev) => prev = id)
+        setArtist(prev => prev = artistList.filter(artist => artist.id === id)[0])
         setUpdateArtist(true)
     }
 
@@ -80,7 +82,9 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                     modalOpen={updateArtist}
                     modalClose={() => setUpdateArtist(false)}
                 >
-                    <ArtistUpdateForm modalClose={() => setUpdateArtist(false)} artistId={artistId} setArtistId={setArtistId} />
+                    {
+                        artist && <ArtistUpdateForm artist={artist} modalClose={() => setUpdateArtist(false)} />
+                    }
                 </Modal>
                 <Modal
                     width='420px'
