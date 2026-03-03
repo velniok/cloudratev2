@@ -1,4 +1,4 @@
-export { trackReducer, getTracksThunk, getOneTrackThunk, createTrackThunk, deleteTrackThunk } from './model/slice'
+export { trackReducer, getTracksThunk, getOneTrackThunk, createTrackThunk, deleteTrackThunk, updateTrackThunk } from './model/slice'
 export { selectTrackList, selectTrackError, selectTrackListStatus, selectTrack, selectTrackStatus } from './model/selectors'
 
 export { TrackUpdateForm } from './ui/TrackUpdateForm'

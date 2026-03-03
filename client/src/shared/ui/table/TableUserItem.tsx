@@ -3,6 +3,7 @@ import { Cover } from '../cover'
 import styles from './Table.module.scss'
 import { FC, ReactNode } from 'react'
 import { Badges } from '../badges'
+import { Link } from 'react-router-dom'
 
 interface TableUserItemProps {
     user: IUser
@@ -13,15 +14,16 @@ interface TableUserItemProps {
 }
 
 export const TableUserItem: FC<TableUserItemProps> = ({ user, actions }) => {
+
     return (
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
-                <div className={styles.artist}>
+                <Link to={`/user/${user.id}`} className={styles.user}>
                     <Cover width='40px' height='40px' borderRadius='6px' url={user.avatarUrl} />
-                    <p className={styles.artist__nickname}>{user.nickname}</p>
-                </div>
+                    <p className={styles.user__nickname}>{user.nickname}</p>
+                </Link>
             </td>
-            <td className={styles.table__data}>1.1.1</td>
+            <td className={styles.table__data}>{new Date(user.createdAt).toLocaleDateString()}</td>
             <td className={styles.table__data}>
                 <Badges role={user.role}>{user.role}</Badges>
             </td>

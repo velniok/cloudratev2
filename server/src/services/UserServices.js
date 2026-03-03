@@ -8,6 +8,7 @@ class UserServices {
         const usersRes = await pool.query(`
             SELECT *
             FROM users
+            ORDER BY id
         `)
         return usersRes.rows.map(mapToCamelCase)
     }
@@ -66,6 +67,14 @@ class UserServices {
                 ) as user
         `, [...values, id])
         return mapToCamelCase(userRes.rows[0])
+    }
+
+    async deleteUserById(id) {
+        await pool.query(`
+            DELETE
+            FROM users
+            WHERE id = $1
+        `, [id])
     }
 }
 

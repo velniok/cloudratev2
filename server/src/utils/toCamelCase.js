@@ -6,6 +6,9 @@ const mapToCamelCase = (obj) => {
     if (Array.isArray(obj)) {
         return obj.map(mapToCamelCase)
     }
+    if (obj instanceof Date) {
+        return obj
+    }
     if (obj !== null && typeof obj === 'object') {
         return Object.fromEntries(
         Object.entries(obj).map(([key, value]) => [

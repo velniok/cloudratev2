@@ -33,18 +33,18 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
                     })
                 }
             </ul>
-            <Rating>
+            <div className={styles.rating}>
                 {
                     review ?
                     <>
-                        {review.rating}
+                        <Rating>{review.rating}</Rating>
                     </>
                     :
                     <>
-                        {track.avgRating ? track.avgRating : 0}
+                        {track.avgRating ? <Rating>{track.avgRating}</Rating> : <span className={styles.rating__text}>Оценок нет</span>}
                     </>
                 }
-            </Rating>
+            </div>
         </div>
     )
 }

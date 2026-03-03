@@ -1,8 +1,9 @@
-import { DeleteIcon, EditIcon, Table, Title } from '@/shared/ui'
+import { DeleteIcon, EditIcon, Modal, Table, Title } from '@/shared/ui'
 import styles from './AdminUsers.module.scss'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { IUser } from '@/entities/user'
 import { TStatus } from '@/shared/types'
+import { DeleteUserModal } from '@/features/user'
 
 interface AdminUsersProps {
     userList: IUser[]
@@ -10,6 +11,16 @@ interface AdminUsersProps {
 }
 
 export const AdminUsers: FC<AdminUsersProps> = ({ userList, userListStatus }) => {
+
+    const [deleteUser, setDeleteUser] = useState<boolean>(false)
+
+    const [userId, setUserId] = useState<number | null>(null)
+
+    const hundleDeleteUser = (id: number) => {
+        setUserId((prev) => prev = id)
+        setDeleteUser(true)
+    }
+
     return (
         <div className={styles.wrapper}>
             <div className="container">
@@ -30,13 +41,22 @@ export const AdminUsers: FC<AdminUsersProps> = ({ userList, userListStatus }) =>
                         {
                             name: 'delete',
                             func: (id) => (
-                            <div>
+                            <div onClick={() => hundleDeleteUser(id)}>
                                 <DeleteIcon />
                             </div>
                             )
                         },
                     ]}
                 />
+                <Modal
+                    width='420px'
+                    modalTitle='Удалить пользователя?'
+                    modalDesc='Это действие нельзя отменить'
+                    modalOpen={deleteUser}
+                    modalClose={() => setDeleteUser(false)}
+                >
+                    <DeleteUserModal modalClose={() => setDeleteUser(false)} userId={userId} />
+                </Modal>
             </div>
         </div>
     )

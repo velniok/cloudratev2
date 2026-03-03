@@ -1,5 +1,6 @@
 .card {
-
+    position: relative;
+    height: 320px;
     transition: transform 0.3s;
 
     &:hover {
@@ -36,5 +37,16 @@
         &:hover {
             opacity: 0.7;
         }
+    }
+}
+
+.rating {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    &__text {
+        color: var(--text-secondary);
+        font-size: 14px;
     }
 }

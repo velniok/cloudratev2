@@ -4,7 +4,7 @@ import type { IReview } from "../../review"
 export interface ITrack {
     kind: 'track'
     id: number
-    createdAt: Date
+    createdAt: string
     title: string
     coverUrl: string | null
     avgRating: number

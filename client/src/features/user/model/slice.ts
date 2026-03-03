@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getOneUser, getUsersApi } from "../api/getUserApi";
+import { deleteUserApi, getOneUser, getUsersApi, updateUserApi } from "../api/userApi";
 import axios from "axios";
 import type { IUserState } from "./userSliceTypes";
 import type { IUser } from "@/entities/user";
 import { IUpdateUserReq } from "../api/userApiTypes";
-import { updateUserApi } from "../api/updateUserApi";
 
 export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { id: number }, { rejectValue: { message: string } }>('user/getOneUserThunk', async (params, { rejectWithValue }) => {
     try {
@@ -31,6 +30,17 @@ export const getUsersThunk = createAsyncThunk<{ users: IUser[] }, void, { reject
 export const updateUserThunk = createAsyncThunk<{ user: IUser }, IUpdateUserReq, { rejectValue: { message: string } }>('user/updateUserThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await updateUserApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
+    }
+})
+
+export const deleteUserThunk = createAsyncThunk<void, { id: number }, { rejectValue: { message: string } }>('user/deleteUserThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await deleteUserApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -104,6 +114,20 @@ const userSlice = createSlice({
             .addCase(updateUserThunk.rejected, (state, action) => {
                 state.updateStatus = 'error',
                 state.updateError = action.payload?.message ?? 'Неизвестная ошибка'
+            })
+
+            .addCase(deleteUserThunk.pending, (state) => {
+                state.userListStatus = 'loading',
+                state.userListError = null
+            })
+            .addCase(deleteUserThunk.fulfilled, (state, action) => {
+                state.userListStatus = 'success',
+                state.userList = state.userList.filter((user) => user.id !== action.meta.arg.id)
+                state.userListError = null
+            })
+            .addCase(deleteUserThunk.rejected, (state, action) => {
+                state.userListStatus = 'error',
+                state.userListError = action.payload?.message ?? 'Неизвестная ошибка'
             })
     }
 })

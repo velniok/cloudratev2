@@ -3,6 +3,7 @@ import { IUser } from "@/entities/user"
 
 export interface IReview {
     id: number
+    createdAt: string
     text: string | null
     rating: number
     criteria1: number
