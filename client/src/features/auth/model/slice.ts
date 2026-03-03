@@ -4,8 +4,10 @@ import { authUser, loginUser, registerUser } from "../api/authApi";
 import type { IAuthState } from "./authSliceTypes";
 import axios from "axios";
 import type { IUser } from "@/entities/user";
+import { IApiError } from "@/shared/types";
+import { useNotification } from "@/shared/lib";
 
-export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq, { rejectValue: { message: string } }>('auth/registerThunk', async (params, { rejectWithValue }) => {
+export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq, { rejectValue: IApiError }>('auth/registerThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await registerUser(params)
         window.localStorage.setItem('token', data.token)
@@ -17,7 +19,7 @@ export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq, { rejectVa
     }
 })
 
-export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: { message: string } }>('auth/loginThunk', async (params, { rejectWithValue }) => {
+export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: IApiError }>('auth/loginThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await loginUser(params)
         window.localStorage.setItem('token', data.token)
@@ -29,7 +31,7 @@ export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: {
     }
 })
 
-export const authThunk = createAsyncThunk<{ user: IUser }, void, { rejectValue: { message: string } }>('auth/authThunk', async (_, { rejectWithValue }) => {
+export const authThunk = createAsyncThunk<{ user: IUser }, void, { rejectValue: IApiError }>('auth/authThunk', async (_, { rejectWithValue }) => {
     try {
         const { data } = await authUser()
         return data
@@ -41,9 +43,9 @@ export const authThunk = createAsyncThunk<{ user: IUser }, void, { rejectValue: 
 })
 
 const initialState: IAuthState = {
+    user: null,
     status: 'idle',
     error: null,
-    user: null,
 }
 
 const authSlice = createSlice({
@@ -54,8 +56,8 @@ const authSlice = createSlice({
             state.error = null
         },
         logout: (state) => {
-            state.status = 'idle',
             state.user = null,
+            state.status = 'idle',
             state.error = null,
             window.localStorage.removeItem('token')
         }
@@ -72,14 +74,14 @@ const authSlice = createSlice({
             .addMatcher(
                 (action) => action.type.startsWith('auth') && action.type.endsWith('/fulfilled'),
                 (state, action: PayloadAction<IAuthRes>) => {
-                    state.status = 'success',
                     state.user = action.payload.user,
+                    state.status = 'success',
                     state.error = null
                 }
             )
             .addMatcher(
                 (action) => action.type.startsWith('auth') && action.type.endsWith('/rejected'),
-                (state, action: PayloadAction<{ message: string }>) => {
+                (state, action: PayloadAction<IApiError>) => {
                     state.status = 'error',
                     state.error = action.payload.message
                 }

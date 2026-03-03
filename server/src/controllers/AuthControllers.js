@@ -9,12 +9,12 @@ class AuthControllers {
     async register(req, res, next) {
         try {
             const errors = validationResult(req)
-            if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400)
+            if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
             const { nickname, email, password } = req.body
 
             const createdUser = await AuthServices.registerUser(password, [email, nickname])
-            if (createdUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 405)
+            if (createdUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 405, 'email')
             const user = createdUser.user
 
             const token = jwt.sign(

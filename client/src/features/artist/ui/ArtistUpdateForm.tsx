@@ -5,6 +5,7 @@ import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { updateAvatarApi } from '@/shared/api'
 import { updateArtistThunk } from '../model/slice'
 import { IArtist } from '@/entities/artist'
+import { IApiError } from '@/shared/types'
 
 interface ArtistUpdateFormProps {
     modalClose: () => void
@@ -17,50 +18,71 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
     const { notify } = useNotification()
 
     useEffect(() => {
-        setName(artist.name)
-        setAvatarUrl(artist.avatarUrl)
-        setSoundcloudUrl(artist.soundcloudUrl)
-    }, [artist])
+        setValues(prev => ({ ...prev, name: artist.name }))
+        setValues(prev => ({ ...prev, avatarUrl: artist.avatarUrl }))
+        setValues(prev => ({ ...prev, soundcloudUrl: artist.soundcloudUrl }))
+        setErrors(initialErrors)
+    }, [artist, modalClose])
 
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const [name, setName] = useState<string>('')
-    const [avatarUrl, setAvatarUrl] = useState<string>('')
-    const [soundcloudUrl, setSoundcloudUrl] = useState<string>('')
+    const initialValues = {
+        name: '',
+        avatarUrl: '',
+        soundcloudUrl: '',
+    }
+    const [values, setValues] = useState(initialValues)
     
+    const initialErrors = {
+        name: '',
+        avatarUrl: '',
+        soundcloudUrl: '',
+    }
+    const [errors, setErrors] = useState(initialErrors)
+
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         const { data } = await updateAvatarApi(file)
-        setAvatarUrl(data.url)
+        setValues(prev => ({ ...prev, avatarUrl: data.url }))
     }
 
     const hundleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value)
+        setErrors(prev => ({ ...prev, name: '' }))
+        setValues(prev => ({ ...prev, name: e.target.value }))
     }
 
     const hundleChangeSoundcloudUrl = (e: ChangeEvent<HTMLInputElement>) => {
-        setSoundcloudUrl(e.target.value)
+        setErrors(prev => ({ ...prev, soundcloudUrl: '' }))
+        setValues(prev => ({ ...prev, soundcloudUrl: e.target.value }))
     }
 
     const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+
+        if (!values.name) return setErrors(prev => ({ ...prev, name: 'Укажите никнейм артиста' }))
+        if (!values.soundcloudUrl) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Укажите ссылку на SoundCloud артиста' }))
+        if (!URL.canParse(values.soundcloudUrl)) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Неверный формат ссылки' }))
+
         dispatch(updateArtistThunk({
             id: artist.id,
             req: {
-                name: name,
-                avatarUrl: avatarUrl,
-                soundcloudUrl: soundcloudUrl,
+                name: values.name,
+                avatarUrl: values.avatarUrl,
+                soundcloudUrl: values.soundcloudUrl,
             }
         })).unwrap()
             .then(() => {
                 notify('Артист изменён', 'Артист успешно изменён', 'edit')
                 hundleCancel(e)
             })
-            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
+            .catch((err: IApiError) => {
+                setErrors(prev => ({ ...prev, [err.field]: err.message }))
+            })
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+        setErrors(initialErrors)
         modalClose()
     }
 
@@ -69,7 +91,7 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
             <div className={styles.content}>
                 <div className={styles.inputList}>
                     <div className={styles.editAvatar}>
-                        <Cover width='64px' height='64px' borderRadius='12px' url={avatarUrl} isInput={true} />
+                        <Cover width='64px' height='64px' borderRadius='12px' url={values.avatarUrl} isInput={true} />
                         <div className={styles.avatarInput}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
                             <Button fontSize='12px' color='default' padding='12px 16px 8px 16px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>
@@ -83,8 +105,9 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
                         labelFontSize='10px'
                         inputFontSize='14px'
                         isGray={true}
-                        value={name}
+                        value={values.name}
                         onChange={hundleChangeName}
+                        error={errors.name}
                     />
                     <Input
                         label='SOUNDCLOUD артиста'
@@ -93,8 +116,9 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
                         labelFontSize='10px'
                         inputFontSize='14px'
                         isGray={true}
-                        value={soundcloudUrl}
+                        value={values.soundcloudUrl}
                         onChange={hundleChangeSoundcloudUrl}
+                        error={errors.soundcloudUrl}
                     />
                 </div>
             </div>

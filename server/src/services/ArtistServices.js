@@ -5,9 +5,31 @@ class ArtistServices {
 
     async createArtist(values) {
         const newArtistRes = await pool.query(`
-            INSERT INTO artists (name, soundcloud_url, avatar_url)
-            VALUES ($1, $2, $3)
-            RETURNING *
+            WITH 
+                artist_check AS (
+                    SELECT id
+                    FROM artists
+                    WHERE name = $1
+                ),
+                inserted AS (
+                    INSERT INTO artists
+                    (
+                        name,
+                        soundcloud_url,
+                        avatar_url
+                    )
+                    SELECT $1, $2, $3
+                    WHERE NOT EXISTS (SELECT 1 FROM artist_check)
+                    RETURNING *
+                )
+            SELECT
+                CASE WHEN EXISTS (SELECT 1 FROM artist_check)
+                THEN 'artist_taken'
+                ELSE 'ok' END as status,
+                (
+                    SELECT row_to_json(a)
+                    FROM inserted a
+                ) as artist
         `, values)
         return mapToCamelCase(newArtistRes.rows[0])
     }
@@ -61,13 +83,29 @@ class ArtistServices {
 
     async updateArtistById(id, values) {
         const artistRes = await pool.query(`
-            UPDATE artists 
-            SET
-                name = $1,
-                avatar_url = $2,
-                soundcloud_url = $3
-            WHERE id = $4
-            RETURNING *
+            WITH
+                artist_check AS (
+                    SELECT id
+                    FROM artists a
+                    WHERE name = $1 AND a.id != $4
+                ),
+                updated AS (
+                    UPDATE artists 
+                    SET
+                        name = $1,
+                        avatar_url = $2,
+                        soundcloud_url = $3
+                    WHERE id = $4 AND NOT EXISTS (SELECT 1 FROM artist_check)
+                    RETURNING *
+                )
+            SELECT
+                CASE WHEN EXISTS (SELECT 1 FROM artist_check)
+                THEN 'artist_taken'
+                ELSE 'ok' END as status,
+                (
+                    SELECT row_to_json(a)
+                    FROM updated a
+                ) as artist
         `, [...values, id])
         return mapToCamelCase(artistRes.rows[0])
     }

@@ -1,4 +1,4 @@
-import { getArtistsThunk, selectArtistListStatus } from "@/features/artist"
+import { getArtistListThunk, selectArtistListStatus } from "@/features/artist"
 import { selectArtistList } from "@/features/artist/model/selectors"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { AdminArtists } from "@/widgets/admin-artists"
@@ -11,7 +11,7 @@ export const AdminArtistsPage = () => {
     const artistListStatus = useAppSelector(selectArtistListStatus)
 
     useEffect(() => {
-        dispatch(getArtistsThunk())
+        dispatch(getArtistListThunk())
     }, [])
 
     return (

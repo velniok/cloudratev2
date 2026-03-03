@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, type MouseEvent } from "react"
-import { useAppDispatch, useAppSelector } from "@/shared/lib"
+import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { Button, Input } from "@/shared/ui"
 import { clearError, loginThunk } from "../model/slice"
 import { selectAuthError, selectAuthStatus } from "../model/selectors"
@@ -10,29 +10,36 @@ export const LoginForm = () => {
     const dispatch = useAppDispatch()
     const error = useAppSelector(selectAuthError)
     const status = useAppSelector(selectAuthStatus)
-
+    const { notify } = useNotification()
     const navigate = useNavigate()
 
     if (status === 'success') {
         navigate('/')
     }
 
-    const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState<string>('')
+    const initialValues = {
+        email: '',
+        password: '',
+    }
+    const [values, setValues] = useState(initialValues)
 
     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(clearError())
-        setEmail(e.target.value)
+        if (error) dispatch(clearError())
+        setValues(prev => ({ ...prev, email: e.target.value }))
     }
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch(clearError())
-        setPassword(e.target.value)
+        if (error) dispatch(clearError())
+        setValues(prev => ({ ...prev, password: e.target.value }))
     }
 
     const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        dispatch(loginThunk({ email, password }))
+        dispatch(loginThunk({
+            email: values.email,
+            password: values.password,
+        })).unwrap()
+            .then(() => notify('Вы вошли в аккаунт', 'Вы успешно вошли в свой аккаунт', 'success'))
     }
 
     return (
@@ -41,7 +48,7 @@ export const LoginForm = () => {
                 type="email"
                 label="EMAIL адрес"
                 placeholder="name@example.com"
-                value={email}
+                value={values.email}
                 onChange={handleEmailChange}
                 error={error}
             />
@@ -49,7 +56,7 @@ export const LoginForm = () => {
                 type="password"
                 label="Пароль"
                 placeholder="••••••••"
-                value={password}
+                value={values.password}
                 onChange={handlePasswordChange}
                 error={error}
                 eyeIcon={true}
