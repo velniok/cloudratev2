@@ -17,6 +17,20 @@ class ReviewControllers {
             next(err)
         }
     }
+
+    async addText(req, res, next) {
+        try {
+            const reviewId = req.params.id
+            const { text } = req.body
+
+            await ReviewServices.addTextReviewById(reviewId, text)
+
+            res.status(200).json({ message: 'Отзыв к оценке успешно добавлен' })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
 }
 
 module.exports = new ReviewControllers()

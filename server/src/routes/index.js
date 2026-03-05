@@ -53,6 +53,7 @@ router.patch('/track/update/:id', TrackControllers.update)
 router.delete('/track/delete/:id', checkAdmin, TrackControllers.delete)
 
 router.post('/review/create', ReviewControllers.create)
+router.patch('/review/addText/:id', ReviewControllers.addText)
 
 router.get('/general/get', checkAdmin, GeneralControllers.get)
 

@@ -6,7 +6,7 @@ export { LogoIcon } from "./logo-icon"
 export { Button } from "./button"
 export { Badges } from './badges'
 export { Skeleton } from './skeleton'
-export { Input } from './input'
+export * from './input'
 export { Notification } from './notification'
 export { Table } from './table'
 export { Modal } from './modal'

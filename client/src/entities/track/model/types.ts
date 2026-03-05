@@ -10,5 +10,5 @@ export interface ITrack {
     avgRating: number
     artistIds: number[]
     artists?: IArtist[]
-    reviews: IReview[] | []
+    reviews: IReview[]
 }

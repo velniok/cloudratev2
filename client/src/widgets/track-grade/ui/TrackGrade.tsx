@@ -4,9 +4,8 @@ import { FC  } from 'react'
 import { ITrack } from '@/entities/track'
 import { useAppSelector } from '@/shared/lib'
 import { selectAuthStatus, selectAuthUser } from '@/features/auth'
-import { IReview } from '@/entities/review'
+import { IReview, LeaveReviewSkeleton } from '@/entities/review'
 import { TStatus } from '@/shared/types'
-import { ReviewCreated } from '@/entities/review/ui/ReviewCreated'
 import { ReviewCreate } from '@/features/review'
 
 interface TrackGradeProps {
@@ -29,21 +28,17 @@ export const TrackGrade: FC<TrackGradeProps> = ({ track, trackStatus }) => {
                     <>
                     {
                         track.reviews.map((review: IReview) => review.userId).includes(user.id) ?
-                        <>
-                        {
                             track.reviews.map((review: IReview) => {
                                 if (review.userId === user.id) {
-                                    return <ReviewCreated key={review.id} review={review} />
+                                    return <ReviewCreate track={track} review={review} />
                                 }
                             })
-                        }
-                        </>
                         :
                         <ReviewCreate track={track} />
                     }
                     </>
                     :
-                    <>Загрузка...</>
+                    <LeaveReviewSkeleton />
                 }
             </div>
         </div>

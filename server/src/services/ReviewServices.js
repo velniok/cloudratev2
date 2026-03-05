@@ -32,8 +32,10 @@ class ReviewServices {
                 THEN 'user_taken'
                 ELSE 'ok' END as status,
                 (
-                    SELECT row_to_json(r)
+                    SELECT
+                        row_to_json(r)::jsonb || jsonb_build_object('user', row_to_json(u)) 
                     FROM inserted r
+                    JOIN users u ON r.user_id = u.id
                 ) as review
         `, value)
         return mapToCamelCase(newReviewRes.rows[0])
@@ -68,6 +70,14 @@ class ReviewServices {
             WHERE r.user_id = $1
         `, [id])
         return reviewsRes.rows.map(mapToCamelCase)
+    }
+
+    async addTextReviewById(id, text) {
+        await pool.query(`
+            UPDATE reviews
+            SET text = $1
+            WHERE id = $2
+        `, [text, id])
     }
 }
 
