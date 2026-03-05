@@ -4,7 +4,7 @@ import { UserHeader } from "@/widgets/user-header"
 import { useEffect } from "react"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { getOneUserThunk, selectUserUpdateStatus } from "@/features/user"
-import { selectUser, selectUserGetStatus } from "@/features/user"
+import { selectUser, selectUserStatus } from "@/features/user"
 
 export const UserPage = () => {
 
@@ -12,7 +12,7 @@ export const UserPage = () => {
     const { notify } = useNotification()
     const userId = useParams().userId
     const user = useAppSelector(selectUser)
-    const userStatus = useAppSelector(selectUserGetStatus)
+    const userStatus = useAppSelector(selectUserStatus)
     const userUpdateStatus = useAppSelector(selectUserUpdateStatus)
 
     useEffect(() => {

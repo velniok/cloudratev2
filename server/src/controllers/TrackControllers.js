@@ -1,9 +1,14 @@
+const { validationResult } = require("express-validator")
 const ReviewServices = require("../services/ReviewServices")
 const TrackServices = require("../services/TrackServices")
+const AppError = require('../utils/AppError')
 
 class TrackControllers {
     async create(req, res, next) {
         try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
+
             const { title, coverUrl, artistIds } = req.body
             const track = await TrackServices.createTrack([title, coverUrl, artistIds])
 

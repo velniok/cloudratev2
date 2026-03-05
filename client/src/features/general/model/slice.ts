@@ -3,8 +3,9 @@ import axios from "axios";
 import { getGeneralApi } from "../api/generalApi";
 import { IGeneral } from "@/entities/general";
 import { IGeneralState } from "./generalSliceTypes";
+import { IApiError } from "@/shared/types";
 
-export const getGeneralThunk = createAsyncThunk<{ general: IGeneral }, void, { rejectValue: { message: string } }>('general/getGeneralThunk', async (_, { rejectWithValue }) => {
+export const getGeneralThunk = createAsyncThunk<{ general: IGeneral }, void, { rejectValue: IApiError }>('general/getGeneralThunk', async (_, { rejectWithValue }) => {
     try {
         const { data } = await getGeneralApi()
         return data
@@ -34,13 +35,11 @@ const generalSlice = createSlice({
             })
             .addCase(getGeneralThunk.fulfilled, (state, action) => {
                 state.general = action.payload.general,
-                state.status = 'success',
-                state.error = null
+                state.status = 'success'
             })
-            .addCase(getGeneralThunk.rejected, (state) => {
-                state.general = null,
+            .addCase(getGeneralThunk.rejected, (state, action) => {
                 state.status = 'error',
-                state.error = null
+                state.error = action.payload.message
             })
     }
 })

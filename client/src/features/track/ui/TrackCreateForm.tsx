@@ -6,6 +6,7 @@ import { updateAvatarApi } from '@/shared/api'
 import { searchArtistsThunk, selectArtistList, selectArtistListStatus } from '@/features/artist'
 import { IArtist } from '@/entities/artist'
 import { createTrackThunk } from '../model/slice'
+import { IApiError } from '@/shared/types'
 
 interface TrackCreateFormProps {
     modalClose: () => void
@@ -20,8 +21,18 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
 
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const [title, setTitle] = useState<string>('')
-    const [coverUrl, setCoverUrl] = useState<string>('')
+    const initialErrors = {
+        title: '',
+        artistIds: '',
+    }
+    const [errors, setErrors] = useState(initialErrors)
+
+    const initialValues = {
+        title: '',
+        coverUrl: '',
+    }
+    const [values, setValues] = useState(initialValues)
+
     const [searchArtist, setSearchArtist] = useState<string>('')
     const [addArtist, setAddArtists] = useState<IArtist[]>([])
 
@@ -38,11 +49,12 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
     const hundleCoverChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         const { data } = await updateAvatarApi(file)
-        setCoverUrl(data.url)
+        setValues(prev => ({ ...prev, coverUrl: data.url }))
     }
 
     const hundleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.target.value)
+        setErrors(prev => ({ ...prev, title: '' }))
+        setValues(prev => ({ ...prev, title: e.target.value }))
     }
 
     const hundleChangeSearchArtist = (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,23 +76,25 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
             return String(addArtist.id)
         })
 
+        if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
+        if (artistIds.length === 0) return setErrors(prev => ({ ...prev, artistIds: 'Укажите хотя бы одного артиста' }))
+
         dispatch(createTrackThunk({
-            title: title,
-            coverUrl: coverUrl,
+            title: values.title,
+            coverUrl: values.coverUrl,
             artistIds: artistIds
         })).unwrap()
             .then(() => {
                 notify('Трек создан', 'Новый трек успешно добавлен', 'success')
                 hundleCancel(e)
             })
-            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
+            .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         modalClose()
-        setTitle('')
-        setCoverUrl('')
+        setValues(initialValues)
         setSearchArtist('')
     }
 
@@ -89,7 +103,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
             <div className={styles.content}>
                 <div className={styles.inputList}>
                     <div className={styles.editCover}>
-                        <Cover width='64px' height='64px' borderRadius='12px' url={coverUrl} isInput={true} />
+                        <Cover width='64px' height='64px' borderRadius='12px' url={values.coverUrl} isInput={true} />
                         <div className={styles.coverInput}>
                             <input ref={inputRef} hidden type="file" onChange={hundleCoverChange} />
                             <Button fontSize='12px' color='default' padding='12px 16px 8px 16px' onClick={() => inputRef.current?.click()}>Загрузить новую обложку</Button>
@@ -103,8 +117,9 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
                         labelFontSize='10px'
                         inputFontSize='14px'
                         isGray={true}
-                        value={title}
+                        value={values.title}
                         onChange={hundleChangeTitle}
+                        error={errors.title}
                     />
                     <div className={styles.search}>
                         <Input
@@ -116,9 +131,10 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
                             isGray={true}
                             value={searchArtist}
                             onChange={hundleChangeSearchArtist}
-                            onFocus={() => setSearch(true)}
+                            onFocus={() => {setErrors(prev => ({ ...prev, artistIds: '' })); setSearch(true)}}
                             onBlur={() => setSearch(false)}
                             isSearch={true}
+                            error={errors.artistIds}
                         >
                         <ul className={styles.addArtistList}>
                             {

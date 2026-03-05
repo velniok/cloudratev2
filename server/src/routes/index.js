@@ -10,6 +10,7 @@ const checkAuth = require('../middlewares/checkAuth')
 const checkUser = require('../middlewares/checkUser')
 const artistValidation = require('../middlewares/validators/artistValidators')
 const registerValidation = require('../middlewares/validators/authValidators')
+const trackValidation = require('../middlewares/validators/trackValidators')
 const userValidation = require('../middlewares/validators/userValidators')
 
 const Router = require('express').Router
@@ -45,7 +46,7 @@ router.get('/artist/search', ArtistControllers.search)
 router.patch('/artist/update/:id', checkAdmin, artistValidation, ArtistControllers.update)
 router.delete('/artist/delete/:id', checkAdmin, ArtistControllers.delete)
 
-router.post('/track/create', checkAdmin, TrackControllers.create)
+router.post('/track/create', checkAdmin, trackValidation, TrackControllers.create)
 router.get('/track/get', TrackControllers.get)
 router.get('/track/getOne/:id', TrackControllers.getOne)
 router.patch('/track/update/:id', TrackControllers.update)

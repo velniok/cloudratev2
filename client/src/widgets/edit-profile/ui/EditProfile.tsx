@@ -6,15 +6,15 @@ import { EditProfileForm } from '@/features/user'
 
 interface EditProfileProps {
     user: IUser
-    getStatus: TStatus
+    userStatus: TStatus
 }
 
-export const EditProfile: FC<EditProfileProps> = ({ user, getStatus }) => {
+export const EditProfile: FC<EditProfileProps> = ({ user, userStatus }) => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
                 {
-                    getStatus === 'success' && <EditProfileForm user={user} /> 
+                    userStatus === 'success' && <EditProfileForm user={user} /> 
                 }
             </div>
         </div>

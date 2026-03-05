@@ -34,7 +34,7 @@ class UserControllers {
     async update(req, res, next) {
         try {
             const errors = validationResult(req)
-            if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400)
+            if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
             const userId = Number(req.params.userId)
             const { nickname, email, avatarUrl, password } = req.body
@@ -44,7 +44,7 @@ class UserControllers {
             }
 
             const updatedUser = await UserServices.updateUserById(userId, [email, nickname, avatarUrl])
-            if (updatedUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409)
+            if (updatedUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
             const user = updatedUser.user
             user.reviews = await ReviewServices.getReviewsByUserId(userId)
 

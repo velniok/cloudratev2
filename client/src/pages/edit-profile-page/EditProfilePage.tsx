@@ -1,4 +1,4 @@
-import { selectUser, selectUserGetStatus } from "@/features/user"
+import { selectUser, selectUserStatus } from "@/features/user"
 import { getOneUserThunk } from "@/features/user"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { EditProfile } from "@/widgets/edit-profile"
@@ -11,10 +11,10 @@ export const EditProfilePage = () => {
     const { notify } = useNotification()
     const userId = useParams().userId
     const user = useAppSelector(selectUser)
-    const getStatus = useAppSelector(selectUserGetStatus)
+    const userStatus = useAppSelector(selectUserStatus)
 
     useEffect(() => {
-        if (getStatus !== 'success') {
+        if (userStatus !== 'success') {
             dispatch(getOneUserThunk({ id: +userId }))
                 .then()
                 .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
@@ -23,7 +23,7 @@ export const EditProfilePage = () => {
 
     return (
         <>
-            <EditProfile user={user} getStatus={getStatus} />
+            <EditProfile user={user} userStatus={userStatus} />
         </>
     )
 }

@@ -4,8 +4,9 @@ import axios from "axios";
 import type { IUserState } from "./userSliceTypes";
 import type { IUser } from "@/entities/user";
 import { IUpdateUserReq } from "../api/userApiTypes";
+import { IApiError } from "@/shared/types";
 
-export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { id: number }, { rejectValue: { message: string } }>('user/getOneUserThunk', async (params, { rejectWithValue }) => {
+export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { id: number }, { rejectValue: IApiError }>('user/getOneUserThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getOneUser(params)
         return data
@@ -16,7 +17,7 @@ export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { id: number },
     }
 })
 
-export const getUsersThunk = createAsyncThunk<{ users: IUser[] }, void, { rejectValue: { message: string } }>('user/getUsersThunk', async (_, { rejectWithValue }) => {
+export const getUsersThunk = createAsyncThunk<{ users: IUser[] }, void, { rejectValue: IApiError }>('user/getUsersThunk', async (_, { rejectWithValue }) => {
     try {
         const { data } = await getUsersApi()
         return data
@@ -27,7 +28,7 @@ export const getUsersThunk = createAsyncThunk<{ users: IUser[] }, void, { reject
     }
 })
 
-export const updateUserThunk = createAsyncThunk<{ user: IUser }, IUpdateUserReq, { rejectValue: { message: string } }>('user/updateUserThunk', async (params, { rejectWithValue }) => {
+export const updateUserThunk = createAsyncThunk<{ user: IUser }, IUpdateUserReq, { rejectValue: IApiError }>('user/updateUserThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await updateUserApi(params)
         return data
@@ -38,7 +39,7 @@ export const updateUserThunk = createAsyncThunk<{ user: IUser }, IUpdateUserReq,
     }
 })
 
-export const deleteUserThunk = createAsyncThunk<void, { id: number }, { rejectValue: { message: string } }>('user/deleteUserThunk', async (params, { rejectWithValue }) => {
+export const deleteUserThunk = createAsyncThunk<void, { id: number }, { rejectValue: IApiError }>('user/deleteUserThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await deleteUserApi(params)
         return data
@@ -50,11 +51,11 @@ export const deleteUserThunk = createAsyncThunk<void, { id: number }, { rejectVa
 })
 
 const initialState: IUserState = {
-    getStatus: 'idle',
-    updateStatus: 'idle',
     user: null,
+    userStatus: 'idle',
+    userError: null,
+    updateStatus: 'idle',
     updateError: null,
-    getError: null,
     userList: null,
     userListStatus: 'idle',
     userListError: null
@@ -75,31 +76,31 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder 
             .addCase(getOneUserThunk.pending, (state) => {
-                state.getStatus = 'loading',
-                state.getError = null
+                state.user = null,
+                state.userStatus = 'loading',
+                state.userError = null
             })
             .addCase(getOneUserThunk.fulfilled, (state, action) => {
-                state.getStatus = 'success',
                 state.user = action.payload.user,
-                state.getError = null
+                state.userStatus = 'success'
             })
             .addCase(getOneUserThunk.rejected, (state, action) => {
-                state.getStatus = 'error',
-                state.getError = action.payload?.message ?? 'Неизвестная ошибка'
+                state.userStatus = 'error',
+                state.userError = action.payload.message
             })
 
             .addCase(getUsersThunk.pending, (state) => {
+                state.userList = null,
                 state.userListStatus = 'loading',
                 state.userListError = null
             })
             .addCase(getUsersThunk.fulfilled, (state, action) => {
                 state.userListStatus = 'success',
-                state.userList = action.payload.users,
-                state.userListError = null
+                state.userList = action.payload.users
             })
             .addCase(getUsersThunk.rejected, (state, action) => {
                 state.userListStatus = 'error',
-                state.userListError = action.payload?.message ?? 'Неизвестная ошибка'
+                state.userListError = action.payload.message
             })
 
             .addCase(updateUserThunk.pending, (state) => {
@@ -107,13 +108,12 @@ const userSlice = createSlice({
                 state.updateError = null
             })
             .addCase(updateUserThunk.fulfilled, (state, action) => {
-                state.updateStatus = 'success',
                 state.user = action.payload.user,
-                state.updateError = null
+                state.updateStatus = 'success'
             })
             .addCase(updateUserThunk.rejected, (state, action) => {
                 state.updateStatus = 'error',
-                state.updateError = action.payload?.message ?? 'Неизвестная ошибка'
+                state.updateError = action.payload.message
             })
 
             .addCase(deleteUserThunk.pending, (state) => {
@@ -121,13 +121,12 @@ const userSlice = createSlice({
                 state.userListError = null
             })
             .addCase(deleteUserThunk.fulfilled, (state, action) => {
-                state.userListStatus = 'success',
-                state.userList = state.userList.filter((user) => user.id !== action.meta.arg.id)
-                state.userListError = null
+                state.userList = state.userList.filter((user) => user.id !== action.meta.arg.id),
+                state.userListStatus = 'success'
             })
             .addCase(deleteUserThunk.rejected, (state, action) => {
                 state.userListStatus = 'error',
-                state.userListError = action.payload?.message ?? 'Неизвестная ошибка'
+                state.userListError = action.payload.message
             })
     }
 })

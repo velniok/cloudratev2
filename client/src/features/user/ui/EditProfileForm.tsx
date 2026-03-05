@@ -3,10 +3,10 @@ import styles from './EditProfileForm.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
 import { IUser } from '@/entities/user'
-import { useAppDispatch, useAppSelector, useNotification } from '@/shared/lib'
-import { clearUpdateError, updateUserThunk } from '../model/slice'
-import { selectUserUpdateError } from '../model/selectors'
+import { useAppDispatch, useNotification } from '@/shared/lib'
+import { updateUserThunk } from '../model/slice'
 import { updateAvatarApi } from '@/shared/api'
+import { IApiError } from '@/shared/types'
 
 interface EditProfileFormProps {
     user: IUser
@@ -15,79 +15,76 @@ interface EditProfileFormProps {
 export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
 
     const dispatch = useAppDispatch()
-    const error = useAppSelector(selectUserUpdateError)
     const { notify } = useNotification() 
     const navigate = useNavigate()
 
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const [nickname, setNickname] = useState<string>(`${user.nickname}`)
-    const [avatarUrl, setAvatarUrl] = useState<string>(`${user.avatarUrl}`)
-    const [email, setEmail] = useState<string>(`${user.email}`)
-    const [password, setPassword] = useState<string>('')
-    const [confirmPassword, setConfirmPassword] = useState<string>('')
+    const initialValues = {
+        nickname: `${user.nickname}`,
+        avatarUrl: `${user.avatarUrl}`,
+        email: `${user.email}`,
+        password: '',
+        confirmPassword: '',
+    }
+    const [values, setValues] = useState(initialValues)
 
-    const [nicknameError, setErrorNickname] = useState<string | null>(null)
-    const [errorPassword, setErrorPassword] = useState<string | null>(null)
-    const [errorConfirmPassword, setErrorConfirmPassword] = useState<string | null>(null)
+    const initialErrors = {
+        nickname: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+    }
+    const [errors, setErrors] = useState(initialErrors)
 
     const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setNickname(e.target.value)
+        setErrors(prev => ({ ...prev, nickname: '' }))
+        setValues(prev => ({ ...prev, nickname: e.target.value }))
     }
 
     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-        if (error) {
-            dispatch(clearUpdateError())
-        }
-        setEmail(e.target.value)
+        setErrors(prev => ({ ...prev, email: '' }))
+        setValues(prev => ({ ...prev, email: e.target.value }))
     }
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value)
+        setErrors(prev => ({ ...prev, password: '' }))
+        setValues(prev => ({ ...prev, password: e.target.value }))
     }
 
     const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setConfirmPassword(e.target.value)
+        setErrors(prev => ({ ...prev, confirmPassword: '' }))
+        setValues(prev => ({ ...prev, confirmPassword: e.target.value }))
     }
 
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         const { data } = await updateAvatarApi(file)
-        setAvatarUrl(data.url)
+        setValues(prev => ({ ...prev, avatarUrl: data.url }))
     }
 
     const hundleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         
-        if (nickname.length < 4) {
-            setErrorNickname('Никнейм должен содержать минимум 4 символа')
-            return false
-        }
-
-        if (password.length > 0 && password.length < 6) {
-            setErrorPassword('Пароль должен содержать минимум 6 символа')
-            return false
-        }
-
-        if (password !== confirmPassword) {
-            setErrorConfirmPassword('Пароли не совпадают')
-            return false
-        }
+        if (values.nickname.length < 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
+        if (!/\S+@\S+\.\S+/.test(values.email)) return setErrors(prev => ({ ...prev, email: 'Неверный формат email' }))
+        if (values.password && values.password.length < 6) return setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 6 символа' }))
+        if (values.password !== values.confirmPassword) return setErrors(prev => ({ ...prev, confirmPassword: 'Пароли не совпадают' }))
 
         dispatch(updateUserThunk({
             id: user.id,
             req: {
-                nickname: nickname,
-                email: email,
-                avatarUrl: avatarUrl,
-                password: password
+                nickname: values.nickname,
+                email: values.email,
+                avatarUrl: values.avatarUrl,
+                password: values.password
             }
         })).unwrap()
             .then(() => {
                 notify('Профиль изменён', 'Ваш профиль успешно изменён', 'edit')
                 navigate(`/user/${user.id}`)
             })
-            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
+            .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {
@@ -102,7 +99,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 <h3 className={styles.title}>ОСНОВНАЯ ИНФОРМАЦИЯ</h3>
                 <div className={styles.formWrapper}>
                     <div className={styles.editAvatar}>
-                        <Cover url={avatarUrl} width='150px' height='150px' borderRadius='12px' isInput={true} />
+                        <Cover url={values.avatarUrl} width='150px' height='150px' borderRadius='12px' isInput={true} />
                         <div className={styles.content}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
                             <Button color='default' padding='14px 20px 10px 20px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>
@@ -112,20 +109,20 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                     <Input
                         label='Никнейм'
                         placeholder='Введите никнейм'
-                        value={nickname}
+                        value={values.nickname}
                         onChange={handleNicknameChange}
                         type='text'
                         isGray={true}
-                        error={nicknameError}
+                        error={errors.nickname}
                     />
                     <Input
                         label='Email'
                         placeholder='Введите email'
-                        value={email}
+                        value={values.email}
                         onChange={handleEmailChange}
                         type='email'
                         isGray={true}
-                        error={error}
+                        error={errors.email}
                     />
                 </div>
                 <h3 className={styles.title}>БЕЗОПАСНОСТЬ</h3>
@@ -133,22 +130,22 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                     <Input
                         label='Новый пароль'
                         placeholder='••••••••'
-                        value={password}
+                        value={values.password}
                         onChange={handlePasswordChange}
                         type='password'
                         eyeIcon={true}
                         isGray={true}
-                        error={errorPassword}
+                        error={errors.password}
                     />
                     <Input
                         label='Подтвердите пароль'
                         placeholder='••••••••'
-                        value={confirmPassword}
+                        value={values.confirmPassword}
                         onChange={handleConfirmPasswordChange}
                         type='password'
                         eyeIcon={true}
                         isGray={true}
-                        error={errorConfirmPassword}
+                        error={errors.confirmPassword}
                     />
                 </div>
                 <div className={styles.bottom}>
