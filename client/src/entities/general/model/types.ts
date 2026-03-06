@@ -1,6 +1,6 @@
 export interface IGeneral {
-    tracks: number
-    artists: number
-    reviews: number
-    users: number
+    tracks: string
+    artists: string
+    reviews: string
+    users: string
 }

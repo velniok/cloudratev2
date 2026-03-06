@@ -42,6 +42,7 @@ router.delete('/user/delete/:userId', UserControllers.delete)
 
 router.post('/artist/create', checkAdmin, artistValidation, ArtistControllers.create)
 router.get('/artist/get', ArtistControllers.get)
+router.get('/artist/count', ArtistControllers.getCount)
 router.get('/artist/getOne/:id', ArtistControllers.getOne)
 router.patch('/artist/update/:id', checkAdmin, artistValidation, ArtistControllers.update)
 router.delete('/artist/delete/:id', checkAdmin, ArtistControllers.delete)

@@ -11,7 +11,10 @@ export const AdminArtistsPage = () => {
     const artistListStatus = useAppSelector(selectArtistListStatus)
 
     useEffect(() => {
-        dispatch(getArtistListThunk())
+        dispatch(getArtistListThunk({
+            page: 1,
+            limit: 5,
+        }))
     }, [])
 
     return (

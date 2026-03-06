@@ -11,14 +11,17 @@ export const useSearch = (fixedTab?: 'tracks' | 'artists' | 'users') => {
     const [filter, setFilter] = useState<'artists' | 'tracks' | 'users'>(fixedTab || 'artists')
     
     useEffect(() => {
-        if (!search) return
-        const timer = setTimeout(() => {
-            dispatch(searchThunk({
-                search: search,
-                filter: filter
-            }))
-        }, 500)
-        return () => clearTimeout(timer)
+        if (!search) {
+            dispatch(clearSearch())
+        } else {
+            const timer = setTimeout(() => {
+                dispatch(searchThunk({
+                    search: search,
+                    filter: filter
+                }))
+            }, 500)
+            return () => clearTimeout(timer)
+        }
     }, [search])
 
     useEffect(() => {

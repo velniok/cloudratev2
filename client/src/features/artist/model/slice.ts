@@ -6,9 +6,9 @@ import { IArtistState } from "./artistSliceTypes";
 import { IArtistReq } from "../api/artistApiTypes";
 import { IApiError } from "@/shared/types";
 
-export const getArtistListThunk = createAsyncThunk<{ artists: IArtist[]}, void, { rejectValue: IApiError }>('artist/getArtistListThunk', async (_, { rejectWithValue }) => {
+export const getArtistListThunk = createAsyncThunk<{ artists: IArtist[]}, {page: number, limit: number}, { rejectValue: IApiError }>('artist/getArtistListThunk', async (params, { rejectWithValue }) => {
     try {
-        const { data } = await getArtistListApi()
+        const { data } = await getArtistListApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {

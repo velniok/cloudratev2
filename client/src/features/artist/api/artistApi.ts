@@ -2,8 +2,8 @@ import { IArtist } from "@/entities/artist"
 import { axios } from "@/shared/api"
 import { IArtistReq } from "./artistApiTypes"
 
-export const getArtistListApi = () => {
-    return axios.get<{ artists: IArtist[]}>('/artist/get')
+export const getArtistListApi = (params: { page: number, limit: number }) => {
+    return axios.get<{ artists: IArtist[]}>('/artist/get', { params: { page: params.page, limit: params.limit } })
 }
 
 export const createArtistApi = (params: IArtistReq) => {

@@ -34,7 +34,8 @@ class ArtistServices {
         return mapToCamelCase(newArtistRes.rows[0])
     }
 
-    async getAllArtists() {
+    async getArtistsPagination(limit, page) {
+        const offset = (+page - 1) * +limit
         const artistsRes = await pool.query(`
             SELECT
                 a.*,
@@ -50,7 +51,9 @@ class ArtistServices {
                 ) as avg_rating
             FROM artists a
             ORDER BY id
-        `)
+            LIMIT $1
+            OFFSET $2
+        `, [limit, offset])
         return artistsRes.rows.map(mapToCamelCase)
     }
 

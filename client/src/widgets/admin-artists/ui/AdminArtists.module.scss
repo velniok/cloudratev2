@@ -5,7 +5,17 @@
 .top {
     width: 100%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 8px;
+}
+
+.count {
+    color: var(--text-secondary);
+}
+
+.text {
+    color: var(--text-secondary);
 }
 
 .buttonInner {
