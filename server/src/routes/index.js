@@ -3,6 +3,7 @@ const ArtistControllers = require('../controllers/ArtistControllers')
 const AuthControllers = require('../controllers/AuthControllers')
 const GeneralControllers = require('../controllers/GeneralControllers')
 const ReviewControllers = require('../controllers/ReviewControllers')
+const SearchControllers = require('../controllers/SearchControllers')
 const TrackControllers = require('../controllers/TrackControllers')
 const UserControllers = require('../controllers/UserControllers')
 const checkAdmin = require('../middlewares/checkAdmin')
@@ -56,5 +57,7 @@ router.post('/review/create', ReviewControllers.create)
 router.patch('/review/addText/:id', ReviewControllers.addText)
 
 router.get('/general/get', checkAdmin, GeneralControllers.get)
+
+router.get('/search', SearchControllers.search)
 
 module.exports = router

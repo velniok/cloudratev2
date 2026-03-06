@@ -5,6 +5,7 @@ import { trackReducer } from "@/features/track";
 import { UserReducer } from "@/features/user";
 import { AuthReducer } from "@/features/auth";
 import { generalReducer } from "@/features/general";
+import { searchReducer } from "@/features/search";
 
 const rootReducer = combineReducers({
     notification: notificationReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     artist: artistReducer,
     track: trackReducer,
     general: generalReducer,
+    search: searchReducer,
 })
 
 export const store = configureStore({

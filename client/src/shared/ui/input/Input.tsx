@@ -3,7 +3,7 @@ import styles from "./Input.module.scss"
 import { EyeIcon, InfoIcon, SearchIcon } from "../icon"
 
 interface InputProps {
-    label: string
+    label?: string
     placeholder: string
     type: string
     value?: string

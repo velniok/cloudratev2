@@ -1,15 +1,11 @@
 .card {
     position: relative;
     height: 320px;
+
     transition: transform 0.3s;
 
     &:hover {
         transform: translateY(-4px);
-
-        & .cover {
-            border: 1px solid var(--accent-color);
-            box-shadow: 0 0 12px var(--accent-color-glow);
-        }
     }
 }
 

@@ -1,0 +1,22 @@
+.card {
+    cursor: pointer;
+    background-color: var(--gray-color);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+
+    transition: opacity 0.3s;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+.nickname {
+    padding-top: 3px;
+    font-family: var(--second-family);
+    font-size: 12px;
+}

@@ -1,0 +1,15 @@
+.wrapper {
+    margin-top: 24px;
+}
+
+.list {
+    margin-top: 32px;
+    display: flex;
+    column-gap: 28px;
+
+    &.users {
+        flex-direction: column;
+        column-gap: unset;
+        row-gap: 4px;
+    }
+}

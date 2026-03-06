@@ -28,18 +28,18 @@ export const Sidebar = () => {
                             Лента
                         </Link>
                     </li>
-                    <li className={`${styles.nav__item} ${ pathname === '/artist' ? styles.active : ''}`}>
-                        <Link to={'/artist'} className={styles.nav__link}>
+                    <li className={`${styles.nav__item} ${ pathname === '/search' ? styles.active : ''}`}>
+                        <Link to={'/search'} className={styles.nav__link}>
                             <SearchIcon />
                             Поиск
                         </Link>
                     </li>
-                    <li className={`${styles.nav__item} ${ pathname === '/track' ? styles.active : ''}`}>
-                        <Link to={'/track'} className={styles.nav__link}>
+                    {/* <li className={`${styles.nav__item} ${ pathname === '/news' ? styles.active : ''}`}>
+                        <Link to={'/news'} className={styles.nav__link}>
                             <NewsIcon />
                             Новости
                         </Link>
-                    </li>
+                    </li> */}
                 </ul>
             </nav>
             <nav className={styles.navBottom}>
