@@ -26,7 +26,7 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
     }, [artistList])
 
     useEffect(() => {
-        if (!result) {
+        if (!result || search === '') {
             setData(artistList)
             setDataStatus(artistListStatus)
         } else {
@@ -101,9 +101,9 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                         },
                     ]}
                 />
-                {
-                    result?.artists.length === 0 && <p className={styles.text}>Ничего не найдено</p>
-                }
+                {/* {
+                    result?.artists?.length === 0 && <p className={styles.text}>Ничего не найдено</p>
+                } */}
                 <div className={styles.bottom}>
                     <Button color='accent' padding='5px'>+</Button>
                     <Button color='accent' padding='5px'>-</Button>

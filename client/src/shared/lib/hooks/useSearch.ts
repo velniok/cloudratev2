@@ -27,7 +27,7 @@ export const useSearch = (fixedTab?: 'tracks' | 'artists' | 'users') => {
     useEffect(() => {
         setSearch('')
         dispatch(clearSearch())
-    }, [filter])
+    }, [filter, fixedTab])
 
     const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
