@@ -1,39 +1,12 @@
 import { Input } from '@/shared/ui'
-import styles from './SearchInput.module.scss'
-import { ChangeEvent, FC, useEffect, useState } from 'react'
-import { useAppDispatch, useAppSelector } from '@/shared/lib'
-import { clearSearch, searchThunk } from '../model/slice'
-import { selectSearchStatus } from '../model/selectors'
+import { ChangeEvent, FC } from 'react'
 
 interface SearchInputProps {
-    activeTab: string
+    search: string
+    onChangeSearch: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
-export const SearchInput: FC<SearchInputProps> = ({ activeTab }) => {
-
-    const dispatch = useAppDispatch()
-    const searchStatus = useAppSelector(selectSearchStatus)
-
-    const [search, setSearch] = useState<string>('')
-    
-    useEffect(() => {
-        if (search !== '') {
-            dispatch(searchThunk({
-                search: search,
-                filter: activeTab,
-            }))
-        } else if (searchStatus !== 'idle') {
-            dispatch(clearSearch())
-        }
-    }, [search])
-
-    useEffect(() => {
-        setSearch('')
-    }, [activeTab])
-
-    const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value)
-    }
+export const SearchInput: FC<SearchInputProps> = ({ onChangeSearch, search }) => {   
 
     return (
         <Input

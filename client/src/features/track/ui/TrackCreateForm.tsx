@@ -1,9 +1,8 @@
 import { Button, Cover, Input, SearchItem, SearchItemSkeleton } from '@/shared/ui'
 import styles from './TrackCreateForm.module.scss'
-import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
-import { useAppDispatch, useAppSelector, useNotification } from '@/shared/lib'
+import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
+import { useAppDispatch, useNotification, useSearch } from '@/shared/lib'
 import { updateAvatarApi } from '@/shared/api'
-import { searchArtistsThunk, selectArtistList, selectArtistListStatus } from '@/features/artist'
 import { IArtist } from '@/entities/artist'
 import { createTrackThunk } from '../model/slice'
 import { IApiError } from '@/shared/types'
@@ -14,9 +13,9 @@ interface TrackCreateFormProps {
 
 export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
 
+    const { result, resultStatus, search, onChangeSearch, setSearch  } = useSearch('artists')
+
     const dispatch = useAppDispatch()
-    const artistList = useAppSelector(selectArtistList)
-    const artistListStatus = useAppSelector(selectArtistListStatus)
     const { notify } = useNotification()
 
     const inputRef = useRef<HTMLInputElement>(null)
@@ -33,18 +32,9 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
     }
     const [values, setValues] = useState(initialValues)
 
-    const [searchArtist, setSearchArtist] = useState<string>('')
     const [addArtist, setAddArtists] = useState<IArtist[]>([])
 
-    const [search, setSearch] = useState<boolean>(false)
-
-    useEffect(() => {
-        if (searchArtist !== '') {
-            dispatch(searchArtistsThunk({ query: searchArtist })).unwrap()
-                .then()
-                .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
-        }
-    }, [searchArtist])
+    const [searchList, setSearchList] = useState<boolean>(false)
     
     const hundleCoverChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -55,10 +45,6 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
     const hundleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setErrors(prev => ({ ...prev, title: '' }))
         setValues(prev => ({ ...prev, title: e.target.value }))
-    }
-
-    const hundleChangeSearchArtist = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearchArtist(e.target.value)
     }
 
     const onClickAddArtist = (artist: IArtist) => {
@@ -95,7 +81,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
         e.preventDefault()
         modalClose()
         setValues(initialValues)
-        setSearchArtist('')
+        setSearch('')
     }
 
     return (
@@ -129,10 +115,10 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
                             labelFontSize='10px'
                             inputFontSize='14px'
                             isGray={true}
-                            value={searchArtist}
-                            onChange={hundleChangeSearchArtist}
-                            onFocus={() => {setErrors(prev => ({ ...prev, artistIds: '' })); setSearch(true)}}
-                            onBlur={() => setSearch(false)}
+                            value={search}
+                            onChange={onChangeSearch}
+                            onFocus={() => {setErrors(prev => ({ ...prev, artistIds: '' })); setSearchList(true)}}
+                            onBlur={() => setSearchList(false)}
                             isSearch={true}
                             error={errors.artistIds}
                         >
@@ -150,18 +136,18 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
                             }
                         </ul>
                         </Input>
-                        <div className={`${styles.search__artist} ${search ? styles.open : ''}`}>
+                        <div className={`${styles.search__artist} ${searchList ? styles.open : ''}`}>
                             <ul className={styles.search__list}>
                                 {
-                                    searchArtist !== '' ?
+                                    search !== '' ?
                                     <>
                                     {
-                                        artistListStatus === 'success'
+                                        resultStatus === 'success'
                                         ?
                                         <>
                                         {
-                                            artistList.filter((artist) => !addArtist.some((addArtist) => addArtist.id === artist.id)).length > 0 ?
-                                            artistList.map((artist) => {
+                                            result.artists.filter((artist) => !addArtist.some((addArtist) => addArtist.id === artist.id)).length > 0 ?
+                                            result.artists.map((artist) => {
                                                 if (!addArtist.some((addArtist) => addArtist.id === artist.id)) {
                                                     return (
                                                         <SearchItem key={artist.id} data={artist} onClick={() => onClickAddArtist(artist)} /> 

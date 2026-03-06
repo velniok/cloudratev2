@@ -1,23 +1,22 @@
 import { Tabs } from '@/shared/ui'
 import styles from './SearchTabs.module.scss'
 import { FC } from 'react'
-import { useAppSelector } from '@/shared/lib'
-import { selectSearch, selectSearchStatus } from '../model/selectors'
 import { TrackCard, TrackCardSekelton } from '@/entities/track'
 import { ArtistCard, ArtistCardSkeleton } from '@/entities/artist'
 import { UserCard, UserCardSkeleton } from '@/entities/user'
+import { ISearch } from '../api/searchApiTypes'
+import { TStatus } from '@/shared/types'
 
 interface SearchTabsProps {
-    activeTab: string
-    hundleActiveTab: (tab: string) => void
+    filter: string
+    hundleFilter: (tab: 'artists' | 'tracks' | 'users') => void
+    result: ISearch
+    resultStatus: TStatus
 }
 
-export const SearchTabs: FC<SearchTabsProps> = ({ hundleActiveTab, activeTab }) => {
+export const SearchTabs: FC<SearchTabsProps> = ({ hundleFilter, filter, result, resultStatus }) => {
 
-    const search = useAppSelector(selectSearch)
-    const searchStatus = useAppSelector(selectSearchStatus)
-
-    const tabs = [
+    const tabs: { title: string, name: 'artists' | 'tracks' | 'users' }[] = [
         {
             title: 'Артисты',
             name: 'artists',
@@ -34,30 +33,30 @@ export const SearchTabs: FC<SearchTabsProps> = ({ hundleActiveTab, activeTab }) 
 
     return (
         <div className={styles.wrapper}>
-            <Tabs tabs={tabs} activeTab={activeTab} hundleActiveTab={(tab) => hundleActiveTab(tab)} />
-            <div className={`${styles.list} ${activeTab === 'users' ? styles.users : ''}`}>
+            <Tabs tabs={tabs} activeTab={filter} hundleActiveTab={hundleFilter} />
+            <div className={`${styles.list} ${filter === 'users' ? styles.users : ''}`}>
                 {
-                    searchStatus === 'success' ?
+                    resultStatus === 'success' ?
                     <>
                     {
-                        search[activeTab]?.length === 0 ?
-                        <>Ничего не найдено</>
+                        result[filter]?.length === 0 ?
+                        <p className={styles.text}>Ничего не найдено.</p>
                         :
                         <>
-                            {activeTab === 'tracks' && search.tracks?.map(t => <TrackCard key={t.id} track={t} />)}
-                            {activeTab === 'artists' && search.artists?.map(a => <ArtistCard key={a.id} artist={a} />)}
-                            {activeTab === 'users' && search.users?.map(u => <UserCard key={u.id} user={u} />)}
+                            {filter === 'tracks' && result.tracks?.map(t => <TrackCard key={t.id} track={t} />)}
+                            {filter === 'artists' && result.artists?.map(a => <ArtistCard key={a.id} artist={a} />)}
+                            {filter === 'users' && result.users?.map(u => <UserCard key={u.id} user={u} />)}
                         </>
                     }
                     </>
                     :
-                    searchStatus === 'idle' ?
-                    <>Начните поиск</>
+                    resultStatus === 'idle' ?
+                    <p className={styles.text}>Ищите треки, артистов, пользователей.</p>
                     :
                     <>
-                        {activeTab === 'tracks' && Array.from({ length: 5 }).map((_, index) => <TrackCardSekelton key={index} />)}
-                        {activeTab === 'artists' && Array.from({ length: 5 }).map((_, index) => <ArtistCardSkeleton key={index} />)}
-                        {activeTab === 'users' && Array.from({ length: 5 }).map((_, index) => <UserCardSkeleton key={index} />)}
+                        {filter === 'tracks' && Array.from({ length: 5 }).map((_, index) => <TrackCardSekelton key={index} />)}
+                        {filter === 'artists' && Array.from({ length: 5 }).map((_, index) => <ArtistCardSkeleton key={index} />)}
+                        {filter === 'users' && Array.from({ length: 5 }).map((_, index) => <UserCardSkeleton key={index} />)}
                     </>
                 }
             </div>

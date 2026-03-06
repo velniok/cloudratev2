@@ -2,9 +2,9 @@ import { FC } from 'react'
 import styles from './Tabs.module.scss'
 
 interface TabsProps {
-    tabs: { title: string, name: string }[]
+    tabs: { title: string, name: 'artists' | 'tracks' | 'users' }[]
     activeTab: string
-    hundleActiveTab: (tab: string) => void
+    hundleActiveTab: (tab: 'artists' | 'tracks' | 'users') => void
 }
 
 export const Tabs: FC<TabsProps> = ({ tabs, activeTab, hundleActiveTab }) => {

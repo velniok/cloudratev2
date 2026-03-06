@@ -61,18 +61,6 @@ class ArtistControllers {
         }
     }
 
-    async search(req, res, next) {
-        try {
-            const { search } = req.query
-            const artists = await ArtistServices.searchArtistsByName(search)
-
-            res.status(200).json({ artists })
-        } catch (err) {
-            console.log(err)
-            next(err)
-        }
-    }
-
     async delete(req, res, next) {
         try {
             const artistId = req.params.id

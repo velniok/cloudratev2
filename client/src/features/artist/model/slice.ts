@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createArtistApi, deleteArtistApi, getArtistListApi, getOneArtistApi, searchArtistsApi, updateArtistApi } from "../api/artistApi";
+import { createArtistApi, deleteArtistApi, getArtistListApi, getOneArtistApi, updateArtistApi } from "../api/artistApi";
 import { IArtist } from "@/entities/artist";
 import axios from "axios";
 import { IArtistState } from "./artistSliceTypes";
@@ -42,17 +42,6 @@ export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: numbe
 export const updateArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number, req: IArtistReq }, { rejectValue: IApiError }>('/artist/updateArtistThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await updateArtistApi(params)
-        return data
-    } catch (err) {
-        if (axios.isAxiosError(err) && err.response) {
-            return rejectWithValue(err.response.data)
-        } 
-    }
-})
-
-export const searchArtistsThunk = createAsyncThunk<{ artists: IArtist[] }, { query: string }, { rejectValue: IApiError }>('/artist/searchArtistsThunk', async (params, { rejectWithValue }) => {
-    try {
-        const { data } = await searchArtistsApi(params.query)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -148,20 +137,6 @@ const artistSlice = createSlice({
         .addCase(updateArtistThunk.rejected, (state) => {
             state.artistStatus = 'error',
             state.artistError = null
-        })
-
-        .addCase(searchArtistsThunk.pending, (state) => {
-            state.artistListStatus = 'loading',
-            state.artistError = null
-        })
-        .addCase(searchArtistsThunk.fulfilled, (state, action) => {
-            state.artistList = action.payload.artists,
-            state.artistListStatus = 'success'
-        })
-        .addCase(searchArtistsThunk.rejected, (state, action) => {
-            state.artistList = null,
-            state.artistListStatus = 'error',
-            state.artistError = action.payload.message
         })
 
         .addCase(deleteArtistThunk.pending, (state) => {
