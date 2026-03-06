@@ -3,7 +3,7 @@ import styles from './GeneralItem.module.scss'
 
 interface GeneralItemProps {
     title: string
-    count: number
+    count: string
 }
 
 export const GeneralItem: FC<GeneralItemProps> = ({ title, count }) => {
