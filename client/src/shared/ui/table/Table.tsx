@@ -50,7 +50,7 @@ export const Table: FC<TableProps> = ({ header, data, dataStatus, actions }) => 
                             }
                         })
                         :
-                        Array.from({ length: 7 }).map((_, index) => {
+                        Array.from({ length: 5 }).map((_, index) => {
                             return <TableSkeleton key={index} />
                         })
                     }

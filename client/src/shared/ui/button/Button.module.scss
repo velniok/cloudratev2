@@ -25,6 +25,12 @@
             border: 1px solid var(--border-highlight);
             color: var(--text-primary);
         }
+
+        &.active {
+            cursor: default;
+            background-color: var(--accent-color);
+            color: var(--text-primary);
+        }
     }
 
     &.accent {

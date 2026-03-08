@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createArtistApi, deleteArtistApi, getArtistListApi, getOneArtistApi, updateArtistApi } from "../api/artistApi";
-import { IArtist } from "@/entities/artist";
+import type { IArtist } from "@/entities/artist";
 import axios from "axios";
-import { IArtistState } from "./artistSliceTypes";
-import { IArtistReq } from "../api/artistApiTypes";
-import { IApiError } from "@/shared/types";
+import type { IArtistState } from "./artistSliceTypes";
+import type { IArtistReq } from "../api/artistApiTypes";
+import type { IApiError, IPagination } from "@/shared/types";
 
-export const getArtistListThunk = createAsyncThunk<{ artists: IArtist[]}, {page: number, limit: number}, { rejectValue: IApiError }>('artist/getArtistListThunk', async (params, { rejectWithValue }) => {
+export const getArtistListThunk = createAsyncThunk<{ artists: IArtist[], pagination: IPagination}, {page: number, limit: number}, { rejectValue: IApiError }>('artist/getArtistListThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getArtistListApi(params)
         return data
@@ -66,6 +66,7 @@ const initialState: IArtistState = {
     artistStatus: 'idle',
     artistError: null,
     artistList: null,
+    artistListPagination: null,
     artistListStatus: 'idle',
     artistListError: null,
 }
@@ -78,11 +79,15 @@ const artistSlice = createSlice({
         builder
         .addCase(getArtistListThunk.pending, (state) => {
             state.artistList = null,
+            state.artistListPagination = null,
             state.artistListStatus = 'loading',
             state.artistListError = null
         })
         .addCase(getArtistListThunk.fulfilled, (state, action) => {
-            state.artistList = action.payload.artists,
+            state.artistList = action.payload.artists
+            if (action.payload.pagination) {
+                state.artistListPagination = action.payload.pagination
+            }
             state.artistListStatus = 'success'
         })
         .addCase(getArtistListThunk.rejected, (state, action) => {

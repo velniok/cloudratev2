@@ -12,7 +12,7 @@ export const LatestReleases = () => {
     const trackListStatus = useAppSelector(selectTrackListStatus)
 
     useEffect(() => {
-        dispatch(getTracksThunk())
+        dispatch(getTracksThunk({ page: 1, limit: 5 }))
     }, [])
 
     return (

@@ -36,25 +36,31 @@ class ArtistServices {
 
     async getArtistsPagination(limit, page) {
         const offset = (+page - 1) * +limit
-        const artistsRes = await pool.query(`
-            SELECT
-                a.*,
-                (
-                    SELECT json_agg(row_to_json(t))
-                    FROM tracks t
-                    WHERE a.id = ANY(t.artist_ids)
-                ) as tracks,
-                (
-                    SELECT ROUND(AVG(r.rating)::numeric)
-                    FROM reviews r, tracks t
-                    WHERE r.track_id = t.id AND a.id = ANY(t.artist_ids)
-                ) as avg_rating
-            FROM artists a
-            ORDER BY id
-            LIMIT $1
-            OFFSET $2
-        `, [limit, offset])
-        return artistsRes.rows.map(mapToCamelCase)
+        const [artistsRes, countRes] = await Promise.all([
+            pool.query(`
+                SELECT
+                    a.*,
+                    (
+                        SELECT json_agg(row_to_json(t))
+                        FROM tracks t
+                        WHERE a.id = ANY(t.artist_ids)
+                    ) as tracks,
+                    (
+                        SELECT ROUND(AVG(r.rating)::numeric)
+                        FROM reviews r, tracks t
+                        WHERE r.track_id = t.id AND a.id = ANY(t.artist_ids)
+                    ) as avg_rating
+                FROM artists a
+                ORDER BY id
+                LIMIT $1
+                OFFSET $2
+            `, [limit, offset]),
+            pool.query(`SELECT COUNT(*) AS total FROM artists`)
+        ])
+        return {
+            artists: artistsRes.rows.map(mapToCamelCase),
+            total: countRes.rows[0].total,
+        }
     }
 
     async getArtistById(id) {

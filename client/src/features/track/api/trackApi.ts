@@ -1,9 +1,10 @@
 import { ITrack } from "@/entities/track"
 import { axios } from "@/shared/api"
 import { ITrackReq, ITrackUpdateReq } from "./trackApiTypes"
+import { IPagination } from "@/shared/types"
 
-export const getTracksApi = () => {
-    return axios.get<{ tracks: ITrack[] }>('/track/get')
+export const getTracksApi = (params: { page: number, limit: number }) => {
+    return axios.get<{ tracks: ITrack[], pagination: IPagination }>('/track/get', { params: { page: params.page, limit: params.limit }})
 }
 
 export const getOneTrackApi = (params: { id: number }) => {

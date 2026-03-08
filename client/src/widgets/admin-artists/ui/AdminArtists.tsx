@@ -1,29 +1,22 @@
-import { Button, DeleteIcon, EditIcon, Input, Modal, PlusIcon, Table, Title } from '@/shared/ui'
+import { Button, DeleteIcon, EditIcon, Input, Modal, PaginationButtons, PlusIcon, Table, Title } from '@/shared/ui'
 import styles from './AdminArtists.module.scss'
-import { useAppDispatch, useAppSelector, useNotification, useSearch } from '@/shared/lib'
+import { usePagination, useSearch } from '@/shared/lib'
 import { IArtist } from '@/entities/artist'
 import { FC, useEffect, useState } from 'react'
-import { TStatus } from '@/shared/types'
-import { ArtistCreateForm, ArtistDeleteModal } from '@/features/artist'
+import { IPagination, TStatus } from '@/shared/types'
+import { ArtistCreateForm, ArtistDeleteModal, getArtistListThunk } from '@/features/artist'
 import { ArtistUpdateForm } from '@/features/artist/ui/ArtistUpdateForm'
-import { selectGeneral, selectGeneralStatus } from '@/features/general'
-import { getArtistsCountThunk } from '@/features/general/model/slice'
 
 interface AdminArtistsProps {
     artistList: IArtist[]
     artistListStatus: TStatus
+    artistListPagination: IPagination
 }
 
-export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStatus }) => {
+export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStatus, artistListPagination }) => {
 
-    const dispatch = useAppDispatch()
-    const artistCount = useAppSelector(selectGeneral)?.artists
-    const artistCountStatus = useAppSelector(selectGeneralStatus)
     const { result, resultStatus, search, onChangeSearch } = useSearch('artists')
-
-    useEffect(() => {
-        dispatch(getArtistsCountThunk())
-    }, [artistList])
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getArtistListThunk, '/admin/artists', 10)
 
     useEffect(() => {
         if (!result || search === '') {
@@ -35,8 +28,8 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
         }
     }, [artistListStatus, artistList, result])
 
-    const [data, setData] = useState(artistList)
-    const [dataStatus, setDataStatus] = useState(artistListStatus)
+    const [data, setData] = useState(null)
+    const [dataStatus, setDataStatus] = useState(null)
 
     const [createArtist, setCreateArtist] = useState<boolean>(false)
     const [updateArtist, setUpdateArtist] = useState<boolean>(false)
@@ -61,7 +54,7 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                 <Title>АРТИСТЫ</Title>
                 <div className={styles.top}>
                     {
-                        artistCountStatus === 'success' ? <p className={styles.count}>Всего: {artistCount} артистов</p> : <>Загрузка</>
+                        artistListStatus === 'success' ? <p className={styles.count}>Всего: {artistListPagination.total} артистов</p> : <>Загрузка</>
                     }
                     <Button color='accent' padding='10px 20px 10px 20px' onClick={() => setCreateArtist(true)}>
                         <div className={styles.buttonInner}>
@@ -101,13 +94,24 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                         },
                     ]}
                 />
-                {/* {
+                {
                     result?.artists?.length === 0 && <p className={styles.text}>Ничего не найдено</p>
-                } */}
-                <div className={styles.bottom}>
-                    <Button color='accent' padding='5px'>+</Button>
-                    <Button color='accent' padding='5px'>-</Button>
-                </div>
+                }
+                {
+                    artistListStatus === 'success' &&
+                        <div className={styles.bottom}>
+                            <div className={styles.left}>
+                                <p className={styles.text}>Показано {((+artistListPagination.page - 1) * limit) + 1}-{limit * +artistListPagination.page} из {artistListPagination.total}</p>
+                            </div>
+                            <PaginationButtons
+                                page={+artistListPagination.page}
+                                totalPages={artistListPagination.totalPages}
+                                hundleNextPage={hundleNextPage}
+                                hundlePrevPage={hundlePrevPage}
+                                hundlePage={hundlePage}
+                            />
+                        </div>
+                }
                 <Modal
                     width='520px'
                     modalTitle='Новый артист'

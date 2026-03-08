@@ -21,9 +21,18 @@ class TrackControllers {
 
     async get(req, res, next) {
         try {
-            const tracks = await TrackServices.getAllTracks()
+            const { page, limit } = req.query
+            const { tracks, total } = await TrackServices.getTracksPagination(page, limit)
 
-            res.status(200).json({ tracks })
+            res.status(200).json({
+                tracks,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)

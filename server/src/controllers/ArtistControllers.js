@@ -24,9 +24,17 @@ class ArtistControllers {
     async get(req, res, next) {
         try {
             const { limit, page } = req.query
-            const artists = await ArtistServices.getArtistsPagination(limit, page)
-
-            res.status(200).json({ artists })
+            const { artists, total } = await ArtistServices.getArtistsPagination(limit, page)
+            
+            res.status(200).json({
+                artists,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)

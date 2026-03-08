@@ -22,24 +22,35 @@ class TrackServices {
         return mapToCamelCase(newTrackRes.rows[0])
     }
 
-    async getAllTracks() {
-        const tracksRes = await pool.query(`
-            SELECT
-                t.*,
-                (
-                    SELECT ROUND(AVG(r.rating)::numeric)
-                    FROM reviews r
-                    WHERE r.track_id = t.id
-                ) as avg_rating,
-                (
-                    SELECT json_agg(row_to_json(a))
-                    FROM artists a
-                    WHERE a.id = ANY(t.artist_ids)
-                ) as artists
-            FROM tracks t
-            ORDER BY id
-        `)
-        return tracksRes.rows.map(mapToCamelCase)
+    async getTracksPagination(page, limit) {
+        const offset = (+page - 1) * +limit
+        const [tracksRes, countRes] = await Promise.all([
+            pool.query(`
+                SELECT
+                    t.*,
+                    (
+                        SELECT ROUND(AVG(r.rating)::numeric)
+                        FROM reviews r
+                        WHERE r.track_id = t.id
+                    ) as avg_rating,
+                    (
+                        SELECT json_agg(row_to_json(a))
+                        FROM artists a
+                        WHERE a.id = ANY(t.artist_ids)
+                    ) as artists
+                FROM tracks t
+                ORDER BY id
+                LIMIT $1
+                OFFSET $2
+            `, [limit, offset]),
+            pool.query(`
+                SELECT COUNT(*) AS total FROM tracks
+            `)
+        ])
+        return {
+            tracks: tracksRes.rows.map(mapToCamelCase),
+            total: countRes.rows[0].total
+        }
     }
 
     async getTrackById(id) {

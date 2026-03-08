@@ -8,6 +8,22 @@
     justify-content: flex-end;
 }
 
+.top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 8px;
+}
+
+.count {
+    color: var(--text-secondary);
+}
+
+.text {
+    color: var(--text-secondary);
+}
+
 .buttonInner {
     display: flex;
     align-items: center;
@@ -16,4 +32,10 @@
 
 .buttonText {
     padding-top: 4px;
+}
+
+.bottom {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
 }

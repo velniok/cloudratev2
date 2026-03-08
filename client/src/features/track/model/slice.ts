@@ -4,11 +4,11 @@ import axios from "axios";
 import { createTrackApi, deleteTrackApi, getOneTrackApi, getTracksApi, updateTrackApi } from "../api/trackApi";
 import { ITrackState } from "./trackSliceTypes";
 import { ITrackReq, ITrackUpdateReq } from "../api/trackApiTypes";
-import { IApiError } from "@/shared/types";
+import { IApiError, IPagination } from "@/shared/types";
 
-export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[] }, void, { rejectValue: IApiError }>('/track/getTracksThunk', async (_, { rejectWithValue }) => {
+export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, { page: number, limit: number }, { rejectValue: IApiError }>('/track/getTracksThunk', async (params, { rejectWithValue }) => {
     try {
-        const { data } = await getTracksApi()
+        const { data } = await getTracksApi(params)
         return data
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
@@ -66,6 +66,7 @@ const initialState: ITrackState = {
     trackStatus: 'idle',
     trackError: null,
     trackList: null,
+    trackListPagination: null,
     trackListStatus: 'idle',
     trackListError: null,
 }
@@ -78,11 +79,15 @@ const trackSlice = createSlice({
         builder
             .addCase(getTracksThunk.pending, (state) => {
                 state.trackList = null,
+                state.trackListPagination = null,
                 state.trackListStatus = 'loading',
                 state.trackListError = null
             })
             .addCase(getTracksThunk.fulfilled, (state, action) => {
-                state.trackList = action.payload.tracks,
+                state.trackList = action.payload.tracks
+                if (action.payload.pagination) {
+                    state.trackListPagination = action.payload.pagination
+                }
                 state.trackListStatus = 'success'
             })
             .addCase(getTracksThunk.rejected, (state, action) => {

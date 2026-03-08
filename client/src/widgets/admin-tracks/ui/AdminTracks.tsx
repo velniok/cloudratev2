@@ -1,16 +1,34 @@
-import { Button, DeleteIcon, EditIcon, Modal, PlusIcon, Table, Title } from '@/shared/ui'
+import { Button, DeleteIcon, EditIcon, Input, Modal, PaginationButtons, PlusIcon, Table, Title } from '@/shared/ui'
 import styles from './AdminTracks.module.scss'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { ITrack } from '@/entities/track'
-import { TStatus } from '@/shared/types'
-import { TrackCreateForm, TrackDeleteModal, TrackUpdateForm } from '@/features/track'
+import { IPagination, TStatus } from '@/shared/types'
+import { getTracksThunk, TrackCreateForm, TrackDeleteModal, TrackUpdateForm } from '@/features/track'
+import { usePagination, useSearch } from '@/shared/lib'
 
 interface AdminTracksProps {
     trackList: ITrack[]
+    trackListPagination: IPagination
     trackListStatus: TStatus
 }
 
-export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }) => {
+export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, trackListPagination }) => {
+
+    const { result, resultStatus, search, onChangeSearch } = useSearch('tracks')
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getTracksThunk, '/admin/tracks', 10)
+
+    useEffect(() => {
+        if (!result || search === '') {
+            setData(trackList)
+            setDataStatus(trackListStatus)
+        } else {
+            setData(result.tracks)
+            setDataStatus(resultStatus)
+        }
+    }, [trackListStatus, trackList, result])
+
+    const [data, setData] = useState(null)
+    const [dataStatus, setDataStatus] = useState(null)
 
     const [createTrack, setCreateTrack] = useState<boolean>(false)
     const [updateTrack, setUpdateTrack] = useState<boolean>(false)
@@ -34,6 +52,9 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }
             <div className="container">
                 <Title>ТРЕКИ</Title>
                 <div className={styles.top}>
+                    {
+                        trackListStatus === 'success' ? <p className={styles.count}>Всего: {trackListPagination.total} артистов</p> : <>Загрузка</>
+                    }
                     <Button color='accent' padding='10px 20px 10px 20px' onClick={() => setCreateTrack(true)}>
                         <div className={styles.buttonInner}>
                             <PlusIcon />
@@ -41,10 +62,18 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }
                         </div>
                     </Button>
                 </div>
+                <Input
+                    placeholder='Поиск по названию трека...'
+                    type='text'
+                    isSearch={true}
+                    isGray={true}
+                    onChange={onChangeSearch}
+                    value={search}
+                />
                 <Table
                     header={ ['трек', 'артист(-ы)', 'рейтинг', 'действия'] }
-                    data={trackList}
-                    dataStatus={trackListStatus}
+                    data={data}
+                    dataStatus={dataStatus}
                     actions={[
                         {
                             name: 'edit',
@@ -64,6 +93,21 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus }
                         },
                     ]}
                 />
+                {
+                    trackListStatus === 'success' &&
+                        <div className={styles.bottom}>
+                            <div className={styles.left}>
+                                <p className={styles.text}>Показано {((+trackListPagination.page - 1) * limit) + 1}-{limit * +trackListPagination.page} из {trackListPagination.total}</p>
+                            </div>
+                            <PaginationButtons
+                                page={+trackListPagination.page}
+                                totalPages={trackListPagination.totalPages}
+                                hundleNextPage={hundleNextPage}
+                                hundlePrevPage={hundlePrevPage}
+                                hundlePage={hundlePage}
+                            />
+                        </div>
+                }
                 <Modal
                     modalTitle='Добавить трек'
                     modalDesc='Заполните информацию о треке'
