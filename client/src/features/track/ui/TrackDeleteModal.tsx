@@ -3,22 +3,30 @@ import styles from './TrackDeleteModal.module.scss'
 import { FC, MouseEvent } from 'react'
 import { useAppDispatch, useNotification } from '@/shared/lib'
 import { deleteTrackThunk } from '../model/slice'
+import { useNavigate } from 'react-router-dom'
 
 interface TrackDeleteModalProps {
     modalClose: () => void
     trackId: number
+    trackListLength: number
+    lastPage: number
+    limit: number
 }
 
-export const TrackDeleteModal: FC<TrackDeleteModalProps> = ({ modalClose, trackId }) => {
+export const TrackDeleteModal: FC<TrackDeleteModalProps> = ({ modalClose, trackId, trackListLength, lastPage, limit }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
+    const navigate = useNavigate()
 
     const hundleSumbit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         dispatch(deleteTrackThunk({ id: trackId })).unwrap()
             .then(() => {
                 notify('Трек удалён', 'Трек успешно удалён', 'delete')
+                if (trackListLength === 1) {
+                    navigate(`/admin/tracks?page=${lastPage - 1}&limit=${limit}`)
+                }
                 modalClose()
             })
             .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))

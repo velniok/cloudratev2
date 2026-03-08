@@ -63,6 +63,17 @@ class TrackServices {
                     WHERE r.track_id = t.id
                 ) as avg_rating,
                 (
+                    SELECT json_build_object(
+                        'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
+                        'criteria2', ROUND(AVG(r.criteria2)::numeric, 1),
+                        'criteria3', ROUND(AVG(r.criteria3)::numeric, 1),
+                        'criteria4', ROUND(AVG(r.criteria4)::numeric, 1),
+                        'criteria5', ROUND(AVG(r.criteria5)::numeric, 1)
+                    )
+                    FROM reviews r
+                    WHERE r.track_id = t.id
+                ) as avg_criterias,
+                (
                     SELECT json_agg(row_to_json(a))
                     FROM artists a
                     WHERE a.id = ANY(t.artist_ids)

@@ -119,7 +119,7 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                     modalOpen={createArtist}
                     modalClose={() => setCreateArtist(false)}
                 >
-                    <ArtistCreateForm modalClose={() => setCreateArtist(false)} />
+                    { artistListStatus === 'success' && <ArtistCreateForm artistListLength={artistList.length} modalClose={() => setCreateArtist(false)} lastPage={artistListPagination.totalPages} limit={limit} /> }
                 </Modal>
                 <Modal
                     width='520px'
@@ -139,7 +139,7 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                     modalOpen={deleteArtist}
                     modalClose={() => setDeleteArtist(false)}
                 >
-                    <ArtistDeleteModal modalClose={() => setDeleteArtist(false)} artistId={artistId} />
+                    { artistListStatus === 'success' && <ArtistDeleteModal artistListLength={artistList.length} lastPage={artistListPagination.totalPages} limit={limit} modalClose={() => setDeleteArtist(false)} artistId={artistId} /> }
                 </Modal>
             </div>
         </div>

@@ -5,15 +5,21 @@ import { useAppDispatch, useNotification } from '@/shared/lib'
 import { updateAvatarApi } from '@/shared/api'
 import { createArtistThunk } from '../model/slice'
 import { IApiError } from '@/shared/types'
+import { useNavigate } from 'react-router-dom'
+import { IArtist } from '@/entities/artist'
 
 interface ArtistCreateFormProps {
     modalClose: () => void
+    lastPage: number
+    limit: number
+    artistListLength: number
 }
 
-export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose }) => {
+export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPage, limit, artistListLength }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
+    const navigate = useNavigate()
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -66,6 +72,11 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose }) => {
         })).unwrap()
             .then(() => {
                 notify('Артист создан', 'Новый артист успешно добавлен', 'success')
+                if (artistListLength === limit) {
+                    navigate(`/admin/artists?page=${lastPage + 1}&limit=${limit}`)
+                } else {
+                    navigate(`/admin/artists?page=${lastPage}&limit=${limit}`)
+                }
                 hundleCancel(e)
             })
             .catch((err: IApiError) => {

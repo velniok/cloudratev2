@@ -115,7 +115,7 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, 
                     modalOpen={createTrack}
                     modalClose={() => setCreateTrack(false)}
                 >
-                    <TrackCreateForm modalClose={() => setCreateTrack(false)} />
+                    { trackListStatus === 'success' && <TrackCreateForm trackListLength={trackList.length} lastPage={trackListPagination.totalPages} limit={limit} modalClose={() => setCreateTrack(false)} /> }
                 </Modal>
                 <Modal
                     width='520px'
@@ -135,7 +135,7 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, 
                     modalOpen={deleteTrack}
                     modalClose={() => setDeleteTrack(false)}
                 >
-                    <TrackDeleteModal modalClose={() => setDeleteTrack(false)} trackId={trackId} />
+                    { trackListStatus === 'success' && <TrackDeleteModal trackListLength={trackList.length} lastPage={trackListPagination.totalPages} limit={limit} modalClose={() => setDeleteTrack(false)} trackId={trackId} /> }
                 </Modal>
             </div>
         </div>

@@ -34,7 +34,7 @@ export const SearchTabs: FC<SearchTabsProps> = ({ hundleFilter, filter, result, 
     return (
         <div className={styles.wrapper}>
             <Tabs tabs={tabs} activeTab={filter} hundleActiveTab={hundleFilter} />
-            <div className={`${styles.list} ${filter === 'users' ? styles.users : ''}`}>
+            <div className={`${styles.list} ${styles[filter]}`}>
                 {
                     resultStatus === 'success' ?
                     <>

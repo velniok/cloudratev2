@@ -6,17 +6,22 @@ import { updateAvatarApi } from '@/shared/api'
 import { IArtist } from '@/entities/artist'
 import { createTrackThunk } from '../model/slice'
 import { IApiError } from '@/shared/types'
+import { useNavigate } from 'react-router-dom'
 
 interface TrackCreateFormProps {
     modalClose: () => void
+    trackListLength: number
+    lastPage: number
+    limit: number
 }
 
-export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
+export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackListLength, lastPage, limit }) => {
 
     const { result, resultStatus, search, onChangeSearch, setSearch  } = useSearch('artists')
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
+    const navigate = useNavigate()
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -72,6 +77,11 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose }) => {
         })).unwrap()
             .then(() => {
                 notify('Трек создан', 'Новый трек успешно добавлен', 'success')
+                if (trackListLength === limit) {
+                    navigate(`/admin/tracks?page=${lastPage + 1}&limit=${limit}`)
+                } else {
+                    navigate(`/admin/tracks?page=${lastPage}&limit=${limit}`)
+                }
                 hundleCancel(e)
             })
             .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))

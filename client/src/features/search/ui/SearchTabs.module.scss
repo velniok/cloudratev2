@@ -12,6 +12,18 @@
         column-gap: unset;
         row-gap: 4px;
     }
+
+    &.artists {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+        row-gap: 28px;
+    }
+
+    &.tracks {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        row-gap: 28px;
+    }
 }
 
 .text {
