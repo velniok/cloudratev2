@@ -27,14 +27,14 @@ export const Slider: FC<SliderProps> = ({ children }) => {
     const hundleNext = () => {
         const list = listRef.current
         if (!list) return
-        const step = list.clientWidth
+        const step = list.clientWidth / 2
         setOffset(prev => Math.min(prev + step, maxOffset))
     }
 
     const hundlePrev = () => {
         const list = listRef.current
         if (!list) return
-        const step = list.clientWidth
+        const step = list.clientWidth / 2
         setOffset(prev => Math.max(prev - step, 0))
     }
 
