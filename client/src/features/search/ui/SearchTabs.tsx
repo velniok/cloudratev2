@@ -34,32 +34,30 @@ export const SearchTabs: FC<SearchTabsProps> = ({ hundleFilter, filter, result, 
     return (
         <div className={styles.wrapper}>
             <Tabs tabs={tabs} activeTab={filter} hundleActiveTab={hundleFilter} />
-            <div className={`${styles.list} ${styles[filter]}`}>
+            {
+                resultStatus === 'success' ?
+                <>
                 {
-                    resultStatus === 'success' ?
-                    <>
-                    {
-                        result[filter]?.length === 0 ?
-                        <p className={styles.text}>Ничего не найдено.</p>
-                        :
-                        <>
-                            {filter === 'tracks' && result.tracks?.map(t => <TrackCard key={t.id} track={t} />)}
-                            {filter === 'artists' && result.artists?.map(a => <ArtistCard key={a.id} artist={a} />)}
-                            {filter === 'users' && result.users?.map(u => <UserCard key={u.id} user={u} />)}
-                        </>
-                    }
-                    </>
+                    result[filter]?.length === 0 ?
+                    <p className={styles.text}>Ничего не найдено.</p>
                     :
-                    resultStatus === 'idle' ?
-                    <p className={styles.text}>Ищите треки, артистов, пользователей.</p>
-                    :
-                    <>
-                        {filter === 'tracks' && Array.from({ length: 5 }).map((_, index) => <TrackCardSekelton key={index} />)}
-                        {filter === 'artists' && Array.from({ length: 5 }).map((_, index) => <ArtistCardSkeleton key={index} />)}
-                        {filter === 'users' && Array.from({ length: 5 }).map((_, index) => <UserCardSkeleton key={index} />)}
-                    </>
+                    <div className={`${styles.list} ${styles[filter]}`}>
+                        {filter === 'tracks' && result.tracks?.map(t => <TrackCard key={t.id} track={t} />)}
+                        {filter === 'artists' && result.artists?.map(a => <ArtistCard key={a.id} artist={a} />)}
+                        {filter === 'users' && result.users?.map(u => <UserCard key={u.id} user={u} />)}
+                    </div>
                 }
-            </div>
+                </>
+                :
+                resultStatus === 'idle' ?
+                <p className={styles.text}>Ищите треки, артистов, пользователей.</p>
+                :
+                <div className={`${styles.list} ${styles[filter]}`}>
+                    {filter === 'tracks' && Array.from({ length: 5 }).map((_, index) => <TrackCardSekelton key={index} />)}
+                    {filter === 'artists' && Array.from({ length: 5 }).map((_, index) => <ArtistCardSkeleton key={index} />)}
+                    {filter === 'users' && Array.from({ length: 5 }).map((_, index) => <UserCardSkeleton key={index} />)}
+                </div>
+            }
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import type { FC } from "react"
-import { TrackCard, TrackCardSekelton, type ITrack } from "@/entities/track"
-import { Title } from "@/shared/ui"
+import { TrackCard, TrackCardSekelton  } from "@/entities/track"
+import { Slider, Title } from "@/shared/ui"
 import styles from "./ArtistTopTracks.module.scss"
 import { TStatus } from "@/shared/types"
 import { IArtist } from "@/entities/artist"
@@ -16,7 +16,7 @@ export const ArtistTopTracks: FC<ArtistTopTracksProps> = ({ artist, artistStatus
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>ТОП ТРЕКОВ</Title>
-                <div className={styles.list}>
+                <Slider>
                     {
                         artistStatus === 'success'
                         ?
@@ -39,7 +39,7 @@ export const ArtistTopTracks: FC<ArtistTopTracksProps> = ({ artist, artistStatus
                             return <TrackCardSekelton key={index} />
                         })
                     }
-                </div>
+                </Slider>
             </div>
         </div>
     )

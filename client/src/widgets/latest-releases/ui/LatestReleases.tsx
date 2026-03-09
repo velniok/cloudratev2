@@ -1,5 +1,5 @@
-import { TrackCard, TrackCardSekelton, type ITrack } from "@/entities/track"
-import { Title } from "@/shared/ui"
+import { TrackCard, TrackCardSekelton } from "@/entities/track"
+import { Slider, Title } from "@/shared/ui"
 import styles from "./LatestReleases.module.scss"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { getTracksThunk, selectTrackList, selectTrackListStatus } from "@/features/track"
@@ -12,14 +12,14 @@ export const LatestReleases = () => {
     const trackListStatus = useAppSelector(selectTrackListStatus)
 
     useEffect(() => {
-        dispatch(getTracksThunk({ page: 1, limit: 5 }))
+        dispatch(getTracksThunk({ page: 1, limit: 15 }))
     }, [])
 
     return (
         <section className={styles.section}>
             <div className="container">
                 <Title>СВЕЖИЕ РЕЛИЗЫ</Title>
-                <div className={styles.list}>
+                <Slider>
                     {
                         trackListStatus === 'success'
                         ?
@@ -35,7 +35,7 @@ export const LatestReleases = () => {
                             return <TrackCardSekelton key={index} />
                         })
                     }
-                </div>
+                </Slider>
             </div>
         </section>
     )

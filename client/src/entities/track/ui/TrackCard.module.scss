@@ -1,8 +1,9 @@
 .card {
     position: relative;
     height: 320px;
+    transform: translateZ(0);
 
-    transition: transform 0.3s;
+    transition: transform 0.3s, z-index 0.3s;
 
     &:hover {
         transform: translateY(-4px);

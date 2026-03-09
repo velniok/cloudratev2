@@ -15,16 +15,23 @@ export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
-                <Title>ОБЗОРЫ ПОЛЬЗОВАТЕЛЕЙ</Title>
+                <Title>ОТЗЫВЫ ПОЛЬЗОВАТЕЛЕЙ</Title>
                 <div className={styles.list}>
                     {
                         trackStatus === 'success'
                         ?
                         <>
                         {
-                            track.reviews.map((review: IReview) => {
-                                if (review.text) return <ReviewCard key={review.id} review={review} />
-                            })
+                            track.reviews.length === 0 ?
+                            <p className={styles.text}>Отзывов нет</p>
+                            :
+                            <>
+                                {
+                                    track.reviews.map((review: IReview) => {
+                                        if (review.text) return <ReviewCard key={review.id} review={review} />
+                                    })
+                                }
+                            </>
                         }
                         </>
                         :

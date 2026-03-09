@@ -1,4 +1,5 @@
 .rating {
+    transform: translateZ(0);
     font-size: 12px;
     font-weight: 700;
     background-color: var(--bg-secondary);
@@ -16,5 +17,22 @@
         height: 72px;
         border: 2px solid var(--border-highlight);
         font-size: 22px;
+    }
+
+    &.isHover {
+        cursor: pointer;
+
+        transition: border 0.3s, color 0.3s;
+
+        &:hover {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+    }
+
+    &.active {
+        cursor: default;
+        border: 1px solid var(--accent-color);
+        color: var(--accent-color);
     }
 }
