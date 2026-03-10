@@ -9,8 +9,10 @@ class TrackControllers {
             const errors = validationResult(req)
             if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
-            const { title, coverUrl, artistIds } = req.body
-            const track = await TrackServices.createTrack([title, coverUrl, artistIds])
+            const { title, coverUrl, artistIds, releaseData } = req.body
+            const trackCreate = await TrackServices.createTrack([title, coverUrl, artistIds, releaseData])
+            if (trackCreate.status === 'track_taken') throw new AppError(`Трек с таким названием уже существует`, 409, `title`)
+            const track = trackCreate.track
 
             res.status(201).json({ track })
         } catch (err) {
@@ -54,11 +56,16 @@ class TrackControllers {
 
     async update(req, res, next) {
         try {
-            const trackId = req.params.id
-            const { title, coverUrl } = req.body
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
-            const track = await TrackServices.updateTrackById(trackId, [title, coverUrl])
-            
+            const trackId = req.params.id
+            const { title, coverUrl, releaseData } = req.body
+
+            const trackUpdate = await TrackServices.updateTrackById(trackId, [title, coverUrl, releaseData])
+            if (trackUpdate.status === 'track_taken') throw new AppError(`Название трека уже занято`, 409, `title`)
+            const track = trackUpdate.track
+
             res.status(200).json({ track })
         } catch (err) {
             console.log(err)

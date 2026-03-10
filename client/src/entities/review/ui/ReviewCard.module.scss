@@ -3,13 +3,24 @@
     padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--border-subtle);
+
+    &.your {
+        border: 2px solid var(--accent-color);
+    }
+}
+
+.top {
+    margin-bottom: 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
 }
 
 .user {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 12px;
 
     transition: opacity 0.3s;
 
@@ -29,6 +40,17 @@
     font-weight: 700;
 }
 
+.yourText {
+    background-color: var(--accent-color);
+    font-size: 10px;
+    font-family: var(--second-family);
+    border-radius: 4px;
+    padding: 4px 6px 2px 6px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
 .review {
     color: var(--text-secondary);
+    white-space: pre-wrap;
 }

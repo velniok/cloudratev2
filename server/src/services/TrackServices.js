@@ -5,19 +5,40 @@ class TrackServices {
 
     async createTrack(values) {
         const newTrackRes = await pool.query(`
-            WITH inserted AS (
-                INSERT INTO tracks (title, cover_url, artist_ids)
-                VALUES ($1, $2, $3)
-                RETURNING *
-            )
+            WITH
+                track_check AS (
+                    SELECT id
+                    FROM tracks t
+                    WHERE title = $1
+                ),
+                inserted AS (
+                    INSERT INTO tracks
+                    (
+                        title,
+                        cover_url,
+                        artist_ids,
+                        release_data
+                    )
+                    SELECT $1, $2, $3, $4
+                    WHERE NOT EXISTS (SELECT 1 FROM track_check)
+                    RETURNING *
+                )
             SELECT
-                i.*,
+                CASE WHEN EXISTS (SELECT 1 FROM track_check)
+                THEN 'track_taken'
+                ELSE 'ok' END as status,
                 (
-                    SELECT json_agg(row_to_json(a))
-                    FROM artists a
-                    WHERE a.id = ANY(i.artist_ids)
-                ) as artists
-            FROM inserted i
+                    SELECT row_to_json(t) FROM (
+                        SELECT
+                            i.*,
+                            (
+                                SELECT json_agg(row_to_json(a))
+                                FROM artists a
+                                WHERE a.id = ANY(i.artist_ids)
+                            ) as artists
+                        FROM inserted i
+                    ) t
+                ) as track
         `, values)
         return mapToCamelCase(newTrackRes.rows[0])
     }
@@ -86,12 +107,29 @@ class TrackServices {
 
     async updateTrackById(id, values) {
         const trackRes = await pool.query(`
-            UPDATE tracks
-            SET
-                title = $1,
-                cover_url = $2
-            WHERE id = $3
-            RETURNING *
+            WITH
+                track_check AS (
+                    SELECT id
+                    FROM tracks t
+                    WHERE title = $1 AND id != $4
+                ),
+                updated as (
+                    UPDATE tracks
+                    SET
+                        title = $1,
+                        cover_url = $2,
+                        release_data = $3
+                    WHERE id = $4 AND NOT EXISTS (SELECT 1 FROM track_check)
+                    RETURNING *
+                )
+            SELECT
+                CASE WHEN EXISTS (SELECT 1 FROM track_check)
+                THEN 'track_taken'
+                ELSE 'ok' END as status,
+                (
+                    SELECT row_to_json(t)
+                    FROM updated t
+                ) as track
         `, [...values, id])
         return mapToCamelCase(trackRes.rows[0])
     }

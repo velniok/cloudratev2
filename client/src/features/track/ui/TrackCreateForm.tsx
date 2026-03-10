@@ -28,12 +28,14 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
     const initialErrors = {
         title: '',
         artistIds: '',
+        releaseData: '',
     }
     const [errors, setErrors] = useState(initialErrors)
 
     const initialValues = {
         title: '',
         coverUrl: '',
+        releaseData: '',
     }
     const [values, setValues] = useState(initialValues)
 
@@ -50,6 +52,11 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
     const hundleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setErrors(prev => ({ ...prev, title: '' }))
         setValues(prev => ({ ...prev, title: e.target.value }))
+    }
+
+    const hundleChangeRelease = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, releaseData: '' }))
+        setValues(prev => ({ ...prev, releaseData: e.target.value }))
     }
 
     const onClickAddArtist = (artist: IArtist) => {
@@ -69,11 +76,12 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
 
         if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
         if (artistIds.length === 0) return setErrors(prev => ({ ...prev, artistIds: 'Укажите хотя бы одного артиста' }))
-
+        if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
         dispatch(createTrackThunk({
             title: values.title,
             coverUrl: values.coverUrl,
-            artistIds: artistIds
+            artistIds: artistIds,
+            releaseData: values.releaseData,
         })).unwrap()
             .then(() => {
                 notify('Трек создан', 'Новый трек успешно добавлен', 'success')
@@ -91,6 +99,8 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
         e.preventDefault()
         modalClose()
         setValues(initialValues)
+        setAddArtists([])
+        setErrors(initialErrors)
         setSearch('')
     }
 
@@ -116,6 +126,17 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
                         value={values.title}
                         onChange={hundleChangeTitle}
                         error={errors.title}
+                    />
+                    <Input
+                        label='ДАТА РЕЛИЗА'
+                        placeholder='Введите дату релиза трека'
+                        type='date'
+                        labelFontSize='10px'
+                        inputFontSize='14px'
+                        isGray={true}
+                        value={values.releaseData}
+                        onChange={hundleChangeRelease}
+                        error={errors.releaseData}
                     />
                     <div className={styles.search}>
                         <Input

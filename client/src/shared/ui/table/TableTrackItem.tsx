@@ -42,6 +42,9 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
                 }
             </td>
             <td className={styles.table__data}>
+                {new Date(track.releaseData).toLocaleDateString()}
+            </td>
+            <td className={styles.table__data}>
                 <div className={styles.action}>
                     {
                         actions.map((action, index) => {

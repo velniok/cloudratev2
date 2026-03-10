@@ -47,10 +47,10 @@ router.get('/artist/getOne/:id', ArtistControllers.getOne)
 router.patch('/artist/update/:id', checkAdmin, artistValidation, ArtistControllers.update)
 router.delete('/artist/delete/:id', checkAdmin, ArtistControllers.delete)
 
-router.post('/track/create', checkAdmin, trackValidation, TrackControllers.create)
+router.post('/track/create', checkAdmin, trackValidation.trackCreateValidation, TrackControllers.create)
 router.get('/track/get', TrackControllers.get)
 router.get('/track/getOne/:id', TrackControllers.getOne)
-router.patch('/track/update/:id', TrackControllers.update)
+router.patch('/track/update/:id', trackValidation.trackUpdateValidation, TrackControllers.update)
 router.delete('/track/delete/:id', checkAdmin, TrackControllers.delete)
 
 router.post('/review/create', ReviewControllers.create)

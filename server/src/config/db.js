@@ -4,6 +4,8 @@ require('dotenv').config();
 
 const isDev = process.env.IS_DEV === 'dev'
 
+pg.types.setTypeParser(1082, val => val)
+
 const pool = new Pool(
     isDev
     ? {

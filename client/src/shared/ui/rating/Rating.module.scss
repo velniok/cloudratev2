@@ -22,7 +22,7 @@
     &.isHover {
         cursor: pointer;
 
-        transition: border 0.3s, color 0.3s;
+        transition: border 0.3s, color 0.3s, opacity 0.3s;
 
         &:hover {
             border: 1px solid var(--accent-color);
@@ -31,8 +31,11 @@
     }
 
     &.active {
-        cursor: default;
         border: 1px solid var(--accent-color);
         color: var(--accent-color);
+
+        &:hover {
+            opacity: 0.7;
+        }
     }
 }

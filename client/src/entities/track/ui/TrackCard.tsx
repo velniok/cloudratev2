@@ -22,7 +22,7 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
         if (true) {
             document.dispatchEvent(new Event('closePopups'))
         }
-        setCriterias(true)
+        setCriterias(!criterias)
     }
 
     return (

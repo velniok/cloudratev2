@@ -7,6 +7,7 @@ export interface ITrack {
     createdAt: string
     title: string
     coverUrl: string | null
+    releaseData: string
     avgRating: number | null
     avgCriterias: {
         criteria1: number | null

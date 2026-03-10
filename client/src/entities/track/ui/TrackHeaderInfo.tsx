@@ -31,16 +31,19 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
                     }
                 </ul>
                 <h2 className={styles.title}>{track.title}</h2>
+                <p className={styles.release}>Дата релиза <strong className={styles.release__strong}>{new Date(track.releaseData).toLocaleDateString()}</strong></p>
                 {
                     track.avgRating
                     ?
-                        <div className={`${styles.rating} ${criterias ? styles.open : ''}`} onClick={(e) => {setCriterias(true), e.stopPropagation()}}>
-                            <CriteriasPopup close={() => setCriterias(false)} position='bottom' show={criterias} avgCriterias={Object.values(track.avgCriterias)} />
-                            <Rating>{track.avgRating}</Rating>
-                            <div className={styles.rating__info}>
-                                <p className={styles.rating__title}>СРЕДНИЙ БАЛЛ</p>
-                                <p className={styles.rating__desc}>На основе {track.reviews.length} оценок</p>
+                        <div className={styles.rating__wrapper}>
+                            <div className={`${styles.rating} ${criterias ? styles.open : ''}`} onClick={(e) => {setCriterias(!criterias), e.stopPropagation()}}>
+                                <Rating>{track.avgRating}</Rating>
+                                <div className={styles.rating__info}>
+                                    <p className={styles.rating__title}>СРЕДНИЙ БАЛЛ</p>
+                                    <p className={styles.rating__desc}>На основе {track.reviews.length} оценок</p>
+                                </div>
                             </div>
+                            <CriteriasPopup close={() => setCriterias(false)} position='bottom' show={criterias} avgCriterias={Object.values(track.avgCriterias)} />
                         </div>
                     :
                         <p className={styles.text}>Оценок нет</p>

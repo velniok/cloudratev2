@@ -2,6 +2,7 @@ export interface ITrackReq {
     title: string
     coverUrl: string
     artistIds: string[]
+    releaseData: string
 }
 
 export interface ITrackUpdateReq {
@@ -9,5 +10,6 @@ export interface ITrackUpdateReq {
     req: {
         title: string
         coverUrl: string
+        releaseData: string
     }
 }

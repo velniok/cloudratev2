@@ -5,6 +5,7 @@ import { updateAvatarApi } from '@/shared/api'
 import { ITrack } from '@/entities/track'
 import { useAppDispatch, useNotification } from '@/shared/lib'
 import { updateTrackThunk } from '../model/slice'
+import { IApiError } from '@/shared/types'
 
 interface TrackUpdateFormProps {
     modalClose: () => void
@@ -17,42 +18,66 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
     const { notify } = useNotification()
     const inputRef = useRef<HTMLInputElement>(null)
 
-    useEffect(() => {
-        setTitle(track.title)
-        setCoverUrl(track.coverUrl)
-    }, [track])
+    
+    const initialValues = {
+        title: '',
+        coverUrl: '',
+        releaseData: '',
+    }
+    const [values, setValues] = useState(initialValues)
 
-    const [title, setTitle] = useState<string>('')
-    const [coverUrl, setCoverUrl] = useState<string>('')
+    const initialErrors = {
+        title: '',
+        releaseData: '',
+    }
+    const [errors, setErrors] = useState(initialErrors)
+
+    useEffect(() => {
+        setValues(prev => ({ ...prev, title: track.title }))
+        setValues(prev => ({ ...prev, coverUrl: track.coverUrl }))
+        setValues(prev => ({ ...prev, releaseData: track.releaseData }))
+    }, [track, modalClose])
 
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         const { data } = await updateAvatarApi(file)
-        setCoverUrl(data.url)
+        setValues(prev => ({ ...prev, coverUrl: data.url }))
     }
 
     const hundleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.target.value)
+        setErrors(prev => ({ ...prev, title: '' }))
+        setValues(prev => ({ ...prev, title: e.target.value }))
+    }
+
+    const hundleChangeRelease = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, releaseData: '' }))
+        setValues(prev => ({ ...prev, releaseData: e.target.value }))
     }
 
     const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+
+        if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
+        if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
+
         dispatch(updateTrackThunk({
             id: track.id,
             req: {
-                title: title,
-                coverUrl: coverUrl,
+                title: values.title,
+                coverUrl: values.coverUrl,
+                releaseData: values.releaseData,
             }
         })).unwrap()
             .then(() => {
                 notify('Трек изменён', 'Трек успешно изменён', 'edit')
                 hundleCancel(e)
             })
-            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
+            .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+        setErrors(initialErrors)
         modalClose()
     }
 
@@ -61,7 +86,7 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
             <div className={styles.content}>
                 <div className={styles.inputList}>
                     <div className={styles.editAvatar}>
-                        <Cover width='64px' height='64px' borderRadius='12px' url={coverUrl} isInput={true} />
+                        <Cover width='64px' height='64px' borderRadius='12px' url={values.coverUrl} isInput={true} />
                         <div className={styles.avatarInput}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
                             <Button fontSize='12px' color='default' padding='12px 16px 8px 16px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>
@@ -75,8 +100,20 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
                         labelFontSize='10px'
                         inputFontSize='14px'
                         isGray={true}
-                        value={title}
+                        value={values.title}
                         onChange={hundleChangeTitle}
+                        error={errors.title}
+                    />
+                    <Input
+                        label='ДАТА РЕЛИЗА'
+                        placeholder='Введите новую дату релиза трека'
+                        type='date'
+                        labelFontSize='10px'
+                        inputFontSize='14px'
+                        isGray={true}
+                        value={values.releaseData}
+                        onChange={hundleChangeRelease}
+                        error={errors.releaseData}
                     />
                 </div>
             </div>

@@ -23,7 +23,7 @@
     &__list {
         display: flex;
         column-gap: 12px;
-        margin-bottom: 4px;
+        margin-bottom: 4%;
     }
 
     &__item {
@@ -57,9 +57,23 @@
     margin-bottom: 8px;
 }
 
+.release {
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    font-family: var(--second-family);
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 10px;
+
+    &__strong {
+        margin-left: 4px;
+        color: var(--text-primary);
+        font-size: 12px;
+    }
+}
+
 .rating {
     cursor: pointer;
-    position: relative;
     display: flex;
     align-items: center;
     gap: 16px;
@@ -68,14 +82,19 @@
     border-radius: 999px;
     border: 2px solid var(--border-subtle);
 
-    transition: border 0.3s;
+    transition: border 0.3s, opacity 0.3s;
 
     &:hover {
         border: 2px solid var(--border-highlight);
+        opacity: 0.7;
     }
 
     &.open {
         border: 2px solid var(--accent-color);
+    }
+
+    &__wrapper {
+        position: relative;
     }
 }
 

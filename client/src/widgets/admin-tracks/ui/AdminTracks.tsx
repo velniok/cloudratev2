@@ -71,7 +71,7 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, 
                     value={search}
                 />
                 <Table
-                    header={ ['трек', 'артист(-ы)', 'рейтинг', 'действия'] }
+                    header={ ['трек', 'артист(-ы)', 'рейтинг', 'дата релиза', 'действия'] }
                     data={data}
                     dataStatus={dataStatus}
                     actions={[
