@@ -3,8 +3,8 @@
     text-transform: uppercase;
     font-size: 10px;
     color: #3B82F6;
-    background-color: rgba(59, 130, 246, 0.08);
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    background-color: var(--blue-color-dim);
+    border: 1px solid var(--blue-border-dim);
     padding: 6px 10px 4px 18px;
     border-radius: 999px;
     font-weight: 700;
@@ -15,7 +15,7 @@
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        background-color: #3B82F6;
+        background-color: var(--blue-color);
         left: 8px;
         width: 5px;
         height: 5px;

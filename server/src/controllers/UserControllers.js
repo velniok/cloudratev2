@@ -2,6 +2,7 @@ const UserServices = require("../services/UserServices")
 const ReviewServices = require("../services/ReviewServices")
 const AppError = require('../utils/AppError')
 const { validationResult } = require('express-validator')
+const pool = require("../config/db")
 
 class UserControllers {
 
@@ -49,6 +50,24 @@ class UserControllers {
             user.reviews = await ReviewServices.getReviewsByUserId(userId)
 
             res.status(200).json({ user })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async updateRole(req, res, next) {
+        try {
+            const userId = req.params.userId
+            const { role } = req.body
+
+            await pool.query(`
+                UPDATE users
+                    SET role = $1
+                WHERE id = $2
+            `, [role, userId])
+
+            res.status(200).json({ message: 'success' })
         } catch (err) {
             console.log(err)
             next(err)

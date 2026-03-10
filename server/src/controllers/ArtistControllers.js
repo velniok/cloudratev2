@@ -1,7 +1,6 @@
 const { validationResult } = require("express-validator")
 const ArtistServices = require("../services/ArtistServices")
 const AppError = require('../utils/AppError')
-const pool = require("../config/db")
 
 class ArtistControllers {
     async create(req, res, next) {
@@ -35,16 +34,6 @@ class ArtistControllers {
                     totalPages: Math.ceil(total / limit)
                 }
             })
-        } catch (err) {
-            console.log(err)
-            next(err)
-        }
-    }
-
-    async getCount(req, res, next) {
-        try {
-            const count = await pool.query(`SELECT COUNT(*) FROM artists`)
-            res.json({ general: { artists: count.rows[0].count } })
         } catch (err) {
             console.log(err)
             next(err)

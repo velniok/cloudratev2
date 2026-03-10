@@ -1,9 +1,9 @@
-import { DeleteIcon, EditIcon, Modal, Table, Title } from '@/shared/ui'
+import { DeleteIcon, EditIcon, Modal, ProfileIcon, Table, Title } from '@/shared/ui'
 import styles from './AdminUsers.module.scss'
 import { FC, useState } from 'react'
 import { IUser } from '@/entities/user'
 import { TStatus } from '@/shared/types'
-import { DeleteUserModal } from '@/features/user'
+import { DeleteUserModal, UpdateRoleModal } from '@/features/user'
 
 interface AdminUsersProps {
     userList: IUser[]
@@ -12,9 +12,16 @@ interface AdminUsersProps {
 
 export const AdminUsers: FC<AdminUsersProps> = ({ userList, userListStatus }) => {
 
+    const [updateRole, setUpdateRole] = useState<boolean>(false)
     const [deleteUser, setDeleteUser] = useState<boolean>(false)
 
     const [userId, setUserId] = useState<number | null>(null)
+    const [user, setUser] = useState<IUser | null>(null)
+
+    const hundleUpdateRole = (id: number) => {
+        setUser(prev => prev = userList.filter(user => user.id === id)[0])
+        setUpdateRole(true)
+    }
 
     const hundleDeleteUser = (id: number) => {
         setUserId((prev) => prev = id)
@@ -30,6 +37,15 @@ export const AdminUsers: FC<AdminUsersProps> = ({ userList, userListStatus }) =>
                     data={userList}
                     dataStatus={userListStatus}
                     actions={[
+                        {
+                            name: 'role',
+                            func: (id) => (
+                            <div onClick={() => hundleUpdateRole(id)}>
+                                <ProfileIcon />
+                                <span>РОЛЬ</span>
+                            </div>
+                            )
+                        },
                         {
                             name: 'edit',
                             func: (id) => (
@@ -48,6 +64,15 @@ export const AdminUsers: FC<AdminUsersProps> = ({ userList, userListStatus }) =>
                         },
                     ]}
                 />
+                <Modal
+                    width='420px'
+                    modalTitle='Изменить роль'
+                    modalDesc={`Изменить роль пользователю`}
+                    modalOpen={updateRole}
+                    modalClose={() => setUpdateRole(false)}
+                >
+                    <UpdateRoleModal user={user} modalClose={() => setUpdateRole(false)} />
+                </Modal>
                 <Modal
                     width='420px'
                     modalTitle='Удалить пользователя?'

@@ -140,6 +140,11 @@
     &__nickname {
         padding-top: 4px;
     }
+
+    &__created {
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
 }
 
 .action {
@@ -162,6 +167,31 @@
             border: 1px solid var(--border-subtle);
 
             transition: color 0.3s, border 0.3s;
+        }
+
+        &.role div {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            column-gap: 6px;
+            padding: 0 10px;
+
+            &:hover {
+                color: var(--purple-color);
+                border: 1px solid var(--purple-color);
+            }
+
+            & svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            & span {
+                padding-top: 2px;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 0.05em;
+            }
         }
 
         &.edit div:hover {

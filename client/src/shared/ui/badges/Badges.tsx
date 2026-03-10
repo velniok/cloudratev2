@@ -2,12 +2,17 @@ import type { FC, ReactNode } from 'react'
 import styles from './Badges.module.scss'
 
 interface BadgesProps {
-    children: ReactNode
-    role?: string
+    role: string
 }
 
-export const Badges: FC<BadgesProps> = ({ children, role }) => {
+export const Badges: FC<BadgesProps> = ({ role }) => {
+
+    const roleLables = {
+        admin: 'Админ',
+        user: 'Пользователь'
+    }
+
     return (
-        <span className={`${styles.badges} ${role ? styles[role] : ''}`}>{children}</span>
+        <span className={`${styles.badges} ${role ? styles[role] : ''}`}>{roleLables[role]}</span>
     )
 }

@@ -23,9 +23,11 @@ export const TableUserItem: FC<TableUserItemProps> = ({ user, actions }) => {
                     <p className={styles.user__nickname}>{user.nickname}</p>
                 </Link>
             </td>
-            <td className={styles.table__data}>{new Date(user.createdAt).toLocaleDateString()}</td>
             <td className={styles.table__data}>
-                <Badges role={user.role}>{user.role}</Badges>
+                <p className={styles.user__created}>{new Date(user.createdAt).toLocaleDateString()}</p>
+            </td>
+            <td className={styles.table__data}>
+                <Badges role={user.role} />
             </td>
             <td className={styles.table__data}>
                 <div className={styles.action}>
