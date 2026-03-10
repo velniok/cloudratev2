@@ -7,6 +7,7 @@ import { useAppDispatch, useNotification } from '@/shared/lib'
 import { updateUserThunk } from '../model/slice'
 import { updateAvatarApi } from '@/shared/api'
 import { IApiError } from '@/shared/types'
+import { authThunk } from '@/features/auth'
 
 interface EditProfileFormProps {
     user: IUser
@@ -90,7 +91,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
         })).unwrap()
             .then(() => {
                 notify('Профиль изменён', 'Ваш профиль успешно изменён', 'edit')
-                if (user.username !== values.username) return navigate(`/user/${values.username}`)
+                if (user.username !== values.username) {return navigate(`/user/${values.username}`), dispatch(authThunk())}
                 navigate(`/user/${user.username}`)
             })
             .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))
