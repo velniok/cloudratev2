@@ -1,9 +1,13 @@
 import { getGeneralThunk, selectGeneral, selectGeneralStatus } from "@/features/general"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { AdminGeneral } from "@/widgets/admin-general"
-import { useEffect } from "react"
+import { FC, useEffect } from "react"
 
-export const AdminPanelPage = () => {
+interface AdminPanelPageProps {
+    role: string
+}
+
+export const AdminPanelPage: FC<AdminPanelPageProps> = ({ role }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
@@ -17,6 +21,10 @@ export const AdminPanelPage = () => {
     }, [])
 
     return (
-        <AdminGeneral general={general} generalStatus={generalStatus} />
+        <>
+            {
+                role === 'admin' && <AdminGeneral general={general} generalStatus={generalStatus} />
+            }
+        </>
     )
 }

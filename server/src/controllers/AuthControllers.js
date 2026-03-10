@@ -16,7 +16,7 @@ class AuthControllers {
             const createdUser = await AuthServices.registerUser(password, [email, nickname])
             if (createdUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 405, 'email')
             const user = createdUser.user
-
+            console.log(user)
             const token = jwt.sign(
                 { 
                     id: user.id,
@@ -62,9 +62,22 @@ class AuthControllers {
     async authMe(req, res, next) {
         try {
             const userId = req.userId
+            const userRole = req.userRole
 
             const user = await AuthServices.authUser(userId)
             if (!user) throw new AppError('Пользователь не найден', 404)
+
+            if (userRole !== user.role) {
+                const token = jwt.sign(
+                    {
+                    id: userId, role: user.role
+                    },
+                    process.env.TOKEN_SECRET_KEY,
+                    { expiresIn: "30d" }
+                )
+                res.status(200).json({ user, token })
+                return false
+            }    
 
             res.status(200).json({ user })
         } catch (err) {

@@ -10,18 +10,18 @@ export const UserPage = () => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
-    const userId = useParams().userId
+    const username = useParams().username
     const user = useAppSelector(selectUser)
     const userStatus = useAppSelector(selectUserStatus)
     const userUpdateStatus = useAppSelector(selectUserUpdateStatus)
 
     useEffect(() => {
         if (userUpdateStatus !== 'success') {
-            dispatch(getOneUserThunk({ id: +userId }))
+            dispatch(getOneUserThunk({ username: username }))
                 .then()
                 .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
         }
-    }, [userId])
+    }, [username])
 
     return (
         <>

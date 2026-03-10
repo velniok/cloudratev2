@@ -6,6 +6,7 @@ export interface IUser {
     createdAt: string
     role: 'user' | 'admin'
     nickname: string
+    username: string
     email: string
     password: string
     avatarUrl: string | null

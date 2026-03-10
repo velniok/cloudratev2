@@ -3,3 +3,5 @@ export { useAppSelector } from "./hooks/useAppSelector"
 export { useNotification } from './hooks/useNotification'
 export { useSearch } from './hooks/useSearch'
 export { usePagination } from './hooks/usePagination'
+export { pluralize } from './pluralize'
+export { getMonth } from './formatMonth'

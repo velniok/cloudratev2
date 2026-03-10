@@ -2,8 +2,8 @@ import type { IUser } from "@/entities/user"
 import { axios } from "@/shared/api"
 import { IUpdateUserReq } from "./userApiTypes"
 
-export const getOneUser = (params: { id: number }) => {
-    return axios.get<{ user: IUser }>(`/user/getOne/${params.id}`)
+export const getOneUser = (params: { username: string }) => {
+    return axios.get<{ user: IUser }>(`/user/getOne/${params.username}`)
 }
 
 export const getUsersApi = () => {

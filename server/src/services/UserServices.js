@@ -22,6 +22,15 @@ class UserServices {
         return mapToCamelCase(userRes.rows[0])
     }
 
+    async getUserByUsername(username) {
+        const userRes = await pool.query(`
+            SELECT *
+            FROM users
+            WHERE username = $1
+        `, [username])
+        return mapToCamelCase(userRes.rows[0])
+    }
+
     async getUsersByEmail(email) {
         return await pool.query(`
             SELECT *
@@ -46,15 +55,16 @@ class UserServices {
             WITH email_check AS (
                 SELECT id
                 FROM users
-                WHERE email = $1 AND id != $4
+                WHERE email = $1 AND id != $5
             ),
             updated AS (
                 UPDATE users
                 SET
-                    nickname = $2,
                     email = $1,
-                    avatar_url = $3
-                WHERE id = $4 AND NOT EXISTS (SELECT 1 FROM email_check)
+                    nickname = $2,
+                    username = $3,
+                    avatar_url = $4
+                WHERE id = $5 AND NOT EXISTS (SELECT 1 FROM email_check)
                 RETURNING *
             )
             SELECT

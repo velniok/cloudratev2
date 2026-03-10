@@ -33,6 +33,7 @@ class AuthServices {
                     FROM inserted u
                 ) as user
         `, [...values, hashPassword])
+        console.log(newUserRes.rows[0])
         return mapToCamelCase(newUserRes.rows[0])
     }
 

@@ -2,9 +2,13 @@ import { getUsersThunk } from "@/features/user"
 import { selectUserList, selectUserListStatus } from "@/features/user/model/selectors"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { AdminUsers } from "@/widgets/admin-users"
-import { useEffect } from "react"
+import { FC, useEffect } from "react"
 
-export const AdminUsersPage = () => {
+interface AdminUsersPageProps {
+    role: string
+}
+
+export const AdminUsersPage: FC<AdminUsersPageProps> = ({ role }) => {
 
     const dispatch = useAppDispatch()
     const userList = useAppSelector(selectUserList)
@@ -15,6 +19,10 @@ export const AdminUsersPage = () => {
     }, [])
 
     return (
-        <AdminUsers userList={userList} userListStatus={userListStatus} />
+        <>
+        {
+            role === 'admin' && <AdminUsers userList={userList} userListStatus={userListStatus} />
+        }
+        </>
     )
 }

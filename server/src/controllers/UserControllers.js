@@ -19,11 +19,11 @@ class UserControllers {
 
     async getOne(req, res, next) {
         try {
-            const userId = req.params.userId
-            const user = await UserServices.getUserById(userId)
+            const username = req.params.userId
+            const user = await UserServices.getUserByUsername(username)
             if (!user) throw new AppError('Пользователь не найден', 404)
 
-            user.reviews = await ReviewServices.getReviewsByUserId(userId)
+            user.reviews = await ReviewServices.getReviewsByUserId(user.id)
 
             res.status(200).json({ user })
         } catch (err) {
@@ -38,13 +38,13 @@ class UserControllers {
             if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
             const userId = Number(req.params.userId)
-            const { nickname, email, avatarUrl, password } = req.body
+            const { nickname, username, email, avatarUrl, password } = req.body
 
             if (password) {
                 await UserServices.updateUserPasswordById(userId, password)
             }
 
-            const updatedUser = await UserServices.updateUserById(userId, [email, nickname, avatarUrl])
+            const updatedUser = await UserServices.updateUserById(userId, [email, nickname, username, avatarUrl])
             if (updatedUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
             const user = updatedUser.user
             user.reviews = await ReviewServices.getReviewsByUserId(userId)

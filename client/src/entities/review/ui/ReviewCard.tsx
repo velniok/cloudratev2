@@ -27,7 +27,7 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review }) => {
     return (
         <div className={`${styles.inner} ${review.userId === authUser?.id ? styles.your : ''}`}>
             <div className={styles.top}>
-                <Link to={`/user/${review.user.id}`} className={styles.user}>
+                <Link to={`/user/${review.user.username}`} className={styles.user}>
                     <Cover width="32px" height="32px" borderRadius="50%" url={review.user.avatarUrl} />
                     <p className={styles.nickname}>{review.user.nickname}</p>
                 </Link>

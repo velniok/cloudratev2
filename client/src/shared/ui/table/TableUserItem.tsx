@@ -18,7 +18,7 @@ export const TableUserItem: FC<TableUserItemProps> = ({ user, actions }) => {
     return (
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
-                <Link to={`/user/${user.id}`} className={styles.user}>
+                <Link to={`/user/${user.username}`} className={styles.user}>
                     <Cover width='40px' height='40px' borderRadius='6px' url={user.avatarUrl} />
                     <p className={styles.user__nickname}>{user.nickname}</p>
                 </Link>

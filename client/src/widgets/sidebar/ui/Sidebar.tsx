@@ -47,8 +47,8 @@ export const Sidebar = () => {
                 {
                     authStatus === 'success' ?
                     <ul className={styles.nav__list}>
-                        <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.id}` || pathname === `/user/${authUser?.id}/edit` ? styles.active : ''}`}>
-                            <Link to={`/user/${authUser?.id}`} className={styles.nav__link}>
+                        <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.username}` || pathname === `/user/${authUser?.id}/edit` ? styles.active : ''}`}>
+                            <Link to={`/user/${authUser?.username}`} className={styles.nav__link}>
                                 <ProfileIcon />
                                 Профиль
                             </Link>

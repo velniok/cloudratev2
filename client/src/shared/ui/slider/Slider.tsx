@@ -17,7 +17,6 @@ export const Slider: FC<SliderProps> = ({ children }) => {
 
         const observer = new ResizeObserver(() => {
             setMaxOffset(list.scrollWidth - list.clientWidth)
-            console.log(list.scrollWidth, list.clientWidth)
         })
 
         observer.observe(list)

@@ -6,7 +6,7 @@ import type { IUser } from "@/entities/user";
 import { IUpdateUserReq } from "../api/userApiTypes";
 import { IApiError } from "@/shared/types";
 
-export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { id: number }, { rejectValue: IApiError }>('user/getOneUserThunk', async (params, { rejectWithValue }) => {
+export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { username: string }, { rejectValue: IApiError }>('user/getOneUserThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getOneUser(params)
         return data

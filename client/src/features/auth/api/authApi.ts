@@ -11,5 +11,5 @@ export const loginUser = (params: ILoginReq) => {
 }
 
 export const authUser = () => {
-    return axios.get<{ user: IUser }>('auth/me')
+    return axios.get<IAuthRes>('auth/me')
 }

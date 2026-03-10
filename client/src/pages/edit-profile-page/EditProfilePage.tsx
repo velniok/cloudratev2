@@ -9,17 +9,17 @@ export const EditProfilePage = () => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
-    const userId = useParams().userId
+    const username = useParams().username
     const user = useAppSelector(selectUser)
     const userStatus = useAppSelector(selectUserStatus)
 
     useEffect(() => {
         if (userStatus !== 'success') {
-            dispatch(getOneUserThunk({ id: +userId }))
+            dispatch(getOneUserThunk({ username: username }))
                 .then()
                 .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
         }
-    }, [userId])
+    }, [username])
 
     return (
         <>

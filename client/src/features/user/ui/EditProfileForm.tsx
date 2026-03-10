@@ -22,6 +22,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
 
     const initialValues = {
         nickname: `${user.nickname}`,
+        username: `${user.username}`,
         avatarUrl: `${user.avatarUrl}`,
         email: `${user.email}`,
         password: '',
@@ -31,6 +32,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
 
     const initialErrors = {
         nickname: '',
+        username: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -40,6 +42,11 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setErrors(prev => ({ ...prev, nickname: '' }))
         setValues(prev => ({ ...prev, nickname: e.target.value }))
+    }
+
+    const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, username: '' }))
+        setValues(prev => ({ ...prev, username: e.target.value }))
     }
 
     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -75,6 +82,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
             id: user.id,
             req: {
                 nickname: values.nickname,
+                username: values.username,
                 email: values.email,
                 avatarUrl: values.avatarUrl,
                 password: values.password
@@ -82,14 +90,15 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
         })).unwrap()
             .then(() => {
                 notify('Профиль изменён', 'Ваш профиль успешно изменён', 'edit')
-                navigate(`/user/${user.id}`)
+                if (user.username !== values.username) return navigate(`/user/${values.username}`)
+                navigate(`/user/${user.username}`)
             })
             .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        navigate(`/user/${user.id}`)
+        navigate(`/user/${user.username}`)
     }
 
     return (
@@ -114,6 +123,15 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                         type='text'
                         isGray={true}
                         error={errors.nickname}
+                    />
+                    <Input
+                        label='Уникальный никнейм'
+                        placeholder='Введите уникальный никнейм'
+                        value={values.username}
+                        onChange={handleUsernameChange}
+                        type='text'
+                        isGray={true}
+                        error={errors.username}
                     />
                     <Input
                         label='Email'

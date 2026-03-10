@@ -16,10 +16,10 @@ import { LoginPage } from "@/pages/login-page"
 import { AdminPanelPage } from "@/pages/admin-panel-page"
 import { AdminArtistsPage } from "@/pages/admin-artists-page"
 
-import { useAppDispatch, useNotification } from "@/shared/lib"
+import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { Notification } from "@/shared/ui"
 
-import { authThunk } from "@/features/auth"
+import { authThunk, selectAuthUser } from "@/features/auth"
 import { AdminTracksPage } from "@/pages/admin-tracks-page"
 import { AdminUsersPage } from "@/pages/admin-users-page"
 import { SearchPage } from "@/pages/search-page"
@@ -27,6 +27,7 @@ import { SearchPage } from "@/pages/search-page"
 function App() {
 
     const dispatch = useAppDispatch()
+    const authUser = useAppSelector(selectAuthUser)
     const { notify } = useNotification()
     const pathname = useLocation().pathname
 
@@ -41,7 +42,7 @@ function App() {
     return (
         <div className="app-shell">
             {
-                pathname.slice(0, 6) !== '/admin' ?  <Sidebar /> : <AdminSidebar />
+                pathname.slice(0, 6) !== '/admin' || authUser?.role !== 'admin' ?  <Sidebar /> : <AdminSidebar />
             }
             <main>
                 <Routes>
@@ -51,16 +52,16 @@ function App() {
                     <Route path="/track/:id" element={<TrackPage />} />
                     <Route path="/artist/:id" element={<ArtistPage />} />
 
-                    <Route path="/user/:userId" element={<UserPage />} />
-                    <Route path="/user/:userId/edit" element={<EditProfilePage />} />
+                    <Route path="/user/:username" element={<UserPage />} />
+                    <Route path="/user/:username/edit" element={<EditProfilePage />} />
 
                     <Route path="/registration" element={<RegPage />} />
                     <Route path="/login" element={<LoginPage />} />
 
-                    <Route path="/admin" element={<AdminPanelPage />} />
-                    <Route path="/admin/artists" element={<AdminArtistsPage />} />
-                    <Route path="/admin/tracks" element={<AdminTracksPage />} />
-                    <Route path="/admin/users" element={<AdminUsersPage />} />
+                    <Route path="/admin" element={<AdminPanelPage role={authUser?.role} />} />
+                    <Route path="/admin/artists" element={<AdminArtistsPage role={authUser?.role} />} />
+                    <Route path="/admin/tracks" element={<AdminTracksPage role={authUser?.role} />} />
+                    <Route path="/admin/users" element={<AdminUsersPage role={authUser?.role} />} />
                 </Routes>
             </main>
             <Notification />

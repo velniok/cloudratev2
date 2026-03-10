@@ -31,9 +31,12 @@ export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: I
     }
 })
 
-export const authThunk = createAsyncThunk<{ user: IUser }, void, { rejectValue: IApiError }>('auth/authThunk', async (_, { rejectWithValue }) => {
+export const authThunk = createAsyncThunk<IAuthRes, void, { rejectValue: IApiError }>('auth/authThunk', async (_, { rejectWithValue }) => {
     try {
         const { data } = await authUser()
+        if (data.token) {
+            window.localStorage.setItem('token', data.token)
+        }
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
