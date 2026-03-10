@@ -22,7 +22,7 @@ export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
                 <h2 className={styles.nickname}>
                     {user?.nickname}
                     {
-                        user?.role !== 'user' && <Badges role={user.role}>{user.role}</Badges>
+                        user?.role !== 'user' && <Badges role={user.role}></Badges>
                     }
                     </h2>
                 <p className={styles.username}>{user?.email}</p>
