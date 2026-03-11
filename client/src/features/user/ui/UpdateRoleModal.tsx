@@ -3,7 +3,8 @@ import styles from './UpdateRoleModal.module.scss'
 import { FC, useEffect, useState } from 'react'
 import { IUser } from '@/entities/user'
 import { axios } from '@/shared/api'
-import { useNotification } from '@/shared/lib'
+import { useAppDispatch, useNotification } from '@/shared/lib'
+import { updateUserRoleThunk } from '../model/slice'
 
 interface UpdateRoleModalProps {
     modalClose: () => void
@@ -12,14 +13,15 @@ interface UpdateRoleModalProps {
 
 export const UpdateRoleModal: FC<UpdateRoleModalProps> = ({ modalClose, user }) => {
 
+    const dispatch = useAppDispatch()
     const { notify } = useNotification()
-    const [active, setActive] = useState<string>('')
+    const [active, setActive] = useState<'admin' | 'user'>('user')
 
     useEffect(() => {
         setActive(user?.role)
     }, [user])
 
-    const roles = [
+    const roles: { name: 'admin' | 'user', title: string, desc: string }[] = [
         {
             name: 'user',
             title: 'Пользователь',
@@ -32,8 +34,11 @@ export const UpdateRoleModal: FC<UpdateRoleModalProps> = ({ modalClose, user }) 
         },
     ]
 
-    const onSubmit = async () => {
-        await axios.patch(`/user/updateRole/${user?.id}`, { role: active })
+    const onSubmit = () => {
+        dispatch(updateUserRoleThunk({
+            id: user?.id,
+            role: active
+        }))
             .then(() => {
                 notify('Роль изменена', 'Вы успешно изменили роль', 'success')
                 hundleCancel()

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteUserApi, getOneUser, getUsersApi, updateUserApi } from "../api/userApi";
+import { deleteUserApi, getOneUser, getUsersApi, updateUserApi, updateUserRoleApi } from "../api/userApi";
 import axios from "axios";
 import type { IUserState } from "./userSliceTypes";
 import type { IUser } from "@/entities/user";
@@ -31,6 +31,17 @@ export const getUsersThunk = createAsyncThunk<{ users: IUser[] }, void, { reject
 export const updateUserThunk = createAsyncThunk<{ user: IUser }, IUpdateUserReq, { rejectValue: IApiError }>('user/updateUserThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await updateUserApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
+    }
+})
+
+export const updateUserRoleThunk = createAsyncThunk<{ role: string }, { id: number, role: 'admin' | 'user' }, { rejectValue: IApiError }>('user/updateUserRoleThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await updateUserRoleApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -114,6 +125,24 @@ const userSlice = createSlice({
             .addCase(updateUserThunk.rejected, (state, action) => {
                 state.updateStatus = 'error',
                 state.updateError = action.payload.message
+            })
+
+            .addCase(updateUserRoleThunk.pending, (state) => {
+                state.userListStatus = 'loading',
+                state.updateError = null
+            })
+            .addCase(updateUserRoleThunk.fulfilled, (state, action) => {
+                state.userList = state.userList.map(user => {
+                    if (user.id === action.meta.arg.id) {
+                        user.role = action.meta.arg.role
+                    }
+                    return user
+                })
+                state.userListStatus = 'success'
+            })
+            .addCase(updateUserRoleThunk.rejected, (state, action) => {
+                state.userListStatus = 'error',
+                state.userListError = action.payload.message
             })
 
             .addCase(deleteUserThunk.pending, (state) => {

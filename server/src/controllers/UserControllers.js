@@ -67,7 +67,7 @@ class UserControllers {
                 WHERE id = $2
             `, [role, userId])
 
-            res.status(200).json({ message: 'success' })
+            res.status(200).json({ role })
         } catch (err) {
             console.log(err)
             next(err)

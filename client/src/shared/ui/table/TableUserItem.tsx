@@ -20,7 +20,10 @@ export const TableUserItem: FC<TableUserItemProps> = ({ user, actions }) => {
             <td className={styles.table__data}>
                 <Link to={`/user/${user.username}`} className={styles.user}>
                     <Cover width='40px' height='40px' borderRadius='6px' url={user.avatarUrl} />
-                    <p className={styles.user__nickname}>{user.nickname}</p>
+                    <div className={styles.user__bio}>
+                        <p className={styles.user__nickname}>{user.nickname}</p>
+                        <p className={styles.user__username}>@{user.username}</p>
+                    </div>
                 </Link>
             </td>
             <td className={styles.table__data}>

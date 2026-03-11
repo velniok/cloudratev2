@@ -15,4 +15,6 @@ export interface IReview {
     user?: IUser
     trackId: number
     track?: ITrack
+    likesCount: string
+    isLiked: boolean
 }

@@ -1,3 +1,4 @@
+import { selectAuthUser } from "@/features/auth"
 import { getOneTrackThunk, selectTrack, selectTrackStatus } from "@/features/track"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { TrackGrade } from "@/widgets/track-grade"
@@ -10,12 +11,15 @@ export const TrackPage = () => {
 
     const dispatch = useAppDispatch()
     const id = useParams<{ id: string }>().id
+    const authUser = useAppSelector(selectAuthUser)
     const track = useAppSelector(selectTrack)
     const trackStatus = useAppSelector(selectTrackStatus)
 
     useEffect(() => {
-        dispatch(getOneTrackThunk({ id: Number(id) }))
-    }, [id])
+        if (authUser) {
+            dispatch(getOneTrackThunk({ trackId: Number(id), userId: authUser.id }))
+        }
+    }, [id, authUser])
 
     return (
         <>

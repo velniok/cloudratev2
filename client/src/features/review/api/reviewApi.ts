@@ -8,3 +8,7 @@ export const createReviewApi = (params: IReviewReq) => {
 export const addTextReviewApi = (params: { id: number, req: { text: string } }) => {
     return axios.patch(`/review/addText/${params.id}`, params.req)
 }
+
+export const toggleLikeApi = (params: { reviewId: number, userId: number }) => {
+    return axios.post('/review/toggleLike', params)
+}

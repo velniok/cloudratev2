@@ -4,6 +4,7 @@ import { Title } from "@/shared/ui"
 import styles from "./TrackReviews.module.scss"
 import { TStatus } from "@/shared/types"
 import { ITrack } from "@/entities/track"
+import { ReviewLikeToggle } from "@/features/review"
 
 interface TrackReviewsProps {
     track: ITrack
@@ -28,7 +29,13 @@ export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
                             <>
                                 {
                                     track.reviews.map((review: IReview) => {
-                                        if (review.text) return <ReviewCard key={review.id} review={review} />
+                                        if (review.text) return (
+                                            <ReviewCard
+                                                key={review.id}
+                                                review={review}
+                                                actions={<ReviewLikeToggle reviewId={review.id} likesCount={+review.likesCount} isLiked={review.isLiked} />}
+                                            />
+                                        )
                                     })
                                 }
                             </>

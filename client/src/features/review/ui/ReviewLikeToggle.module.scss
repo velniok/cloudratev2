@@ -1,0 +1,47 @@
+.wrapper {
+    margin-top: 12px;
+    display: flex;
+    justify-self: flex-end;
+    align-items: center;
+    column-gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--text-secondary);
+
+    transition: border 0.3s, color 0.3s, opacity 0.3s;
+
+    & svg {
+        transition: fill 0.3s;
+    }
+
+    &.active {
+        border: 1px solid var(--accent-color);
+        color: var(--accent-color);
+
+        & svg {
+            fill: var(--accent-color);
+        }
+
+        &:hover {
+            opacity: 0.7;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+
+            & svg {
+                fill: var(--accent-color);
+            }
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+        border: 1px solid var(--text-primary);
+        color: var(--text-primary);
+
+        & svg {
+            fill: var(--text-primary);
+        }
+    }
+}

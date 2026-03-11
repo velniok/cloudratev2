@@ -14,6 +14,10 @@ export const updateUserApi = (params: IUpdateUserReq) => {
     return axios.patch<{ user: IUser }>(`user/update/${params.id}`, params.req)
 }
 
+export const updateUserRoleApi = (params: { id: number, role: 'admin' | 'user' }) => {
+    return axios.patch(`/user/updateRole/${params.id}`, { role: params.role })
+}
+
 export const deleteUserApi = (params: { id: number }) => {
     return axios.delete(`/user/delete/${params.id}`)
 }

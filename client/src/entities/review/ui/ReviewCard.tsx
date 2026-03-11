@@ -1,16 +1,17 @@
 import { Link } from "react-router-dom"
 import styles from "./ReviewCard.module.scss"
 import type { IReview } from "../model/types"
-import { MouseEvent, useState, type FC } from "react"
+import { MouseEvent, ReactNode, useState, type FC } from "react"
 import { Cover, CriteriasPopup, Rating } from "@/shared/ui"
 import { useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
 
 interface ReviewCardProps {
     review: IReview
+    actions?: ReactNode
 }
 
-export const ReviewCard: FC<ReviewCardProps> = ({ review }) => {
+export const ReviewCard: FC<ReviewCardProps> = ({ review, actions }) => {
 
     const authUser = useAppSelector(selectAuthUser)
 
@@ -38,6 +39,9 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review }) => {
                 }
             </div>
             <p className={styles.review}>{review.text}</p>
+            {
+                actions && <>{actions}</>
+            }
         </div>
     )
 }

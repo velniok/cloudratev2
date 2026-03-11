@@ -5,6 +5,7 @@ import { createTrackApi, deleteTrackApi, getOneTrackApi, getTracksApi, updateTra
 import { ITrackState } from "./trackSliceTypes";
 import { ITrackReq, ITrackUpdateReq } from "../api/trackApiTypes";
 import { IApiError, IPagination } from "@/shared/types";
+import { toggleLikeApi } from "@/features/review";
 
 export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, { page: number, limit: number }, { rejectValue: IApiError }>('/track/getTracksThunk', async (params, { rejectWithValue }) => {
     try {
@@ -17,7 +18,7 @@ export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: I
     }
 })
 
-export const getOneTrackThunk = createAsyncThunk<{ track: ITrack }, { id: number }, { rejectValue: IApiError }>('/track/getOneTrackThunk', async (params, { rejectWithValue }) => {
+export const getOneTrackThunk = createAsyncThunk<{ track: ITrack }, { trackId: number, userId: number }, { rejectValue: IApiError }>('/track/getOneTrackThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getOneTrackApi(params)
         return data
@@ -42,6 +43,17 @@ export const createTrackThunk = createAsyncThunk<{ track: ITrack }, ITrackReq, {
 export const updateTrackThunk = createAsyncThunk<{ track: ITrack }, ITrackUpdateReq, { rejectValue: IApiError }>('/track/updateTrackThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await updateTrackApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
+export const toggleLikeReviewThunk = createAsyncThunk<{ liked: boolean }, { reviewId: number, userId: number }, { rejectValue: IApiError }>('/track/toggleLikeReview', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await toggleLikeApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -138,6 +150,29 @@ const trackSlice = createSlice({
                 state.trackStatus = 'success'
             })
             .addCase(updateTrackThunk.rejected, (state, action) => {
+                state.trackStatus = 'error',
+                state.trackError = action.payload.message
+            })
+
+            .addCase(toggleLikeReviewThunk.pending, (state) => {
+                state.trackError = null
+            })
+            .addCase(toggleLikeReviewThunk.fulfilled, (state, action) => {
+                state.track.reviews = state.track.reviews.map(review => {
+                    if (review.id === action.meta.arg.reviewId) {
+                        if (action.payload.liked) {
+                            review.likesCount = String(+review.likesCount + 1)
+                            review.isLiked = true
+                        } else {
+                            review.likesCount = String(+review.likesCount - 1)
+                            review.isLiked = false
+                        }
+                    }
+                    return review
+                })
+                state.trackStatus = 'success'
+            })
+            .addCase(toggleLikeReviewThunk.rejected, (state, action) => {
                 state.trackStatus = 'error',
                 state.trackError = action.payload.message
             })

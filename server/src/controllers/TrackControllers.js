@@ -44,8 +44,9 @@ class TrackControllers {
     async getOne(req, res, next) {
         try {
             const trackId = req.params.id
+            const { userId } = req.query
             const track = await TrackServices.getTrackById(trackId)
-            track.reviews = await ReviewServices.getReviewsByTrackId(trackId)
+            track.reviews = await ReviewServices.getReviewsByTrackId(trackId, userId)
 
             res.status(200).json({ track })
         } catch (err) {

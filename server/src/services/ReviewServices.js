@@ -41,15 +41,20 @@ class ReviewServices {
         return mapToCamelCase(newReviewRes.rows[0])
     }
 
-    async getReviewsByTrackId(id) {
+    async getReviewsByTrackId(trackId, userId) {
         const reviewsRes = await pool.query(`
             SELECT
                 r.*,
-                row_to_json(u) as user
+                row_to_json(u) as user,
+                (SELECT COUNT(*) FROM review_likes rl WHERE rl.review_id = r.id) as likes_count,
+                (SELECT EXISTS (
+                    SELECT 1 FROM review_likes rl2
+                    WHERE rl2.review_id = r.id AND rl2.user_id = $2
+                )) as is_liked
             FROM reviews r
             JOIN users u ON r.user_id = u.id
             WHERE track_id = $1
-            `, [id])
+            `, [trackId, userId])
         return reviewsRes.rows.map(mapToCamelCase)
     }
 
@@ -78,6 +83,20 @@ class ReviewServices {
             SET text = $1
             WHERE id = $2
         `, [text, id])
+    }
+
+    async toggleLikeReview(reviewId, userId) {
+        return await pool.query(`
+            WITH deleted AS (
+                DELETE FROM review_likes
+                WHERE review_id = $1 and user_id = $2
+                RETURNING id
+            )
+            INSERT INTO review_likes (review_id, user_id)
+            SELECT $1, $2
+            WHERE NOT EXISTS (SELECT 1 FROM deleted)
+            RETURNING id
+        `, [reviewId, userId])
     }
 }
 

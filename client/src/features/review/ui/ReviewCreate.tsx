@@ -24,7 +24,7 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
         await createReviewApi(req)
             .then(() => {
                 notify('Трек оценён', 'Вы успешно оставили оценку', 'success')
-                dispatch(getOneTrackThunk({ id: track.id }))
+                dispatch(getOneTrackThunk({ trackId: track.id, userId: user.id }))
             })
     }
 
@@ -32,7 +32,7 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
         await addTextReviewApi(req)
             .then(() => {
                 notify('Отзыв оставлен', 'Вы успешно оставили отзыв к оценке', 'success')
-                dispatch(getOneTrackThunk({ id: track.id }))
+                dispatch(getOneTrackThunk({ trackId: track.id, userId: user.id }))
             })
     }
 

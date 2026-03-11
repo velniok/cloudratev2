@@ -31,6 +31,18 @@ class ReviewControllers {
             next(err)
         }
     }
+
+    async toggleLike(req, res, next) {
+        try {
+            const { reviewId, userId } = req.body
+            const result = await ReviewServices.toggleLikeReview(reviewId, userId)
+
+            res.status(200).json({ liked: !!result.rows[0] })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
 }
 
 module.exports = new ReviewControllers()
