@@ -116,36 +116,38 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                             <p className={styles.sub}>JPG или PNG. Макс. размер 2MB</p>
                         </div>
                     </div>
-                    <Input
-                        label='Никнейм'
-                        placeholder='Введите никнейм'
-                        value={values.nickname}
-                        onChange={handleNicknameChange}
-                        type='text'
-                        isGray={true}
-                        error={errors.nickname}
-                    />
-                    <Input
-                        label='Уникальный никнейм'
-                        placeholder='Введите уникальный никнейм'
-                        value={values.username}
-                        onChange={handleUsernameChange}
-                        type='text'
-                        isGray={true}
-                        error={errors.username}
-                    />
-                    <Input
-                        label='Email'
-                        placeholder='Введите email'
-                        value={values.email}
-                        onChange={handleEmailChange}
-                        type='email'
-                        isGray={true}
-                        error={errors.email}
-                    />
+                    <div className={styles.grid}>
+                        <Input
+                            label='Никнейм'
+                            placeholder='Введите никнейм'
+                            value={values.nickname}
+                            onChange={handleNicknameChange}
+                            type='text'
+                            isGray={true}
+                            error={errors.nickname}
+                        />
+                        <Input
+                            label='Уникальный никнейм'
+                            placeholder='Введите уникальный никнейм'
+                            value={values.username}
+                            onChange={handleUsernameChange}
+                            type='text'
+                            isGray={true}
+                            error={errors.username}
+                        />
+                        <Input
+                            label='Email'
+                            placeholder='Введите email'
+                            value={values.email}
+                            onChange={handleEmailChange}
+                            type='email'
+                            isGray={true}
+                            error={errors.email}
+                        />
+                </div>
                 </div>
                 <h3 className={styles.title}>БЕЗОПАСНОСТЬ</h3>
-                <div className={styles.formWrapper}>
+                <div className={styles.securityWrapper}>
                     <Input
                         label='Новый пароль'
                         placeholder='••••••••'

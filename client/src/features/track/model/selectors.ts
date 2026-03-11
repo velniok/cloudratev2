@@ -8,3 +8,6 @@ export const selectTrackList = (state: RootState) => state.track.trackList
 export const selectTrackListPagination = (state: RootState) => state.track.trackListPagination
 export const selectTrackListStatus = (state: RootState) => state.track.trackListStatus
 export const selectTrackListError = (state: RootState) => state.track.trackListError
+
+export const selectNewTracks = (state: RootState) => state.track.newTracks
+export const selectNewTracksStatus = (state: RootState) => state.track.newTracksStatus

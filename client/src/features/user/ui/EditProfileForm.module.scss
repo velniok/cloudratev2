@@ -31,6 +31,24 @@
     row-gap: 12px;
 }
 
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+
+
+    & :nth-child(3) {
+        grid-column: span 2;
+    }
+}
+
+.securityWrapper {
+    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
 .sub {
     color: var(--text-secondary);
     font-size: 12px;

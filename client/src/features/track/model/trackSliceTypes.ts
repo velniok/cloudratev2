@@ -9,4 +9,6 @@ export interface ITrackState {
     trackListPagination: IPagination | null
     trackListStatus: TStatus
     trackListError: string | null
+    newTracks: ITrack[] | null
+    newTracksStatus: TStatus
 }

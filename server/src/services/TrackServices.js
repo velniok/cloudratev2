@@ -73,6 +73,27 @@ class TrackServices {
             total: countRes.rows[0].total
         }
     }
+    
+    async getNewTracks() {
+        const tracksRes = await pool.query(`
+            SELECT
+                t.*,
+                (
+                    SELECT ROUND(AVG(r.rating)::numeric)
+                    FROM reviews r
+                    WHERE r.track_id = t.id
+                ) as avg_rating,
+                (
+                    SELECT json_agg(row_to_json(a))
+                    FROM artists a
+                    WHERE a.id = ANY(t.artist_ids)
+                ) as artists
+            FROM tracks t
+            ORDER BY t.release_data DESC
+            LIMIT 15
+        `)
+        return tracksRes.rows.map(mapToCamelCase)
+    }
 
     async getTrackById(id) {
         const trackRes = await pool.query(`

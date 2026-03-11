@@ -7,6 +7,10 @@ export const getTracksApi = (params: { page: number, limit: number }) => {
     return axios.get<{ tracks: ITrack[], pagination: IPagination }>('/track/get', { params: { page: params.page, limit: params.limit }})
 }
 
+export const getNewTracksApi = () => {
+    return axios.get<{ tracks: ITrack[], pagination: IPagination }>('/track/newTracks')
+}
+
 export const getOneTrackApi = (params: { trackId: number, userId: number }) => {
     return axios.get<{ track: ITrack }>(`/track/getOne/${params.trackId}`, { params: { userId: params.userId } })
 }

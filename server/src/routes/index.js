@@ -49,6 +49,7 @@ router.delete('/artist/delete/:id', checkAdmin, ArtistControllers.delete)
 
 router.post('/track/create', checkAdmin, trackValidation.trackCreateValidation, TrackControllers.create)
 router.get('/track/get', TrackControllers.get)
+router.get('/track/newTracks', TrackControllers.getNewTracks)
 router.get('/track/getOne/:id', TrackControllers.getOne)
 router.patch('/track/update/:id', checkAdmin, trackValidation.trackUpdateValidation, TrackControllers.update)
 router.delete('/track/delete/:id', checkAdmin, TrackControllers.delete)

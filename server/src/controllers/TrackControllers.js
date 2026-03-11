@@ -41,6 +41,17 @@ class TrackControllers {
         }
     }
 
+    async getNewTracks(req, res, next) {
+        try {
+            const tracks = await TrackServices.getNewTracks()
+
+            res.status(200).json({ tracks })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
     async getOne(req, res, next) {
         try {
             const trackId = req.params.id

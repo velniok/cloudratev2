@@ -2,17 +2,17 @@ import { TrackCard, TrackCardSekelton } from "@/entities/track"
 import { Slider, Title } from "@/shared/ui"
 import styles from "./LatestReleases.module.scss"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
-import { getTracksThunk, selectTrackList, selectTrackListStatus } from "@/features/track"
+import { getNewTracksThunk, selectNewTracks, selectNewTracksStatus } from "@/features/track"
 import { useEffect } from "react"
 
 export const LatestReleases = () => {
 
     const dispatch = useAppDispatch()
-    const trackList = useAppSelector(selectTrackList)
-    const trackListStatus = useAppSelector(selectTrackListStatus)
+    const newTracks = useAppSelector(selectNewTracks)
+    const newTracksStatus = useAppSelector(selectNewTracksStatus)
 
     useEffect(() => {
-        dispatch(getTracksThunk({ page: 1, limit: 15 }))
+        dispatch(getNewTracksThunk())
     }, [])
 
     return (
@@ -21,11 +21,11 @@ export const LatestReleases = () => {
                 <Title>СВЕЖИЕ РЕЛИЗЫ</Title>
                 <Slider>
                     {
-                        trackListStatus === 'success'
+                        newTracksStatus === 'success'
                         ?
                         <>
                         {
-                            trackList.map((track) => {
+                            newTracks.map((track) => {
                                 return <TrackCard key={track.id} track={track} />
                             })
                         }
