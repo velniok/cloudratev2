@@ -8,9 +8,10 @@ import { FC } from "react"
 
 interface SidebarProps {
     sidebar: boolean
+    setSidebar: () => void
 }
 
-export const Sidebar: FC<SidebarProps> = ({ sidebar }) => {
+export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
 
     const dispatch = useAppDispatch()
     const authStatus = useAppSelector(selectAuthStatus)
@@ -20,7 +21,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar }) => {
 
     return (
         <aside className={`${styles.sidebar} ${sidebar ? styles.active : ''}`}>
-            <Link to={'/'} className={styles.logo}>
+            <Link to={'/'} className={styles.logo} onClick={setSidebar}>
                 <LogoIcon width="24px" height="24px" />
                 <h1 className={styles.logo__text}>CLOUDRATE</h1>
             </Link>
@@ -28,13 +29,13 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar }) => {
                 <h2 className={styles.nav__title}>Обзор</h2>
                 <ul className={styles.nav__list}>
                     <li className={`${styles.nav__item} ${ pathname === '/' ? styles.active : ''}`}>
-                        <Link to={'/'} className={styles.nav__link}>
+                        <Link to={'/'} className={styles.nav__link} onClick={setSidebar}>
                             <HomeIcon />
                             Лента
                         </Link>
                     </li>
                     <li className={`${styles.nav__item} ${ pathname === '/search' ? styles.active : ''}`}>
-                        <Link to={'/search'} className={styles.nav__link}>
+                        <Link to={'/search'} className={styles.nav__link} onClick={setSidebar}>
                             <SearchIcon />
                             Поиск
                         </Link>
@@ -53,7 +54,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar }) => {
                     authStatus === 'success' ?
                     <ul className={styles.nav__list}>
                         <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.username}` || pathname === `/user/${authUser?.id}/edit` ? styles.active : ''}`}>
-                            <Link to={`/user/${authUser?.username}`} className={styles.nav__link}>
+                            <Link to={`/user/${authUser?.username}`} className={styles.nav__link} onClick={setSidebar}>
                                 <ProfileIcon />
                                 Профиль
                             </Link>
@@ -61,7 +62,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar }) => {
                         {
                             authUser?.role === 'admin' &&
                             <li className={`${styles.nav__item} ${ pathname === '/admin' ? styles.active : ''}`}>
-                                <Link to={'/admin'} className={styles.nav__link}>
+                                <Link to={'/admin'} className={styles.nav__link} onClick={setSidebar}>
                                     <AdminPanelIcon />
                                     Админ-панель
                                 </Link>
@@ -78,7 +79,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar }) => {
                     <div className={styles.nonAuth}>
                         <InfoIcon />
                         <p className={styles.nonAuth__text}>Войдите, чтобы сохранять оценки и управлять профилем</p>
-                        <Link to={'/login'} className={styles.nonAuth__link}>
+                        <Link to={'/login'} className={styles.nonAuth__link} onClick={setSidebar}>
                             <Button color="accent" padding="14px 20px 10px 20px">Войти</Button>
                         </Link>
                     </div>

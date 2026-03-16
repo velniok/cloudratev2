@@ -49,9 +49,9 @@ function App() {
 
     return (
         <div className="app-shell">
-            <Header setSidebar={() => setSidebar(!sidebar)} />
+            <Header setSidebar={setSidebar} sidebar={sidebar} />
             {
-                pathname.slice(0, 6) !== '/admin' || authUser?.role !== 'admin' ?  <Sidebar sidebar={sidebar} /> : <AdminSidebar />
+                pathname.slice(0, 6) !== '/admin' || authUser?.role !== 'admin' ?  <Sidebar setSidebar={() => setSidebar(false)} sidebar={sidebar} /> : <AdminSidebar />
             }
             <main>
                 <Routes>
