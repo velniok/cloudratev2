@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .button {
     border-radius: 12px;
     border: none;
@@ -10,9 +12,14 @@
 
     transition: transform 0.3s, filter 0.3s, border 0.3s, background-color 0.3s, color 0.3s;
 
-    &:hover {
-        // transform: translateY(-2px);
-        filter: brightness(1.1);
+    @media (max-width: $mobile) {
+        font-size: 10px;
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            filter: brightness(1.1);
+        }
     }
 
     &.default {
@@ -21,9 +28,11 @@
         color: var(--text-secondary);
         font-weight: 500;
 
-        &:hover {
-            border: 1px solid var(--border-highlight);
-            color: var(--text-primary);
+        @media (hover: hover) {
+            &:hover {
+                border: 1px solid var(--border-highlight);
+                color: var(--text-primary);
+            }
         }
 
         &.active {

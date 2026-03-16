@@ -4,8 +4,13 @@ import { AdminPanelIcon, Button, HomeIcon, InfoIcon, LogoIcon, LogoutIcon, NewsI
 import { useAppDispatch, useAppSelector } from "../../../shared/lib"
 import { selectAuthStatus, selectAuthUser } from "../../../features/auth"
 import { logout } from "../../../features/auth"
+import { FC } from "react"
 
-export const Sidebar = () => {
+interface SidebarProps {
+    sidebar: boolean
+}
+
+export const Sidebar: FC<SidebarProps> = ({ sidebar }) => {
 
     const dispatch = useAppDispatch()
     const authStatus = useAppSelector(selectAuthStatus)
@@ -14,7 +19,7 @@ export const Sidebar = () => {
     const pathname = useLocation().pathname
 
     return (
-        <aside className={styles.sidebar}>
+        <aside className={`${styles.sidebar} ${sidebar ? styles.active : ''}`}>
             <Link to={'/'} className={styles.logo}>
                 <LogoIcon width="24px" height="24px" />
                 <h1 className={styles.logo__text}>CLOUDRATE</h1>

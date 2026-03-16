@@ -1,7 +1,7 @@
 import { ITrack } from "@/entities/track";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { createTrackApi, deleteTrackApi, getNewTracksApi, getOneTrackApi, getTracksApi, updateTrackApi } from "../api/trackApi";
+import { createTrackApi, deleteTrackApi, getOneTrackApi, getTracksApi, updateTrackApi } from "../api/trackApi";
 import { ITrackState } from "./trackSliceTypes";
 import { ITrackReq, ITrackUpdateReq } from "../api/trackApiTypes";
 import { IApiError, IPagination } from "@/shared/types";
@@ -10,17 +10,6 @@ import { toggleLikeApi } from "@/features/review";
 export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, { page: number, limit: number }, { rejectValue: IApiError }>('/track/getTracksThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getTracksApi(params)
-        return data
-    } catch (err) {
-            if (axios.isAxiosError(err) && err.response) {
-            return rejectWithValue(err.response.data)
-        } 
-    }
-})
-
-export const getNewTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, void, { rejectValue: IApiError }>('/track/getNewTracksThunk', async (_, { rejectWithValue }) => {
-    try {
-        const { data } = await getNewTracksApi()
         return data
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
@@ -92,8 +81,6 @@ const initialState: ITrackState = {
     trackListPagination: null,
     trackListStatus: 'idle',
     trackListError: null,
-    newTracks: null,
-    newTracksStatus: 'idle',
 }
 
 const trackSlice = createSlice({
@@ -120,20 +107,6 @@ const trackSlice = createSlice({
                 state.trackListError = action.payload.message
             })
 
-            .addCase(getNewTracksThunk.pending, (state) => {
-                state.newTracks = null,
-                state.newTracksStatus = 'loading',
-                state.trackListError = null
-            })
-            .addCase(getNewTracksThunk.fulfilled, (state, action) => {
-                state.newTracks = action.payload.tracks
-                state.newTracksStatus = 'success'
-            })
-            .addCase(getNewTracksThunk.rejected, (state, action) => {
-                state.newTracksStatus = 'error',
-                state.trackListError = action.payload.message
-            })
-
             .addCase(getOneTrackThunk.pending, (state) => {
                 state.track = null,
                 state.trackStatus = 'loading',
@@ -154,7 +127,7 @@ const trackSlice = createSlice({
             })
             .addCase(createTrackThunk.fulfilled, (state, action) => {
                 state.trackList.push(action.payload.track),
-                state.trackStatus = 'success'
+                state.trackStatus = 'idle'
             })
             .addCase(createTrackThunk.rejected, (state, action) => {
                 state.trackStatus = 'error',
@@ -174,7 +147,7 @@ const trackSlice = createSlice({
                     }
                     return track
                 }),
-                state.trackStatus = 'success'
+                state.trackStatus = 'idle'
             })
             .addCase(updateTrackThunk.rejected, (state, action) => {
                 state.trackStatus = 'error',
@@ -210,7 +183,7 @@ const trackSlice = createSlice({
             })
             .addCase(deleteTrackThunk.fulfilled, (state, action) => {
                 state.trackList = state.trackList.filter((track) => track.id !== action.meta.arg.id),
-                state.trackStatus = 'success'
+                state.trackStatus = 'idle'
             })
             .addCase(deleteTrackThunk.rejected, (state, action) => {
                 state.trackStatus = 'error',

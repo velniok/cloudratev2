@@ -1,7 +1,14 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .grade {
     display: flex;
     align-items: flex-end;
     column-gap: 20px;
+
+    @media (max-width: $mobile) {
+        flex-direction: column;
+        row-gap: 10px;
+    }
 }
 
 .criteria {
@@ -16,65 +23,6 @@
         border-radius: 12px;
         border: 1px solid var(--border-subtle);
     }
-
-    &__item {
-        display: grid;
-        grid-template-columns: 135px 1fr 28px;
-        column-gap: 14px;
-        align-items: center;
-    }
-
-    &__label {
-        margin-top: 3px;
-        font-family: var(--second-family);
-        text-transform: uppercase;
-        font-weight: 700;
-        font-size: 10px;
-        letter-spacing: 0.05rem;
-        color: var(--text-secondary);
-    }
-
-    &__range {
-        width: 100%;
-        --value: 5;
-        --min: 0;
-        --max: 10;
-        -webkit-appearance: none;
-        --range: calc(var(--max) - var(--min));
-        --ratio: calc((var(--value) - var(--min)) / var(--range));
-        --sx: calc(0.5 * 2em + var(--ratio) * (100% - 2em));
-
-        &:focus {
-            outline: none;
-        }
-
-        &::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #E62E3C;
-            border: none;
-            box-shadow: 0 0 8px var(--accent-color-glow);
-            transform: translateY(-5px);
-            cursor: default;
-        }
-
-        &::-webkit-slider-runnable-track {
-            height: 2px;
-            border-radius: 1px;
-        }
-
-        &::-webkit-slider-runnable-track {
-            background: linear-gradient(var(--accent-color), var(--accent-color)) 0/var(--sx) 100% no-repeat, var(--bg-secondary);
-        }
-    }
-
-    &__value {
-        font-family: var(--second-family);
-        font-size: 12px;
-        color: var(--accent-color);
-    }
 }
 
 .rating {
@@ -86,6 +34,10 @@
     background-color: var(--gray-color);
     border-radius: 12px;
     border: 1px solid var(--border-subtle);
+
+    @media (max-width: $mobile) {
+        width: 100%;
+    }
 
     &__title {
         margin-bottom: 12px;
@@ -152,6 +104,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
+    @media (max-width: $mobile) {
+        margin-top: 10px;
+        flex-direction: column;
+        row-gap: 8px;
+    }
 
     &__leaved {
         margin-top: 16px;

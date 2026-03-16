@@ -23,7 +23,7 @@ export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
                         ?
                         <>
                         {
-                            track.reviews.length === 0 ?
+                            track.reviews.filter(review => review.text).length === 0 ?
                             <p className={styles.text}>Отзывов нет</p>
                             :
                             <>

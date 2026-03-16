@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .cover {
     background-color: var(--gray-color);
     border: 1px solid var(--border-subtle);
@@ -12,6 +14,10 @@
 
     &.mb-16 {
         margin-bottom: 16px;
+
+        @media (max-width: $mobile) {
+            margin-bottom: 8px;
+        }
     }
 
     &.input {
@@ -25,9 +31,9 @@
         border: 1px dashed var(--border-highlight);
         background-color: var(--bg-secondary);
 
-    & svg {
-        width: 24px;
-        height: 24px;
+        & svg {
+            width: 24px;
+            height: 24px;
+        }
     }
-}
 }

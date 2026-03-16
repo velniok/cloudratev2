@@ -96,7 +96,11 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
                 </div>
             </div>
             <div className={styles.footer}>
-                <Button color='default' padding='12px 18px 9px 18px' onClick={() => setTextarea(!textarea)}>
+                <Button
+                    color='default'
+                    padding='12px 18px 9px 18px'
+                    onClick={() => setTextarea(!textarea)}
+                >
                     {
                         textarea ?
                         "Скрыть отзыв"

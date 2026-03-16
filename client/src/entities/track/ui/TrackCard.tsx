@@ -28,7 +28,15 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
     return (
         <div className={styles.card} style={{ zIndex: `${criterias ? '1' : '0'}` }} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <Link to={`/track/${track.id}`}>
-                <Cover isHovered={isHovered} mb={'mb-16'} url={track.coverUrl} width="205px" height="205px" borderRadius="12px" />
+                <Cover
+                    isHovered={isHovered}
+                    mb={'mb-16'}
+                    url={track.coverUrl}
+                    width="205px"
+                    height="205px"
+                    borderRadius="12px"
+                    className={styles.cover}
+                />
             </Link>
             <h3 className={styles.title}>{track.title}</h3>
             <ul className={styles.artist__list}>

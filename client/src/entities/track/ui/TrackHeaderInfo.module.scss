@@ -1,14 +1,21 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .inner {
     display: flex;
-    gap: 48px;
+    column-gap: 48px;
+
+    @media (max-width: $mobile) {
+        flex-direction: column;
+        align-items: center;
+        row-gap: 24px;
+    }
 }
 
 .cover {
-    width: 320px;
-    height: 320px;
-    background-color: var(--gray-color);
-    border-radius: 24px;
-    border: 1px solid var(--border-subtle);
+    @media (max-width: $mobile) {
+        width: 100% !important;
+        height: 100% !important;
+    }
 }
 
 .info {
@@ -16,6 +23,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+
+    @media (max-width: $mobile) {
+        align-items: center;
+    }
 }
 
 .artist {
@@ -23,19 +34,39 @@
     &__list {
         display: flex;
         column-gap: 12px;
-        margin-bottom: 4%;
+        margin-bottom: 4px;
+
+        @media (max-width: $mobile) {
+            flex-wrap: wrap;
+            column-gap: 6px;
+            row-gap: 4px;
+            justify-content: center;
+        }
     }
 
     &__item {
         cursor: pointer;
         display: flex;
         align-items: center;
-        gap: 12px;
+        column-gap: 12px;
 
         transition: opacity 0.3s;
 
-        &:hover {
-            opacity: 0.7;
+        @media (max-width: $mobile) {
+            column-gap: 6px;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                opacity: 0.7;
+            }
+        }
+    }
+
+    &__avatar {
+        @media (max-width: $mobile) {
+            width: 28px !important;
+            height: 28px !important;
         }
     }
     
@@ -46,6 +77,10 @@
         color: var(--text-secondary);
         font-weight: 700;
         letter-spacing: 0.05em;
+
+        @media (max-width: $mobile) {
+            font-size: 12px;
+        }
     }
 }
 
@@ -55,6 +90,11 @@
     font-weight: 700;
     font-family: var(--second-family);
     margin-bottom: 8px;
+
+    @media (max-width: $mobile) {
+        font-size: 28px;
+        margin-bottom: 4px;
+    }
 }
 
 .release {
@@ -70,6 +110,10 @@
         color: var(--text-primary);
         font-size: 12px;
     }
+
+    @media (max-width: $mobile) {
+        margin-bottom: 8px;
+    }
 }
 
 .rating {
@@ -84,9 +128,11 @@
 
     transition: border 0.3s, opacity 0.3s;
 
-    &:hover {
-        border: 2px solid var(--border-highlight);
-        opacity: 0.7;
+    @media (hover: hover) {
+        &:hover {
+            border: 2px solid var(--border-highlight);
+            opacity: 0.7;
+        }
     }
 
     &.open {

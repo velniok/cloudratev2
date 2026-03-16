@@ -1,5 +1,11 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .wrapper {
     margin-top: 32px;
+
+    @media (max-width: $mobile) {
+        margin-top: 16px;
+    }
 }
 
 .list {
@@ -11,4 +17,8 @@
 .text {
     color: var(--text-secondary);
     font-size: 16px;
+
+    @media (max-width: $mobile) {
+        font-size: 14px;
+    }
 }

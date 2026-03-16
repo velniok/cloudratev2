@@ -1,8 +1,15 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .item {
     display: grid;
     grid-template-columns: 135px 1fr 28px;
     column-gap: 14px;
     align-items: center;
+
+    @media (max-width: $mobile) {
+        grid-template-columns: none;
+        grid-template-rows: repeat(3, 1fr);
+    }
 }
 
 .label {

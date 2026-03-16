@@ -1,8 +1,14 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .list {
     display: flex;
     column-gap: 24px;
 
     transition: transform 0.6s;
+
+    @media (max-width: $mobile) {
+        column-gap: 10px;
+    }
 
     &__wrapper {
         position: relative;
@@ -11,6 +17,14 @@
     &__inner {
         padding-top: 4px;
         overflow: hidden;
+
+        @media (max-width: $mobile) {
+            overflow-x: scroll;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
     }
 }
 
@@ -57,5 +71,9 @@
 
     &.prev {
         left: -16px;
+    }
+
+     @media (max-width: $mobile) {
+        display: none;
     }
 }

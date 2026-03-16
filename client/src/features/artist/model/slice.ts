@@ -117,7 +117,7 @@ const artistSlice = createSlice({
         })
         .addCase(createArtistThunk.fulfilled, (state, action) => {
             state.artistList.push(action.payload.artist),
-            state.artistStatus = 'success'
+            state.artistStatus = 'idle'
         })
         .addCase(createArtistThunk.rejected, (state, action) => {
             state.artistStatus = 'error',
@@ -137,7 +137,7 @@ const artistSlice = createSlice({
                 }
                 return artist
             }),
-            state.artistStatus = 'success'
+            state.artistStatus = 'idle'
         })
         .addCase(updateArtistThunk.rejected, (state) => {
             state.artistStatus = 'error',
@@ -150,7 +150,7 @@ const artistSlice = createSlice({
         })
         .addCase(deleteArtistThunk.fulfilled, (state, action) => {
             state.artistList = state.artistList.filter((artist) => artist.id !== action.meta.arg.id),
-            state.artistStatus = 'success'
+            state.artistStatus = 'idle'
         })
         .addCase(deleteArtistThunk.rejected, (state, action) => {
             state.artistStatus = 'error',

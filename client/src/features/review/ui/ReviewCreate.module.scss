@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .grade {
     display: flex;
     align-items: flex-end;

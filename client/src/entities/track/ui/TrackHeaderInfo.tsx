@@ -17,14 +17,14 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
 
     return (
         <div className={styles.inner}>
-            <Cover url={track.coverUrl} width='200px' height='200px' borderRadius='12px' />
+            <Cover url={track.coverUrl} className={styles.cover} width='200px' height='200px' borderRadius='12px' />
             <div className={styles.info}>
                 <ul className={styles.artist__list}>
                     {
                         track.artists.map((artist) => {
                             return (
                                 <li key={artist.id} className={styles.artist__item} onClick={() => navigate(`/artist/${artist.id}`)}>
-                                    <Cover width='32px' height='32px' borderRadius='50%' url={artist.avatarUrl} />
+                                    <Cover width='32px' height='32px' borderRadius='50%' className={styles.artist__avatar} url={artist.avatarUrl} />
                                     <h3 className={styles.artist__name}>{artist.name}</h3>
                                 </li>
                             )

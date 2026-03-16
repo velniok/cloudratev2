@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation } from "react-router-dom"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 import "./styles/main.scss"
 
@@ -23,6 +23,7 @@ import { authThunk, selectAuthUser } from "@/features/auth"
 import { AdminTracksPage } from "@/pages/admin-tracks-page"
 import { AdminUsersPage } from "@/pages/admin-users-page"
 import { SearchPage } from "@/pages/search-page"
+import { Header } from "@/widgets/header"
 
 function App() {
 
@@ -30,6 +31,8 @@ function App() {
     const authUser = useAppSelector(selectAuthUser)
     const { notify } = useNotification()
     const pathname = useLocation().pathname
+
+    const [sidebar, setSidebar] = useState<boolean>(false)
 
     useEffect(() => {
         if (window.localStorage.token) {
@@ -41,8 +44,9 @@ function App() {
 
     return (
         <div className="app-shell">
+            <Header setSidebar={() => setSidebar(!sidebar)} />
             {
-                pathname.slice(0, 6) !== '/admin' || authUser?.role !== 'admin' ?  <Sidebar /> : <AdminSidebar />
+                pathname.slice(0, 6) !== '/admin' || authUser?.role !== 'admin' ?  <Sidebar sidebar={sidebar} /> : <AdminSidebar />
             }
             <main>
                 <Routes>

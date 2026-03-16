@@ -1,11 +1,9 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .section {
     margin-top: 32px;
-}
 
-.title {
-    font-family: var(--second-family);
-    font-weight: 700;
-    font-size: 32px;
-    letter-spacing: 0.05em;
-    margin-bottom: 32px;
+    @media (max-width: $mobile) {
+        margin-top: 16px;
+    }
 }

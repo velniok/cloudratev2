@@ -2,7 +2,7 @@ import { TrackCard, TrackCardSekelton } from "@/entities/track"
 import { Slider, Title } from "@/shared/ui"
 import styles from "./LatestReleases.module.scss"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
-import { getNewTracksThunk, selectNewTracks, selectNewTracksStatus } from "@/features/track"
+import { getNewTracksThunk, selectNewTracks, selectNewTracksStatus } from "@/features/home"
 import { useEffect } from "react"
 
 export const LatestReleases = () => {

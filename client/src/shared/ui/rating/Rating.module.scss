@@ -24,9 +24,11 @@
 
         transition: border 0.3s, color 0.3s, opacity 0.3s;
 
-        &:hover {
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
+        @media (hover: hover) {
+            &:hover {
+                border: 1px solid var(--accent-color);
+                color: var(--accent-color);
+            }
         }
     }
 
@@ -34,8 +36,10 @@
         border: 1px solid var(--accent-color);
         color: var(--accent-color);
 
-        &:hover {
-            opacity: 0.7;
+        @media (hover: hover) {
+            &:hover {
+                opacity: 0.7;
+            }
         }
     }
 }
