@@ -1,8 +1,9 @@
 .wrapper {
     margin-top: 12px;
     display: flex;
-    justify-self: flex-end;
     align-items: center;
+    width: 60px;
+    margin-left: auto;
     column-gap: 6px;
     padding: 6px 14px;
     border: 1px solid var(--border-subtle);

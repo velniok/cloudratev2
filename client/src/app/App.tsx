@@ -35,6 +35,11 @@ function App() {
     const [sidebar, setSidebar] = useState<boolean>(false)
 
     useEffect(() => {
+        if (sidebar) return document.body.classList.add('no-scroll')
+        document.body.classList.remove('no-scroll')
+    }, [sidebar])
+
+    useEffect(() => {
         if (window.localStorage.token) {
             dispatch(authThunk()).unwrap()
                 .then()

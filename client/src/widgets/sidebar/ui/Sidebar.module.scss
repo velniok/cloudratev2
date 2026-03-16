@@ -17,9 +17,10 @@
 
     @media (max-width: $mobile) {
         transform: translateX(-100%);
-        top: 55px;
+        top: 53px;
         width: 100%;
         overflow-y: auto;
+        height: calc(100% - 53px);
     }
 
     &.active {
