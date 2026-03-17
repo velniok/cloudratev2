@@ -109,10 +109,10 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 <h3 className={styles.title}>ОСНОВНАЯ ИНФОРМАЦИЯ</h3>
                 <div className={styles.formWrapper}>
                     <div className={styles.editAvatar}>
-                        <Cover url={values.avatarUrl} width='150px' height='150px' borderRadius='12px' isInput={true} />
+                        <Cover url={values.avatarUrl} className={styles.avatar} width='150px' height='150px' borderRadius='12px' isInput={true} />
                         <div className={styles.content}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
-                            <Button color='default' padding='14px 20px 10px 20px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>
+                            <Button className={styles.editButton} color='default' padding='14px 20px 10px 20px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>
                             <p className={styles.sub}>JPG или PNG. Макс. размер 2MB</p>
                         </div>
                     </div>

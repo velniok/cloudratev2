@@ -47,9 +47,11 @@
         box-shadow: 0 4px 15px var(--accent-color-glow);
         font-weight: 700;
 
-        &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px var(--accent-color-glow);
+        @media (hover: hover) {
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px var(--accent-color-glow);
+            }
         }
     }
 }

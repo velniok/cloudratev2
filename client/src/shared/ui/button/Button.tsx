@@ -8,10 +8,11 @@ interface ButtonProps {
     color: 'accent' | 'default'
     fontSize?: string
     active?: boolean
+    className?: string
 }
 
-export const Button: FC<ButtonProps> = ({ children, padding, onClick, color, fontSize, active }) => {
+export const Button: FC<ButtonProps> = ({ children, padding, onClick, color, fontSize, active, className }) => {
     return (
-        <button type="button" className={`${styles.button} ${styles[color]} ${active ? styles.active : ''}`} style={ { padding: `${padding}`, fontSize: `${fontSize}` } } onClick={onClick} >{children}</button>
+        <button type="button" className={`${styles.button} ${className ?? className} ${styles[color]} ${active ? styles.active : ''}`} style={ { padding: `${padding}`, fontSize: `${fontSize}` } } onClick={onClick} >{children}</button>
     )
 }

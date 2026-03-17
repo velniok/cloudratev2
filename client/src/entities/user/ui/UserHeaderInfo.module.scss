@@ -82,20 +82,39 @@
 }
 
 .editButton {
-    display: none;
     position: absolute;
     top: 0;
     right: 0;
+
+    @media (max-width: 1000px) {
+        margin-top: 12px;
+        position: unset;
+    }
+}
+
+.button {
+
+    @media (max-width: $mobile) {
+        padding: 8px 8px !important;
+    }
 }
 
 .buttonInner {
     display: flex;
     align-items: center;
     column-gap: 8px;
+
+    @media (max-width: $mobile) {
+        column-gap: 4px;
+    }
 }
 
 .buttonText {
     padding-top: 4px;
+
+    @media (max-width: $mobile) {
+        font-size: 10px;
+    }
 }
 
 .stats {

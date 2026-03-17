@@ -48,7 +48,7 @@ export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
                 {
                     authUser?.id === user.id &&
                     <div className={styles.editButton}>
-                        <Button color="default" padding="10px 20px 10px 20px" onClick={() => navigate('edit')}>
+                        <Button className={styles.button} color="default" padding="10px 20px 10px 20px" onClick={() => navigate('edit')}>
                             <div className={styles.buttonInner}>
                                 <EditIcon />
                                 <span className={styles.buttonText}>Изменить профиль</span>

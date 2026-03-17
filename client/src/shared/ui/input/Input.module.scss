@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .wrapper {
     display: flex;
     flex-direction: column;
@@ -11,6 +13,10 @@
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: 0.05rem;
+
+    @media (max-width: $mobile) {
+        font-size: 10px;
+    }
 }
 
 .inputWrapper {
@@ -46,6 +52,11 @@
     color: var(--text-primary);
 
     transition: border 0.3s;
+
+    @media (max-width: $mobile) {
+        font-size: 12px;
+        padding: 10px 12px;
+    }
 
     &:focus {
         border: 1px solid var(--accent-color);
