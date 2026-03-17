@@ -1,9 +1,16 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .wrapper {
     margin-top: 32px;
     background-color: var(--gray-color);
     border: 1px solid var(--border-subtle);
     border-radius: 24px;
-    overflow: hidden;
+    overflow-x: auto;
+    width: 100%;
+
+    @media (max-width: $mobile) {
+        margin-top: 16px;
+    }
 }
 
 .table {
@@ -23,8 +30,10 @@
     
         transition: background-color 0.3s;
     
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.02);
+        @media (hover: hover) {            
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.02);
+            }
         }
     }
     
@@ -36,6 +45,11 @@
         color: var(--text-tertiary);
         font-weight: 700;
         border-bottom: 1px solid var(--border-subtle);
+
+        @media (max-width: $mobile) {
+            padding: 14px 18px;
+            font-size: 10px;
+        }
     }
 
     &__data {
@@ -43,6 +57,10 @@
         border-bottom: 1px solid var(--border-subtle);
         font-family: var(--second-family);
         font-size: 14px;
+
+        @media (max-width: $mobile) {
+            padding: 14px 18px;
+        }
     }
 }
 
@@ -54,8 +72,10 @@
 
     transition: background-color 0.3s;
 
-    &:hover {
-        background-color: var(--lightgray-color);
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--lightgray-color);
+        }
     }
 
     &__avatar {
@@ -78,8 +98,10 @@
 
     transition: background-color 0.3s;
 
-    &:hover {
-        background-color: var(--lightgray-color);
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--lightgray-color);
+        }
     }
 
     &__cover {
@@ -126,8 +148,10 @@
 
     transition: background-color 0.3s;
 
-    &:hover {
-        background-color: var(--lightgray-color);
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--lightgray-color);
+        }
     }
 
     &__avatar {
@@ -146,6 +170,10 @@
     &__nickname {
         padding-top: 4px;
         font-size: 16px;
+
+        @media (max-width: $mobile) {
+            font-size: 14px;
+        }
     }
 
     &__username {
@@ -156,6 +184,10 @@
     &__created {
         font-size: 12px;
         color: var(--text-secondary);
+
+        @media (max-width: $mobile) {
+            font-size: 10px;
+        }
     }
 }
 
@@ -179,6 +211,16 @@
             border: 1px solid var(--border-subtle);
 
             transition: color 0.3s, border 0.3s;
+
+            @media (max-width: $mobile) {
+                width: 28px;
+                height: 28px;
+
+                & svg {
+                    width: 12px;
+                    height: 12px;
+                }
+            }
         }
 
         &.role div {
@@ -188,9 +230,11 @@
             column-gap: 6px;
             padding: 0 10px;
 
-            &:hover {
-                color: var(--purple-color);
-                border: 1px solid var(--purple-color);
+            @media (hover: hover) {
+                &:hover {
+                    color: var(--purple-color);
+                    border: 1px solid var(--purple-color);
+                }
             }
 
             & svg {
@@ -206,14 +250,16 @@
             }
         }
 
-        &.edit div:hover {
-            color: var(--yellow-color);
-            border: 1px solid var(--yellow-color);
-        }
-
-        &.delete div:hover {
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
+        @media (hover: hover) {
+            &.edit div:hover {
+                color: var(--yellow-color);
+                border: 1px solid var(--yellow-color);
+            }
+    
+            &.delete div:hover {
+                color: var(--accent-color);
+                border: 1px solid var(--accent-color);
+            }
         }
     }
 }

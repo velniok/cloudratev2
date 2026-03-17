@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .container {
     display: flex;
     justify-content: center;
@@ -13,6 +15,11 @@
     border-radius: 24px;
     border: 1px solid var(--border-subtle);
     padding: 48px;
+
+    @media (max-width: $mobile) {
+        padding: 24px;
+        margin: 0 15px;
+    }
 
     &::before {
         position: absolute;
@@ -32,24 +39,51 @@
     align-items: center;
     row-gap: 16px;
     margin-bottom: 40px;
+
+    @media (max-width: $mobile) {
+        row-gap: 12px;
+        margin-bottom: 26px;
+
+        & div {
+            width: 30px !important;
+            height: 30px !important;
+        }
+    }
 }
 
 .title {
     font-family: var(--second-family);
     font-weight: 700;
     font-size: 24px;
+    text-align: center;
+
+    @media (max-width: $mobile) {
+        font-size: 18px;
+    }
 }
 
 .form {
     display: flex;
     flex-direction: column;
     row-gap: 24px;
+
+    @media (max-width: $mobile) {
+        row-gap: 12px;
+
+        & button {
+            padding: 13px 16px 12px 16px !important;
+        }
+    }
 }
 
 .bottom {
     margin-top: 32px;
     display: flex;
     justify-content: center;
+
+    @media (max-width: $mobile) {
+        margin-top: 16px;
+    }
 }
 
 .text {
@@ -66,7 +100,9 @@
 
     transition: opacity 0.3s;
 
-    &:hover {
-        opacity: 0.7;
+    @media (hover: hover) {
+        &:hover {
+            opacity: 0.7;
+        }
     }
 }

@@ -126,6 +126,20 @@
     border-radius: 12px;
     padding: 16px;
 
+    @media (max-width: $mobile) {
+        row-gap: 6px;
+        padding: 12px;
+
+        & svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        & a button {
+            padding: 12px 20px 10px !important;
+        }
+    }
+
     &__text {
         font-size: 12px;
     }
@@ -133,4 +147,5 @@
     &__link {
         width: 100%;
     }
+    
 }

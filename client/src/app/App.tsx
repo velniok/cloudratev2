@@ -51,7 +51,7 @@ function App() {
         <div className="app-shell">
             <Header setSidebar={setSidebar} sidebar={sidebar} />
             {
-                pathname.slice(0, 6) !== '/admin' || authUser?.role !== 'admin' ?  <Sidebar setSidebar={() => setSidebar(false)} sidebar={sidebar} /> : <AdminSidebar />
+                pathname.slice(0, 6) !== '/admin' || authUser?.role !== 'admin' ?  <Sidebar setSidebar={() => setSidebar(false)} sidebar={sidebar} /> : <AdminSidebar setSidebar={() => setSidebar(false)} sidebar={sidebar} />
             }
             <main>
                 <Routes>

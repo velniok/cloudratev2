@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .statsItem {
     padding: 24px;
     background-color: var(--gray-color);
@@ -6,8 +8,14 @@
 
     transition: border 0.3s;
 
-    &:hover {
-        border: 1px solid var(--border-highlight);
+    @media (hover: hover) {        
+        &:hover {
+            border: 1px solid var(--border-highlight);
+        }
+    }
+    
+    @media (max-width: $mobile) {
+        padding: 12px;
     }
 }
 
@@ -19,10 +27,18 @@
     font-size: 12px;
     font-weight: 600;
     margin-bottom: 8px;
+
+    @media (max-width: $mobile) {
+        font-size: 10px;
+    }
 }
 
 .statsCount {
     font-family: var(--second-family);
     font-size: 32px;
     font-weight: 600;
+
+    @media (max-width: $mobile) {
+        font-size: 26px;
+    }
 }
