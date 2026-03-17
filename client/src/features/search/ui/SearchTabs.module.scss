@@ -1,11 +1,21 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .wrapper {
     margin-top: 24px;
+
+    @media (max-width: $mobile) {
+        margin-top: 12px;
+    }
 }
 
 .list {
     margin-top: 32px;
     display: flex;
     column-gap: 28px;
+
+    @media (max-width: $mobile) {
+        margin-top: 16px;
+    }
 
     &.users {
         flex-direction: column;
@@ -14,15 +24,28 @@
     }
 
     &.artists {
-        display: grid;
-        grid-template-columns: repeat(9, 1fr);
+        display: flex;
+        flex-wrap: wrap;
         row-gap: 28px;
+        column-gap: 24px;
+
+        @media (max-width: $mobile) {
+            row-gap: 14px;
+            column-gap: 14px;
+        }
     }
 
     &.tracks {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        display: flex;
+        flex-wrap: wrap;
         row-gap: 28px;
+
+        @media (max-width: $mobile) {
+            display: flex;
+            flex-wrap: wrap;
+            row-gap: 14px;
+            column-gap: 14px;
+        }
     }
 }
 
@@ -30,4 +53,9 @@
     margin-top: 32px;
     font-size: 16px;
     color: var(--text-secondary);
+
+    @media (max-width: $mobile) {
+        margin-top: 16px;
+        font-size: 14px;
+    }
 }

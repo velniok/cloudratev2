@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .card {
     cursor: pointer;
     background-color: var(--gray-color);
@@ -10,8 +12,15 @@
 
     transition: opacity 0.3s;
 
-    &:hover {
-        opacity: 0.7;
+    @media (max-width: $mobile) {
+        column-gap: 8px;
+        padding: 8px 12px;
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            opacity: 0.7;
+        }
     }
 }
 

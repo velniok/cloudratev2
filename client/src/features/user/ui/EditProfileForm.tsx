@@ -127,7 +127,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                             error={errors.nickname}
                         />
                         <Input
-                            label='Уникальный никнейм'
+                            label='Уник. никнейм'
                             placeholder='Введите уникальный никнейм'
                             value={values.username}
                             onChange={handleUsernameChange}

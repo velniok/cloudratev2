@@ -10,7 +10,7 @@ interface ArtistHeaderInfoProps {
 export const ArtistHeaderInfo: FC<ArtistHeaderInfoProps> = ({ artist }) => {
     return (
         <div className={styles.inner}>
-            <Cover width='180px' height='180px' borderRadius='12px' url={artist.avatarUrl} />
+            <Cover className={styles.avatar} width='180px' height='180px' borderRadius='12px' url={artist.avatarUrl} />
             <div className={styles.info}>
                 <h2 className={styles.name}>{artist.name}</h2>
                 <a href={`${artist.soundcloudUrl}`} className={styles.soundcloud}>
