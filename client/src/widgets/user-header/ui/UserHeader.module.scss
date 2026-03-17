@@ -1,4 +1,11 @@
+@use '@/shared/styles/breakpoints' as *;
+
+
 .wrapper {
     padding: 32px 0;
     border-bottom: 1px solid var(--border-subtle);
+
+    @media (max-width: $mobile) {
+        padding: 16px 0;
+    }
 }

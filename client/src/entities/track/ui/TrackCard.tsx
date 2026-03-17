@@ -16,9 +16,9 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
 
     const [isHovered, setIsHovered] = useState<boolean>(false)
     const [criterias, setCriterias] = useState<boolean>(false)
-
     const handleOpenCriterias = (e: MouseEvent) => {
         e.stopPropagation()
+
         if (true) {
             document.dispatchEvent(new Event('closePopups'))
         }

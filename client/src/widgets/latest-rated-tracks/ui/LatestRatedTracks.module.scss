@@ -1,8 +1,9 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .wrapper {
     margin-top: 32px;
-}
 
-.list {
-    display: flex;
-    gap: 24px;
+    @media (max-width: $mobile) {
+        margin-top: 16px;
+    }
 }

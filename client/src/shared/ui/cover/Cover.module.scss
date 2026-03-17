@@ -6,12 +6,14 @@
 
     transition: border 0.3s, box-shadow 0.3s;
 
-    &.hovered {
-        border: 1px solid var(--accent-color);
-        box-shadow: 0 0 12px var(--accent-color-glow);
-        cursor: pointer;
+    @media (hover: hover) {        
+        &.hovered {
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 12px var(--accent-color-glow);
+            cursor: pointer;
+        }
     }
-
+    
     &.mb-16 {
         margin-bottom: 16px;
 

@@ -18,7 +18,7 @@ export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
 
     return (
         <div className={styles.inner}>
-            <Cover width="150px" height="150px" borderRadius="24px" url={user.avatarUrl} />
+            <Cover width="150px" height="150px" borderRadius="24px" className={styles.avatar} url={user.avatarUrl} />
             <div className={styles.info}>
                 <h2 className={styles.nickname}>
                     {user.nickname}

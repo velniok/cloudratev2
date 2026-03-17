@@ -19,7 +19,7 @@
         overflow: hidden;
 
         @media (max-width: $mobile) {
-            overflow-x: scroll;
+            overflow-x: auto;
 
             &::-webkit-scrollbar {
                 display: none;

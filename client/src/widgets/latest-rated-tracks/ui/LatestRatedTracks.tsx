@@ -1,5 +1,5 @@
 import { TrackCard, TrackCardSekelton, type ITrack } from "@/entities/track"
-import { Title } from "@/shared/ui"
+import { Slider, Title } from "@/shared/ui"
 import styles from "./LatestRatedTracks.module.scss"
 import { FC } from "react"
 import { IUser } from "@/entities/user"
@@ -17,7 +17,7 @@ export const LatestRatedTracks: FC<LatestRatedTracksProps> = ({ user, userStatus
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>НЕДАВНИЕ ОЦЕНКИ</Title>
-                <div className={styles.list}>
+                <Slider>
                     {
                         userStatus === 'success'
                         ?
@@ -33,7 +33,7 @@ export const LatestRatedTracks: FC<LatestRatedTracksProps> = ({ user, userStatus
                             return <TrackCardSekelton key={index} />
                         })
                     }
-                </div>
+                </Slider>
             </div>
         </div>
     )

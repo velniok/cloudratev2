@@ -3,16 +3,22 @@
 .criterias {
     opacity: 0;
     visibility: hidden;
-    z-index: 9999;
     background-color: var(--bg-secondary);
     left: -1px;
     position: absolute;
+    z-index: 9999;
     padding: 16px 20px;
     border: 1px solid var(--border-highlight);
     box-shadow: 16px 16px 40px rgba(0, 0, 0, 0.8);
     border-radius: 12px;
 
     transition: visibility 0.3s, opacity 0.3s;
+
+    @media (max-width: $mobile) {
+        width: 200px;
+        padding: 10px 16px;
+        left: 0;
+    }
 
     &.open {
         opacity: 1;
@@ -21,24 +27,37 @@
 
     &.bottom {
         top: calc(100% + 10px);
+
+        @media (max-width: $mobile) {
+            top: calc(100% + 5px);
+        }
     }
 
     &.top {
         bottom: calc(100% + 10px);
+
+        @media (max-width: $mobile) {
+            bottom: calc(100% + 5px);
+        }
     }
 
     &__top {
         display: flex;
         align-items: center;
+        margin-bottom: 14px;
+        justify-content: space-between;
     }
 
     &__text {
-        margin-bottom: 14px;
         font-family: var(--second-family);
         color: var(--text-secondary);
         font-weight: 700;
         letter-spacing: 0.05rem;
         font-size: 12px;
+
+        @media (max-width: $mobile) {
+            font-size: 10px;
+        }
     }
 
     &__review {
@@ -63,6 +82,10 @@
         display: flex;
         flex-direction: column;
         row-gap: 10px;
+
+        @media (max-width: $mobile) {
+            row-gap: 6px;
+        }
     }
 
     &__item {
@@ -72,8 +95,7 @@
         column-gap: 10px;
 
         @media (max-width: $mobile) {
-            grid-template-columns: none;
-            grid-template-rows: repeat(3, 1fr);
+            grid-template-columns: 130px 23px;
         }
     }
 
@@ -81,6 +103,11 @@
         font-family: var(--second-family);
         font-size: 12px;
         color: var(--text-secondary);
+
+        @media (max-width: $mobile) {
+            font-size: 10px;
+            grid-column: span 2;
+        }
     }
 
     &__line {
@@ -107,5 +134,9 @@
         font-weight: 700;
         font-family: var(--second-family);
         font-size: 12px;
+
+        @media (max-width: $mobile) {
+            font-size: 10px;
+        }
     }
 }
