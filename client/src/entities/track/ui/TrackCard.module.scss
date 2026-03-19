@@ -2,7 +2,7 @@
 
 .card {
     position: relative;
-    height: 320px;
+    height: 340px;
     transform: translateZ(0);
     width: 205px;
 
@@ -15,7 +15,7 @@
     }
 
     @media (max-width: $mobile) {
-        height: 240px;
+        height: 250px;
         width: 135px;
     }
 }
@@ -76,5 +76,9 @@
     &__text {
         color: var(--text-secondary);
         font-size: 14px;
+        
+        @media (max-width: $mobile) {
+            font-size: 12px;
+        }
     }
 }

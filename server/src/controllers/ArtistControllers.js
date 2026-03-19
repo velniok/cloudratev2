@@ -43,7 +43,9 @@ class ArtistControllers {
     async getOne(req, res, next) {
         try {
             const artistId = req.params.id
-            const artist = await ArtistServices.getArtistById(artistId)
+            const { userId } = req.query
+            const { artist, follow } = await ArtistServices.getArtistById(artistId, userId)
+            artist.follow = follow
 
             res.status(200).json({ artist })
         } catch (err) {
@@ -64,6 +66,18 @@ class ArtistControllers {
             const artist = artistUpdated.artist
 
             res.status(200).json({ artist })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async toggleFollow(req, res, next) {
+        try {
+            const {artistId, userId} = req.body
+            const result = await ArtistServices.toggleFollow(artistId, userId)
+
+            res.status(200).json({ followed:  !!result.rows[0]})
         } catch (err) {
             console.log(err)
             next(err)

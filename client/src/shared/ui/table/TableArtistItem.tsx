@@ -24,13 +24,15 @@ export const TableArtistItem: FC<TableArtistItemProps> = ({ artist, actions }) =
                 </Link>
             </td>
             <td className={styles.table__data}>
-                {
-                    artist.tracks ? artist.tracks.length : 'Треков нет'
-                }
+                <p className={styles.artist__tracks}>
+                    {
+                        artist.tracks ? artist.tracks.length : 'Треков нет'
+                    }
+                </p>
             </td>
             <td className={styles.table__data}>
                 {
-                    artist.avgRating ? <Rating>{artist.avgRating}</Rating> : 'Нет оценок'
+                    artist.avgRating ? <Rating>{artist.avgRating}</Rating> : <p className={styles.artist__tracks}>Нет оценок</p>
                 }
             </td>
             <td className={styles.table__data}>

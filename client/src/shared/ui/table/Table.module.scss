@@ -87,6 +87,18 @@
 
     &__nickname {
         padding-top: 4px;
+        text-wrap: nowrap;
+
+        @media (max-width: $mobile) {
+            font-size: 12px;
+        }
+    }
+
+    &__tracks {
+
+        @media (max-width: $mobile) {
+            font-size: 12px;
+        }
     }
 }
 
@@ -113,6 +125,10 @@
 
     &__title {
         padding-top: 4px;
+
+        @media (max-width: $mobile) {
+            font-size: 12px;
+        }
     }
 
     &__artist {
@@ -120,12 +136,20 @@
         &List {
             display: flex;
             column-gap: 20px;
+
+            @media (max-width: $mobile) {
+                column-gap: 10px;
+            }
         }
 
         &Item {
             display: flex;
             align-items: center;
             column-gap: 10px;
+
+            @media (max-width: $mobile) {
+                column-gap: 6px;
+            }
         }
 
         &Avatar {
@@ -136,6 +160,17 @@
 
         &Nickname {
             color: var(--text-secondary);
+
+            @media (max-width: $mobile) {
+                font-size: 12px;
+            }
+        }
+    }
+
+    &__release {
+        
+        @media (max-width: $mobile) {
+            font-size: 12px;
         }
     }
 }

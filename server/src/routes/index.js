@@ -45,6 +45,7 @@ router.post('/artist/create', checkAdmin, artistValidation, ArtistControllers.cr
 router.get('/artist/get', ArtistControllers.get)
 router.get('/artist/getOne/:id', ArtistControllers.getOne)
 router.patch('/artist/update/:id', checkAdmin, artistValidation, ArtistControllers.update)
+router.post('/artist/toggleFollow', ArtistControllers.toggleFollow)
 router.delete('/artist/delete/:id', checkAdmin, ArtistControllers.delete)
 
 router.post('/track/create', checkAdmin, trackValidation.trackCreateValidation, TrackControllers.create)

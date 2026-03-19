@@ -17,7 +17,7 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
 
     return (
         <div className={styles.inner}>
-            <Cover url={track.coverUrl} className={styles.cover} width='200px' height='200px' borderRadius='12px' />
+            <Cover url={track.coverUrl} width='200px' height='200px' borderRadius='12px' />
             <div className={styles.info}>
                 <ul className={styles.artist__list}>
                     {

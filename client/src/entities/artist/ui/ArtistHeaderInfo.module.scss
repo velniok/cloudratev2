@@ -39,6 +39,7 @@
 }
 
 .soundcloud {
+    margin-bottom: 20px;
     display: inline-flex;
     gap: 8px;
     align-items: center;
@@ -49,5 +50,31 @@
 
     &:hover {
         opacity: 0.7;
+    }
+}
+
+.stats {
+
+    &__list {
+        display: flex;
+        align-items: center;
+        column-gap: 24px;
+
+        margin-bottom: 18px;
+    }
+
+    &__count {
+        display: block;
+        font-size: 16px;
+        font-family: var(--second-family);
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    &__title {
+        font-family: var(--second-family);
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
     }
 }

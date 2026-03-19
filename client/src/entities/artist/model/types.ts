@@ -9,4 +9,8 @@ export interface IArtist {
     soundcloudUrl: string
     avgRating: number | null
     tracks: ITrack[] | null
+    follow: {
+        followersCount: number
+        isFollowed: boolean
+    }
 }

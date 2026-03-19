@@ -1,5 +1,11 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .wrapper {
     margin-top: 32px;
+
+    @media (max-width: $mobile) {
+        margin-top: 16px;
+    }
 }
 
 .top {
@@ -14,10 +20,21 @@
     justify-content: space-between;
     align-items: flex-end;
     margin-bottom: 8px;
+
+    @media (max-width: $mobile) {
+        
+        & button {
+            padding: 8px 14px !important;
+        }
+    }
 }
 
 .count {
     color: var(--text-secondary);
+
+    @media (max-width: $mobile) {
+        font-size: 12px;
+    }
 }
 
 .text {
@@ -32,10 +49,22 @@
 
 .buttonText {
     padding-top: 4px;
+
+    @media (max-width: $mobile) {
+        padding-top: 3px;
+    }
 }
 
 .bottom {
     margin-top: 32px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.text {
+
+    @media (max-width: $mobile) {
+        font-size: 12px;
+    }
 }

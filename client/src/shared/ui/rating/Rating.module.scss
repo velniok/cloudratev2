@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .rating {
     transform: translateZ(0);
     font-size: 12px;
@@ -11,6 +13,12 @@
     align-items: center;
     border: 1px solid var(--border-highlight);
     font-family: var(--font-family);
+
+    @media (max-width: $mobile) {
+        width: 28px;
+        height: 28px;
+        font-size: 10px;
+    }
 
     &.big {
         width: 72px;

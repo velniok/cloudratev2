@@ -17,6 +17,9 @@ export const TrackHeaderInfoSkeleton = () => {
                 <h2 className={styles.title}>
                     <Skeleton width='200px' height='52px' borderRadius='12px' />
                 </h2>
+                <p className={styles.release}>
+                    <Skeleton width='175px' height='14px' borderRadius='6px' />
+                </p>
                 <Skeleton width='222px' height='51px' borderRadius='999px' />
             </div>
         </div>

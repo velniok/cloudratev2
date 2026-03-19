@@ -12,19 +12,7 @@
     @media (max-width: 400px) {
         flex-direction: column;
         align-items: center;
-        row-gap: 24px;
-    }
-}
-
-.cover {
-    @media (max-width: $mobile) {
-        width: 150px !important;
-        height: 150px !important;
-    }
-
-    @media (max-width: 400px) {
-        width: 75% !important;
-        height: 75% !important;
+        row-gap: 16px;
     }
 }
 

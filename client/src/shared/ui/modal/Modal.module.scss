@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .modal {
     opacity: 0;
     visibility: hidden;
@@ -29,12 +31,21 @@
         padding: 32px;
 
         transition: transform 0.3s;
+
+        @media (max-width: $mobile) {
+            margin: 0 15px;
+            padding: 24px;
+        }
     }
 
     &__header {
         margin-bottom: 24px;
         display: flex;
         justify-content: space-between;
+
+        @media (max-width: $mobile) {
+            margin-bottom: 12px;
+        }
         
         &Title {
             text-transform: uppercase;
@@ -43,11 +54,20 @@
             font-family: var(--second-family);
             font-size: 18px;
             letter-spacing: 0.05rem;
+
+            @media (max-width: $mobile) {
+                font-size: 16px;
+                margin-bottom: 2px;
+            }
         }
 
         &Desc {
             font-size: 14px;
             color: var(--text-tertiary);
+
+            @media (max-width: $mobile) {
+                font-size: 12px;
+            }
         }
     }
 

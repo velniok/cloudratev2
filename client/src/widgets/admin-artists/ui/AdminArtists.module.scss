@@ -39,13 +39,6 @@
     display: flex;
     align-items: center;
     column-gap: 8px;
-
-    @media (max-width: $mobile) {
-
-        & svg {
-            display: none;
-        }
-    }
 }
 
 .buttonText {
@@ -60,4 +53,12 @@
     margin-top: 32px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.text {
+
+    @media (max-width: $mobile) {
+        font-size: 12px;
+    }
 }

@@ -7,10 +7,25 @@ interface SkeletonProps {
     borderRadius: string
     isBlack?: boolean
     mb?: string
+    className?: string
 }
 
-export const Skeleton: FC<SkeletonProps> = ({ width, height, borderRadius, isBlack, mb }) => {
+export const Skeleton: FC<SkeletonProps> = ({ width, height, borderRadius, isBlack, mb, className }) => {
     return (
-        <span className={`${styles.skeleton} ${isBlack ? styles.black : ''}`} style={{ width: `${width}`, height: `${height}`, borderRadius: `${borderRadius}`, marginBottom: mb }}></span>
+        <span
+            className={`
+                ${styles.skeleton}
+                ${isBlack ? styles.black : ''}
+                ${className ?? className}
+            `}
+            style={
+                {
+                    width: `${width}`,
+                    height: `${height}`,
+                    borderRadius: `${borderRadius}`,
+                    marginBottom: mb 
+                }
+            }
+        ></span>
     )
 }

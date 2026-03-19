@@ -1,5 +1,5 @@
-import type { IArtist } from "@/entities/artist"
 import { getOneArtistThunk, selectArtist, selectArtistStatus } from "@/features/artist"
+import { selectAuthUser } from "@/features/auth"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { ArtistHeader } from "@/widgets/artist-header"
 import { ArtistTopTracks } from "@/widgets/artist-top-tracks"
@@ -12,10 +12,12 @@ export const ArtistPage = () => {
     const id = useParams<{ id: string }>().id
     const artist = useAppSelector(selectArtist)
     const artistStatus = useAppSelector(selectArtistStatus)
+    const authUser = useAppSelector(selectAuthUser)
 
     useEffect(() => {
-        dispatch(getOneArtistThunk({ id: Number(id) }))
-    }, [id])
+        if (authUser)
+        dispatch(getOneArtistThunk({ id: Number(id), userId: authUser.id }))
+    }, [id, authUser])
 
     return (
         <>

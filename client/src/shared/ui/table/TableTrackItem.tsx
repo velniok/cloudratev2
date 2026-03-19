@@ -38,11 +38,11 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
             </td>
             <td className={styles.table__data}>
                 {
-                    track.avgRating ? <Rating>{track.avgRating}</Rating> : 'Оценок нет'
+                    track.avgRating ? <Rating>{track.avgRating}</Rating> : <p className={styles.track__release}>Оценок нет</p>
                 }
             </td>
             <td className={styles.table__data}>
-                {new Date(track.releaseData).toLocaleDateString()}
+                <p className={styles.track__release}>{new Date(track.releaseData).toLocaleDateString()}</p>
             </td>
             <td className={styles.table__data}>
                 <div className={styles.action}>

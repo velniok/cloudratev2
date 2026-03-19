@@ -1,0 +1,11 @@
+.button {
+    width: 206px;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--text-primary);
+            color: var(--bg-color);
+            box-shadow: unset !important;
+        }
+    }
+}

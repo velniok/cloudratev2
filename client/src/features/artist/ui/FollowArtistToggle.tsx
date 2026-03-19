@@ -1,0 +1,42 @@
+import styles from './FollowArtistToggle.module.scss'
+import { Button } from '@/shared/ui'
+import { useState, type FC } from 'react'
+import { toggleFollowApi } from '../api/artistApi'
+import { useAppDispatch, useAppSelector } from '@/shared/lib'
+import { toggleFollowThunk } from '../model/slice'
+import { selectAuthUser } from '@/features/auth'
+
+interface FollowArtistToggleProps {
+    isFollowed: boolean
+    artistId: number
+}
+
+export const FollowArtistToggle: FC<FollowArtistToggleProps> = ({ isFollowed, artistId }) => {
+
+    const dispatch = useAppDispatch()
+    const authUser = useAppSelector(selectAuthUser)
+
+    const [isHovered, setIsHovered] = useState<boolean>(false)
+
+    const onSubmit = () => {
+        dispatch(toggleFollowThunk({
+            artistId: artistId,
+            userId: authUser?.id
+        }))
+    }
+
+    return (
+        <>
+        {
+            isFollowed ?
+            <Button onClick={onSubmit} padding='12px 24px 8px 24px' color='accent' setIsHovered={setIsHovered} className={styles.button}>
+                {
+                    isHovered ? 'Отписаться' : 'Вы подписаны'
+                }
+            </Button>
+            :
+            <Button onClick={onSubmit} padding='12px 24px 8px 24px' color='white'>Подписаться</Button>
+        }
+        </>
+    )
+}

@@ -11,12 +11,16 @@ export const createArtistApi = (params: IArtistReq) => {
     return axios.post<{ artist: IArtist }>('/artist/create', params)
 }
 
-export const getOneArtistApi = (params: { id: number }) => {
-    return axios.get<{ artist: IArtist }>(`/artist/getOne/${params.id}`)
+export const getOneArtistApi = (params: { id: number, userId: number }) => {
+    return axios.get<{ artist: IArtist }>(`/artist/getOne/${params.id}`, { params: { userId: params.userId } })
 }
 
 export const updateArtistApi = (params: { id: number, req: IArtistReq }) => {
     return axios.patch<{ artist: IArtist }>(`/artist/update/${params.id}`, params.req)
+}
+
+export const toggleFollowApi = (params: { artistId: number, userId: number }) => {
+    return axios.post('/artist/toggleFollow', params)
 }
 
 export const deleteArtistApi = (params: { id: number }) => {

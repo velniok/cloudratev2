@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { ArtistHeaderInfo, type IArtist } from '@/entities/artist'
 import styles from './ArtistHeader.module.scss'
 import { TStatus } from '@/shared/types'
+import { FollowArtistToggle } from '@/features/artist'
 
 interface ArtistHeaderProps {
     artist: IArtist
@@ -15,7 +16,7 @@ export const ArtistHeader: FC<ArtistHeaderProps> = ({ artist, artistStatus }) =>
                 {
                     artistStatus === 'success'
                     ?
-                    <ArtistHeaderInfo artist={artist} />
+                    <ArtistHeaderInfo artist={artist} actions={<FollowArtistToggle isFollowed={artist.follow.isFollowed} artistId={artist.id} />} />
                     :
                     <>Загрузка</>
                 }

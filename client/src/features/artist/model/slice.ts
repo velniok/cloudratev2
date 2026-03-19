@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createArtistApi, deleteArtistApi, getArtistListApi, getOneArtistApi, updateArtistApi } from "../api/artistApi";
+import { createArtistApi, deleteArtistApi, getArtistListApi, getOneArtistApi, toggleFollowApi, updateArtistApi } from "../api/artistApi";
 import type { IArtist } from "@/entities/artist";
 import axios from "axios";
 import type { IArtistState } from "./artistSliceTypes";
@@ -28,7 +28,7 @@ export const createArtistThunk = createAsyncThunk<{ artist: IArtist }, IArtistRe
     }
 })
 
-export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number }, { rejectValue: IApiError }>('/artist/getOneArtistThunk', async (params, { rejectWithValue }) => {
+export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number, userId: number }, { rejectValue: IApiError }>('/artist/getOneArtistThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getOneArtistApi(params)
         return data
@@ -42,6 +42,17 @@ export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: numbe
 export const updateArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number, req: IArtistReq }, { rejectValue: IApiError }>('/artist/updateArtistThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await updateArtistApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
+export const toggleFollowThunk = createAsyncThunk<{followed: boolean}, { artistId: number, userId: number }, { rejectValue: IApiError }>('/artist/toggleFollowThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await toggleFollowApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -140,6 +151,23 @@ const artistSlice = createSlice({
             state.artistStatus = 'idle'
         })
         .addCase(updateArtistThunk.rejected, (state) => {
+            state.artistStatus = 'error',
+            state.artistError = null
+        })
+
+        .addCase(toggleFollowThunk.pending, (state) => {
+            state.artistError = null
+        })
+        .addCase(toggleFollowThunk.fulfilled, (state, action) => {
+            if (action.payload.followed) {
+                ++state.artist.follow.followersCount
+                state.artist.follow.isFollowed = true
+            } else {
+                --state.artist.follow.followersCount
+                state.artist.follow.isFollowed = false
+            }
+        })
+        .addCase(toggleFollowThunk.rejected, (state) => {
             state.artistStatus = 'error',
             state.artistError = null
         })

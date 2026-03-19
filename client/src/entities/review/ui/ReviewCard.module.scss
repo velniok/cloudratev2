@@ -63,4 +63,18 @@
 .review {
     color: var(--text-secondary);
     white-space: pre-wrap;
+
+    &__skeleton {
+        display: flex;
+        flex-direction: column;
+        row-gap: 6px;
+    }
+}
+
+.action {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    width: 60px;
+    margin-left: auto;
 }
