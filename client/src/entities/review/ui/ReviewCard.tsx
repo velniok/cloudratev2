@@ -9,7 +9,7 @@ import { ITrack } from "@/entities/track"
 
 interface ReviewCardProps {
     review: IReview
-    track: ITrack
+    track?: ITrack
     actions?: ReactNode
 }
 

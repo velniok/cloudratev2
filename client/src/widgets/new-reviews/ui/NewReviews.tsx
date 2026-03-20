@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/shared/lib'
 import { getNewReviewsThunk, selectNewReviews, selectNewReviewsStatus } from '@/features/home'
 import { ReviewCard, ReviewCardSkeleton } from '@/entities/review'
+import { ReviewLikeToggle } from '@/features/review'
 
 export const NewReviews = () => {
 
