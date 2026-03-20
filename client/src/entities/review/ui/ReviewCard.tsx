@@ -5,13 +5,15 @@ import { MouseEvent, ReactNode, useState, type FC } from "react"
 import { Cover, CriteriasPopup, Rating } from "@/shared/ui"
 import { useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
+import { ITrack } from "@/entities/track"
 
 interface ReviewCardProps {
     review: IReview
+    track: ITrack
     actions?: ReactNode
 }
 
-export const ReviewCard: FC<ReviewCardProps> = ({ review, actions }) => {
+export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track }) => {
 
     const authUser = useAppSelector(selectAuthUser)
 
@@ -36,6 +38,9 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions }) => {
                 <CriteriasPopup close={() => setCriterias(false)} show={criterias} position="top" avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
                 {
                     review.userId === authUser?.id && <p className={styles.yourText}>Ваша рецензия</p>
+                }
+                {
+                    track && <p className={styles.track}>о треке <Link to={`/track/${track.id}`}>{track.title}</Link></p>
                 }
             </div>
             <p className={styles.review}>{review.text}</p>

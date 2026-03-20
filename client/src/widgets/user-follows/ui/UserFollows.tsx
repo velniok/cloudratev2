@@ -14,7 +14,7 @@ export const UserFollows: FC<UserFollowsProps> = ({ user, userStatus }) => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
-                <Title>Подписки</Title>
+                <Title>ПОДПИСКИ</Title>
                 <Slider>
                     {
                         userStatus === 'success' ?

@@ -56,6 +56,7 @@ router.patch('/track/update/:id', checkAdmin, trackValidation.trackUpdateValidat
 router.delete('/track/delete/:id', checkAdmin, TrackControllers.delete)
 
 router.post('/review/create', ReviewControllers.create)
+router.get('/review/newReviews', ReviewControllers.getNewReviews)
 router.patch('/review/addText/:id', ReviewControllers.addText)
 router.post('/review/toggleLike', ReviewControllers.toggleLike)
 

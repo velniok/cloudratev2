@@ -18,6 +18,17 @@ class ReviewControllers {
         }
     }
 
+    async getNewReviews(req, res, next) {
+        try {
+            const reviews = await ReviewServices.getNewReviews()
+
+            res.status(200).json({ reviews })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
     async addText(req, res, next) {
         try {
             const reviewId = req.params.id

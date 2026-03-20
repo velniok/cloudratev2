@@ -1,0 +1,1 @@
+export { NewReviews } from './ui/NewReviews'

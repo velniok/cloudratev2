@@ -77,6 +77,22 @@ class ReviewServices {
         return reviewsRes.rows.map(mapToCamelCase)
     }
 
+    async getNewReviews() {
+        const reviewsRes = await pool.query(`
+            SELECT
+                r.*,
+                row_to_json(u) as user,
+                row_to_json(t) as track
+            FROM reviews r
+            JOIN users u ON r.user_id = u.id
+            JOIN tracks t ON r.track_id = t.id
+            WHERE r.text != '' AND r.text IS NOT NULL
+            ORDER BY r.created_at DESC
+            LIMIT 15
+        `)
+        return reviewsRes.rows.map(mapToCamelCase)
+    }
+
     async addTextReviewById(id, text) {
         await pool.query(`
             UPDATE reviews

@@ -71,6 +71,24 @@
     }
 }
 
+.track {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+
+    & a {
+        content: attr(data-text);
+        padding-top: 4px;
+        color: var(--accent-color);
+        font-weight: 700;
+        font-family: var(--second-family);
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
 .action {
     margin-top: 12px;
     display: flex;
