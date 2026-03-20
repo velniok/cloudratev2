@@ -12,7 +12,7 @@
 }
 
 .top {
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     position: relative;
     display: flex;
     align-items: center;
@@ -74,7 +74,8 @@
 .track {
     display: flex;
     align-items: center;
-    column-gap: 4px;
+    column-gap: 7px;
+    color: var(--text-secondary);
 
     & a {
         content: attr(data-text);

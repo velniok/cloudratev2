@@ -10,6 +10,14 @@
         column-gap: 10px;
     }
 
+    &.columns {
+        display: grid;
+        grid-template-columns: repeat(3, 100%);
+        grid-template-rows: repeat(3, 1fr);
+        grid-auto-flow: column; 
+        row-gap: 16px;
+    }
+
     &__wrapper {
         position: relative;
     }

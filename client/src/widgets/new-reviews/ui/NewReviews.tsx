@@ -20,7 +20,7 @@ export const NewReviews = () => {
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>НОВЫЕ ОТЗЫВЫ</Title>
-                <Slider>
+                <Slider columns={true}>
                     {
                         newReviewsStatus === 'success' ?
                         newReviews.map((review) => {

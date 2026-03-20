@@ -3,9 +3,10 @@ import styles from './Slider.module.scss'
 
 interface SliderProps {
     children: ReactNode
+    columns?: boolean
 }
 
-export const Slider: FC<SliderProps> = ({ children }) => {
+export const Slider: FC<SliderProps> = ({ children, columns }) => {
 
     const listRef = useRef<HTMLDivElement>(null)
     const [maxOffset, setMaxOffset] = useState(0) 
@@ -26,21 +27,21 @@ export const Slider: FC<SliderProps> = ({ children }) => {
     const hundleNext = () => {
         const list = listRef.current
         if (!list) return
-        const step = list.clientWidth / 2
+        const step = columns ? list.clientWidth + +getComputedStyle(list).columnGap.replace('px', '') : list.clientWidth / 2
         setOffset(prev => Math.min(prev + step, maxOffset))
     }
 
     const hundlePrev = () => {
         const list = listRef.current
         if (!list) return
-        const step = list.clientWidth / 2
+        const step = columns ? list.clientWidth + +getComputedStyle(list).columnGap.replace('px', '') : list.clientWidth / 2
         setOffset(prev => Math.max(prev - step, 0))
     }
 
     return (
         <div className={styles.list__wrapper}>
             <div className={styles.list__inner}>
-                <div className={styles.list} ref={listRef} style={{ transform: `translateX(-${offset}px)` }}>
+                <div className={`${styles.list} ${columns && styles.columns}`} ref={listRef} style={{ transform: `translateX(-${offset}px)` }}>
                     {children}
                 </div>
             </div>
