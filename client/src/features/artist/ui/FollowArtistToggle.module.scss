@@ -1,11 +1,34 @@
-.button {
-    width: 206px;
+@use '@/shared/styles/breakpoints' as *;
 
-    @media (hover: hover) {
-        &:hover {
-            background-color: var(--text-primary);
-            color: var(--bg-color);
-            box-shadow: unset !important;
+.button {
+    
+    @media (max-width: $mobile) {
+        padding: 10px 24px 8px 24px !important;
+    }
+
+    &__desc {
+        display: none;
+        width: 206px;
+    
+        @media (hover: hover) {
+            display: block;
+            &:hover {
+                background-color: var(--text-primary);
+                color: var(--bg-color);
+                box-shadow: unset !important;
+            }
+        }
+    }
+    
+    &__mobile {
+        display: none;
+
+        @media (max-width: $mobile) {
+            padding: 10px 24px 8px 24px !important;
+        }
+
+        @media (hover: none) {
+            display: block;
         }
     }
 }

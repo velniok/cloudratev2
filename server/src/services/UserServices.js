@@ -24,8 +24,14 @@ class UserServices {
 
     async getUserByUsername(username) {
         const userRes = await pool.query(`
-            SELECT *
-            FROM users
+            SELECT u.*,
+            (
+                SELECT json_agg(row_to_json(a))
+                FROM artists a
+                JOIN artist_follows af ON af.artist_id = a.id
+                WHERE af.user_id = u.id 
+            ) as follows
+            FROM users u
             WHERE username = $1
         `, [username])
         return mapToCamelCase(userRes.rows[0])

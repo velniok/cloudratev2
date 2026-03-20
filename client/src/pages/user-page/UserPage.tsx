@@ -5,6 +5,7 @@ import { useEffect } from "react"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { getOneUserThunk, selectUserUpdateStatus } from "@/features/user"
 import { selectUser, selectUserStatus } from "@/features/user"
+import { UserFollows } from "@/widgets/user-follows"
 
 export const UserPage = () => {
 
@@ -27,6 +28,7 @@ export const UserPage = () => {
         <>
             <UserHeader user={user} userStatus={userStatus} />
             <LatestRatedTracks user={user} userStatus={userStatus} />
+            <UserFollows user={user} userStatus={userStatus} />
         </>
     )
 }

@@ -29,13 +29,18 @@ export const FollowArtistToggle: FC<FollowArtistToggleProps> = ({ isFollowed, ar
         <>
         {
             isFollowed ?
-            <Button onClick={onSubmit} padding='12px 24px 8px 24px' color='accent' setIsHovered={setIsHovered} className={styles.button}>
-                {
-                    isHovered ? 'Отписаться' : 'Вы подписаны'
-                }
-            </Button>
+            <>
+                <Button onClick={onSubmit} padding='12px 24px 8px 24px' color='accent' setIsHovered={setIsHovered} className={styles.button__desc}>
+                    {
+                        isHovered ? 'Отписаться' : 'Вы подписаны'
+                    }
+                </Button>
+                <Button onClick={onSubmit} padding='12px 24px 8px 24px' color='accent' className={styles.button__mobile}>
+                    Вы подписаны
+                </Button>
+            </>
             :
-            <Button onClick={onSubmit} padding='12px 24px 8px 24px' color='white'>Подписаться</Button>
+            <Button onClick={onSubmit} padding='12px 24px 8px 24px' className={styles.button} color='white'>Подписаться</Button>
         }
         </>
     )

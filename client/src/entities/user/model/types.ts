@@ -1,3 +1,4 @@
+import { IArtist } from "@/entities/artist"
 import { IReview } from "@/entities/review"
 
 export interface IUser {
@@ -10,5 +11,6 @@ export interface IUser {
     email: string
     password: string
     avatarUrl: string | null
-    reviews: IReview[] | []
+    reviews: IReview[]
+    follows: IArtist[]
 }
