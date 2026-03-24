@@ -5,9 +5,14 @@
     padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--border-subtle);
+    min-height: 150px;
 
     &.your {
         border: 2px solid var(--accent-color);
+    }
+
+    @media (max-width: $mobile) {
+        min-height: 118px;
     }
 }
 
@@ -17,9 +22,24 @@
     display: flex;
     align-items: center;
     column-gap: 12px;
+    border-bottom: 2px solid var(--border-subtle);
+    padding-bottom: 8px;
+
+    @media (max-width: $mobile) {
+        flex-direction: column;
+        align-items: flex-start;
+        row-gap: 4px;
+    }
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
 }
 
 .user {
+    grid-column: span 1;
     display: flex;
     align-items: center;
     column-gap: 8px;
@@ -63,6 +83,10 @@
 .review {
     color: var(--text-secondary);
     white-space: pre-wrap;
+
+    @media (max-width: $mobile) {
+        font-size: 12px;
+    }
 
     &__skeleton {
         display: flex;

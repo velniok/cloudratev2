@@ -5,7 +5,7 @@ import { ReviewIcon } from '../icon'
 interface CriteriasPopupProps {
     show: boolean
     avgCriterias: number[]
-    position: 'bottom' | 'top'
+    position: 'bottom' | 'top' | 'right'
     close: () => void
     review?: boolean
 }
@@ -25,8 +25,7 @@ export const CriteriasPopup: FC<CriteriasPopupProps> = ({ show, avgCriterias, po
 
     return (
         <div className={`${styles.criterias} ${show ? styles.open : ''} ${styles[position]}`}>
-            <div className={styles.criterias__top}>
-            <p className={styles.criterias__text}>Средние оценки по критериям</p>
+            {/* <p className={styles.criterias__text}>Средние оценки по критериям</p> */}
             {
                 review &&
                 <div className={styles.criterias__review}>
@@ -34,7 +33,6 @@ export const CriteriasPopup: FC<CriteriasPopupProps> = ({ show, avgCriterias, po
                     <span className={styles.criterias__reviewText}>ОТЗЫВ</span>
                 </div>
             }
-            </div>
             <ul className={styles.criterias__list}>
                 {
                     Object.values(avgCriterias).map((criteria, index) => {

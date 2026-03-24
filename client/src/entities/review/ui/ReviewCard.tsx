@@ -30,15 +30,17 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track }) => {
     return (
         <div className={`${styles.inner} ${review.userId === authUser?.id ? styles.your : ''}`}>
             <div className={styles.top}>
-                <Link to={`/user/${review.user.username}`} className={styles.user}>
-                    <Cover width="32px" height="32px" borderRadius="50%" url={review.user.avatarUrl} />
-                    <p className={styles.nickname}>{review.user.nickname}</p>
-                </Link>
-                <Rating active={criterias} isHover={true} onClick={(e) => handleOpenCriterias(e)}>{review.rating}</Rating>
-                <CriteriasPopup close={() => setCriterias(false)} show={criterias} position="top" avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
-                {
-                    review.userId === authUser?.id && <p className={styles.yourText}>Ваша рецензия</p>
-                }
+                <div className={styles.info}>
+                    <Link to={`/user/${review.user.username}`} className={styles.user}>
+                        <Cover width="32px" height="32px" borderRadius="50%" url={review.user.avatarUrl} />
+                        <p className={styles.nickname}>{review.user.nickname}</p>
+                    </Link>
+                    <Rating active={criterias} isHover={true} onClick={(e) => handleOpenCriterias(e)}>{review.rating}</Rating>
+                    <CriteriasPopup close={() => setCriterias(false)} show={criterias} position="right" avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
+                    {
+                        review.userId === authUser?.id && <p className={styles.yourText}>Ваша рецензия</p>
+                    }
+                </div> 
                 {
                     track && <p className={styles.track}>о треке <Link to={`/track/${track.id}`}>{track.title}</Link></p>
                 }
