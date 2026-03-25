@@ -5,8 +5,7 @@ class ReviewControllers {
     async create(req, res, next) {
         try {
             const { text, userId, trackId, criteria1, criteria2, criteria3, criteria4, criteria5 } = req.body
-
-            const rating = criteria1 + criteria2 + criteria3 + criteria4 + criteria5
+            const rating = Math.round( ( (criteria1 * 1.3) + (criteria2 * 1.3) + (criteria3 * 1.3) + (criteria4 * 1.3) + (criteria5 * 1.8) ) )
             const createdReview = await ReviewServices.reviewCreate([text, rating, userId, trackId, criteria1, criteria2, criteria3, criteria4, criteria5])
             if (createdReview.status === 'user_taken') throw new AppError('Вы уже оставили отзыв на этот трек', 409)
             const review = createdReview.review
