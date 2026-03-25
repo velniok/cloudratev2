@@ -9,7 +9,7 @@ interface LeavedReviewProps {
 
 export const LeavedReview: FC<LeavedReviewProps> = ({ review }) => {
 
-    const ranges = ['Продакшн', 'Текст', 'Подача', 'Мелодия', 'Оригинальность']
+    const ranges = ['Текст', 'Бит и Ритм', 'Мастерство Подачи', 'Аранжировка', 'Атмосфера и Эмоции']
     const values = [review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]
 
     return (

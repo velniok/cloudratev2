@@ -25,7 +25,7 @@ export const ArtistHeaderInfo: FC<ArtistHeaderInfoProps> = ({ artist, actions })
                         <p className={styles.stats__title}>{pluralize(artist.follow.followersCount, 'подписчик', 'подписчика', 'подписчиков')}</p>
                     </li>
                     <li className={styles.stats__item}>
-                        <span className={styles.stats__count}>52</span>
+                        <span className={styles.stats__count}>{artist.avgRating ?? '0'}</span>
                         <p className={styles.stats__title}>Средний рейтинг</p>
                     </li>
                 </ul>

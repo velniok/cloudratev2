@@ -20,7 +20,12 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
     const { notify } = useNotification()
     const user = useAppSelector(selectAuthUser)
 
+    const [errorText, setErrorText] = useState<string>('')
+
     const onSubmit = async (req: IReviewReq) => {
+
+        if (req.text !== '' && req.text.length < 300) return setErrorText(prev => prev = 'Отзыв должен содержать минимум 300 символов')
+
         await createReviewApi(req)
             .then(() => {
                 notify('Трек оценён', 'Вы успешно оставили оценку', 'success')
@@ -29,6 +34,9 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
     }
 
     const onSubmitText = async (req: { id: number, req: { text: string } }) => {
+
+        if (req.req.text !== '' && req.req.text.length < 300) return setErrorText(prev => prev = 'Отзыв должен содержать минимум 300 символов')
+
         await addTextReviewApi(req)
             .then(() => {
                 notify('Отзыв оставлен', 'Вы успешно оставили отзыв к оценке', 'success')
@@ -37,11 +45,11 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
     }
 
     if (!review) {
-        return <LeaveReview onSubmit={onSubmit} trackId={track.id} userId={user.id} />
+        return <LeaveReview onSubmit={onSubmit} trackId={track.id} userId={user.id} errorText={errorText} clearErrorText={() => setErrorText('')} />
     }
 
     if (!review.text) {
-        return <LeaveReview onSubmit={onSubmitText} trackId={track.id} userId={user.id} review={review} textOnly={true} />
+        return <LeaveReview onSubmit={onSubmitText} trackId={track.id} userId={user.id} review={review} textOnly={true} errorText={errorText} clearErrorText={() => setErrorText('')} />
     }
 
     return <LeavedReview review={review} />

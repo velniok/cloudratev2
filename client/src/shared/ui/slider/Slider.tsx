@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useRef, useState } from 'react'
+import { CSSProperties, FC, ReactNode, useEffect, useRef, useState } from 'react'
 import styles from './Slider.module.scss'
 
 interface SliderProps {
@@ -11,6 +11,7 @@ export const Slider: FC<SliderProps> = ({ children, columns }) => {
     const listRef = useRef<HTMLDivElement>(null)
     const [maxOffset, setMaxOffset] = useState(0) 
     const [offset, setOffset] = useState(0)
+    const [listWidth, setListWidth] = useState(0)
 
     useEffect(() => {
         const list = listRef.current
@@ -18,6 +19,7 @@ export const Slider: FC<SliderProps> = ({ children, columns }) => {
 
         const observer = new ResizeObserver(() => {
             setMaxOffset(list.scrollWidth - list.clientWidth)
+            setListWidth(list.clientWidth)
         })
 
         observer.observe(list)
@@ -27,21 +29,22 @@ export const Slider: FC<SliderProps> = ({ children, columns }) => {
     const hundleNext = () => {
         const list = listRef.current
         if (!list) return
-        const step = columns ? list.clientWidth + +getComputedStyle(list).columnGap.replace('px', '') : list.clientWidth / 2
+        const step = columns ? listWidth + +getComputedStyle(list).columnGap.replace('px', '') : list.clientWidth / 2
         setOffset(prev => Math.min(prev + step, maxOffset))
+        console.log(list.scrollWidth)
     }
 
     const hundlePrev = () => {
         const list = listRef.current
         if (!list) return
-        const step = columns ? list.clientWidth + +getComputedStyle(list).columnGap.replace('px', '') : list.clientWidth / 2
+        const step = columns ? listWidth + +getComputedStyle(list).columnGap.replace('px', '') : list.clientWidth / 2
         setOffset(prev => Math.max(prev - step, 0))
     }
 
     return (
         <div className={styles.list__wrapper}>
             <div className={styles.list__inner}>
-                <div className={`${styles.list} ${columns && styles.columns}`} ref={listRef} style={{ transform: `translateX(-${offset}px)` }}>
+                <div className={`${styles.list} ${columns && styles.columns}`} ref={listRef} style={{ transform: `translateX(-${offset}px)`, '--width': `${listWidth}px` } as CSSProperties}>
                     {children}
                 </div>
             </div>

@@ -15,8 +15,7 @@ export const ArtistPage = () => {
     const authUser = useAppSelector(selectAuthUser)
 
     useEffect(() => {
-        if (authUser)
-        dispatch(getOneArtistThunk({ id: Number(id), userId: authUser.id }))
+        dispatch(getOneArtistThunk({ id: Number(id), userId: authUser?.id }))
     }, [id, authUser])
 
     return (

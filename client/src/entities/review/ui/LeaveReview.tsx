@@ -1,4 +1,4 @@
-import { Button, InputRange, Rating } from '@/shared/ui'
+import { Button, InfoIcon, InputRange, Rating } from '@/shared/ui'
 import styles from './LeaveReview.module.scss'
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 import { IReviewReq } from '@/features/review'
@@ -10,9 +10,11 @@ interface LeaveReviewProps {
     trackId: number
     textOnly?: boolean
     review?: IReview
+    errorText: string
+    clearErrorText: () => void
 }
 
-export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, textOnly, review }) => {
+export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, textOnly, review, errorText, clearErrorText }) => {
 
     useEffect(() =>{
         if (textOnly) {
@@ -23,7 +25,7 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
         }
     }, [])
 
-    const ranges = ['Продакшн', 'Текст', 'Подача', 'Мелодия', 'Оригинальность']
+    const ranges = ['Текст', 'Бит и Ритм', 'Мастерство Подачи', 'Аранжировка', 'Атмосфера и Эмоции']
     const [values, setValues] = useState<number[]>([5, 5, 5, 5, 5])
     const [rating, setRating] = useState<number>(20)
     const [text, setText] = useState<string>('')
@@ -31,7 +33,7 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
     const [textarea, setTextarea] = useState<boolean>(false)
 
     useEffect(() => {
-        setRating(prev => prev = values[0] + values[1] + values[2] + values[3] + values[4])
+        setRating(prev => prev = Math.round( ( (values[0] * 1.3) + (values[1] * 1.3) + (values[2] * 1.3) + (values[3] * 1.3) + (values[4] * 1.8) ) ))
     }, [values])
 
     const hundleChangeValue = (e: ChangeEvent<HTMLInputElement>, index: number) => {
@@ -42,6 +44,7 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
     }
 
     const hundleChangeTextarea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        clearErrorText()
         setText(e.target.value)
     }
 
@@ -92,7 +95,21 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
                     </div>
                 </div>
                 <div className={`${styles.textarea__wrapper} ${textarea ? styles.show : ''}`}>
-                    <textarea placeholder='Напишите ваш отзыв о треке (более 100 и менее 3000 символов)...' className={styles.textarea} onChange={hundleChangeTextarea} value={text}></textarea>
+                    <textarea
+                        placeholder='Напишите ваш отзыв о треке (более 300 и менее 3000 символов)...'
+                        className={`${styles.textarea} ${errorText && styles.error}`}
+                        onChange={hundleChangeTextarea}
+                        value={text}
+                        minLength={100}
+                        maxLength={3000}
+                    />
+                    {
+                        errorText &&
+                            <p className={styles.errorMessage}>
+                                <InfoIcon />
+                                {errorText}
+                            </p>
+                    }
                 </div>
             </div>
             <div className={styles.footer}>

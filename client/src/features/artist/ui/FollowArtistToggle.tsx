@@ -2,7 +2,7 @@ import styles from './FollowArtistToggle.module.scss'
 import { Button } from '@/shared/ui'
 import { useState, type FC } from 'react'
 import { toggleFollowApi } from '../api/artistApi'
-import { useAppDispatch, useAppSelector } from '@/shared/lib'
+import { useAppDispatch, useAppSelector, useNotification } from '@/shared/lib'
 import { toggleFollowThunk } from '../model/slice'
 import { selectAuthUser } from '@/features/auth'
 
@@ -14,15 +14,26 @@ interface FollowArtistToggleProps {
 export const FollowArtistToggle: FC<FollowArtistToggleProps> = ({ isFollowed, artistId }) => {
 
     const dispatch = useAppDispatch()
+    const { notify } = useNotification()
     const authUser = useAppSelector(selectAuthUser)
 
     const [isHovered, setIsHovered] = useState<boolean>(false)
 
     const onSubmit = () => {
+
+        if (!authUser?.id) return notify('Вы не авторизованы', 'Прежде чем сделать это, авторизуйтесь', 'error')
+
         dispatch(toggleFollowThunk({
             artistId: artistId,
             userId: authUser?.id
-        }))
+        })).unwrap()
+            .then((res) => {
+                if (res.followed) {
+                    notify('Вы подписались', 'Вы успешно подписались на артиста', 'success')
+                } else {
+                    notify('Вы отписались', 'Вы успешно отписались от артиста', 'delete')
+                }
+            })
     }
 
     return (

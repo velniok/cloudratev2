@@ -16,9 +16,7 @@ export const TrackPage = () => {
     const trackStatus = useAppSelector(selectTrackStatus)
 
     useEffect(() => {
-        if (authUser) {
-            dispatch(getOneTrackThunk({ trackId: Number(id), userId: authUser.id }))
-        }
+        dispatch(getOneTrackThunk({ trackId: Number(id), userId: authUser?.id }))
     }, [id, authUser])
 
     return (

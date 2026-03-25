@@ -14,6 +14,19 @@ interface ButtonProps {
 
 export const Button: FC<ButtonProps> = ({ children, padding, onClick, color, fontSize, active, className, setIsHovered }) => {
     return (
-        <button type="button" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className={`${styles.button} ${className ?? className} ${styles[color]} ${active ? styles.active : ''}`} style={ { padding: `${padding}`, fontSize: `${fontSize}` } } onClick={onClick} >{children}</button>
+        <button
+            type="button"
+            onMouseEnter={() => setIsHovered?.(true)}
+            onMouseLeave={() => setIsHovered?.(false)}
+            className={`
+                ${styles.button}
+                ${className ?? className}
+                ${styles[color]}
+                ${active ? styles.active : ''}
+            `}
+            style={ { padding: `${padding}`, fontSize: `${fontSize}` } }
+            onClick={onClick}>
+            {children}
+        </button>
     )
 }

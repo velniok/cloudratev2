@@ -69,6 +69,12 @@ class ArtistServices {
                     SELECT
                         a.*,
                         (
+                            SELECT ROUND(AVG(r.rating)::numeric)
+                            FROM reviews r
+                            JOIN tracks t ON t.id = r.track_id
+                            WHERE $1 = ANY(t.artist_ids)
+                        ) as avg_rating,
+                        (
                             SELECT json_agg(
                                 jsonb_build_object('artists', (
                                     SELECT json_agg(row_to_json(ar))

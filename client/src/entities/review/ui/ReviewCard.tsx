@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import styles from "./ReviewCard.module.scss"
 import type { IReview } from "../model/types"
 import { MouseEvent, ReactNode, useState, type FC } from "react"
-import { Cover, CriteriasPopup, Rating } from "@/shared/ui"
+import { Cover, CriteriasPopup, EyeIcon, Rating } from "@/shared/ui"
 import { useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
 import { ITrack } from "@/entities/track"
@@ -11,13 +11,15 @@ interface ReviewCardProps {
     review: IReview
     track?: ITrack
     actions?: ReactNode
+    showMore?: boolean
 }
 
-export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track }) => {
+export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMore }) => {
 
     const authUser = useAppSelector(selectAuthUser)
 
     const [criterias, setCriterias] = useState<boolean>(false)
+    const [more, setMore] = useState<boolean>(false)
 
     const handleOpenCriterias = (e: MouseEvent) => {
         e.stopPropagation()
@@ -45,10 +47,13 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track }) => {
                     track && <p className={styles.track}>о треке <Link to={`/track/${track.id}`}>{track.title}</Link></p>
                 }
             </div>
-            <p className={styles.review}>{review.text}</p>
+            <p className={`${styles.review} ${showMore ? styles.visible : ''} ${more ? styles.more : ''}`}>{review.text}</p>
             {
                 actions && <>{actions}</>
             }
+            <div className={`${styles.show} ${showMore ? styles.visible : ''} ${more ? styles.more : ''}`} onClick={() => setMore(!more)}>
+                <EyeIcon />
+            </div>
         </div>
     )
 }
