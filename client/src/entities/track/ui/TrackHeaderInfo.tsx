@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import styles from './TrackHeaderInfo.module.scss'
 import type { ITrack } from '../model/types'
-import { Cover, CriteriasPopup, Rating } from '@/shared/ui'
+import { Cover, CriteriasPopup, LinkIcon, Rating } from '@/shared/ui'
 import { useState, type FC } from 'react'
 import { pluralize } from '@/shared/lib'
 
@@ -32,6 +32,10 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
                     }
                 </ul>
                 <h2 className={styles.title}>{track.title}</h2>
+                <a href={`${track.soundcloudUrl}`} className={styles.soundcloud}>
+                    <LinkIcon />
+                    SoundCloud
+                </a>
                 <p className={styles.release}>Дата релиза <strong className={styles.release__strong}>{new Date(track.releaseData).toLocaleDateString()}</strong></p>
                 {
                     track.avgRating

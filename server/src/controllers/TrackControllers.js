@@ -9,8 +9,8 @@ class TrackControllers {
             const errors = validationResult(req)
             if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
-            const { title, coverUrl, artistIds, releaseData } = req.body
-            const trackCreate = await TrackServices.createTrack([title, coverUrl, artistIds, releaseData])
+            const { title, coverUrl, soundcloudUrl, artistIds, releaseData } = req.body
+            const trackCreate = await TrackServices.createTrack([title, coverUrl, soundcloudUrl, artistIds, releaseData])
             if (trackCreate.status === 'track_taken') throw new AppError(`Трек с таким названием уже существует`, 409, `title`)
             const track = trackCreate.track
 
@@ -72,9 +72,9 @@ class TrackControllers {
             if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
             const trackId = req.params.id
-            const { title, coverUrl, releaseData } = req.body
+            const { title, coverUrl, soundcloudUrl, releaseData } = req.body
 
-            const trackUpdate = await TrackServices.updateTrackById(trackId, [title, coverUrl, releaseData])
+            const trackUpdate = await TrackServices.updateTrackById(trackId, [title, coverUrl, soundcloudUrl, releaseData])
             if (trackUpdate.status === 'track_taken') throw new AppError(`Название трека уже занято`, 409, `title`)
             const track = trackUpdate.track
 

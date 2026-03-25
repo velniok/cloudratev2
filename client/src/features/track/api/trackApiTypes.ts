@@ -2,6 +2,7 @@ export interface ITrackReq {
     title: string
     coverUrl: string
     artistIds: string[]
+    soundcloudUrl: string
     releaseData: string
 }
 
@@ -10,6 +11,7 @@ export interface ITrackUpdateReq {
     req: {
         title: string
         coverUrl: string
+        soundcloudUrl: string
         releaseData: string
     }
 }

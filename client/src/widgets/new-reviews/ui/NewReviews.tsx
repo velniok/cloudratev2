@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/shared/lib'
 import { getNewReviewsThunk, selectNewReviews, selectNewReviewsStatus } from '@/features/home'
 import { IReview, ReviewCard, ReviewCardSkeleton } from '@/entities/review'
-import { ReviewLikeToggle } from '@/features/review'
 
 export const NewReviews = () => {
 
@@ -51,9 +50,11 @@ export const NewReviews = () => {
                             )
                         })
                         :
-                        Array.from({ length: 5 }).map((_, index) => {
-                            return <ReviewCardSkeleton key={index} />
-                        })
+                        <ul>
+                            <li><ReviewCardSkeleton /></li>
+                            <li><ReviewCardSkeleton /></li>
+                            <li><ReviewCardSkeleton /></li>
+                        </ul>
                     }
                 </Slider>
             </div>

@@ -28,6 +28,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
     const initialErrors = {
         title: '',
         artistIds: '',
+        soundcloudUrl: '',
         releaseData: '',
     }
     const [errors, setErrors] = useState(initialErrors)
@@ -35,6 +36,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
     const initialValues = {
         title: '',
         coverUrl: '',
+        soundcloudUrl: '',
         releaseData: '',
     }
     const [values, setValues] = useState(initialValues)
@@ -52,6 +54,11 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
     const hundleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setErrors(prev => ({ ...prev, title: '' }))
         setValues(prev => ({ ...prev, title: e.target.value }))
+    }
+
+    const hundleChangeSoundcloudUrl = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, soundcloudUrl: '' }))
+        setValues(prev => ({ ...prev, soundcloudUrl: e.target.value }))
     }
 
     const hundleChangeRelease = (e: ChangeEvent<HTMLInputElement>) => {
@@ -75,11 +82,15 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
         })
 
         if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
+        if (!values.soundcloudUrl) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Укажите ссылку на SoundCloud трека' }))
+        if (!URL.canParse(values.soundcloudUrl)) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Неверный формат ссылки' }))
         if (artistIds.length === 0) return setErrors(prev => ({ ...prev, artistIds: 'Укажите хотя бы одного артиста' }))
         if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
+
         dispatch(createTrackThunk({
             title: values.title,
             coverUrl: values.coverUrl,
+            soundcloudUrl: values.soundcloudUrl,
             artistIds: artistIds,
             releaseData: values.releaseData,
         })).unwrap()
@@ -125,6 +136,16 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
                         value={values.title}
                         onChange={hundleChangeTitle}
                         error={errors.title}
+                    />
+                    <Input
+                        label='ССЫЛКА НА SoundCloud трека'
+                        placeholder='Введите ссылку на SoundCloud трека'
+                        type='text'
+                        labelFontSize='10px'
+                        isGray={true}
+                        value={values.soundcloudUrl}
+                        onChange={hundleChangeSoundcloudUrl}
+                        error={errors.soundcloudUrl}
                     />
                     <Input
                         label='ДАТА РЕЛИЗА'

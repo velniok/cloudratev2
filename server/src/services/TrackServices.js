@@ -16,10 +16,11 @@ class TrackServices {
                     (
                         title,
                         cover_url,
+                        soundcloud_url,
                         artist_ids,
                         release_data
                     )
-                    SELECT $1, $2, $3, $4
+                    SELECT $1, $2, $3, $4, $5
                     WHERE NOT EXISTS (SELECT 1 FROM track_check)
                     RETURNING *
                 )
@@ -132,15 +133,16 @@ class TrackServices {
                 track_check AS (
                     SELECT id
                     FROM tracks t
-                    WHERE title = $1 AND id != $4
+                    WHERE title = $1 AND id != $5
                 ),
                 updated as (
                     UPDATE tracks
                     SET
                         title = $1,
                         cover_url = $2,
-                        release_data = $3
-                    WHERE id = $4 AND NOT EXISTS (SELECT 1 FROM track_check)
+                        soundcloud_url = $3,
+                        release_data = $4
+                    WHERE id = $5 AND NOT EXISTS (SELECT 1 FROM track_check)
                     RETURNING *
                 )
             SELECT

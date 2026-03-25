@@ -22,12 +22,14 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
     const initialValues = {
         title: '',
         coverUrl: '',
+        soundcloudUrl: '',
         releaseData: '',
     }
     const [values, setValues] = useState(initialValues)
 
     const initialErrors = {
         title: '',
+        soundcloudUrl: '',
         releaseData: '',
     }
     const [errors, setErrors] = useState(initialErrors)
@@ -35,6 +37,7 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
     useEffect(() => {
         setValues(prev => ({ ...prev, title: track.title }))
         setValues(prev => ({ ...prev, coverUrl: track.coverUrl }))
+        setValues(prev => ({ ...prev, soundcloudUrl: track.soundcloudUrl }))
         setValues(prev => ({ ...prev, releaseData: track.releaseData }))
     }, [track, modalClose])
 
@@ -47,6 +50,11 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
     const hundleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
         setErrors(prev => ({ ...prev, title: '' }))
         setValues(prev => ({ ...prev, title: e.target.value }))
+    }
+
+    const hundleChangeSoundcloudUrl = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, soundcloudUrl: '' }))
+        setValues(prev => ({ ...prev, soundcloudUrl: e.target.value }))
     }
 
     const hundleChangeRelease = (e: ChangeEvent<HTMLInputElement>) => {
@@ -65,6 +73,7 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
             req: {
                 title: values.title,
                 coverUrl: values.coverUrl,
+                soundcloudUrl: values.soundcloudUrl,
                 releaseData: values.releaseData,
             }
         })).unwrap()
@@ -102,6 +111,16 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
                         value={values.title}
                         onChange={hundleChangeTitle}
                         error={errors.title}
+                    />
+                    <Input
+                        label='ССЫЛКА НА SoundCloud трека'
+                        placeholder='Введите ссылку на SoundCloud трека'
+                        type='text'
+                        labelFontSize='10px'
+                        isGray={true}
+                        value={values.soundcloudUrl}
+                        onChange={hundleChangeSoundcloudUrl}
+                        error={errors.soundcloudUrl}
                     />
                     <Input
                         label='ДАТА РЕЛИЗА'
