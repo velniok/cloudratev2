@@ -31,6 +31,7 @@ router.post('/upload', upload.single('image'), (req, res) => {
     }
 })
 
+router.post('/auth/sendVerifyCode', registerValidation, AuthControllers.sendVerifyCode)
 router.post('/auth/register', registerValidation, AuthControllers.register)
 router.post('/auth/login', AuthControllers.login)
 router.get('/auth/me', checkAuth, AuthControllers.authMe)
@@ -38,14 +39,14 @@ router.get('/auth/me', checkAuth, AuthControllers.authMe)
 router.get('/user/getOne/:userId', UserControllers.getOne)
 router.get('/user/get', UserControllers.getAll)
 router.patch('/user/update/:userId', checkUser, userValidation, UserControllers.update)
-router.patch('/user/updateRole/:userId', UserControllers.updateRole)
+router.patch('/user/updateRole/:userId', checkAdmin, UserControllers.updateRole)
 router.delete('/user/delete/:userId', checkAdmin, UserControllers.delete)
 
 router.post('/artist/create', checkAdmin, artistValidation, ArtistControllers.create)
 router.get('/artist/get', ArtistControllers.get)
 router.get('/artist/getOne/:id', ArtistControllers.getOne)
 router.patch('/artist/update/:id', checkAdmin, artistValidation, ArtistControllers.update)
-router.post('/artist/toggleFollow', ArtistControllers.toggleFollow)
+router.post('/artist/toggleFollow', checkUser, ArtistControllers.toggleFollow)
 router.delete('/artist/delete/:id', checkAdmin, ArtistControllers.delete)
 
 router.post('/track/create', checkAdmin, trackValidation.trackCreateValidation, TrackControllers.create)
@@ -55,10 +56,10 @@ router.get('/track/getOne/:id', TrackControllers.getOne)
 router.patch('/track/update/:id', checkAdmin, trackValidation.trackUpdateValidation, TrackControllers.update)
 router.delete('/track/delete/:id', checkAdmin, TrackControllers.delete)
 
-router.post('/review/create', ReviewControllers.create)
+router.post('/review/create', checkUser, ReviewControllers.create)
 router.get('/review/newReviews', ReviewControllers.getNewReviews)
-router.patch('/review/addText/:id', ReviewControllers.addText)
-router.post('/review/toggleLike', ReviewControllers.toggleLike)
+router.patch('/review/addText/:id', checkUser, ReviewControllers.addText)
+router.post('/review/toggleLike', checkUser, ReviewControllers.toggleLike)
 
 router.get('/general/get', checkAdmin, GeneralControllers.get)
 

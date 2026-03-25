@@ -1,11 +1,20 @@
 const pool = require("../config/db")
 const bcrypt = require('bcrypt')
 const mapToCamelCase = require("../utils/toCamelCase")
+const AppError = require('../utils/AppError');
+require('dotenv').config()
 
 class AuthServices {
-    async registerUser(password, values) {
+    async registerUser(password, values, verifyCode) {
         const salt = await bcrypt.genSalt(10)
         const hashPassword = await bcrypt.hash(password, salt)
+
+        const verifyCodeRes = await pool.query(`
+            SELECT * FROM verify_codes
+            WHERE email = $1 AND code = $2 AND expires_at > NOW()
+        `, [values[0], verifyCode])
+
+        if (!verifyCodeRes.rows[0]) throw new AppError('Код неверный или истёк', 409, 'verifyCode')
 
         const newUserRes = await pool.query(`
             WITH email_check AS (
@@ -33,7 +42,7 @@ class AuthServices {
                     FROM inserted u
                 ) as user
         `, [...values, hashPassword])
-        console.log(newUserRes.rows[0])
+
         return mapToCamelCase(newUserRes.rows[0])
     }
 

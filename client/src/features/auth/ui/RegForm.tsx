@@ -5,6 +5,8 @@ import { registerThunk } from "../model/slice"
 import { selectAuthStatus } from "../model/selectors"
 import { useNavigate } from "react-router-dom"
 import { IApiError } from "@/shared/types"
+import { sendVerifyCodeApi } from "../api/authApi"
+import axios from "axios"
 
 export const RegForm = () => {
 
@@ -22,6 +24,7 @@ export const RegForm = () => {
         email: '',
         password: '',
         confirmPassword: '',
+        verifyCode: '',
     }
     const [values, setValues] = useState(initialValues)
 
@@ -30,8 +33,11 @@ export const RegForm = () => {
         email: '',
         password: '',
         confirmPassword: '',
+        verifyCode: '',
     }
     const [errors, setErrors] = useState(initialErrors)
+
+    const [verifyPage, setVerifyPage] = useState<boolean>(false)
 
     const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setErrors(prev => ({ ...prev, nickname: '' }))
@@ -53,7 +59,12 @@ export const RegForm = () => {
         setValues(prev => ({ ...prev, confirmPassword: e.target.value }))
     }
 
-    const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleVerifyCode = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, verifyCode: '' }))
+        setValues(prev => ({ ...prev, verifyCode: e.target.value }))
+    }
+
+    const handleSendVerifyCode = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
 
         if (values.nickname.length <= 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
@@ -61,11 +72,31 @@ export const RegForm = () => {
         if (!/\S+@\S+\.\S+/.test(values.email)) return setErrors(prev => ({ ...prev, email: 'Неверный формат email' }))
         if (values.password.length < 6) return setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 6 символов' }))
         if (values.password !== values.confirmPassword) return setErrors(prev => ({ ...prev, confirmPassword: 'Пароли должны совпадать' }))
+        
+        await sendVerifyCodeApi({
+            nickname: values.nickname,
+            email: values.email,
+            password: values.password,
+        })
+            .then(() => setVerifyPage(true))
+            .catch((err: IApiError) => {
+                if (axios.isAxiosError(err) && err.response) {
+                    const apiError: IApiError = err.response.data
+                    setErrors(prev => ({ ...prev, [apiError.field]: apiError.message }))
+                }
+            })
+    }
+
+    const hundleRegister = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+
+        if (values.verifyCode.length < 6) return setErrors(prev => ({ ...prev, verifyCode: 'Код должен содержать минимум 6 символа' }))
 
         dispatch(registerThunk({
             nickname: values.nickname,
             email: values.email,
             password: values.password,
+            verifyCode: values.verifyCode,
         })).unwrap()
             .then(() => notify('Аккаунт зарегистрирован', 'Вы успешно зарегистрировали аккаунт', 'success'))
             .catch((err: IApiError) => {
@@ -75,41 +106,59 @@ export const RegForm = () => {
 
     return (
         <>
-            <Input
-                type="text"
-                label="Никнейм"
-                placeholder="Введите никнейм"
-                value={values.nickname}
-                onChange={handleNicknameChange}
-                error={errors.nickname}
-            />
-            <Input
-                type="email"
-                label="EMAIL адрес"
-                placeholder="name@example.com"
-                value={values.email}
-                onChange={handleEmailChange}
-                error={errors.email}
-            />
-            <Input
-                type="password"
-                label="Пароль"
-                placeholder="••••••••"
-                value={values.password}
-                onChange={handlePasswordChange}
-                error={errors.password}
-                eyeIcon={true}
-            />
-            <Input
-                type="password"
-                label="Подтвердите пароль"
-                placeholder="••••••••"
-                value={values.confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                error={errors.confirmPassword}
-                eyeIcon={true}
-            />
-            <Button color="accent" padding="20px 16px 16px 16px" onClick={handleSubmit}>Зарегистрироваться</Button>
+        {
+            verifyPage ?
+            <>
+                <Input
+                    type="text"
+                    label="Код активации"
+                    placeholder="Введите код активации"
+                    value={values.verifyCode}
+                    onChange={handleVerifyCode}
+                    error={errors.verifyCode}
+                />
+                <Button color="accent" padding="20px 16px 16px 16px" onClick={hundleRegister}>Зарегистрироваться</Button>
+                <Button color="default" padding="16px 12px 12px 12px" onClick={() => setVerifyPage(false)}>Назад</Button>
+            </>
+            :
+            <>
+                <Input
+                    type="text"
+                    label="Никнейм"
+                    placeholder="Введите никнейм"
+                    value={values.nickname}
+                    onChange={handleNicknameChange}
+                    error={errors.nickname}
+                />
+                <Input
+                    type="email"
+                    label="EMAIL адрес"
+                    placeholder="name@example.com"
+                    value={values.email}
+                    onChange={handleEmailChange}
+                    error={errors.email}
+                />
+                <Input
+                    type="password"
+                    label="Пароль"
+                    placeholder="••••••••"
+                    value={values.password}
+                    onChange={handlePasswordChange}
+                    error={errors.password}
+                    eyeIcon={true}
+                />
+                <Input
+                    type="password"
+                    label="Подтвердите пароль"
+                    placeholder="••••••••"
+                    value={values.confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    error={errors.confirmPassword}
+                    eyeIcon={true}
+                />
+                <Button color="accent" padding="20px 16px 16px 16px" onClick={handleSendVerifyCode}>Зарегистрироваться</Button>
+            </>
+        }
         </>
     )
 }

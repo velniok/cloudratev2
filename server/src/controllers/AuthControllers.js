@@ -3,20 +3,35 @@ const { validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
 const AuthServices = require('../services/AuthServices')
 const AppError = require('../utils/AppError');
+const MailServices = require('../services/MailServices');
 require('dotenv').config()
 
 class AuthControllers {
+
+    async sendVerifyCode(req, res, next) {
+        try {
+            const { email } = req.body
+
+            await MailServices.sendVerifyCode(email)
+
+            res.status(200).json({ message: 'Код отправлен' })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
     async register(req, res, next) {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
-            const { nickname, email, password } = req.body
+            const { nickname, email, password, verifyCode } = req.body
 
-            const createdUser = await AuthServices.registerUser(password, [email, nickname])
-            if (createdUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 405, 'email')
+            const createdUser = await AuthServices.registerUser(password, [email, nickname], verifyCode)
+            if (createdUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
             const user = createdUser.user
-            console.log(user)
+            
             const token = jwt.sign(
                 { 
                     id: user.id,

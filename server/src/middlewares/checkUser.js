@@ -7,7 +7,7 @@ const checkUser = (req, res, next) => {
         if (!token) return res.status(401).json({ message: 'Не авторизован' })
 
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET_KEY)
-        if (decoded.id !== Number(req.params.userId)) return res.status(403).json({ message: 'Доступ запрещен' })
+        if (decoded.id !== Number(req.params.userId) & decoded.id !== Number(req.body.userId) ) return res.status(403).json({ message: 'Доступ запрещен' })
         next()
     } catch (err) {
         console.log(err)

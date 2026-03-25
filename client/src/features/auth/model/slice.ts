@@ -7,7 +7,7 @@ import type { IUser } from "@/entities/user";
 import { IApiError } from "@/shared/types";
 import { useNotification } from "@/shared/lib";
 
-export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq, { rejectValue: IApiError }>('auth/registerThunk', async (params, { rejectWithValue }) => {
+export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq & { verifyCode: string }, { rejectValue: IApiError }>('auth/registerThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await registerUser(params)
         window.localStorage.setItem('token', data.token)
