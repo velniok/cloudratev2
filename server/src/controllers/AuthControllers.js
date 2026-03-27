@@ -1,9 +1,11 @@
 const bcrypt = require('bcrypt')
 const { validationResult } = require('express-validator')
-const jwt = require('jsonwebtoken')
 const AuthServices = require('../services/AuthServices')
 const AppError = require('../utils/AppError');
 const MailServices = require('../services/MailServices');
+const TokenServices = require('../services/TokenServices');
+const UserDto = require('../dtos/UserDto');
+const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 class AuthControllers {
@@ -31,17 +33,17 @@ class AuthControllers {
             const createdUser = await AuthServices.registerUser(password, [email, nickname], verifyCode)
             if (createdUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
             const user = createdUser.user
-            
-            const token = jwt.sign(
-                { 
-                    id: user.id,
-                    role: user.role,
-                },
-                process.env.TOKEN_SECRET_KEY,
-                { expiresIn: "30d" }
-            )
+            const userDto = new UserDto(user)
 
-            res.status(201).json({ user, token })
+            const { accessToken, refreshToken } = TokenServices.generateTokens({ id: userDto.id, role: userDto.role })
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 30 * 24 * 60 * 60 * 1000
+            })
+
+            res.status(201).json({ user, token: accessToken })
         } catch (err) {
             console.log(err)
             next(err)
@@ -58,46 +60,48 @@ class AuthControllers {
             const isValidPassword = await bcrypt.compare(password, user.password)
             if (!isValidPassword) throw new AppError('Неправильный email или пароль', 401)
 
-            const token = jwt.sign(
-                {
-                    id: user.id,
-                    role: user.role,
-                },
-                process.env.TOKEN_SECRET_KEY,
-                { expiresIn: "30d" }
-            )
+            const userDto = new UserDto(user)
 
-            res.status(200).json({ user, token })
+            const { accessToken, refreshToken } = TokenServices.generateTokens({ id: userDto.id, role: userDto.role })
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 30 * 24 * 60 * 60 * 1000
+            })
+
+            res.status(200).json({ user: userDto, token: accessToken })
         } catch (err) {
             console.log(err)
             next(err)
         }
     }
 
-    async authMe(req, res, next) {
+    async refresh(req, res, next) {
         try {
-            const userId = req.userId
-            const userRole = req.userRole
 
-            const user = await AuthServices.authUser(userId)
+            const refreshToken = req.cookies.refreshToken
+            if (!refreshToken) throw new AppError('Пользователь не авторизован', 401)
+            
+            const decoded = TokenServices.validateRefreshToken(refreshToken)
+            if (!decoded) throw new AppError('Сессия устарела, авторизуйтесь заново', 401)
+
+            const user = await AuthServices.authUser(decoded.id)
             if (!user) throw new AppError('Пользователь не найден', 404)
+            const userDto = new UserDto(user)
 
-            if (userRole !== user.role) {
-                const token = jwt.sign(
-                    {
-                    id: userId, role: user.role
-                    },
-                    process.env.TOKEN_SECRET_KEY,
-                    { expiresIn: "30d" }
-                )
-                res.status(200).json({ user, token })
-                return false
-            }    
+            const { accessToken, refreshToken: newRefresh } = TokenServices.generateTokens({ id: userDto.id, role: userDto.role })
+            res.cookie('refreshToken', newRefresh, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 30 * 24 * 60 * 60 * 1000
+            })
 
-            res.status(200).json({ user })
+            res.json({ user: userDto, token: accessToken })
         } catch (err) {
             console.log(err)
-            next(err)       
+            next(err)
         }
     }
 }

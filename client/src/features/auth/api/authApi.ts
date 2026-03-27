@@ -13,6 +13,6 @@ export const loginUser = (params: ILoginReq) => {
     return axios.post<IAuthRes>('auth/login', params)
 }
 
-export const authUser = () => {
-    return axios.get<IAuthRes>('auth/me')
+export const refreshApi = () => {
+    return axios.get<IAuthRes>('auth/refresh')
 }

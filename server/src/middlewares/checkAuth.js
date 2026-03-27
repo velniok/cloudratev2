@@ -1,19 +1,20 @@
-const pool = require("../config/db");
-const jwt = require('jsonwebtoken')
+const AppError = require('../utils/AppError');
+const TokenServices = require('../services/TokenServices');
 require('dotenv').config()
 
 const checkAuth = async (req, res, next) => {
     try {
         const token = (req.headers.authorization || '').replace(/Bearer\s?/, '')
-        if (!token) return res.status(401).json({ message: "Не авторизован" })
+        if (!token) throw new AppError('Пользователь не авторизован', 401)
 
-        const decoded = jwt.verify(token, process.env.TOKEN_SECRET_KEY)
+        const decoded = TokenServices.validateAccessToken(token) 
+        if (!decoded) throw new AppError('Сессия устарела', 401)
 
         req.userId = decoded.id
-        req.userRole = decoded.role
         next()
     } catch (err) {
-        res.status(500).json({ message: "Не удалось авторизоваться" })
+        console.log(err)
+        next(err)
     }
 }
 

@@ -34,7 +34,7 @@ router.post('/upload', upload.single('image'), (req, res) => {
 router.post('/auth/sendVerifyCode', registerValidation, AuthControllers.sendVerifyCode)
 router.post('/auth/register', registerValidation, AuthControllers.register)
 router.post('/auth/login', AuthControllers.login)
-router.get('/auth/me', checkAuth, AuthControllers.authMe)
+router.get('/auth/refresh', AuthControllers.refresh)
 
 router.get('/user/getOne/:userId', UserControllers.getOne)
 router.get('/user/get', UserControllers.getAll)

@@ -40,11 +40,9 @@ function App() {
     }, [sidebar])
 
     useEffect(() => {
-        if (window.localStorage.token) {
-            dispatch(authThunk()).unwrap()
-                .then()
-                .catch((err: { message: string}) => notify(err.message, 'Попробуйте еще раз', 'error'))
-        }
+        dispatch(authThunk()).unwrap()
+            .then()
+            .catch((err: { message: string}) => notify(err.message, 'Попробуйте еще раз', 'error'))
     }, [])
 
     return (

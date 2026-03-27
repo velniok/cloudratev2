@@ -1,18 +1,19 @@
-const jwt = require('jsonwebtoken')
+const AppError = require('../utils/AppError');
+const TokenServices = require('../services/TokenServices')
 require('dotenv').config()
 
 const checkAdmin = (req, res, next) => {
     try {
         const token = (req.headers.authorization || '').replace(/Bearer\s?/, '')
-        if (!token) return res.status(401).json({ message: 'Не авторизован' })
-
-        const decoded = jwt.verify(token, process.env.TOKEN_SECRET_KEY)
-        if (decoded.role !== 'admin') return res.status(403).json({ message: 'Доступ запрещен' })
+        if (!token) throw new AppError('Пользователь не авторизован', 401)
+        const decoded = TokenServices.validateAccessToken(token)
+        if (!decoded) throw new AppError('Сессия устарела', 401)
+        if (decoded.role !== 'admin') throw new AppError('Доступ запрещен', 403)
 
         next()
     } catch (err) {
         console.log(err)
-        res.status(500).json({ message: 'Не удалось проверить роль пользователя' })
+        next(err)
     }
 }
 

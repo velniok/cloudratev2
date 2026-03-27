@@ -1,16 +1,14 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { type ILoginReq, type IRegisterReq, type IAuthRes } from "../api/authApiTypes";
-import { authUser, loginUser, registerUser } from "../api/authApi";
+import { loginUser, refreshApi, registerUser } from "../api/authApi";
 import type { IAuthState } from "./authSliceTypes";
 import axios from "axios";
-import type { IUser } from "@/entities/user";
 import { IApiError } from "@/shared/types";
-import { useNotification } from "@/shared/lib";
+import { useAppDispatch } from "@/shared/lib";
 
 export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq & { verifyCode: string }, { rejectValue: IApiError }>('auth/registerThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await registerUser(params)
-        window.localStorage.setItem('token', data.token)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -22,7 +20,6 @@ export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq & { verifyC
 export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: IApiError }>('auth/loginThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await loginUser(params)
-        window.localStorage.setItem('token', data.token)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -33,10 +30,7 @@ export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: I
 
 export const authThunk = createAsyncThunk<IAuthRes, void, { rejectValue: IApiError }>('auth/authThunk', async (_, { rejectWithValue }) => {
     try {
-        const { data } = await authUser()
-        if (data.token) {
-            window.localStorage.setItem('token', data.token)
-        }
+        const { data } = await refreshApi()
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -47,6 +41,7 @@ export const authThunk = createAsyncThunk<IAuthRes, void, { rejectValue: IApiErr
 
 const initialState: IAuthState = {
     user: null,
+    token: null,
     status: 'idle',
     error: null,
 }
@@ -58,11 +53,14 @@ const authSlice = createSlice({
         clearError: (state) => {
             state.error = null
         },
+        setToken: (state, action: PayloadAction<string>) => {
+            state.token = action.payload
+        },
         logout: (state) => {
             state.user = null,
             state.status = 'idle',
             state.error = null,
-            window.localStorage.removeItem('token')
+            state.token = null
         }
     },
     extraReducers: (builder) => {
@@ -78,6 +76,7 @@ const authSlice = createSlice({
                 (action) => action.type.startsWith('auth') && action.type.endsWith('/fulfilled'),
                 (state, action: PayloadAction<IAuthRes>) => {
                     state.user = action.payload.user,
+                    state.token = action.payload.token,
                     state.status = 'success',
                     state.error = null
                 }
@@ -92,7 +91,6 @@ const authSlice = createSlice({
     }
 })
 
-export const { clearError } = authSlice.actions
-export const { logout } = authSlice.actions
+export const { clearError, logout, setToken } = authSlice.actions
 
 export const AuthReducer = authSlice.reducer
