@@ -3,6 +3,7 @@ const ReviewServices = require("../services/ReviewServices")
 const AppError = require('../utils/AppError')
 const { validationResult } = require('express-validator')
 const pool = require("../config/db")
+const UserDto = require("../dtos/UserDto")
 
 class UserControllers {
 
@@ -47,9 +48,10 @@ class UserControllers {
             const updatedUser = await UserServices.updateUserById(userId, [email, nickname, username, avatarUrl])
             if (updatedUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
             const user = updatedUser.user
-            user.reviews = await ReviewServices.getReviewsByUserId(userId)
+            const userDto = new UserDto(user)
+            const reviews = await ReviewServices.getReviewsByUserId(userId)
 
-            res.status(200).json({ user })
+            res.status(200).json({ user: { ...userDto, reviews } })
         } catch (err) {
             console.log(err)
             next(err)
