@@ -5,7 +5,7 @@ export const createReviewApi = (params: IReviewReq) => {
     return axios.post('/review/create', params)
 }
 
-export const addTextReviewApi = (params: { id: number, req: { text: string } }) => {
+export const addTextReviewApi = (params: { id: number, req: { text: string, userId: number } }) => {
     return axios.patch(`/review/addText/${params.id}`, params.req)
 }
 

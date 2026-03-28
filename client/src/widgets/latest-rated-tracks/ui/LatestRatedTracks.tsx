@@ -23,9 +23,12 @@ export const LatestRatedTracks: FC<LatestRatedTracksProps> = ({ user, userStatus
                         ?
                         <>
                         {
+                            user.reviews.length > 0 ?
                             user.reviews.map((review: IReview) => {
                                 return <TrackCard key={review.id} review={review} track={review.track} />
                             })
+                            :
+                            <>Пользователь ничего не оценил</>
                         }
                         </>
                         :

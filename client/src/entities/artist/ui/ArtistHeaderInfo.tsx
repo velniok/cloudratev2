@@ -2,7 +2,7 @@ import type { FC, ReactNode } from "react"
 import { Cover, LinkIcon, Rating } from "@/shared/ui"
 import type { IArtist } from "../model/types"
 import styles from "./ArtistHeaderInfo.module.scss"
-import { pluralize } from "@/shared/lib"
+import { getOptimizedAvatar, pluralize } from "@/shared/lib"
 
 interface ArtistHeaderInfoProps {
     artist: IArtist
@@ -12,7 +12,7 @@ interface ArtistHeaderInfoProps {
 export const ArtistHeaderInfo: FC<ArtistHeaderInfoProps> = ({ artist, actions }) => {
     return (
         <div className={styles.inner}>
-            <Cover className={styles.avatar} width='180px' height='180px' borderRadius='12px' url={artist.avatarUrl} />
+            <Cover className={styles.avatar} width='200px' height='200px' borderRadius='12px' url={getOptimizedAvatar(artist.avatarUrl, 200, 200)} />
             <div className={styles.info}>
                 <h2 className={styles.name}>{artist.name}</h2>
                 <a href={`${artist.soundcloudUrl}`} className={styles.soundcloud}>

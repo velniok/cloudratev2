@@ -68,6 +68,7 @@ export const RegForm = () => {
         e.preventDefault()
 
         if (values.nickname.length <= 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
+        if (!/^[a-zA-Z0-9_#@-]+$/.test(values.nickname)) return setErrors(prev => ({ ...prev, nickname: 'Уник. никнейм может содержать только латинские буквы, цифры, _, @, - и #' }))
         if (!values.email) return setErrors(prev => ({ ...prev, email: 'Email не может быть пустым' }))
         if (!/\S+@\S+\.\S+/.test(values.email)) return setErrors(prev => ({ ...prev, email: 'Неверный формат email' }))
         if (values.password.length < 6) return setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 6 символов' }))
@@ -98,7 +99,10 @@ export const RegForm = () => {
             password: values.password,
             verifyCode: values.verifyCode,
         })).unwrap()
-            .then(() => notify('Аккаунт зарегистрирован', 'Вы успешно зарегистрировали аккаунт', 'success'))
+            .then(() => {
+                notify('Аккаунт зарегистрирован', 'Вы успешно зарегистрировали аккаунт', 'success')
+                navigate('/')
+            })
             .catch((err: IApiError) => {
                 setErrors(prev => ({ ...prev, [err.field]: err.message }))
             })

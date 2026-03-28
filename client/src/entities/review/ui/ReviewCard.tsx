@@ -3,7 +3,7 @@ import styles from "./ReviewCard.module.scss"
 import type { IReview } from "../model/types"
 import { MouseEvent, ReactNode, useState, type FC } from "react"
 import { Cover, CriteriasPopup, EyeIcon, Rating } from "@/shared/ui"
-import { useAppSelector } from "@/shared/lib"
+import { getOptimizedAvatar, useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
 import { ITrack } from "@/entities/track"
 
@@ -34,7 +34,7 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
             <div className={styles.top}>
                 <div className={styles.info}>
                     <Link to={`/user/${review.user.username}`} className={styles.user}>
-                        <Cover width="32px" height="32px" borderRadius="50%" url={review.user.avatarUrl} />
+                        <Cover width="32px" height="32px" borderRadius="50%" url={getOptimizedAvatar(review.user.avatarUrl, 32, 32)} />
                         <p className={styles.nickname}>{review.user.nickname}</p>
                     </Link>
                     <Rating active={criterias} isHover={true} onClick={(e) => handleOpenCriterias(e)}>{review.rating}</Rating>

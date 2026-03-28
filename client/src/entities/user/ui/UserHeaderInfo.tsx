@@ -3,7 +3,7 @@ import { Badges, Button, CalendarIcon, Cover, EditIcon, LinkIcon } from "@/share
 import type { IUser } from "../model/types"
 import styles from "./UserHeaderInfo.module.scss"
 import { useNavigate } from "react-router-dom"
-import { getMonth, pluralize, useAppSelector } from "@/shared/lib"
+import { getMonth, getOptimizedAvatar, pluralize, useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
 import { IReview } from "@/entities/review"
 
@@ -18,7 +18,7 @@ export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
 
     return (
         <div className={styles.inner}>
-            <Cover width="150px" height="150px" borderRadius="24px" className={styles.avatar} url={user.avatarUrl} />
+            <Cover width="200px" height="200px" borderRadius="24px" className={styles.avatar} url={getOptimizedAvatar(user.avatarUrl, 200, 200)} />
             <div className={styles.info}>
                 <h2 className={styles.nickname}>
                     {user.nickname}

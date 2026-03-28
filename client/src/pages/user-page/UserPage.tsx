@@ -14,14 +14,11 @@ export const UserPage = () => {
     const username = useParams().username
     const user = useAppSelector(selectUser)
     const userStatus = useAppSelector(selectUserStatus)
-    const userUpdateStatus = useAppSelector(selectUserUpdateStatus)
 
     useEffect(() => {
-        if (userUpdateStatus !== 'success') {
-            dispatch(getOneUserThunk({ username: username }))
-                .then()
-                .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
-        }
+        dispatch(getOneUserThunk({ username: username }))
+            .then()
+            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
     }, [username])
 
     return (

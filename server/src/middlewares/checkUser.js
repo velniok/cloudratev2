@@ -9,7 +9,7 @@ const checkUser = (req, res, next) => {
 
         const decoded = TokenServices.validateAccessToken(token)
         if (!decoded) throw new AppError('Сессия устарела', 401)
-        if (decoded.id !== Number(req.params.userId) & decoded.id !== Number(req.body.userId) ) throw new AppError('Доступ запрещен', 403)
+        if (decoded.id !== Number(req.params.userId) && decoded.id !== Number(req.body.userId) ) throw new AppError('Доступ запрещен', 403)
         next()
     } catch (err) {
         console.log(err)

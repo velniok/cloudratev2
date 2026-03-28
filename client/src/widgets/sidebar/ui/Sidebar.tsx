@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom"
 import styles from "./Sidebar.module.scss"
 import { AdminPanelIcon, Button, HomeIcon, InfoIcon, LogoIcon, LogoutIcon, NewsIcon, ProfileIcon, SearchIcon } from "../../../shared/ui"
 import { useAppDispatch, useAppSelector } from "../../../shared/lib"
-import { selectAuthStatus, selectAuthUser } from "../../../features/auth"
+import { logoutApi, selectAuthStatus, selectAuthUser } from "../../../features/auth"
 import { logout } from "../../../features/auth"
 import { FC } from "react"
 
@@ -69,7 +69,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                             </li>
                         }
                         <li className={styles.nav__item}>
-                            <div onClick={() => dispatch(logout())} className={styles.nav__link}>
+                            <div onClick={() => {dispatch(logout()), logoutApi() }} className={styles.nav__link}>
                                 <LogoutIcon />
                                 Выйти из аккаунта
                             </div>

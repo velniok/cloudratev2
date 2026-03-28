@@ -3,7 +3,7 @@ import styles from './EditProfileForm.module.scss'
 import { useNavigate } from 'react-router-dom'
 import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
 import { IUser } from '@/entities/user'
-import { useAppDispatch, useNotification } from '@/shared/lib'
+import { getOptimizedAvatar, useAppDispatch, useNotification } from '@/shared/lib'
 import { updateUserThunk } from '../model/slice'
 import { updateAvatarApi } from '@/shared/api'
 import { IApiError } from '@/shared/types'
@@ -73,8 +73,12 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
 
     const hundleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        
+
         if (values.nickname.length < 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
+        if (!/^[a-zA-Z0-9_#@-]+$/.test(values.nickname)) return setErrors(prev => ({ ...prev, nickname: 'Уник. никнейм может содержать только латинские буквы, цифры, _, @, - и #' }))
+        if (values.username.length < 4) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм должен содержать минимум 4 символа' }))
+        if (!/^[a-zA-Z]/.test(values.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм должен начинаться с латинской буквы' }))
+        if (!/^[a-zA-Z0-9_]+$/.test(values.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм может содержать только латинские буквы, цифры и _' }))
         if (!/\S+@\S+\.\S+/.test(values.email)) return setErrors(prev => ({ ...prev, email: 'Неверный формат email' }))
         if (values.password && values.password.length < 6) return setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 6 символа' }))
         if (values.password !== values.confirmPassword) return setErrors(prev => ({ ...prev, confirmPassword: 'Пароли не совпадают' }))
@@ -109,7 +113,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 <h3 className={styles.title}>ОСНОВНАЯ ИНФОРМАЦИЯ</h3>
                 <div className={styles.formWrapper}>
                     <div className={styles.editAvatar}>
-                        <Cover url={values.avatarUrl} className={styles.avatar} width='150px' height='150px' borderRadius='12px' isInput={true} />
+                        <Cover url={getOptimizedAvatar(values.avatarUrl, 200, 200)} className={styles.avatar} width='150px' height='150px' borderRadius='12px' isInput={true} />
                         <div className={styles.content}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
                             <Button className={styles.editButton} color='default' padding='14px 20px 10px 20px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>

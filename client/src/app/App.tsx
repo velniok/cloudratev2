@@ -16,10 +16,10 @@ import { LoginPage } from "@/pages/login-page"
 import { AdminPanelPage } from "@/pages/admin-panel-page"
 import { AdminArtistsPage } from "@/pages/admin-artists-page"
 
-import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
+import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { Notification } from "@/shared/ui"
 
-import { authThunk, selectAuthUser } from "@/features/auth"
+import { authThunk, clearError, selectAuthUser } from "@/features/auth"
 import { AdminTracksPage } from "@/pages/admin-tracks-page"
 import { AdminUsersPage } from "@/pages/admin-users-page"
 import { SearchPage } from "@/pages/search-page"
@@ -29,7 +29,6 @@ function App() {
 
     const dispatch = useAppDispatch()
     const authUser = useAppSelector(selectAuthUser)
-    const { notify } = useNotification()
     const pathname = useLocation().pathname
 
     const [sidebar, setSidebar] = useState<boolean>(false)
@@ -40,9 +39,8 @@ function App() {
     }, [sidebar])
 
     useEffect(() => {
-        dispatch(authThunk()).unwrap()
-            .then()
-            .catch((err: { message: string}) => notify(err.message, 'Попробуйте еще раз', 'error'))
+        if (localStorage.getItem('isAuth'))
+        dispatch(authThunk())
     }, [])
 
     return (

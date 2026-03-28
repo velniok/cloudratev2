@@ -3,18 +3,23 @@ import styles from './LeaveReview.module.scss'
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 import { IReviewReq } from '@/features/review'
 import { IReview } from '../model/types'
+import { useAppSelector } from '@/shared/lib'
+import { selectAuthUser } from '@/features/auth'
 
 interface LeaveReviewProps {
-    onSubmit: (req: IReviewReq | { id: number, req: { text: string } }) => void
+    onSubmit: (req: IReviewReq | { id: number, req: { text: string, userId: number } }) => void
     userId: number
     trackId: number
     textOnly?: boolean
     review?: IReview
     errorText: string
     clearErrorText: () => void
+    createReviewLoading: boolean
 }
 
-export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, textOnly, review, errorText, clearErrorText }) => {
+export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, textOnly, review, errorText, clearErrorText, createReviewLoading }) => {
+
+    const authUser = useAppSelector(selectAuthUser)
 
     useEffect(() =>{
         if (textOnly) {
@@ -79,7 +84,7 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
                             info ?
                             ranges.map((range, index) => {
                                 return (
-                                    <li className={styles.info__item}>
+                                    <li className={styles.info__item} key={index}>
                                         <h4 className={styles.info__title}>{range}: </h4>
                                         <p className={styles.info__desc}>{infoDesc[index]}</p>
                                     </li>
@@ -172,11 +177,14 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
                             onClick={() => onSubmit({
                                 id: review.id,
                                 req: {
-                                    text: text
+                                    text: text,
+                                    userId: authUser?.id,
                                 }
                             })}
                         >
-                            Отправить отзыв
+                            {
+                                createReviewLoading ? 'Загрузка..' : 'Отправить отзыв'
+                            }
                         </Button>
                     }
                     </>
@@ -195,7 +203,9 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
                             criteria5: values[4],
                         })}
                     >
-                        Отправить оценку
+                        {
+                            createReviewLoading ? 'Загрузка..' : 'Отправить оценку'
+                        }
                     </Button>
                 }
             </div>

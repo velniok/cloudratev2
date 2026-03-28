@@ -18,7 +18,7 @@ export const InputRange: FC<InputRangeProps> = ({ label, values, index, onChange
                 <input
                     style={{ '--value': `${values[index]}` } as CSSProperties}
                     type="range"
-                    min='0'
+                    min='1'
                     max="10"
                     step='1'
                     value={values[index]}
@@ -29,7 +29,7 @@ export const InputRange: FC<InputRangeProps> = ({ label, values, index, onChange
                 <input
                     style={{ '--value': `${values[index]}` } as CSSProperties}
                     type="range"
-                    min='0'
+                    min='1'
                     max="10"
                     step='1'
                     value={values[index]}

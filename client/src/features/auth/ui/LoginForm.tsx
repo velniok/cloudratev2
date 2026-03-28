@@ -9,13 +9,8 @@ export const LoginForm = () => {
 
     const dispatch = useAppDispatch()
     const error = useAppSelector(selectAuthError)
-    const status = useAppSelector(selectAuthStatus)
     const { notify } = useNotification()
     const navigate = useNavigate()
-
-    if (status === 'success') {
-        navigate('/')
-    }
 
     const initialValues = {
         email: '',
@@ -39,7 +34,10 @@ export const LoginForm = () => {
             email: values.email,
             password: values.password,
         })).unwrap()
-            .then(() => notify('Вы вошли в аккаунт', 'Вы успешно вошли в свой аккаунт', 'success'))
+            .then(() => {
+                notify('Вы вошли в аккаунт', 'Вы успешно вошли в свой аккаунт', 'success')
+                navigate('/')
+            })
     }
 
     return (

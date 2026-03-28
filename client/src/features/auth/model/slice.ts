@@ -4,11 +4,11 @@ import { loginUser, refreshApi, registerUser } from "../api/authApi";
 import type { IAuthState } from "./authSliceTypes";
 import axios from "axios";
 import { IApiError } from "@/shared/types";
-import { useAppDispatch } from "@/shared/lib";
 
 export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq & { verifyCode: string }, { rejectValue: IApiError }>('auth/registerThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await registerUser(params)
+        localStorage.setItem('isAuth', 'true')
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -20,6 +20,7 @@ export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq & { verifyC
 export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: IApiError }>('auth/loginThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await loginUser(params)
+        localStorage.setItem('isAuth', 'true')
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -60,7 +61,8 @@ const authSlice = createSlice({
             state.user = null,
             state.status = 'idle',
             state.error = null,
-            state.token = null
+            state.token = null,
+            localStorage.removeItem('isAuth')
         }
     },
     extraReducers: (builder) => {

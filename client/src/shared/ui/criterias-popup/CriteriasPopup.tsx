@@ -25,7 +25,6 @@ export const CriteriasPopup: FC<CriteriasPopupProps> = ({ show, avgCriterias, po
 
     return (
         <div className={`${styles.criterias} ${show ? styles.open : ''} ${styles[position]}`}>
-            {/* <p className={styles.criterias__text}>Средние оценки по критериям</p> */}
             {
                 review &&
                 <div className={styles.criterias__review}>

@@ -34,6 +34,7 @@ router.post('/auth/sendVerifyCode', registerValidation, AuthControllers.sendVeri
 router.post('/auth/register', registerValidation, AuthControllers.register)
 router.post('/auth/login', AuthControllers.login)
 router.get('/auth/refresh', AuthControllers.refresh)
+router.get('/auth/logout', AuthControllers.logout)
 
 router.get('/user/getOne/:userId', UserControllers.getOne)
 router.get('/user/get', UserControllers.getAll)

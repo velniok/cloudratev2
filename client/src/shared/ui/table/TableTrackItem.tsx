@@ -4,6 +4,7 @@ import { FC, ReactNode } from 'react'
 import { Rating } from '../rating'
 import { Cover } from '../cover'
 import { Link } from 'react-router-dom'
+import { getOptimizedAvatar } from '@/shared/lib'
 
 interface TableTrackItemProps {
     track: ITrack
@@ -18,7 +19,7 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
                 <Link to={`/track/${track.id}`} className={styles.track}>
-                    <Cover width='40px' height='40px' borderRadius='6px' url={track.coverUrl} />
+                    <Cover width='40px' height='40px' borderRadius='6px' url={getOptimizedAvatar(track.coverUrl, 40, 40)} />
                     <p className={styles.track__title}>{track.title}</p>
                 </Link>
             </td>

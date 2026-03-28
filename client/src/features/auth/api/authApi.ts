@@ -16,3 +16,7 @@ export const loginUser = (params: ILoginReq) => {
 export const refreshApi = () => {
     return axios.get<IAuthRes>('auth/refresh')
 }
+
+export const logoutApi = () => {
+    return axios.get('auth/logout')
+}

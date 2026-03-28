@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import type { ITrack } from "../model/types"
 import { Cover, CriteriasPopup, Rating } from "@/shared/ui"
 import { IReview } from "@/entities/review"
+import { getOptimizedAvatar } from "@/shared/lib"
 
 interface TrackCardProps {
     track: ITrack
@@ -31,7 +32,7 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
                 <Cover
                     isHovered={isHovered}
                     mb={'mb-16'}
-                    url={track.coverUrl}
+                    url={getOptimizedAvatar(track.coverUrl, 205, 205)}
                     width="205px"
                     height="205px"
                     borderRadius="12px"

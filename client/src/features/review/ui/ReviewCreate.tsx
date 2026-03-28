@@ -21,35 +21,42 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
     const user = useAppSelector(selectAuthUser)
 
     const [errorText, setErrorText] = useState<string>('')
+    const [createReviewLoading, setCreateReviewLoading] = useState<boolean>(false)
 
     const onSubmit = async (req: IReviewReq) => {
 
+        if (createReviewLoading) return false
         if (req.text !== '' && req.text.length < 300) return setErrorText(prev => prev = 'Отзыв должен содержать минимум 300 символов')
 
+        setCreateReviewLoading(true)
         await createReviewApi(req)
             .then(() => {
                 notify('Трек оценён', 'Вы успешно оставили оценку', 'success')
                 dispatch(getOneTrackThunk({ trackId: track.id, userId: user.id }))
+                setCreateReviewLoading(false)
             })
     }
 
-    const onSubmitText = async (req: { id: number, req: { text: string } }) => {
+    const onSubmitText = async (req: { id: number, req: { text: string, userId: number } }) => {
 
+        if (createReviewLoading) return false
         if (req.req.text !== '' && req.req.text.length < 300) return setErrorText(prev => prev = 'Отзыв должен содержать минимум 300 символов')
 
+        setCreateReviewLoading(true)
         await addTextReviewApi(req)
             .then(() => {
                 notify('Отзыв оставлен', 'Вы успешно оставили отзыв к оценке', 'success')
                 dispatch(getOneTrackThunk({ trackId: track.id, userId: user.id }))
+                setCreateReviewLoading(false)
             })
     }
 
     if (!review) {
-        return <LeaveReview onSubmit={onSubmit} trackId={track.id} userId={user.id} errorText={errorText} clearErrorText={() => setErrorText('')} />
+        return <LeaveReview onSubmit={onSubmit} createReviewLoading={createReviewLoading} trackId={track.id} userId={user.id} errorText={errorText} clearErrorText={() => setErrorText('')} />
     }
 
     if (!review.text) {
-        return <LeaveReview onSubmit={onSubmitText} trackId={track.id} userId={user.id} review={review} textOnly={true} errorText={errorText} clearErrorText={() => setErrorText('')} />
+        return <LeaveReview onSubmit={onSubmitText} createReviewLoading={createReviewLoading} trackId={track.id} userId={user.id} review={review} textOnly={true} errorText={errorText} clearErrorText={() => setErrorText('')} />
     }
 
     return <LeavedReview review={review} />

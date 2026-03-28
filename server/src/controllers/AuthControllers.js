@@ -104,6 +104,16 @@ class AuthControllers {
             next(err)
         }
     }
+
+    async logout(req, res, next) {
+        try {
+            res.clearCookie('refreshToken')
+            res.status(200).json({ message: 'Пользователь успешно вышел из аккаунта' })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
 }
 
 module.exports = new AuthControllers()

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { API_URL } from "../config"
-import { refreshApi, setToken } from "@/features/auth"
+import { logout, logoutApi, refreshApi, setToken } from "@/features/auth"
 import { store } from "@/app/store"
 
 export const instance = axios.create({
@@ -16,18 +16,25 @@ instance.interceptors.request.use((config) => {
     return config
 })
 
-instance.interceptors.response.use(res => res,
+instance.interceptors.response.use(
+    (response) => response,
     async (err) => {
         const original = err.config
 
-        if (err.response?.status === 401 && !original._retry) {
+        if (err.response?.status === 401 && !original._retry && !original.url.includes('/auth/refresh')) {
             original._retry = true
 
-            const { data } = await refreshApi()
-            store.dispatch(setToken(data.token))
-
-            original.headers.Authorization = `${data.token}`
-            return instance(original)
+            try {
+                const { data } = await instance.get('/auth/refresh')
+                store.dispatch(setToken(data.accessToken))
+    
+                original.headers.Authorization = `Bearer ${data.accessToken}`
+                return instance(original)
+            } catch (err) {
+                store.dispatch(logout())
+                logoutApi()
+                return Promise.reject(err)
+            }
         }
 
         return Promise.reject(err)

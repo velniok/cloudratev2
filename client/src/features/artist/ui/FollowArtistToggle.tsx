@@ -18,11 +18,14 @@ export const FollowArtistToggle: FC<FollowArtistToggleProps> = ({ isFollowed, ar
     const authUser = useAppSelector(selectAuthUser)
 
     const [isHovered, setIsHovered] = useState<boolean>(false)
+    const [followLoading, setFollowLoading] = useState<boolean>(false)
 
     const onSubmit = () => {
 
+        if (followLoading) return false
         if (!authUser?.id) return notify('Вы не авторизованы', 'Прежде чем сделать это, авторизуйтесь', 'error')
 
+        setFollowLoading(true)
         dispatch(toggleFollowThunk({
             artistId: artistId,
             userId: authUser?.id
@@ -33,6 +36,7 @@ export const FollowArtistToggle: FC<FollowArtistToggleProps> = ({ isFollowed, ar
                 } else {
                     notify('Вы отписались', 'Вы успешно отписались от артиста', 'delete')
                 }
+                setFollowLoading(false)
             })
     }
 
@@ -43,15 +47,21 @@ export const FollowArtistToggle: FC<FollowArtistToggleProps> = ({ isFollowed, ar
             <>
                 <Button onClick={onSubmit} padding='12px 24px 8px 24px' color='accent' setIsHovered={setIsHovered} className={styles.button__desc}>
                     {
-                        isHovered ? 'Отписаться' : 'Вы подписаны'
+                        followLoading ? 'Загрузка..' : <>{ isHovered ? 'Отписаться' : 'Вы подписаны' }</>
                     }
                 </Button>
                 <Button onClick={onSubmit} padding='12px 24px 8px 24px' color='accent' className={styles.button__mobile}>
-                    Вы подписаны
+                    {
+                        followLoading ? 'Загрузка..' : 'Вы подписаны'
+                    }
                 </Button>
             </>
             :
-            <Button onClick={onSubmit} padding='12px 24px 8px 24px' className={styles.button} color='white'>Подписаться</Button>
+            <Button onClick={onSubmit} padding='12px 24px 8px 24px' className={styles.button} color='white'>
+                {
+                    followLoading ? 'Загрузка..' : 'Подписаться'
+                }
+            </Button>
         }
         </>
     )
