@@ -5,13 +5,14 @@
     z-index: 9999;
     top: 0;
     left: 0;
-    width: 260px;
+    width: 280px;
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-color);
+    background-color: var(--bg-secondary);
     border-right: 1px solid var(--border-subtle);
-    padding: 24px;
+    padding-top: 24px;
+    padding-bottom: 16px;
 
     transition: transform 0.6s;
 
@@ -21,6 +22,8 @@
         width: 100%;
         overflow: hidden;
         height: calc(100dvh - 51px);
+        padding-top: 0;
+        padding-bottom: 12px;
     }
 
     &.active {
@@ -32,7 +35,9 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0 24px;
+    padding-bottom: 16px;
 
     transition: opacity 0.3s;
   
@@ -50,21 +55,25 @@
 .logo__text {
     padding-top: 4px;
     font-family: var(--second-family);
-    color: var(--accent-color);
     font-weight: 700;
     font-size: 20px;
     letter-spacing: 0.05em;
 }
 
 .nav {
+    padding: 0 24px;
+
+    @media (max-width: $mobile) {
+        padding: 0 16px;
+    }
 
     &__title {
-        font-size: 12px;
+        margin-top: 24px;
+        font-size: 10px;
         font-family: var(--second-family);
         text-transform: uppercase;
         color: var(--text-secondary);
         padding-left: 16px;
-        font-weight: 700;
         margin-bottom: 8px;
     }
 
@@ -76,7 +85,6 @@
 
     &__item {
         color: var(--text-secondary);
-        font-size: 14px;
         cursor: pointer;
         border-radius: 12px;
 
@@ -85,11 +93,12 @@
         @media (hover: hover) {
             &:hover {
                 color: var(--text-primary);
-                background-color: var(--bg-secondary);
+                background-color: var(--hover-white);
             }
         }
 
         &.active {
+            position: relative;
             background-color: var(--accent-color-dim);
             color: var(--accent-color);
             cursor: default;
@@ -97,20 +106,93 @@
             & .nav__link {
                 cursor: default;
             }
+
+            &::before {
+                position: absolute;
+                content: '';
+                width: 4px;
+                height: 65%;
+                background-color: var(--accent-color);
+                border-top-right-radius: 9999px;
+                border-bottom-right-radius: 9999px;
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+            }
         }
     }
 
     &__link {
+        font-size: 16px;
         display: flex;
         align-items: center;
-        column-gap: 16px;
+        column-gap: 12px;
         padding: 16px;
         border-radius: 12px;
+
+        @media (max-width: $mobile) {
+            font-size: 14px;
+        }
+
+        & i {
+            font-size: 20px;
+
+            @media (max-width: $mobile) {
+                font-size: 18px;
+            }
+        }
     }
 }
 
-.navBottom {
+.bottom {
+    border-top: 1px solid var(--border-subtle);
     margin-top: auto;
+    padding: 0 24px;
+
+    @media (max-width: $mobile) {
+        padding: 0 16px;
+    }
+
+    &__inner {
+        margin-top: 16px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        border-radius: 12px;
+
+        transition: background-color 0.3s;
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--hover-white);
+            }
+        }
+
+        @media (max-width: $mobile) {
+            margin-top: 8px;
+        }
+    }
+}
+
+.user {
+    display: flex;
+    column-gap: 12px;
+    align-items: center;
+
+    &__nickname {
+        font-size: 14px;
+    }
+
+    &__username {
+        font-size: 12px;
+        color: var(--text-secondary);
+    }
+
+    &__more {
+        font-size: 20px;
+    }
 }
 
 .nonAuth {

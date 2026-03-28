@@ -19,6 +19,8 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const { notify } = useNotification() 
     const navigate = useNavigate()
 
+    const [updateUserLoading, setUpdateUserLoading] = useState<boolean>(false)
+
     const inputRef = useRef<HTMLInputElement>(null)
 
     const initialValues = {
@@ -83,6 +85,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
         if (values.password && values.password.length < 6) return setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 6 символа' }))
         if (values.password !== values.confirmPassword) return setErrors(prev => ({ ...prev, confirmPassword: 'Пароли не совпадают' }))
 
+        setUpdateUserLoading(true)
         dispatch(updateUserThunk({
             id: user.id,
             req: {
@@ -96,6 +99,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
             .then(() => {
                 notify('Профиль изменён', 'Ваш профиль успешно изменён', 'edit')
                 if (user.username !== values.username) {return navigate(`/user/${values.username}`), dispatch(authThunk())}
+                setUpdateUserLoading(false)
                 navigate(`/user/${user.username}`)
             })
             .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))
@@ -174,7 +178,11 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                     />
                 </div>
                 <div className={styles.bottom}>
-                    <Button color='accent' padding='16px 24px 12px 24px' onClick={hundleSubmit}>Сохранить изменения</Button>
+                    <Button color='accent' padding='16px 24px 12px 24px' onClick={hundleSubmit}>
+                        {
+                            updateUserLoading ? 'Загрузка...' : 'Сохранить изменения'
+                        }
+                    </Button>
                     <Button color='default' padding='16px 24px 12px 24px' onClick={hundleCancel}>Отмена</Button>
                 </div>
             </form>

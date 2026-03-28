@@ -15,10 +15,12 @@
 }
 
 :root {
-    --bg-color: #000000;
-    --bg-secondary: #141414;
+    --bg-color: #0e0e11;
+    --bg-secondary: rgb(22 22 25 / var(--tw-bg-opacity, 1));
 
-    --accent-color: #E62E3C;
+    --hover-white: rgb(255 255 255 / 0.05);
+
+    --accent-color: #e62e3c;
     --accent-color-glow: rgba(230, 46, 60, 0.4);
     --accent-color-dim: rgba(230, 46, 60, 0.1);
     --accent-border-dim: rgba(230, 46, 60, 0.15);
@@ -35,12 +37,13 @@
     --blue-color-dim: rgba(59, 130, 246, 0.08);
     --blue-border-dim: rgba(59, 130, 246, 0.3);
     
-    --gray-color: #0A0A0A;
+    --gray-color: rgb(26 26 30 / var(--tw-bg-opacity, 1));;
     --lightgray-color: #222222;
     --text-primary: #FFFFFF;
-    --text-secondary: #888888;
+    --text-secondary: #a0a0a5;
     --text-tertiary: #444444;
-    --border-subtle: #1A1A1A;
+
+    --border-subtle: rgb(255 255 255 / 0.05);
     --border-highlight: #333333;
 
     --font-family: 'Inter', sans-serif;
@@ -68,7 +71,7 @@ body {
 }
 
 main {
-    margin-left: 260px;
+    margin-left: 280px;
 
     @media (max-width: $mobile) {
         margin-left: 0;

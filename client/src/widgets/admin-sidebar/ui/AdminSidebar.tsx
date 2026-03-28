@@ -15,43 +15,43 @@ export const AdminSidebar: FC<AdminSidebarProps> = ({ sidebar, setSidebar }) => 
         <aside className={`${styles.sidebar} ${sidebar ? styles.active : ''}`}>
             <Link to={'/'} className={styles.logo}>
                 <LogoIcon width="24px" height="24px" />
-                <h1 className={styles.logo__text}>CLOUDRATE</h1>
+                <h1 className={styles.logo__text}>CloudRate</h1>
             </Link>
             <nav className={styles.nav}>
                 <h2 className={styles.nav__title}>Администрирование</h2>
                 <ul className={styles.nav__list}>
                     <li className={`${styles.nav__item} ${ pathname === '/admin' ? styles.active : ''}`}>
                         <Link to={'/admin'} className={styles.nav__link} onClick={setSidebar}>
-                            <DashboardIcon />
+                            <i className={`ph${pathname === '/admin' ? '-fill' : ''} ph-chart-bar`}></i>
                             Общая информация
                         </Link>
                     </li>
                     <li className={`${styles.nav__item} ${ pathname === '/admin/users' ? styles.active : ''}`}>
                         <Link to={'/admin/users'} className={styles.nav__link} onClick={setSidebar}>
-                            <UsersIcon />
+                            <i className={`ph${pathname === '/admin/users' ? '-fill' : ''} ph-users`}></i>
                             Пользователи
                         </Link>
                     </li>
                     <li className={`${styles.nav__item} ${ pathname === '/admin/artists' ? styles.active : ''}`}>
                         <Link to={'/admin/artists'} className={styles.nav__link} onClick={setSidebar}>
-                            <ProfileIcon />
+                            <i className={`ph${pathname === '/admin/artists' ? '-fill' : ''} ph-user`}></i>
                             Артисты
                         </Link>
                     </li>
                     <li className={`${styles.nav__item} ${ pathname === '/admin/tracks' ? styles.active : ''}`}>
                         <Link to={'/admin/tracks'} className={styles.nav__link} onClick={setSidebar}>
-                            <TrackIcon />
+                            <i className={`ph${pathname === '/admin/tracks' ? '-fill' : ''} ph-music-notes-simple`}></i>
                             Треки
                         </Link>
                     </li>
                 </ul>
             </nav>
-            <nav className={styles.navBottom}>
+            <nav className={styles.bottom}>
                 <ul className={styles.nav__list}>
                     <li className={`${styles.nav__item}`}>
                         <Link to={'/'} className={styles.nav__link} onClick={setSidebar}>
-                            <HomeIcon />
-                            Вернуться в Ленту
+                            <i className={`ph${pathname === '/' ? '-fill' : ''} ph-house`}></i>
+                            Вернуться на Главную
                         </Link>
                     </li>
                 </ul>

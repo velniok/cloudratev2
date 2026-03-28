@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
 import styles from "./Sidebar.module.scss"
-import { AdminPanelIcon, Button, HomeIcon, InfoIcon, LogoIcon, LogoutIcon, NewsIcon, ProfileIcon, SearchIcon } from "../../../shared/ui"
-import { useAppDispatch, useAppSelector } from "../../../shared/lib"
+import { AdminPanelIcon, Badges, Button, Cover, HomeIcon, InfoIcon, LogoIcon, LogoutIcon, NewsIcon, ProfileIcon, SearchIcon } from "../../../shared/ui"
+import { getOptimizedAvatar, useAppDispatch, useAppSelector } from "../../../shared/lib"
 import { logoutApi, selectAuthStatus, selectAuthUser } from "../../../features/auth"
 import { logout } from "../../../features/auth"
 import { FC } from "react"
@@ -23,58 +23,72 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
         <aside className={`${styles.sidebar} ${sidebar ? styles.active : ''}`}>
             <Link to={'/'} className={styles.logo} onClick={setSidebar}>
                 <LogoIcon width="24px" height="24px" />
-                <h1 className={styles.logo__text}>CLOUDRATE</h1>
+                <h1 className={styles.logo__text}>CloudRate</h1>
             </Link>
             <nav className={styles.nav}>
                 <h2 className={styles.nav__title}>Обзор</h2>
                 <ul className={styles.nav__list}>
                     <li className={`${styles.nav__item} ${ pathname === '/' ? styles.active : ''}`}>
                         <Link to={'/'} className={styles.nav__link} onClick={setSidebar}>
-                            <HomeIcon />
-                            Лента
+                            <i className={`ph${pathname === '/' ? '-fill' : ''} ph-house`}></i>
+                            Главная
                         </Link>
                     </li>
                     <li className={`${styles.nav__item} ${ pathname === '/search' ? styles.active : ''}`}>
                         <Link to={'/search'} className={styles.nav__link} onClick={setSidebar}>
-                            <SearchIcon />
+                            <i className={`ph${pathname === '/search' ? '-fill' : ''} ph-magnifying-glass`}></i>
                             Поиск
                         </Link>
                     </li>
-                    {/* <li className={`${styles.nav__item} ${ pathname === '/news' ? styles.active : ''}`}>
-                        <Link to={'/news'} className={styles.nav__link}>
-                            <NewsIcon />
-                            Новости
-                        </Link>
-                    </li> */}
                 </ul>
             </nav>
-            <nav className={styles.navBottom}>
-                <h2 className={styles.nav__title}>Библиотека</h2>
-                {
-                    authStatus === 'success' ?
-                    <ul className={styles.nav__list}>
-                        <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.username}` || pathname === `/user/${authUser?.id}/edit` ? styles.active : ''}`}>
-                            <Link to={`/user/${authUser?.username}`} className={styles.nav__link} onClick={setSidebar}>
-                                <ProfileIcon />
-                                Профиль
-                            </Link>
-                        </li>
-                        {
-                            authUser?.role === 'admin' &&
+            {
+                authUser?.role === 'admin' &&
+                    <nav className={styles.nav}>
+                        <h2 className={styles.nav__title}>Админ</h2>
+                        <ul className={styles.nav__list}>
                             <li className={`${styles.nav__item} ${ pathname === '/admin' ? styles.active : ''}`}>
                                 <Link to={'/admin'} className={styles.nav__link} onClick={setSidebar}>
-                                    <AdminPanelIcon />
+                                    <i className={`ph${pathname === '/admin' ? '-fill' : ''} ph-shield`}></i>
                                     Админ-панель
                                 </Link>
                             </li>
-                        }
-                        <li className={styles.nav__item}>
-                            <div onClick={() => {dispatch(logout()), logoutApi() }} className={styles.nav__link}>
-                                <LogoutIcon />
-                                Выйти из аккаунта
+                        </ul>
+                    </nav>
+            }
+            {
+                authStatus === 'success' &&
+                    <nav className={styles.nav}>
+                        <h2 className={styles.nav__title}>Профиль</h2>
+                        <ul className={styles.nav__list}>
+                            <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.username}` || pathname === `/user/${authUser?.id}/edit` ? styles.active : ''}`}>
+                                <Link to={`/user/${authUser?.username}`} className={styles.nav__link} onClick={setSidebar}>
+                                    <i className={`ph${pathname === `/user/${authUser?.username}` ? '-fill' : ''} ph-user`}></i>
+                                    Мой профиль
+                                </Link>
+                            </li>
+                            <li className={styles.nav__item}>
+                                <div onClick={() => {dispatch(logout()), logoutApi() }} className={styles.nav__link}>
+                                    <LogoutIcon />
+                                    Выйти из аккаунта
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+            }
+            <div className={styles.bottom}>
+                {
+                    authStatus === 'success' ?
+                    <div className={styles.bottom__inner}>
+                        <div className={styles.user}>
+                            <Cover url={getOptimizedAvatar(authUser.avatarUrl)} width="40px" height="40px" borderRadius="50%" />
+                            <div className={styles.user__bio}>
+                                <h3 className={styles.user__nickname}>{authUser.nickname}</h3>
+                                <p className={styles.user__username}>@{authUser.username}</p>
                             </div>
-                        </li>
-                    </ul>
+                        </div>
+                        <i className={`ph ph-dots-three ${styles.user__more}`}></i>
+                    </div>
                     :
                     <div className={styles.nonAuth}>
                         <InfoIcon />
@@ -84,7 +98,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                         </Link>
                     </div>
                 }
-            </nav>
+            </div>
         </aside>
     )
 }

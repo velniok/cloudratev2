@@ -5,13 +5,13 @@
     z-index: 999999;
     top: 0;
     left: 0;
-    width: 260px;
+    width: 280px;
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-color);
+    background-color: var(--bg-secondary);
     border-right: 1px solid var(--border-subtle);
-    padding: 24px;
+    padding: 24px 0;
 
     transition: transform 0.6s;
 
@@ -32,7 +32,9 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0 24px;
+    padding-bottom: 16px;
 
     transition: opacity 0.3s;
   
@@ -50,16 +52,17 @@
 .logo__text {
     padding-top: 4px;
     font-family: var(--second-family);
-    color: var(--accent-color);
     font-weight: 700;
     font-size: 20px;
     letter-spacing: 0.05em;
 }
 
 .nav {
+    padding: 0 24px;
 
     &__title {
-        font-size: 12px;
+        margin-top: 24px;
+        font-size: 10px;
         font-family: var(--second-family);
         text-transform: uppercase;
         color: var(--text-secondary);
@@ -84,16 +87,30 @@
 
         &:hover {
             color: var(--text-primary);
-            background-color: var(--bg-secondary);
+            background-color: var(--hover-white);
         }
 
         &.active {
+            position: relative;
             background-color: var(--accent-color-dim);
             color: var(--accent-color);
             cursor: default;
 
             & .nav__link {
                 cursor: default;
+            }
+
+            &::before {
+                position: absolute;
+                content: '';
+                width: 4px;
+                height: 65%;
+                background-color: var(--accent-color);
+                border-top-right-radius: 9999px;
+                border-bottom-right-radius: 9999px;
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
             }
         }
     }
@@ -104,9 +121,17 @@
         column-gap: 16px;
         padding: 16px;
         border-radius: 12px;
+        font-size: 16px;
+
+        & i {
+            font-size: 20px;
+        }
     }
 }
 
-.navBottom {
+.bottom {
+    border-top: 1px solid var(--border-subtle);
     margin-top: auto;
+    padding: 12px;
+    padding-bottom: 0;
 }

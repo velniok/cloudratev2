@@ -7,10 +7,6 @@
     border: 1px solid var(--border-subtle);
     min-height: 150px;
 
-    &.your {
-        border: 2px solid var(--accent-color);
-    }
-
     @media (max-width: $mobile) {
         min-height: 118px;
     }

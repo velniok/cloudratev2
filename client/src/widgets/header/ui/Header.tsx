@@ -13,7 +13,7 @@ export const Header: FC<HeaderProps> = ({ setSidebar, sidebar }) => {
         <header className={styles.header}>
             <Link to={'/'} className={styles.logo} onClick={() => setSidebar(false)}>
                 <LogoIcon width="20px" height="20px" />
-                <h1 className={styles.logo__text}>CLOUDRATE</h1>
+                <h1 className={styles.logo__text}>CloudRate</h1>
             </Link>
             <Button color='default' padding='10px 10px 5px 10px' onClick={() => setSidebar(!sidebar)}><BurgerIcon /></Button>
         </header>
