@@ -1,0 +1,35 @@
+.links {
+
+    &__list {
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+        cursor: pointer;
+        color: var(--text-secondary);
+        
+        transition: color 0.3s;
+
+        @media (hover: hover) {
+            &:hover {
+                color: var(--text-primary);
+            }
+        }
+
+        &.active {
+            cursor: default;
+            color: var(--text-primary);
+        }
+
+        & i {
+            cursor: default;
+            color: var(--text-secondary);
+        }
+    }
+}

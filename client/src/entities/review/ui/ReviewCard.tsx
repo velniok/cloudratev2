@@ -3,7 +3,7 @@ import styles from "./ReviewCard.module.scss"
 import type { IReview } from "../model/types"
 import { MouseEvent, ReactNode, useState, type FC } from "react"
 import { Cover, CriteriasPopup, EyeIcon, Rating } from "@/shared/ui"
-import { getOptimizedAvatar, useAppSelector } from "@/shared/lib"
+import { getMonth, getOptimizedAvatar, useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
 import { ITrack } from "@/entities/track"
 
@@ -48,11 +48,14 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
                 }
             </div>
             <p className={`${styles.review} ${showMore ? styles.visible : ''} ${more ? styles.more : ''}`}>{review.text}</p>
-            {
-                actions && <>{actions}</>
-            }
             <div className={`${styles.show} ${showMore ? styles.visible : ''} ${more ? styles.more : ''}`} onClick={() => setMore(!more)}>
                 <EyeIcon />
+            </div>
+            <div className={styles.bottom}>
+                <p className={styles.createdAt}>{new Date(review.createdAt).getUTCDate()} {getMonth(review.createdAt, 'pluralize')} {new Date(review.createdAt).getUTCFullYear()}</p>
+                {
+                    actions && <>{actions}</>
+                }
             </div>
         </div>
     )

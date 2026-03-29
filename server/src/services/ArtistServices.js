@@ -66,6 +66,35 @@ class ArtistServices {
     async getArtistById(id, userId) {
             const [artistRes, followRes] = await Promise.all([
                 pool.query(`
+                    WITH artist_tracks AS (
+                        SELECT
+                            t.*,
+                            (
+                                SELECT ROUND(AVG(r.rating)::numeric)
+                                FROM reviews r
+                                WHERE r.track_id = t.id
+                            ) as avg_rating,
+                            (
+                                SELECT json_agg(row_to_json(ar))
+                                FROM artists ar
+                                WHERE ar.id = ANY(t.artist_ids)
+                            ) as artists,
+                            (
+                                SELECT json_build_object(
+                                    'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
+                                    'criteria2', ROUND(AVG(r.criteria2)::numeric, 1),
+                                    'criteria3', ROUND(AVG(r.criteria3)::numeric, 1),
+                                    'criteria4', ROUND(AVG(r.criteria4)::numeric, 1),
+                                    'criteria5', ROUND(AVG(r.criteria5)::numeric, 1)
+                                )
+                                FROM reviews r
+                                WHERE r.track_id = t.id
+                            ) as avg_criterias
+                        FROM tracks t
+                        WHERE $1 = ANY(t.artist_ids)
+                        ORDER BY avg_rating DESC NULLS LAST
+                        LIMIT 15
+                    )
                     SELECT
                         a.*,
                         (
@@ -75,32 +104,8 @@ class ArtistServices {
                             WHERE $1 = ANY(t.artist_ids)
                         ) as avg_rating,
                         (
-                            SELECT json_agg(
-                                jsonb_build_object('artists', (
-                                    SELECT json_agg(row_to_json(ar))
-                                    FROM artists ar
-                                    WHERE ar.id = ANY(t.artist_ids)
-                                ),
-                                'avg_rating', (
-                                    SELECT ROUND(AVG(r.rating)::numeric)
-                                    FROM reviews r
-                                    WHERE r.track_id = t.id
-                                ),
-                                'avg_criterias', (
-                                    SELECT json_build_object(
-                                        'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
-                                        'criteria2', ROUND(AVG(r.criteria2)::numeric, 1),
-                                        'criteria3', ROUND(AVG(r.criteria3)::numeric, 1),
-                                        'criteria4', ROUND(AVG(r.criteria4)::numeric, 1),
-                                        'criteria5', ROUND(AVG(r.criteria5)::numeric, 1)
-                                    )
-                                    FROM reviews r
-                                    WHERE r.track_id = t.id
-                                )
-                                ) || row_to_json(t)::jsonb
-                            )
-                            FROM tracks t
-                            WHERE $1 = ANY(t.artist_ids)
+                            SELECT json_agg(row_to_json(at))
+                            FROM artist_tracks at
                         ) as tracks
                     FROM artists a
                     WHERE a.id = $1

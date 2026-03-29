@@ -7,7 +7,7 @@
     color: #3B82F6;
     background-color: var(--blue-color-dim);
     border: 1px solid var(--blue-border-dim);
-    padding: 6px 10px 4px 18px;
+    padding: 4px 10px 4px 18px;
     border-radius: 999px;
     font-weight: 700;
     letter-spacing: 0.1rem;
@@ -26,6 +26,11 @@
         width: 5px;
         height: 5px;
         border-radius: 50%;
+    }
+
+    &.small {
+        font-size: 8px;
+        padding: 4px 8px 4px 16px;
     }
 
     &.admin {

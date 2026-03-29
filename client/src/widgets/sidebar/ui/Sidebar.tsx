@@ -1,10 +1,10 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import styles from "./Sidebar.module.scss"
 import { AdminPanelIcon, Badges, Button, Cover, HomeIcon, InfoIcon, LogoIcon, LogoutIcon, NewsIcon, ProfileIcon, SearchIcon } from "../../../shared/ui"
 import { getOptimizedAvatar, useAppDispatch, useAppSelector } from "../../../shared/lib"
 import { logoutApi, selectAuthStatus, selectAuthUser } from "../../../features/auth"
 import { logout } from "../../../features/auth"
-import { FC } from "react"
+import { FC, useEffect, useState } from "react"
 
 interface SidebarProps {
     sidebar: boolean
@@ -14,10 +14,20 @@ interface SidebarProps {
 export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
 
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const authStatus = useAppSelector(selectAuthStatus)
     const authUser = useAppSelector(selectAuthUser)
 
+    const [openUser, setOpenUser] = useState<boolean>(false)
+
     const pathname = useLocation().pathname
+
+    useEffect(() => {
+        document.addEventListener('click', () => setOpenUser(false))
+        return () => {
+            document.addEventListener('click', () => setOpenUser(false))
+        }
+    }, [])
 
     return (
         <aside className={`${styles.sidebar} ${sidebar ? styles.active : ''}`}>
@@ -67,11 +77,11 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                                     Мой профиль
                                 </Link>
                             </li>
-                            <li className={styles.nav__item}>
-                                <div onClick={() => {dispatch(logout()), logoutApi() }} className={styles.nav__link}>
-                                    <LogoutIcon />
-                                    Выйти из аккаунта
-                                </div>
+                            <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.username}/reviews` ? styles.active : ''}`}>
+                                <Link to={`/user/${authUser?.username}/reviews`} className={styles.nav__link} onClick={setSidebar}>
+                                    <i className={`ph${pathname === `/user/${authUser?.username}/reviews` ? '-fill' : ''} ph-star`}></i>
+                                    Мои оценки
+                                </Link>
                             </li>
                         </ul>
                     </nav>
@@ -79,24 +89,45 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
             <div className={styles.bottom}>
                 {
                     authStatus === 'success' ?
-                    <div className={styles.bottom__inner}>
-                        <div className={styles.user}>
-                            <Cover url={getOptimizedAvatar(authUser.avatarUrl)} width="40px" height="40px" borderRadius="50%" />
-                            <div className={styles.user__bio}>
-                                <h3 className={styles.user__nickname}>{authUser.nickname}</h3>
-                                <p className={styles.user__username}>@{authUser.username}</p>
-                            </div>
+                    <>
+                        <div className={`${styles.user__info} ${openUser ? styles.open : ''}`}>
+                            <ul className={styles.user__infoList}>
+                                <li className={styles.user__infoItem} onClick={() => {navigate(`/user/${authUser?.username}/edit`); setSidebar()}}>
+                                    <i className="ph ph-gear"></i>
+                                    Настройки
+                                </li>
+                                <li className={styles.user__infoItem} onClick={() => {navigate(`/user/${authUser?.username}`); setSidebar()}}>
+                                    <i className="ph ph-user"></i>
+                                    Профиль
+                                </li>
+                                <li className={`${styles.user__infoItem} ${styles.logout}`} onClick={() => {dispatch(logout()), logoutApi(), setSidebar() }}>
+                                    <i className="ph ph-sign-out"></i>
+                                    Выйти
+                                </li>
+                            </ul>
                         </div>
-                        <i className={`ph ph-dots-three ${styles.user__more}`}></i>
-                    </div>
+                        <div className={styles.bottom__inner} onClick={(e) => {e.stopPropagation(); setOpenUser(!openUser)}}>
+                            <div className={styles.user}>
+                                <Cover url={getOptimizedAvatar(authUser.avatarUrl)} width="40px" height="40px" borderRadius="50%" />
+                                <div className={styles.user__bio}>
+                                    <h3 className={styles.user__nickname}>{authUser.nickname}</h3>
+                                    {
+                                        authUser.role !== 'user' && <Badges size='small' role={authUser.role} />
+                                    }
+                                </div>
+                            </div>
+                            <i className={`ph ph-dots-three ${styles.user__more}`}></i>
+                        </div>
+                    </>
                     :
                     <div className={styles.nonAuth}>
-                        <InfoIcon />
+                        <i className="ph ph-info"></i>
                         <p className={styles.nonAuth__text}>Войдите, чтобы сохранять оценки и управлять профилем</p>
                         <Link to={'/login'} className={styles.nonAuth__link} onClick={setSidebar}>
                             <Button color="accent" padding="14px 20px 10px 20px">Войти</Button>
                         </Link>
                     </div>
+                    
                 }
             </div>
         </aside>

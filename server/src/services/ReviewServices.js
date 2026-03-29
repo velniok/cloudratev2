@@ -73,8 +73,39 @@ class ReviewServices {
                 ) as track
             FROM reviews r
             WHERE r.user_id = $1
+            ORDER BY r.created_at DESC
+            LIMIT 15
         `, [id])
         return reviewsRes.rows.map(mapToCamelCase)
+    }
+
+    async getReviewsByUserPagination(limit, page, userId) {
+        const offset = (+page - 1) * +limit
+        const [reviewsRes, countRes] = await Promise.all([
+            pool.query(`
+                SELECT
+                    r.*,
+                    (
+                        SELECT jsonb_build_object('artists', (
+                            SELECT json_agg(row_to_json(a))
+                            FROM artists a
+                            WHERE a.id = ANY(t.artist_ids)
+                        )) || row_to_json(t)::jsonb
+                        FROM tracks t
+                        WHERE t.id = r.track_id
+                    ) as track
+                FROM reviews r
+                WHERE r.user_id = $3
+                ORDER BY r.created_at DESC
+                LIMIT $1
+                OFFSET $2
+            `, [limit, offset, userId]),
+            pool.query(`SELECT COUNT(*) AS total FROM reviews r WHERE r.user_id = $1`, [userId])
+        ])
+        return {
+            reviews: reviewsRes.rows.map(mapToCamelCase),
+            total: countRes.rows[0].total,
+        }
     }
 
     async getNewReviews() {

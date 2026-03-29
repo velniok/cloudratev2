@@ -5,7 +5,15 @@ const months = [
     'Октябрь', 'Ноябрь', 'Декабрь'
 ]
 
-export const getMonth = (dateStr: string) => {
+const pluralizeMonths = [
+    'Января', 'Февраля', 'Марта',
+    'Апреля', 'Мая', 'Июня',
+    'Июля', 'Августа', 'Сентября',
+    'Октября', 'Ноября', 'Декабря'
+]
+
+export const getMonth = (dateStr: string, type = 'months') => {
     const month = new Date(dateStr).getUTCMonth()
-    return months[month]
+    if (type === 'months') return months[month]
+    if (type === 'pluralize') return pluralizeMonths[month]
 }

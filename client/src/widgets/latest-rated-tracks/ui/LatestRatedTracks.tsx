@@ -5,6 +5,7 @@ import { FC } from "react"
 import { IUser } from "@/entities/user"
 import { TStatus } from "@/shared/types"
 import { IReview } from "@/entities/review"
+import { Link } from "react-router-dom"
 
 interface LatestRatedTracksProps {
     user: IUser
@@ -16,7 +17,7 @@ export const LatestRatedTracks: FC<LatestRatedTracksProps> = ({ user, userStatus
     return (
         <div className={styles.wrapper}>
             <div className="container">
-                <Title>НЕДАВНИЕ ОЦЕНКИ</Title>
+                <Title link={`/user/${user?.username}/reviews`} linkTitle={'Показать все'}>НЕДАВНИЕ ОЦЕНКИ</Title>
                 <Slider>
                     {
                         userStatus === 'success'

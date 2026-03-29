@@ -1,5 +1,7 @@
 import { axios } from "@/shared/api"
 import { IReviewReq } from "./reviewApiTypes"
+import { IReview } from "@/entities/review"
+import { IPagination } from "@/shared/types"
 
 export const createReviewApi = (params: IReviewReq) => {
     return axios.post('/review/create', params)
@@ -11,4 +13,8 @@ export const addTextReviewApi = (params: { id: number, req: { text: string, user
 
 export const toggleLikeApi = (params: { reviewId: number, userId: number }) => {
     return axios.post('/review/toggleLike', params)
+}
+
+export const getUserReviewsApi = (params: { page: number, limit: number, userId: number }) => {
+    return axios.get<{ reviews: IReview[], pagination: IPagination }>(`/user/getUserReviews/${params.userId}`, { params: { page: params.page, limit: params.limit } })
 }

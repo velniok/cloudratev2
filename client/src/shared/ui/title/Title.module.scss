@@ -21,3 +21,17 @@
     height: 1px;
     background-color: var(--border-subtle);
 }
+
+.link {
+    color: var(--accent-color);
+    font-size: 14px;
+    font-weight: 400;
+    
+    transition: opacity 0.3s;
+
+    @media (hover: hover) {
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}

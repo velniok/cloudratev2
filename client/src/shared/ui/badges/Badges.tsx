@@ -3,9 +3,10 @@ import styles from './Badges.module.scss'
 
 interface BadgesProps {
     role: string
+    size?: string
 }
 
-export const Badges: FC<BadgesProps> = ({ role }) => {
+export const Badges: FC<BadgesProps> = ({ role, size }) => {
 
     const roleLables = {
         admin: 'Админ',
@@ -13,6 +14,6 @@ export const Badges: FC<BadgesProps> = ({ role }) => {
     }
 
     return (
-        <span className={`${styles.badges} ${role ? styles[role] : ''}`}>{roleLables[role]}</span>
+        <span className={`${styles.badges} ${role ? styles[role] : ''} ${size ? styles[size] : ''}`}>{roleLables[role]}</span>
     )
 }

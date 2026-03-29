@@ -1,6 +1,7 @@
 import type { IUser } from "@/entities/user"
 import { axios } from "@/shared/api"
 import { IUpdateUserReq } from "./userApiTypes"
+import { IReview } from "@/entities/review"
 
 export const getOneUser = (params: { username: string }) => {
     return axios.get<{ user: IUser }>(`/user/getOne/${params.username}`)

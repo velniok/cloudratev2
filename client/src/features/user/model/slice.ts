@@ -5,6 +5,7 @@ import type { IUserState } from "./userSliceTypes";
 import type { IUser } from "@/entities/user";
 import { IUpdateUserReq } from "../api/userApiTypes";
 import { IApiError } from "@/shared/types";
+import { IReview } from "@/entities/review";
 
 export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { username: string }, { rejectValue: IApiError }>('user/getOneUserThunk', async (params, { rejectWithValue }) => {
     try {

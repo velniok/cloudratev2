@@ -1,11 +1,10 @@
-import { selectUser, selectUserStatus } from "@/features/user"
-import { getOneUserThunk } from "@/features/user"
+import { getOneUserThunk, selectUser, selectUserStatus } from "@/features/user"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
-import { EditProfile } from "@/widgets/edit-profile"
+import { UserReviews } from "@/widgets/user-reviews"
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 
-export const EditProfilePage = () => {
+export const UserReviewsPage = () => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
@@ -14,14 +13,15 @@ export const EditProfilePage = () => {
     const userStatus = useAppSelector(selectUserStatus)
 
     useEffect(() => {
-        dispatch(getOneUserThunk({ username: username }))
+        dispatch(getOneUserThunk({ username }))
             .then()
             .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
     }, [username])
 
     return (
-        <>
-            <EditProfile user={user} userStatus={userStatus} />
-        </>
+        userStatus === 'success' ?
+        <UserReviews user={user} />
+        :
+        <>Загрузка...</>
     )
 }

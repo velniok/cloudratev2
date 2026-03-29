@@ -33,6 +33,26 @@ class UserControllers {
         }
     }
 
+    async getUserReviews(req, res, next) {
+        try {
+            const userId = req.params.userId
+            const { limit, page } = req.query
+
+            const {reviews, total} = await ReviewServices.getReviewsByUserPagination(limit, page, userId)
+            res.status(200).json({
+                reviews,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                } })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
     async update(req, res, next) {
         try {
             const errors = validationResult(req)

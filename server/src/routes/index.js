@@ -38,6 +38,7 @@ router.get('/auth/logout', AuthControllers.logout)
 
 router.get('/user/getOne/:userId', UserControllers.getOne)
 router.get('/user/get', UserControllers.getAll)
+router.get('/user/getUserReviews/:userId', UserControllers.getUserReviews)
 router.patch('/user/update/:userId', checkUser, userValidation, UserControllers.update)
 router.patch('/user/updateRole/:userId', checkAdmin, UserControllers.updateRole)
 router.delete('/user/delete/:userId', checkAdmin, UserControllers.delete)
