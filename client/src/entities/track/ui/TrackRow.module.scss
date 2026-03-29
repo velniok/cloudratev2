@@ -1,0 +1,53 @@
+.row {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 12px;
+
+    transition: background-color 0.3s;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--hover-white);
+        }
+    }
+
+    &__left {
+        display: flex;
+        align-items: center;
+        column-gap: 16px;
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        column-gap: 16px;
+    }
+
+    &__title {
+        font-family: var(--second-family);
+    }
+
+    &__artist {
+
+        &List {
+            display: flex;
+            column-gap: 4px;
+        }
+
+        &Item {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+    }
+
+    &__release {
+        color: var(--text-secondary);
+    }
+
+    &__rating {
+        position: relative;
+    }
+}

@@ -15,6 +15,6 @@ export const toggleLikeApi = (params: { reviewId: number, userId: number }) => {
     return axios.post('/review/toggleLike', params)
 }
 
-export const getUserReviewsApi = (params: { page: number, limit: number, userId: number }) => {
-    return axios.get<{ reviews: IReview[], pagination: IPagination }>(`/user/getUserReviews/${params.userId}`, { params: { page: params.page, limit: params.limit } })
+export const getUserReviewsApi = (params: { page: number, limit: number, id: number }) => {
+    return axios.get<{ reviews: IReview[], pagination: IPagination }>(`/user/getUserReviews/${params.id}`, { params: { page: params.page, limit: params.limit } })
 }

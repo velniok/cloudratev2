@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createArtistApi, deleteArtistApi, getArtistListApi, getOneArtistApi, toggleFollowApi, updateArtistApi } from "../api/artistApi";
+import { createArtistApi, deleteArtistApi, getArtistListApi, getArtistTracksApi, getOneArtistApi, toggleFollowApi, updateArtistApi } from "../api/artistApi";
 import type { IArtist } from "@/entities/artist";
 import axios from "axios";
 import type { IArtistState } from "./artistSliceTypes";
 import type { IArtistReq } from "../api/artistApiTypes";
 import type { IApiError, IPagination } from "@/shared/types";
+import { ITrack } from "@/entities/track";
 
 export const getArtistListThunk = createAsyncThunk<{ artists: IArtist[], pagination: IPagination}, {page: number, limit: number}, { rejectValue: IApiError }>('artist/getArtistListThunk', async (params, { rejectWithValue }) => {
     try {
@@ -34,6 +35,17 @@ export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: numbe
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
+export const getArtistTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, { page: number, limit: number, id: number }, { rejectValue: IApiError }>('/artist/getArtistTracksThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await getArtistTracksApi(params)
+        return data
+    } catch (err) {
+            if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         } 
     }
@@ -76,6 +88,11 @@ const initialState: IArtistState = {
     artist: null,
     artistStatus: 'idle',
     artistError: null,
+
+    tracks: null,
+    tracksPagination: null,
+    tracksStatus: 'idle',
+
     artistList: null,
     artistListPagination: null,
     artistListStatus: 'idle',
@@ -119,6 +136,22 @@ const artistSlice = createSlice({
         .addCase(getOneArtistThunk.rejected, (state, action) => {
             state.artist = null,
             state.artistStatus = 'error',
+            state.artistError = action.payload.message
+        })
+
+        .addCase(getArtistTracksThunk.pending, (state) => {
+            state.tracksStatus = 'loading'
+            state.artistError = null
+        })
+        .addCase(getArtistTracksThunk.fulfilled, (state, action) => {
+            state.tracks = action.payload.tracks
+            if (action.payload.pagination) {
+                state.tracksPagination = action.payload.pagination
+            }
+            state.tracksStatus = 'success'
+        })
+        .addCase(getArtistTracksThunk.rejected, (state, action) => {
+            state.tracksStatus = 'error',
             state.artistError = action.payload.message
         })
         

@@ -15,7 +15,6 @@
 
     @media (max-width: $mobile) {
         padding: 10px 12px;
-        left: 0;
     }
 
     &.open {
@@ -42,6 +41,12 @@
     &.right {
         left: 140px;
         top: -20px;
+    }
+
+    &.left {
+        right: 48px;
+        top: 50%;
+        transform: translateY(-50%);
     }
 
     &__text {

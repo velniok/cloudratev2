@@ -4,7 +4,7 @@ import styles from './UserHeaderInfo.module.scss'
 export const UserHeaderInfoSkeleton = () => {
     return (
         <div className={styles.inner}>
-            <Skeleton width='150px' height='150px' borderRadius='24px' />
+            <Skeleton width='200px' height='200px' borderRadius='24px' />
             <div className={styles.info}>
                 <h2 className={styles.nickname}>
                     <Skeleton width='280px' height='38px' borderRadius='12px' />

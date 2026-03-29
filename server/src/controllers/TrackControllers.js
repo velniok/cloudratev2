@@ -41,6 +41,27 @@ class TrackControllers {
         }
     }
 
+    async getTracksByArtist(req, res, next) {
+        try {
+            const artistId = req.params.artistId
+            const { page, limit } = req.query
+            const { tracks, total } = await TrackServices.getTracksPaginationByArtist(page, limit, artistId)
+
+            res.status(200).json({
+                tracks,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
     async getNewTracks(req, res, next) {
         try {
             const tracks = await TrackServices.getNewTracks()

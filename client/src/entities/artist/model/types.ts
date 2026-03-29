@@ -1,3 +1,4 @@
+import { IPagination } from "@/shared/types"
 import type { ITrack } from "../../track"
 
 export interface IArtist {
@@ -8,7 +9,12 @@ export interface IArtist {
     avatarUrl: string | null
     soundcloudUrl: string
     avgRating: number | null
-    tracks: ITrack[] | null
+    tracks: {
+        trackList: ITrack[]
+        pagination: IPagination
+    }
+    topTracks: ITrack[] | null
+    tracksCount?: number
     follow: {
         followersCount: number
         isFollowed: boolean

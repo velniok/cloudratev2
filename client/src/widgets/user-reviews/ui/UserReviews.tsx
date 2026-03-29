@@ -12,7 +12,7 @@ interface UserReviewsProps {
 
 export const UserReviews: FC<UserReviewsProps> = ({ user }) => {
 
-    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getUserReviewsThunk, `/user/${user.username}/reviews`, 10, { userId: user.id })
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getUserReviewsThunk, `/user/${user.username}/reviews`, 10, user.id)
     const reviewList = useAppSelector(selectReviewList)
     const reviewListPagination = useAppSelector(selectReviewListPagination)
     const reviewListStatus = useAppSelector(selectReviewListStatus)

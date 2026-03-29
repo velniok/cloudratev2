@@ -22,12 +22,13 @@
         border-bottom: none;
     }
 
-    & tr th:last-child {
-        text-align: right;
-    }
-
-    &__row {
     
+    &__row {
+        
+        & th:last-child {
+            text-align: right;
+        }
+        
         transition: background-color 0.3s;
     
         @media (hover: hover) {            
@@ -135,7 +136,7 @@
         
         &List {
             display: flex;
-            column-gap: 20px;
+            column-gap: 12px;
 
             @media (max-width: $mobile) {
                 column-gap: 10px;

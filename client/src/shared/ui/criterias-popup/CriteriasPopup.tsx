@@ -5,7 +5,7 @@ import { ReviewIcon } from '../icon'
 interface CriteriasPopupProps {
     show: boolean
     avgCriterias: number[]
-    position: 'bottom' | 'top' | 'right'
+    position: 'bottom' | 'top' | 'right' | 'left'
     close: () => void
     review?: boolean
 }

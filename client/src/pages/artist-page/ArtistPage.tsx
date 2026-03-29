@@ -2,6 +2,7 @@ import { getOneArtistThunk, selectArtist, selectArtistStatus } from "@/features/
 import { selectAuthUser } from "@/features/auth"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { ArtistHeader } from "@/widgets/artist-header"
+import { ArtistReleases } from "@/widgets/artist-releases"
 import { ArtistTopTracks } from "@/widgets/artist-top-tracks"
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
@@ -20,8 +21,16 @@ export const ArtistPage = () => {
 
     return (
         <>
-            <ArtistHeader artist={artist} artistStatus={artistStatus} />
-            <ArtistTopTracks artist={artist} artistStatus={artistStatus} />
+        {
+            artistStatus === 'success' ?
+            <>
+                <ArtistHeader artist={artist} artistStatus={artistStatus} />
+                <ArtistTopTracks artist={artist} artistStatus={artistStatus} />
+                <ArtistReleases artist={artist} artistStatus={artistStatus} />
+            </>
+            :
+            <>Загрузка...</>
+        }
         </>
     )
 }

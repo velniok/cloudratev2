@@ -22,10 +22,10 @@ export const ArtistTopTracks: FC<ArtistTopTracksProps> = ({ artist, artistStatus
                         ?
                         <>
                         {
-                            artist.tracks ?
+                            artist.topTracks ?
                             <>
                             {
-                                artist.tracks.map((track) => {
+                                artist.topTracks.map((track) => {
                                     return <TrackCard key={track.id} track={track} />
                                 })
                             }

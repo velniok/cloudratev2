@@ -74,6 +74,49 @@ class TrackServices {
             total: countRes.rows[0].total
         }
     }
+
+    async getTracksPaginationByArtist(page, limit, artistId) {
+        const offset = (+page - 1) * +limit
+        const [tracksRes, countRes] = await Promise.all([
+            pool.query(`
+                SELECT
+                    t.*,
+                    (
+                        SELECT ROUND(AVG(r.rating)::numeric)
+                        FROM reviews r
+                        WHERE r.track_id = t.id
+                    ) as avg_rating,
+                    (
+                        SELECT json_agg(row_to_json(a))
+                        FROM artists a
+                        WHERE a.id = ANY(t.artist_ids)
+                    ) as artists,
+                    (
+                        SELECT json_build_object(
+                            'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
+                            'criteria2', ROUND(AVG(r.criteria2)::numeric, 1),
+                            'criteria3', ROUND(AVG(r.criteria3)::numeric, 1),
+                            'criteria4', ROUND(AVG(r.criteria4)::numeric, 1),
+                            'criteria5', ROUND(AVG(r.criteria5)::numeric, 1)
+                        )
+                        FROM reviews r
+                        WHERE r.track_id = t.id
+                    ) as avg_criterias
+                FROM tracks t
+                WHERE $3 = ANY(t.artist_ids)
+                ORDER BY id
+                LIMIT $1
+                OFFSET $2
+            `, [limit, offset, artistId]),
+            pool.query(`
+                SELECT COUNT(*) AS total FROM tracks t WHERE $1 = ANY(t.artist_ids)
+            `, [artistId])
+        ])
+        return {
+            tracks: tracksRes.rows.map(mapToCamelCase),
+            total: countRes.rows[0].total
+        }
+    } 
     
     async getNewTracks() {
         const tracksRes = await pool.query(`

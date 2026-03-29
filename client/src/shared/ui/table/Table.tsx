@@ -13,7 +13,7 @@ interface TableProps {
     header: string[]
     data: IArtist[] | ITrack[] | IUser[]
     dataStatus: TStatus
-    actions: {
+    actions?: {
         name: string
         func: (id: number) => ReactNode
     }[]

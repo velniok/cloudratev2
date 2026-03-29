@@ -5,7 +5,7 @@ import axios from "axios"
 import { getUserReviewsApi } from "../api/reviewApi"
 import { IReviewState } from "./reviewSliceTypes"
 
-export const getUserReviewsThunk = createAsyncThunk<{ reviews: IReview[], pagination: IPagination }, { page: number, limit: number, userId: number }, { rejectValue: IApiError }>('review/getUserReviewsThunk', async (params, { rejectWithValue }) => {
+export const getUserReviewsThunk = createAsyncThunk<{ reviews: IReview[], pagination: IPagination }, { page: number, limit: number, id: number }, { rejectValue: IApiError }>('review/getUserReviewsThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getUserReviewsApi(params)
         return data

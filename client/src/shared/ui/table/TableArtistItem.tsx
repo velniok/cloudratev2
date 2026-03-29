@@ -25,11 +25,7 @@ export const TableArtistItem: FC<TableArtistItemProps> = ({ artist, actions }) =
                 </Link>
             </td>
             <td className={styles.table__data}>
-                <p className={styles.artist__tracks}>
-                    {
-                        artist.tracks ? artist.tracks.length : 'Треков нет'
-                    }
-                </p>
+                <p className={styles.artist__tracks}>{artist.tracksCount}</p>
             </td>
             <td className={styles.table__data}>
                 {

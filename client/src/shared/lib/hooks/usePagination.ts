@@ -3,7 +3,7 @@ import { useAppDispatch } from "./useAppDispatch"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useNotification } from "./useNotification"
 
-export const usePagination = (thunk: (params: { page: number, limit: number } | { page: number, limit: number, userId: number }) => any, path: string, limit: number, query?: { userId: number } ) => {
+export const usePagination = (thunk: (params: { page: number, limit: number } | { page: number, limit: number, userId: number }) => any, path: string, limit: number, id?: number ) => {
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
     const navigate = useNavigate()
@@ -12,10 +12,11 @@ export const usePagination = (thunk: (params: { page: number, limit: number } | 
     const page = Number(params.get('page') || 1)
 
     useEffect(() => {
-        dispatch(thunk({ ...query, page: page, limit: limit })).unwrap()
+        const query = {page: page, limit: limit, id: id}
+        dispatch(thunk(query)).unwrap()
             .then()
             .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
-    }, [page, limit, query?.userId])
+    }, [page, limit, id])
 
     const hundleNextPage = () => {
         navigate(`${path}?page=${page + 1}&limit=${limit}`)

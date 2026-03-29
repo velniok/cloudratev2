@@ -4,7 +4,7 @@ import styles from './ArtistHeaderInfo.module.scss'
 export const ArtistHeaderInfoSkeleton = () => {
     return (
         <div className={styles.inner}>
-            <Skeleton className={styles.avatar} width='180px' height='180px' borderRadius='12px' />
+            <Skeleton className={styles.avatar} width='200px' height='200px' borderRadius='12px' />
             <div className={styles.info}>
                 <h2 className={styles.name}>
                     <Skeleton width='180px' height='52px' borderRadius='12px' />
