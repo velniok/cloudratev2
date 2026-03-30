@@ -20,5 +20,5 @@ export interface ITrack {
     artistIds: number[]
     artists?: IArtist[]
     reviewsCount: number
-    reviews: IReview[]
+    userReview: IReview | null
 }

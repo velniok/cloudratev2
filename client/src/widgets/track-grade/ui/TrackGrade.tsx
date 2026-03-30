@@ -28,12 +28,8 @@ export const TrackGrade: FC<TrackGradeProps> = ({ track, trackStatus }) => {
                     ?
                     <>
                     {
-                        track.reviews.map((review: IReview) => review.userId).includes(authUser.id) ?
-                            track.reviews.map((review: IReview) => {
-                                if (review.userId === authUser.id) {
-                                    return <ReviewCreate key={review.id} track={track} review={review} />
-                                }
-                            })
+                        track.userReview ?
+                        <ReviewCreate key={track.userReview.id} track={track} review={track.userReview} />
                         :
                         <ReviewCreate track={track} />
                     }

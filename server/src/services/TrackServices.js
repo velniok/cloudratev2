@@ -139,7 +139,7 @@ class TrackServices {
         return tracksRes.rows.map(mapToCamelCase)
     }
 
-    async getTrack(id) {
+    async getTrack(trackId, userId) {
         const trackRes = await pool.query(`
             SELECT
                 t.*,
@@ -168,10 +168,15 @@ class TrackServices {
                     SELECT COUNT(*)::int
                     FROM reviews r
                     WHERE r.track_id = t.id
-                ) as reviews_count
+                ) as reviews_count,
+                (
+                    SELECT row_to_json(r)
+                    FROM reviews r
+                    WHERE r.track_id = $1 AND r.user_id = $2
+                ) as user_review
             FROM tracks t
             WHERE id = $1
-        `, [id])
+        `, [trackId, userId])
         return mapToCamelCase(trackRes.rows[0])
     }
 

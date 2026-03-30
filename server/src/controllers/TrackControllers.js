@@ -56,8 +56,7 @@ class TrackControllers {
         try {
             const trackId = req.params.id
             const userId = req.userId
-            const track = await TrackServices.getTrack(trackId)
-            track.reviews = await ReviewServices.getReviewsByTrack(trackId, userId)
+            const track = await TrackServices.getTrack(trackId, userId)
 
             res.status(200).json({ track })
         } catch (err) {
