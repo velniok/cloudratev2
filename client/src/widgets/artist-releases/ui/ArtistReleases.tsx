@@ -23,12 +23,12 @@ export const ArtistReleases: FC<ArtistReleasesProps> = ({ artist, artistStatus }
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>ДИСКОГРАФИЯ АРТИСТА</Title>
-                {
-                    tracks?.length > 0 ?
-                    <>
-                        <ul className={styles.list}>
+                    <ul className={styles.list}>
+                        {
+                            tracksStatus === 'success' ?
+                            <>
                             {
-                                tracksStatus === 'success' ?
+                                tracks.length > 0 ?
                                 <>
                                 <p className={styles.text}>Показано {((+tracksPagination?.page - 1) * limit) + 1}-{(limit * +tracksPagination?.page)} из {+tracksPagination?.total}</p>
                                 {
@@ -38,27 +38,27 @@ export const ArtistReleases: FC<ArtistReleasesProps> = ({ artist, artistStatus }
                                 }
                                 </>
                                 :
-                                Array.from({ length: 10 }).map((_, index) => {
-                                    return <TrackRowSkelton key={index} />
-                                })
+                                <>Треков нет</>
                             }
-                        </ul>
-                        <div className={styles.bottom}>
-                        {
-                            tracksStatus === 'success' &&
-                            <PaginationButtons
-                                page={+tracksPagination.page}
-                                totalPages={tracksPagination.totalPages}
-                                hundleNextPage={hundleNextPage}
-                                hundlePrevPage={hundlePrevPage}
-                                hundlePage={hundlePage}
-                            />
+                            </>
+                            :
+                            Array.from({ length: 10 }).map((_, index) => {
+                                return <TrackRowSkelton key={index} />
+                            })
                         }
-                        </div>
-                    </>
-                    :
-                    <>Треков нет</>
-                }
+                    </ul>
+                    <div className={styles.bottom}>
+                    {
+                        tracksStatus === 'success' &&
+                        <PaginationButtons
+                            page={+tracksPagination.page}
+                            totalPages={tracksPagination.totalPages}
+                            hundleNextPage={hundleNextPage}
+                            hundlePrevPage={hundlePrevPage}
+                            hundlePage={hundlePage}
+                        />
+                    }
+                    </div>
             </div>
         </div>
     )

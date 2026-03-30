@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type MouseEvent } from "react"
+import { useEffect, useState, type ChangeEvent, type MouseEvent } from "react"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { Button, Input } from "@/shared/ui"
 import { registerThunk } from "../model/slice"
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"
 import { IApiError } from "@/shared/types"
 import { sendVerifyCodeApi } from "../api/authApi"
 import axios from "axios"
+import styles from './Auth.module.scss'
 
 export const RegForm = () => {
 
@@ -18,6 +19,20 @@ export const RegForm = () => {
     if (status === 'success') {
         navigate('/')
     }
+
+    const [verifyPage, setVerifyPage] = useState<boolean>(false)
+    const [seconds, setSeconds] = useState<number>(60)
+
+    useEffect(() => {
+        if (!verifyPage) return setSeconds(60)
+        if (seconds <= 0) return
+
+        const timerId = setInterval(() => {
+            setSeconds(prev => prev - 1)
+        }, 1000)
+        
+        return () => clearInterval(timerId)
+    }, [seconds, verifyPage])
 
     const initialValues = {
         nickname: '',
@@ -36,8 +51,6 @@ export const RegForm = () => {
         verifyCode: '',
     }
     const [errors, setErrors] = useState(initialErrors)
-
-    const [verifyPage, setVerifyPage] = useState<boolean>(false)
 
     const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setErrors(prev => ({ ...prev, nickname: '' }))
@@ -113,6 +126,16 @@ export const RegForm = () => {
         {
             verifyPage ?
             <>
+                <p className={styles.text}>Код отправлен на почту <span>{values.email}</span></p>
+                <div className={styles.retry}>
+                    {
+                        seconds === 0 ?
+                        
+                        <Button className={styles.retry__btn} color="default" padding="10px 8px 8px 8px" onClick={(e) => {handleSendVerifyCode(e); setSeconds(60)}}>Отправить код еще раз</Button>
+                        :
+                        <p className={styles.retry__text}>Код можно отправить еще раз через <span>{seconds}</span> сек.</p>
+                    }
+                </div>
                 <Input
                     type="text"
                     label="Код активации"
@@ -122,7 +145,7 @@ export const RegForm = () => {
                     error={errors.verifyCode}
                 />
                 <Button color="accent" padding="20px 16px 16px 16px" onClick={hundleRegister}>Зарегистрироваться</Button>
-                <Button color="default" padding="16px 12px 12px 12px" onClick={() => setVerifyPage(false)}>Назад</Button>
+                <Button color="default" padding="16px 12px 12px 12px" onClick={() => setVerifyPage(false)}>Отмена</Button>
             </>
             :
             <>

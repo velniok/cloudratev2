@@ -1,0 +1,24 @@
+.text {
+    margin-top: -15px;
+    color: var(--text-secondary);
+
+    & span {
+        color: var(--accent-color);
+    }
+}
+
+.retry {
+    margin-top: -15px;
+
+    &__btn {
+        font-size: 10px;
+    }
+    
+    &__text {
+        color: var(--text-secondary);
+
+        & span {
+            color: var(--accent-color);
+        }
+    }
+}

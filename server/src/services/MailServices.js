@@ -27,6 +27,8 @@ class MailService {
         `, [email])
         if (usersRes.rows.length > 0) throw new AppError('Пользователь с таким email уже существует', 409, 'email')
 
+        await pool.query('DELETE FROM verify_codes WHERE email = $1', [email])
+
         const code = this.generateCode()
         await pool.query(`
             INSERT INTO verify_codes (email, code)
