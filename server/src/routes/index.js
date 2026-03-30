@@ -1,21 +1,17 @@
-const upload = require('../config/multer')
-const ArtistControllers = require('../controllers/ArtistControllers')
-const AuthControllers = require('../controllers/AuthControllers')
 const GeneralControllers = require('../controllers/GeneralControllers')
-const ReviewControllers = require('../controllers/ReviewControllers')
 const SearchControllers = require('../controllers/SearchControllers')
-const TrackControllers = require('../controllers/TrackControllers')
-const UserControllers = require('../controllers/UserControllers')
+
 const checkAdmin = require('../middlewares/checkAdmin')
-const checkUser = require('../middlewares/checkUser')
-const getUser = require('../middlewares/getUser')
-const artistValidation = require('../middlewares/validators/artistValidators')
-const registerValidation = require('../middlewares/validators/authValidators')
-const trackValidation = require('../middlewares/validators/trackValidators')
-const userValidation = require('../middlewares/validators/userValidators')
+
+const AuthRouter = require('./AuthRouter')
+const UserRouter = require('./UserRouter')
+const ArtistRouter = require('./ArtistRouter')
+const TrackRouter = require('./TrackRouter')
+const ReviewRouter = require('./ReviewRouter')
+
+const upload = require('../config/multer')
 
 const Router = require('express').Router
-
 const router = new Router()
 
 router.post('/upload', upload.single('image'), (req, res) => {
@@ -31,39 +27,11 @@ router.post('/upload', upload.single('image'), (req, res) => {
     }
 })
 
-router.post('/auth/sendVerifyCode', registerValidation, AuthControllers.sendVerifyCode)
-router.post('/auth/register', registerValidation, AuthControllers.register)
-router.post('/auth/login', AuthControllers.login)
-router.get('/auth/refresh', AuthControllers.refresh)
-router.get('/auth/logout', AuthControllers.logout)
-
-router.get('/user/getOne/:userId', UserControllers.getOne)
-router.get('/user/get', UserControllers.getAll)
-router.get('/user/getUserReviews/:userId', UserControllers.getUserReviews)
-router.patch('/user/update/:userId', checkUser, userValidation, UserControllers.update)
-router.patch('/user/updateRole/:userId', checkAdmin, UserControllers.updateRole)
-router.delete('/user/delete/:userId', checkAdmin, UserControllers.delete)
-
-router.post('/artist/create', checkAdmin, artistValidation, ArtistControllers.create)
-router.get('/artist/get', ArtistControllers.get)
-router.get('/artist/getOne/:id', getUser, ArtistControllers.getOne)
-router.patch('/artist/update/:id', checkAdmin, artistValidation, ArtistControllers.update)
-router.post('/artist/toggleFollow', checkUser, ArtistControllers.toggleFollow)
-router.delete('/artist/delete/:id', checkAdmin, ArtistControllers.delete)
-
-router.post('/track/create', checkAdmin, trackValidation.trackCreateValidation, TrackControllers.create)
-router.get('/track/get', TrackControllers.get)
-router.get('/track/newTracks', TrackControllers.getNewTracks)
-router.get('/track/getArtistTracks/:artistId', TrackControllers.getTracksByArtist)
-router.get('/track/getOne/:id', getUser, TrackControllers.getOne)
-router.patch('/track/update/:id', checkAdmin, trackValidation.trackUpdateValidation, TrackControllers.update)
-router.delete('/track/delete/:id', checkAdmin, TrackControllers.delete)
-
-router.post('/review/create', checkUser, ReviewControllers.create)
-router.get('/review/newReviews', ReviewControllers.getNewReviews)
-router.get('/review/reviewsWithText/:trackId', getUser, ReviewControllers.getReviewsWithText)
-router.patch('/review/addText/:id', checkUser, ReviewControllers.addText)
-router.post('/review/toggleLike', checkUser, ReviewControllers.toggleLike)
+router.use('/auth', AuthRouter)
+router.use('/user', UserRouter)
+router.use('/artist', ArtistRouter)
+router.use('/track', TrackRouter)
+router.use('/review', ReviewRouter)
 
 router.get('/general/get', checkAdmin, GeneralControllers.get)
 

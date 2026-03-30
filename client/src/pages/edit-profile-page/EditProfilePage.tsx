@@ -1,6 +1,6 @@
-import { selectUser, selectUserStatus } from "@/features/user"
-import { getOneUserThunk } from "@/features/user"
+import { getUserProfileThunk, selectUser, selectUserStatus } from "@/features/user"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
+import { Loading } from "@/shared/ui"
 import { EditProfile } from "@/widgets/edit-profile"
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
@@ -14,14 +14,19 @@ export const EditProfilePage = () => {
     const userStatus = useAppSelector(selectUserStatus)
 
     useEffect(() => {
-        dispatch(getOneUserThunk({ username: username }))
+        dispatch(getUserProfileThunk({ username: username }))
             .then()
             .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
     }, [username])
 
     return (
         <>
+        {
+            userStatus === 'success' ?
             <EditProfile user={user} userStatus={userStatus} />
+            :
+            <Loading />
+        }
         </>
     )
 }

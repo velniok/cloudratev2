@@ -1,4 +1,4 @@
-import { getOneUserThunk, selectUser, selectUserStatus } from "@/features/user"
+import { getUserProfileThunk, selectUser, selectUserStatus } from "@/features/user"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { Loading } from "@/shared/ui"
 import { UserReviews } from "@/widgets/user-reviews"
@@ -14,7 +14,7 @@ export const UserReviewsPage = () => {
     const userStatus = useAppSelector(selectUserStatus)
 
     useEffect(() => {
-        dispatch(getOneUserThunk({ username }))
+        dispatch(getUserProfileThunk({ username }))
             .then()
             .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
     }, [username])

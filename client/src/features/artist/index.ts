@@ -1,4 +1,5 @@
 export * from './model/slice'
+export * from './api/artistApi'
 export * from './model/selectors'
 export { ArtistCreateForm } from './ui/ArtistCreateForm'
 export { ArtistDeleteModal } from './ui/ArtistDeleteModal'

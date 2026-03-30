@@ -37,12 +37,12 @@ export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
                 </a>
                 <div className={styles.stats}>
                     <div className={styles.stats__item}>
-                        <span className={styles.stats__count}>{user.reviews.length}</span>
-                        <p className={styles.stats__title}>{pluralize(user.reviews.length, 'оценка', 'оценки', 'оценок')}</p>
+                        <span className={styles.stats__count}>{user.reviewsCount}</span>
+                        <p className={styles.stats__title}>{pluralize(user.reviewsCount, 'оценка', 'оценки', 'оценок')}</p>
                     </div>
                     <div className={styles.stats__item}>
-                        <span className={styles.stats__count}>{user.reviews.filter((review: IReview) => review?.text).length}</span>
-                        <p className={styles.stats__title}>{pluralize(user.reviews.filter((review: IReview) => review?.text).length, 'отзыв', 'отзыва', 'отзывов')}</p>
+                        <span className={styles.stats__count}>{user.reviewsTextCount}</span>
+                        <p className={styles.stats__title}>{pluralize(user.reviewsTextCount, 'отзыв', 'отзыва', 'отзывов')}</p>
                     </div>
                 </div>
                 {

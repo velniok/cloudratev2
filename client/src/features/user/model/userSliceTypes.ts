@@ -1,12 +1,24 @@
+import { IArtist } from "@/entities/artist";
+import { IReview } from "@/entities/review";
 import type { IUser } from "@/entities/user";
-import type { TStatus } from "@/shared/types";
+import type { IPagination, TStatus } from "@/shared/types";
 
 export interface IUserState {
     user: IUser | null
     userStatus: TStatus
     userError: string | null
+
     updateStatus: TStatus
     updateError: string | null
+
+    follows: IArtist[] | null
+    followsPagination: IPagination | null
+    followsStatus: TStatus
+
+    reviews: IReview[] | null
+    reviewsPagination: IPagination | null
+    reviewsStatus: TStatus
+
     userList: IUser[] | null
     userListStatus: TStatus
     userListError: string | null

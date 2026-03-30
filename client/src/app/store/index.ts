@@ -7,7 +7,6 @@ import { AuthReducer } from "@/features/auth";
 import { generalReducer } from "@/features/general";
 import { searchReducer } from "@/features/search";
 import { homeReducer } from "@/features/home";
-import { ReviewReducer } from "@/features/review";
 
 const rootReducer = combineReducers({
     notification: notificationReducer,
@@ -18,7 +17,6 @@ const rootReducer = combineReducers({
     general: generalReducer,
     search: searchReducer,
     home: homeReducer,
-    review: ReviewReducer
 })
 
 export const store = configureStore({

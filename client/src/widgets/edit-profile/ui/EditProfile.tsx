@@ -27,9 +27,7 @@ export const EditProfile: FC<EditProfileProps> = ({ user, userStatus }) => {
         <div className={styles.wrapper}>
             <div className="container">
                 <LinksList links={links} />
-                {
-                    userStatus === 'success' && <EditProfileForm user={user} /> 
-                }
+                <EditProfileForm user={user} />
             </div>
         </div>
     )

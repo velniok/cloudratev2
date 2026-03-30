@@ -2,13 +2,18 @@ import { ITrack } from "@/entities/track"
 import { axios } from "@/shared/api"
 import { ITrackReq, ITrackUpdateReq } from "./trackApiTypes"
 import { IPagination } from "@/shared/types"
+import { IReview } from "@/entities/review"
 
-export const getTracksApi = (params: { page: number, limit: number }) => {
-    return axios.get<{ tracks: ITrack[], pagination: IPagination }>('/track/get', { params: { page: params.page, limit: params.limit }})
+export const getTrackListApi = (params: { page: number, limit: number }) => {
+    return axios.get<{ tracks: ITrack[], pagination: IPagination }>('/track/list', { params: { page: params.page, limit: params.limit }})
 }
 
-export const getOneTrackApi = (params: { trackId: number }) => {
-    return axios.get<{ track: ITrack }>(`/track/getOne/${params.trackId}`)
+export const getTrackProfileApi = (params: { trackId: number }) => {
+    return axios.get<{ track: ITrack }>(`/track/profile/${params.trackId}`)
+}
+
+export const getTrackReviewsTextApi = (params: { id: number, page: number, limit: number }) => {
+    return axios.get<{ reviews: IReview[], pagination: IPagination }>(`/track/reviews-text/${params.id}`, { params: { page: params.page, limit: params.limit } })
 }
 
 export const createTrackApi = (params: ITrackReq) => {

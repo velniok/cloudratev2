@@ -1,15 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteUserApi, getOneUser, getUsersApi, updateUserApi, updateUserRoleApi } from "../api/userApi";
+import { deleteUserApi, getUserFollowsApi, getUserListApi, getUserProfileApi, getUserReviewsApi, updateUserApi, updateUserRoleApi } from "../api/userApi";
 import axios from "axios";
 import type { IUserState } from "./userSliceTypes";
 import type { IUser } from "@/entities/user";
 import { IUpdateUserReq } from "../api/userApiTypes";
-import { IApiError } from "@/shared/types";
+import { IApiError, IPagination } from "@/shared/types";
+import { IArtist } from "@/entities/artist";
 import { IReview } from "@/entities/review";
 
-export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { username: string }, { rejectValue: IApiError }>('user/getOneUserThunk', async (params, { rejectWithValue }) => {
+export const getUserProfileThunk = createAsyncThunk<{ user: IUser }, { username: string }, { rejectValue: IApiError }>('user/getUserProfileThunk', async (params, { rejectWithValue }) => {
     try {
-        const { data } = await getOneUser(params)
+        const { data } = await getUserProfileApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -18,9 +19,31 @@ export const getOneUserThunk = createAsyncThunk<{ user: IUser }, { username: str
     }
 })
 
-export const getUsersThunk = createAsyncThunk<{ users: IUser[] }, void, { rejectValue: IApiError }>('user/getUsersThunk', async (_, { rejectWithValue }) => {
+export const getUserListThunk = createAsyncThunk<{ users: IUser[] }, void, { rejectValue: IApiError }>('user/getUserListThunk', async (_, { rejectWithValue }) => {
     try {
-        const { data } = await getUsersApi()
+        const { data } = await getUserListApi()
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
+    }
+})
+
+export const getUserFollowsThunk = createAsyncThunk<{ artists: IArtist[], pagination: IPagination }, { page: number, limit: number, id: number }, { rejectValue: IApiError }>('user/getUserFollowsThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await getUserFollowsApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
+    }
+})
+
+export const getUserReviewsThunk = createAsyncThunk<{ reviews: IReview[], pagination: IPagination }, { page: number, limit: number, id: number }, { rejectValue: IApiError }>('user/getUserReviewsThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await getUserReviewsApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -66,8 +89,18 @@ const initialState: IUserState = {
     user: null,
     userStatus: 'idle',
     userError: null,
+
     updateStatus: 'idle',
     updateError: null,
+
+    follows: null,
+    followsPagination: null,
+    followsStatus: 'idle',
+
+    reviews: null,
+    reviewsPagination: null,
+    reviewsStatus: 'idle',
+
     userList: null,
     userListStatus: 'idle',
     userListError: null
@@ -87,32 +120,62 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder 
-            .addCase(getOneUserThunk.pending, (state) => {
+            .addCase(getUserProfileThunk.pending, (state) => {
                 state.user = null,
                 state.userStatus = 'loading',
                 state.userError = null
             })
-            .addCase(getOneUserThunk.fulfilled, (state, action) => {
+            .addCase(getUserProfileThunk.fulfilled, (state, action) => {
                 state.user = action.payload.user,
                 state.userStatus = 'success'
             })
-            .addCase(getOneUserThunk.rejected, (state, action) => {
+            .addCase(getUserProfileThunk.rejected, (state, action) => {
                 state.userStatus = 'error',
                 state.userError = action.payload.message
             })
 
-            .addCase(getUsersThunk.pending, (state) => {
+            .addCase(getUserListThunk.pending, (state) => {
                 state.userList = null,
                 state.userListStatus = 'loading',
                 state.userListError = null
             })
-            .addCase(getUsersThunk.fulfilled, (state, action) => {
+            .addCase(getUserListThunk.fulfilled, (state, action) => {
                 state.userListStatus = 'success',
                 state.userList = action.payload.users
             })
-            .addCase(getUsersThunk.rejected, (state, action) => {
+            .addCase(getUserListThunk.rejected, (state, action) => {
                 state.userListStatus = 'error',
                 state.userListError = action.payload.message
+            })
+
+            .addCase(getUserFollowsThunk.pending, (state) => {
+                state.follows = null,
+                state.followsStatus = 'loading',
+                state.followsPagination = null
+            })
+            .addCase(getUserFollowsThunk.fulfilled, (state, action) => {
+                state.followsStatus = 'success',
+                state.follows = action.payload.artists
+                state.followsPagination = action.payload.pagination
+            })
+            .addCase(getUserFollowsThunk.rejected, (state, action) => {
+                state.followsStatus = 'error',
+                state.userError = action.payload.message
+            })
+
+            .addCase(getUserReviewsThunk.pending, (state) => {
+                state.reviews = null,
+                state.reviewsStatus = 'loading',
+                state.reviewsPagination = null
+            })
+            .addCase(getUserReviewsThunk.fulfilled, (state, action) => {
+                state.reviewsStatus = 'success',
+                state.reviews = action.payload.reviews
+                state.reviewsPagination = action.payload.pagination
+            })
+            .addCase(getUserReviewsThunk.rejected, (state, action) => {
+                state.reviewsStatus = 'error',
+                state.userError = action.payload.message
             })
 
             .addCase(updateUserThunk.pending, (state) => {

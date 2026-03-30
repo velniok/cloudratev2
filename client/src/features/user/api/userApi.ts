@@ -1,14 +1,24 @@
 import type { IUser } from "@/entities/user"
 import { axios } from "@/shared/api"
 import { IUpdateUserReq } from "./userApiTypes"
+import { IArtist } from "@/entities/artist"
+import { IPagination } from "@/shared/types"
 import { IReview } from "@/entities/review"
 
-export const getOneUser = (params: { username: string }) => {
-    return axios.get<{ user: IUser }>(`/user/getOne/${params.username}`)
+export const getUserProfileApi = (params: { username: string }) => {
+    return axios.get<{ user: IUser }>(`/user/profile/${params.username}`)
 }
 
-export const getUsersApi = () => {
-    return axios.get<{ users: IUser[] }>('/user/get')
+export const getUserListApi = () => {
+    return axios.get<{ users: IUser[] }>('/user/list')
+}
+
+export const getUserReviewsApi = (params: { page: number, limit: number, id: number }) => {
+    return axios.get<{ reviews: IReview[], pagination: IPagination }>(`/user/reviews/${params.id}`, { params: { page: params.page, limit: params.limit } })
+}
+
+export const getUserFollowsApi = (params: { page: number, limit: number, id: number }) => {
+    return axios.get<{ artists: IArtist[], pagination: IPagination }>(`/user/follows/${params.id}`, { params: { page: params.page, limit: params.limit }})
 }
 
 export const updateUserApi = (params: IUpdateUserReq) => {
@@ -16,7 +26,7 @@ export const updateUserApi = (params: IUpdateUserReq) => {
 }
 
 export const updateUserRoleApi = (params: { id: number, role: 'admin' | 'user' }) => {
-    return axios.patch(`/user/updateRole/${params.id}`, { role: params.role })
+    return axios.patch(`/user/update-role/${params.id}`, { role: params.role })
 }
 
 export const deleteUserApi = (params: { id: number }) => {

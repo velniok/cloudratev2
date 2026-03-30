@@ -1,27 +1,37 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import styles from './UserFollows.module.scss'
 import { IUser } from '@/entities/user'
-import { TStatus } from '@/shared/types'
 import { Slider, Title } from '@/shared/ui'
 import { ArtistCard, ArtistCardSkeleton } from '@/entities/artist'
+import { useAppDispatch, useAppSelector } from '@/shared/lib'
+import { getUserFollowsThunk } from '@/features/user/model/slice'
+import { selectUserFollows, selectUserFollowsStatus } from '@/features/user/model/selectors'
 
 interface UserFollowsProps {
     user: IUser
-    userStatus: TStatus
 }
 
-export const UserFollows: FC<UserFollowsProps> = ({ user, userStatus }) => {
+export const UserFollows: FC<UserFollowsProps> = ({ user }) => {
+
+    const dispatch = useAppDispatch()
+    const follows = useAppSelector(selectUserFollows)
+    const followsStatus = useAppSelector(selectUserFollowsStatus)
+
+    useEffect(() => {
+        dispatch(getUserFollowsThunk({ page: 1, limit: 15, id: user.id }))
+    }, [user])
+
     return (
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>ПОДПИСКИ</Title>
                 <Slider>
                     {
-                        userStatus === 'success' ?
+                        followsStatus === 'success' ?
                         <>
                         {
-                            user.follows?.length > 0 ?
-                            user.follows.map((artist) => {
+                            follows.length > 0 ?
+                            follows.map((artist) => {
                                 return <ArtistCard artist={artist} key={artist.id} />
                             })
                             :

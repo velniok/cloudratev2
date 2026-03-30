@@ -41,7 +41,7 @@ class ReviewServices {
         return mapToCamelCase(newReviewRes.rows[0])
     }
 
-    async getReviewsByTrackId(trackId, userId) {
+    async getReviewsByTrack(trackId, userId) {
         const reviewsRes = await pool.query(`
             SELECT
                 r.*,
@@ -58,7 +58,7 @@ class ReviewServices {
         return reviewsRes.rows.map(mapToCamelCase)
     }
 
-    async getReviewsByTrackIdWithText(page, limit, trackId, userId) {
+    async getReviewsTextByTrack(page, limit, trackId, userId) {
         const offset = (+page - 1) * +limit
         const [reviewsRes, countRes] = await Promise.all([            
             pool.query(`
@@ -106,7 +106,7 @@ class ReviewServices {
         return reviewsRes.rows.map(mapToCamelCase)
     }
 
-    async getReviewsByUserPagination(limit, page, userId) {
+    async getReviewsByUser(limit, page, userId) {
         const offset = (+page - 1) * +limit
         const [reviewsRes, countRes] = await Promise.all([
             pool.query(`
@@ -151,7 +151,7 @@ class ReviewServices {
         return reviewsRes.rows.map(mapToCamelCase)
     }
 
-    async addTextReviewById(id, text) {
+    async addTextReview(id, text) {
         await pool.query(`
             UPDATE reviews
             SET text = $1
@@ -159,7 +159,7 @@ class ReviewServices {
         `, [text, id])
     }
 
-    async toggleLikeReview(reviewId, userId) {
+    async toggleLike(reviewId, userId) {
         return await pool.query(`
             WITH deleted AS (
                 DELETE FROM review_likes

@@ -10,6 +10,6 @@ export interface IUser {
     username: string
     email: string
     avatarUrl: string | null
-    reviews: IReview[]
-    follows: IArtist[]
+    reviewsCount: number
+    reviewsTextCount: number
 }

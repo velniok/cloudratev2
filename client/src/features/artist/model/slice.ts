@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createArtistApi, deleteArtistApi, getArtistListApi, getArtistTracksApi, getOneArtistApi, toggleFollowApi, updateArtistApi } from "../api/artistApi";
+import { createArtistApi, deleteArtistApi, getArtistListApi, getArtistProfileApi, getArtistTracksApi, toggleFollowApi, updateArtistApi } from "../api/artistApi";
 import type { IArtist } from "@/entities/artist";
 import axios from "axios";
 import type { IArtistState } from "./artistSliceTypes";
@@ -29,9 +29,9 @@ export const createArtistThunk = createAsyncThunk<{ artist: IArtist }, IArtistRe
     }
 })
 
-export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number }, { rejectValue: IApiError }>('/artist/getOneArtistThunk', async (params, { rejectWithValue }) => {
+export const getArtistProfileThunk = createAsyncThunk<{artist: IArtist}, { id: number }, { rejectValue: IApiError }>('/artist/getArtistProfileThunk', async (params, { rejectWithValue }) => {
     try {
-        const { data } = await getOneArtistApi(params)
+        const { data } = await getArtistProfileApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -124,16 +124,16 @@ const artistSlice = createSlice({
         })
 
         
-        .addCase(getOneArtistThunk.pending, (state) => {
+        .addCase(getArtistProfileThunk.pending, (state) => {
             state.artist = null,
             state.artistStatus = 'loading',
             state.artistError = null
         })
-        .addCase(getOneArtistThunk.fulfilled, (state, action) => {
+        .addCase(getArtistProfileThunk.fulfilled, (state, action) => {
             state.artist = action.payload.artist,
             state.artistStatus = 'success'
         })
-        .addCase(getOneArtistThunk.rejected, (state, action) => {
+        .addCase(getArtistProfileThunk.rejected, (state, action) => {
             state.artist = null,
             state.artistStatus = 'error',
             state.artistError = action.payload.message

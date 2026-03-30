@@ -4,12 +4,13 @@ const AppError = require('../utils/AppError')
 const { validationResult } = require('express-validator')
 const pool = require("../config/db")
 const UserDto = require("../dtos/UserDto")
+const ArtistServices = require("../services/ArtistServices")
 
 class UserControllers {
 
-    async getAll(req, res, next) {
+    async getList(req, res, next) {
         try {
-            const users = await UserServices.getAllUsers()
+            const users = await UserServices.getUserList()
 
             res.status(200).json({users})
         } catch (err) {
@@ -18,13 +19,11 @@ class UserControllers {
         }
     }
 
-    async getOne(req, res, next) {
+    async getProfile(req, res, next) {
         try {
             const username = req.params.userId
             const user = await UserServices.getUserByUsername(username)
             if (!user) throw new AppError('Пользователь не найден', 404)
-
-            user.reviews = await ReviewServices.getReviewsByUserId(user.id)
 
             res.status(200).json({ user })
         } catch (err) {
@@ -33,12 +32,12 @@ class UserControllers {
         }
     }
 
-    async getUserReviews(req, res, next) {
+    async getReviews(req, res, next) {
         try {
             const userId = req.params.userId
             const { limit, page } = req.query
 
-            const {reviews, total} = await ReviewServices.getReviewsByUserPagination(limit, page, userId)
+            const {reviews, total} = await ReviewServices.getReviewsByUser(limit, page, userId)
             res.status(200).json({
                 reviews,
                 pagination: {
@@ -47,6 +46,27 @@ class UserControllers {
                     total,
                     totalPages: Math.ceil(total / limit)
                 } })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async getFollows(req, res, next) {
+        try {
+            const userId = req.params.userId
+            const { page, limit } = req.query
+            const { artists, total } = await ArtistServices.getArtistsByUser(page, limit, userId)
+
+            res.status(200).json({
+                artists,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)
@@ -62,14 +82,15 @@ class UserControllers {
             const { nickname, username, email, avatarUrl, password } = req.body
 
             if (password) {
-                await UserServices.updateUserPasswordById(userId, password)
+                await UserServices.updateUserPassword(userId, password)
             }
 
-            const updatedUser = await UserServices.updateUserById(userId, [email, nickname, username, avatarUrl])
+            const updatedUser = await UserServices.updateUser(userId, [email, nickname, username, avatarUrl])
             if (updatedUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
+            if (updatedUser.status === 'username_taken') throw new AppError('Уникальный никнейм занят', 409, 'username')
             const user = updatedUser.user
             const userDto = new UserDto(user)
-            const reviews = await ReviewServices.getReviewsByUserId(userId)
+            const reviews = await ReviewServices.getReviewsByUser(userId)
 
             res.status(200).json({ user: { ...userDto, reviews } })
         } catch (err) {
@@ -99,7 +120,7 @@ class UserControllers {
     async delete(req, res, next) {
         try {
             const userId = req.params.userId
-            await UserServices.deleteUserById(userId)
+            await UserServices.deleteUser(userId)
 
             res.status(200).json({ message: 'Пользователь удален' })
         } catch (err) {

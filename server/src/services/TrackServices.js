@@ -44,7 +44,7 @@ class TrackServices {
         return mapToCamelCase(newTrackRes.rows[0])
     }
 
-    async getTracksPagination(page, limit) {
+    async getTrackList(page, limit) {
         const offset = (+page - 1) * +limit
         const [tracksRes, countRes] = await Promise.all([
             pool.query(`
@@ -75,7 +75,7 @@ class TrackServices {
         }
     }
 
-    async getTracksPaginationByArtist(page, limit, artistId) {
+    async getTracksByArtist(page, limit, artistId) {
         const offset = (+page - 1) * +limit
         const [tracksRes, countRes] = await Promise.all([
             pool.query(`
@@ -139,7 +139,7 @@ class TrackServices {
         return tracksRes.rows.map(mapToCamelCase)
     }
 
-    async getTrackById(id) {
+    async getTrack(id) {
         const trackRes = await pool.query(`
             SELECT
                 t.*,
@@ -175,7 +175,7 @@ class TrackServices {
         return mapToCamelCase(trackRes.rows[0])
     }
 
-    async updateTrackById(id, values) {
+    async updateTrack(id, values) {
         const trackRes = await pool.query(`
             WITH
                 track_check AS (
@@ -205,7 +205,7 @@ class TrackServices {
         return mapToCamelCase(trackRes.rows[0])
     }
 
-    async deleteTrackById(id) {
+    async deleteTrack(id) {
         await pool.query(`
             DELETE
             FROM tracks

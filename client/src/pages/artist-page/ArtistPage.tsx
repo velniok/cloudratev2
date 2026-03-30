@@ -1,4 +1,4 @@
-import { getOneArtistThunk, selectArtist, selectArtistStatus } from "@/features/artist"
+import { getArtistProfileThunk, selectArtist, selectArtistStatus } from "@/features/artist"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { Loading } from "@/shared/ui"
 import { ArtistHeader } from "@/widgets/artist-header"
@@ -15,7 +15,7 @@ export const ArtistPage = () => {
     const artistStatus = useAppSelector(selectArtistStatus)
 
     useEffect(() => {
-        dispatch(getOneArtistThunk({ id: Number(id) }))
+        dispatch(getArtistProfileThunk({ id: Number(id) }))
     }, [id])
 
     return (

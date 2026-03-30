@@ -3,7 +3,7 @@ import styles from './AdminTracks.module.scss'
 import { FC, useEffect, useState } from 'react'
 import { ITrack } from '@/entities/track'
 import { IPagination, TStatus } from '@/shared/types'
-import { getTracksThunk, TrackCreateForm, TrackDeleteModal, TrackUpdateForm } from '@/features/track'
+import { getTrackListThunk, TrackCreateForm, TrackDeleteModal, TrackUpdateForm } from '@/features/track'
 import { usePagination, useSearch } from '@/shared/lib'
 
 interface AdminTracksProps {
@@ -15,7 +15,7 @@ interface AdminTracksProps {
 export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, trackListPagination }) => {
 
     const { result, resultStatus, search, onChangeSearch } = useSearch('tracks')
-    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getTracksThunk, '/admin/tracks', 10)
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getTrackListThunk, '/admin/tracks', 10)
 
     useEffect(() => {
         if (!result || search === '') {

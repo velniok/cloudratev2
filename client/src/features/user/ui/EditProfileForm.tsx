@@ -102,7 +102,10 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 setUpdateUserLoading(false)
                 navigate(`/user/${user.username}`)
             })
-            .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))
+            .catch((err: IApiError) => {
+                setErrors(prev => ({ ...prev, [err.field]: err.message }))
+                setUpdateUserLoading(false)
+            })
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {

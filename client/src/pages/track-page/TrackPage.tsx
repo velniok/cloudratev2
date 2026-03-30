@@ -1,4 +1,4 @@
-import { getOneTrackThunk, selectTrack, selectTrackStatus } from "@/features/track"
+import { getTrackProfileThunk, selectTrack, selectTrackStatus } from "@/features/track"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { Loading } from "@/shared/ui"
 import { TrackGrade } from "@/widgets/track-grade"
@@ -15,7 +15,7 @@ export const TrackPage = () => {
     const trackStatus = useAppSelector(selectTrackStatus)
 
     useEffect(() => {
-        dispatch(getOneTrackThunk({ trackId: Number(id) }))
+        dispatch(getTrackProfileThunk({ trackId: Number(id) }))
     }, [id])
 
     return (

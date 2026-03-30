@@ -3,8 +3,8 @@ import styles from './UserReviews.module.scss'
 import { FC } from 'react'
 import { IUser } from '@/entities/user'
 import { useAppSelector, usePagination } from '@/shared/lib'
-import { getUserReviewsThunk, selectReviewList, selectReviewListPagination, selectReviewListStatus } from '@/features/review'
 import { TrackCard, TrackCardSekelton } from '@/entities/track'
+import { getUserReviewsThunk, selectUserReviews, selectUserReviewsPagination, selectUserReviewsStatus } from '@/features/user'
 
 interface UserReviewsProps {
     user: IUser
@@ -13,9 +13,9 @@ interface UserReviewsProps {
 export const UserReviews: FC<UserReviewsProps> = ({ user }) => {
 
     const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getUserReviewsThunk, `/user/${user.username}/reviews`, 10, user.id)
-    const reviewList = useAppSelector(selectReviewList)
-    const reviewListPagination = useAppSelector(selectReviewListPagination)
-    const reviewListStatus = useAppSelector(selectReviewListStatus)
+    const reviewList = useAppSelector(selectUserReviews)
+    const reviewListPagination = useAppSelector(selectUserReviewsPagination)
+    const reviewListStatus = useAppSelector(selectUserReviewsStatus)
 
     const links = [
         {
@@ -62,9 +62,13 @@ export const UserReviews: FC<UserReviewsProps> = ({ user }) => {
                         }
                         </>
                         :
-                        Array.from({ length: 10 }).map((_, index) => {
-                            return <TrackCardSekelton key={index} />
-                        })
+                        <ul className={styles.list}>
+                            {
+                                Array.from({ length: 10 }).map((_, index) => {
+                                    return <TrackCardSekelton key={index} />
+                                })
+                            }
+                        </ul>
                     }
             </div>
         </div>

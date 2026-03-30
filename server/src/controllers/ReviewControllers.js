@@ -28,34 +28,12 @@ class ReviewControllers {
         }
     }
 
-    async getReviewsWithText(req, res, next) {
-        try {
-            const { trackId } = req.params
-            const { page, limit } = req.query
-            const userId = req.userId
-
-            const { reviews, total } = await ReviewServices.getReviewsByTrackIdWithText(page, limit, trackId, userId)
-            res.status(200).json({
-                reviews,
-                pagination: {
-                    page,
-                    limit,
-                    total,
-                    totalPages: Math.ceil(total / limit)
-                }
-            })
-        } catch (err) {
-            console.log(err)
-            next(err)
-        }
-    }
-
     async addText(req, res, next) {
         try {
             const reviewId = req.params.id
             const { text } = req.body
 
-            await ReviewServices.addTextReviewById(reviewId, text)
+            await ReviewServices.addTextReview(reviewId, text)
 
             res.status(200).json({ message: 'Отзыв к оценке успешно добавлен' })
         } catch (err) {
@@ -67,7 +45,7 @@ class ReviewControllers {
     async toggleLike(req, res, next) {
         try {
             const { reviewId, userId } = req.body
-            const result = await ReviewServices.toggleLikeReview(reviewId, userId)
+            const result = await ReviewServices.toggleLike(reviewId, userId)
 
             res.status(200).json({ liked: !!result.rows[0] })
         } catch (err) {

@@ -34,7 +34,7 @@ class ArtistServices {
         return mapToCamelCase(newArtistRes.rows[0])
     }
 
-    async getArtistsPagination(limit, page) {
+    async getArtistList(limit, page) {
         const offset = (+page - 1) * +limit
         const [artistsRes, countRes] = await Promise.all([
             pool.query(`
@@ -63,7 +63,7 @@ class ArtistServices {
         }
     }
 
-    async getArtistById(id, userId) {
+    async getArtist(id, userId) {
             const [artistRes, followRes, tracksRes] = await Promise.all([
                 pool.query(`
                     WITH artist_top_tracks AS (
@@ -157,7 +157,7 @@ class ArtistServices {
             }
     }
 
-    async updateArtistById(id, values) {
+    async updateArtist(id, values) {
         const artistRes = await pool.query(`
             WITH
                 artist_check AS (
@@ -186,16 +186,28 @@ class ArtistServices {
         return mapToCamelCase(artistRes.rows[0])
     }
 
-    async searchArtistsByName(search) {
-        const artistsRes = await pool.query(`
-            SELECT *
-            FROM artists
-            WHERE
-                REPLACE(LOWER(name), 'ё', 'е')
-            ILIKE
-                REPLACE(LOWER($1), 'ё', 'е')
-        `, [`%${search}%`])
-        return artistsRes.rows.map(mapToCamelCase)
+    async getArtistsByUser(page, limit, userId) {
+        const offset = (+page - 1) * +limit
+        const [artistsRes, countRes] = await Promise.all([
+            pool.query(`
+                SELECT *
+                FROM artists a
+                JOIN artist_follows af ON af.artist_id = a.id
+                WHERE af.user_id = $3
+                LIMIT $1
+                OFFSET $2
+            `, [limit, offset, userId]),
+            pool.query(`
+                SELECT COUNT(*)::int AS total
+                FROM artists a
+                JOIN artist_follows af ON af.artist_id = a.id
+                WHERE af.user_id = $1
+            `, [userId])
+        ])
+        return {
+            artists: artistsRes.rows.map(mapToCamelCase),
+            total: countRes.rows[0].total,
+        }
     }
 
     async toggleFollow(artistId, userId) {
@@ -212,7 +224,7 @@ class ArtistServices {
         `, [artistId, userId])
     }
 
-    async deleteArtistById(id) {
+    async deleteArtist(id) {
         await pool.query(`
             DELETE
             FROM artists

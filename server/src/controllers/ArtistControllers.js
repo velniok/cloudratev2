@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator")
 const ArtistServices = require("../services/ArtistServices")
 const AppError = require('../utils/AppError')
+const TrackServices = require("../services/TrackServices")
 
 class ArtistControllers {
     async create(req, res, next) {
@@ -20,10 +21,10 @@ class ArtistControllers {
         }
     }
 
-    async get(req, res, next) {
+    async getList(req, res, next) {
         try {
             const { limit, page } = req.query
-            const { artists, total } = await ArtistServices.getArtistsPagination(limit, page)
+            const { artists, total } = await ArtistServices.getArtistList(limit, page)
             
             res.status(200).json({
                 artists,
@@ -40,14 +41,35 @@ class ArtistControllers {
         }
     }
  
-    async getOne(req, res, next) {
+    async getProfile(req, res, next) {
         try {
             const artistId = req.params.id
             const userId = req.userId
-            const { artist, follow, tracks } = await ArtistServices.getArtistById(artistId, userId)
+            const { artist, follow, tracks } = await ArtistServices.getArtist(artistId, userId)
             artist.follow = follow
 
             res.status(200).json({ artist })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async getTracks(req, res, next) {
+        try {
+            const artistId = req.params.id
+            const { page, limit } = req.query
+            const { tracks, total } = await TrackServices.getTracksByArtist(page, limit, artistId)
+
+            res.status(200).json({
+                tracks,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)
@@ -61,7 +83,7 @@ class ArtistControllers {
 
             const artistId = req.params.id
             const { name, avatarUrl, soundcloudUrl } = req.body
-            const artistUpdated = await ArtistServices.updateArtistById(artistId, [name, avatarUrl, soundcloudUrl])
+            const artistUpdated = await ArtistServices.updateArtist(artistId, [name, avatarUrl, soundcloudUrl])
             if (artistUpdated.status === 'artist_taken') throw new AppError('Артист уже существует', 405, 'name')
             const artist = artistUpdated.artist
 
@@ -87,7 +109,7 @@ class ArtistControllers {
     async delete(req, res, next) {
         try {
             const artistId = req.params.id
-            await ArtistServices.deleteArtistById(artistId)
+            await ArtistServices.deleteArtist(artistId)
 
             res.status(200).json({ message: 'Артист удален' })
         } catch (err) {

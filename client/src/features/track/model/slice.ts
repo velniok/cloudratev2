@@ -1,16 +1,16 @@
 import { ITrack } from "@/entities/track";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { createTrackApi, deleteTrackApi, getOneTrackApi, getTracksApi, updateTrackApi } from "../api/trackApi";
+import { createTrackApi, deleteTrackApi, getTrackListApi, getTrackProfileApi, getTrackReviewsTextApi, updateTrackApi } from "../api/trackApi";
 import { ITrackState } from "./trackSliceTypes";
 import { ITrackReq, ITrackUpdateReq } from "../api/trackApiTypes";
 import { IApiError, IPagination } from "@/shared/types";
-import { getTrackReviewsTextApi, toggleLikeApi } from "@/features/review";
 import { IReview } from "@/entities/review";
+import { toggleLikeReviewApi } from "@/features/review";
 
-export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, { page: number, limit: number }, { rejectValue: IApiError }>('/track/getTracksThunk', async (params, { rejectWithValue }) => {
+export const getTrackListThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, { page: number, limit: number }, { rejectValue: IApiError }>('/track/getTrackListThunk', async (params, { rejectWithValue }) => {
     try {
-        const { data } = await getTracksApi(params)
+        const { data } = await getTrackListApi(params)
         return data
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
@@ -19,9 +19,9 @@ export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: I
     }
 })
 
-export const getOneTrackThunk = createAsyncThunk<{ track: ITrack }, { trackId: number }, { rejectValue: IApiError }>('/track/getOneTrackThunk', async (params, { rejectWithValue }) => {
+export const getTrackProfileThunk = createAsyncThunk<{ track: ITrack }, { trackId: number }, { rejectValue: IApiError }>('/track/getTrackProfileThunk', async (params, { rejectWithValue }) => {
     try {
-        const { data } = await getOneTrackApi(params)
+        const { data } = await getTrackProfileApi(params)
         return data
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
@@ -65,7 +65,7 @@ export const updateTrackThunk = createAsyncThunk<{ track: ITrack }, ITrackUpdate
 
 export const toggleLikeReviewThunk = createAsyncThunk<{ liked: boolean }, { reviewId: number, userId: number }, { rejectValue: IApiError }>('/track/toggleLikeReview', async (params, { rejectWithValue }) => {
     try {
-        const { data } = await toggleLikeApi(params)
+        const { data } = await toggleLikeReviewApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -106,34 +106,34 @@ const trackSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(getTracksThunk.pending, (state) => {
+            .addCase(getTrackListThunk.pending, (state) => {
                 state.trackList = null,
                 state.trackListPagination = null,
                 state.trackListStatus = 'loading',
                 state.trackListError = null
             })
-            .addCase(getTracksThunk.fulfilled, (state, action) => {
+            .addCase(getTrackListThunk.fulfilled, (state, action) => {
                 state.trackList = action.payload.tracks
                 if (action.payload.pagination) {
                     state.trackListPagination = action.payload.pagination
                 }
                 state.trackListStatus = 'success'
             })
-            .addCase(getTracksThunk.rejected, (state, action) => {
+            .addCase(getTrackListThunk.rejected, (state, action) => {
                 state.trackListStatus = 'error',
                 state.trackListError = action.payload.message
             })
 
-            .addCase(getOneTrackThunk.pending, (state) => {
+            .addCase(getTrackProfileThunk.pending, (state) => {
                 state.track = null,
                 state.trackStatus = 'loading',
                 state.trackError = null
             })
-            .addCase(getOneTrackThunk.fulfilled, (state, action) => {
+            .addCase(getTrackProfileThunk.fulfilled, (state, action) => {
                 state.track = action.payload.track
                 state.trackStatus = 'success'
             })
-            .addCase(getOneTrackThunk.rejected, (state, action) => {
+            .addCase(getTrackProfileThunk.rejected, (state, action) => {
                 state.trackStatus = 'error',
                 state.trackError = action.payload.message
             })

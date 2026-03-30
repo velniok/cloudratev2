@@ -1,13 +1,11 @@
-import { Button, InputRange, Rating } from '@/shared/ui'
-import styles from './ReviewCreate.module.scss'
 import { addTextReviewApi, createReviewApi } from '../api/reviewApi'
-import { ChangeEvent, FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import { useAppDispatch, useAppSelector, useNotification } from '@/shared/lib'
 import { selectAuthUser } from '@/features/auth'
 import { ITrack } from '@/entities/track'
-import { getOneTrackThunk } from '@/features/track'
 import { IReview, LeavedReview, LeaveReview } from '@/entities/review'
 import { IReviewReq } from '../api/reviewApiTypes'
+import { getTrackProfileThunk } from '@/features/track'
 
 interface ReviewCreateProps {
     track: ITrack
@@ -32,7 +30,7 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
         await createReviewApi(req)
             .then(() => {
                 notify('Трек оценён', 'Вы успешно оставили оценку', 'success')
-                dispatch(getOneTrackThunk({ trackId: track.id }))
+                dispatch(getTrackProfileThunk({ trackId: track.id }))
                 setCreateReviewLoading(false)
             })
     }
@@ -46,7 +44,7 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
         await addTextReviewApi(req)
             .then(() => {
                 notify('Отзыв оставлен', 'Вы успешно оставили отзыв к оценке', 'success')
-                dispatch(getOneTrackThunk({ trackId: track.id }))
+                dispatch(getTrackProfileThunk({ trackId: track.id }))
                 setCreateReviewLoading(false)
             })
     }

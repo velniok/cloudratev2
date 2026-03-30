@@ -21,31 +21,10 @@ class TrackControllers {
         }
     }
 
-    async get(req, res, next) {
+    async getList(req, res, next) {
         try {
             const { page, limit } = req.query
-            const { tracks, total } = await TrackServices.getTracksPagination(page, limit)
-
-            res.status(200).json({
-                tracks,
-                pagination: {
-                    page,
-                    limit,
-                    total,
-                    totalPages: Math.ceil(total / limit)
-                }
-            })
-        } catch (err) {
-            console.log(err)
-            next(err)
-        }
-    }
-
-    async getTracksByArtist(req, res, next) {
-        try {
-            const artistId = req.params.artistId
-            const { page, limit } = req.query
-            const { tracks, total } = await TrackServices.getTracksPaginationByArtist(page, limit, artistId)
+            const { tracks, total } = await TrackServices.getTrackList(page, limit)
 
             res.status(200).json({
                 tracks,
@@ -73,14 +52,36 @@ class TrackControllers {
         }
     }
 
-    async getOne(req, res, next) {
+    async getProfile(req, res, next) {
         try {
             const trackId = req.params.id
             const userId = req.userId
-            const track = await TrackServices.getTrackById(trackId)
-            track.reviews = await ReviewServices.getReviewsByTrackId(trackId, userId)
+            const track = await TrackServices.getTrack(trackId)
+            track.reviews = await ReviewServices.getReviewsByTrack(trackId, userId)
 
             res.status(200).json({ track })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async getReviewsText(req, res, next) {
+        try {
+            const trackId = req.params.id
+            const { page, limit } = req.query
+            const userId = req.userId
+
+            const { reviews, total } = await ReviewServices.getReviewsTextByTrack(page, limit, trackId, userId)
+            res.status(200).json({
+                reviews,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)
@@ -95,7 +96,7 @@ class TrackControllers {
             const trackId = req.params.id
             const { title, coverUrl, soundcloudUrl, releaseData } = req.body
 
-            const trackUpdate = await TrackServices.updateTrackById(trackId, [title, coverUrl, soundcloudUrl, releaseData])
+            const trackUpdate = await TrackServices.updateTrack(trackId, [title, coverUrl, soundcloudUrl, releaseData])
             if (trackUpdate.status === 'track_taken') throw new AppError(`Название трека уже занято`, 409, `title`)
             const track = trackUpdate.track
 
@@ -109,7 +110,7 @@ class TrackControllers {
     async delete(req, res, next) {
         try {
             const trackId = req.params.id
-            await TrackServices.deleteTrackById(trackId)
+            await TrackServices.deleteTrack(trackId)
 
             res.status(200).json({ message: 'Трек успешно удален' })
         } catch (err) {

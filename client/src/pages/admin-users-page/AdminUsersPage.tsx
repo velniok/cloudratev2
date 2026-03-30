@@ -1,4 +1,4 @@
-import { getUsersThunk } from "@/features/user"
+import { getUserListThunk } from "@/features/user"
 import { selectUserList, selectUserListStatus } from "@/features/user/model/selectors"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { AdminUsers } from "@/widgets/admin-users"
@@ -15,7 +15,7 @@ export const AdminUsersPage: FC<AdminUsersPageProps> = ({ role }) => {
     const userListStatus = useAppSelector(selectUserListStatus)
 
     useEffect(() => {
-        dispatch(getUsersThunk())
+        dispatch(getUserListThunk())
     }, [])
 
     return (

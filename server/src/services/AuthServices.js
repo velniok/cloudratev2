@@ -5,7 +5,7 @@ const AppError = require('../utils/AppError');
 require('dotenv').config()
 
 class AuthServices {
-    async registerUser(password, values, verifyCode) {
+    async register(password, values, verifyCode) {
         const salt = await bcrypt.genSalt(10)
         const hashPassword = await bcrypt.hash(password, salt)
 
@@ -46,7 +46,7 @@ class AuthServices {
         return mapToCamelCase(newUserRes.rows[0])
     }
 
-    async loginUser(email) {
+    async login(email) {
         const userRes = await pool.query(`
             SELECT *
             FROM users
@@ -55,7 +55,7 @@ class AuthServices {
         return mapToCamelCase(userRes.rows[0])
     }
 
-    async authUser(id) {
+    async auth(id) {
         const userRes = await pool.query(`
             SELECT *
             FROM users

@@ -5,7 +5,6 @@ const AppError = require('../utils/AppError');
 const MailServices = require('../services/MailServices');
 const TokenServices = require('../services/TokenServices');
 const UserDto = require('../dtos/UserDto');
-const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 class AuthControllers {
@@ -30,7 +29,7 @@ class AuthControllers {
 
             const { nickname, email, password, verifyCode } = req.body
 
-            const createdUser = await AuthServices.registerUser(password, [email, nickname], verifyCode)
+            const createdUser = await AuthServices.register(password, [email, nickname], verifyCode)
             if (createdUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
             const user = createdUser.user
             const userDto = new UserDto(user)
@@ -54,7 +53,7 @@ class AuthControllers {
         try {
             const { email, password } = req.body
 
-            const user = await AuthServices.loginUser(email)
+            const user = await AuthServices.login(email)
             if (!user) throw new AppError('Неправильный email или пароль', 401)
 
             const isValidPassword = await bcrypt.compare(password, user.password)
@@ -86,7 +85,7 @@ class AuthControllers {
             const decoded = TokenServices.validateRefreshToken(refreshToken)
             if (!decoded) throw new AppError('Сессия устарела, авторизуйтесь заново', 401)
 
-            const user = await AuthServices.authUser(decoded.id)
+            const user = await AuthServices.auth(decoded.id)
             if (!user) throw new AppError('Пользователь не найден', 404)
             const userDto = new UserDto(user)
 
