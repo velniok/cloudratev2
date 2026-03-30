@@ -104,7 +104,7 @@ class TrackServices {
                     ) as avg_criterias
                 FROM tracks t
                 WHERE $3 = ANY(t.artist_ids)
-                ORDER BY id
+                ORDER BY t.release_data DESC
                 LIMIT $1
                 OFFSET $2
             `, [limit, offset, artistId]),

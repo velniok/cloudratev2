@@ -44,6 +44,14 @@ function App() {
         dispatch(authThunk())
     }, [])
 
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth"
+        });
+    }, [pathname])
+
     return (
         <div className="app-shell">
             <Header setSidebar={setSidebar} sidebar={sidebar} />

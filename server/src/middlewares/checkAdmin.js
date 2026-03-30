@@ -6,7 +6,7 @@ const checkAdmin = (req, res, next) => {
     try {
         const token = (req.headers.authorization || '').replace(/Bearer\s?/, '')
         if (!token) throw new AppError('Пользователь не авторизован', 401)
-        
+
         const decoded = TokenServices.validateAccessToken(token)
         if (!decoded) throw new AppError('Сессия устарела', 401)
         if (decoded.role !== 'admin') throw new AppError('Доступ запрещен', 403)

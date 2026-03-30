@@ -11,7 +11,7 @@ export const instance = axios.create({
 instance.interceptors.request.use((config) => {
     const token = store.getState().auth.token
     if (token) {
-        config.headers.Authorization = `${token}`
+        config.headers.Authorization = `Bearer ${token}`
     }
     return config
 })
@@ -26,9 +26,9 @@ instance.interceptors.response.use(
 
             try {
                 const { data } = await instance.get('/auth/refresh')
-                store.dispatch(setToken(data.accessToken))
+                store.dispatch(setToken(data.token))
     
-                original.headers.Authorization = `Bearer ${data.accessToken}`
+                original.headers.Authorization = `Bearer ${data.token}`
                 return instance(original)
             } catch (err) {
                 store.dispatch(logout())

@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .row {
     cursor: pointer;
     display: flex;
@@ -18,6 +20,7 @@
         display: flex;
         align-items: center;
         column-gap: 16px;
+        padding-right: 8px;
     }
 
     &__right {
@@ -28,6 +31,7 @@
 
     &__title {
         font-family: var(--second-family);
+        margin-bottom: 2px;
     }
 
     &__artist {
@@ -35,6 +39,7 @@
         &List {
             display: flex;
             column-gap: 4px;
+            flex-wrap: wrap;
         }
 
         &Item {

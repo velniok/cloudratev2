@@ -1,6 +1,7 @@
 import { getOneArtistThunk, selectArtist, selectArtistStatus } from "@/features/artist"
 import { selectAuthUser } from "@/features/auth"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
+import { Loading } from "@/shared/ui"
 import { ArtistHeader } from "@/widgets/artist-header"
 import { ArtistReleases } from "@/widgets/artist-releases"
 import { ArtistTopTracks } from "@/widgets/artist-top-tracks"
@@ -29,7 +30,7 @@ export const ArtistPage = () => {
                 <ArtistReleases artist={artist} artistStatus={artistStatus} />
             </>
             :
-            <>Загрузка...</>
+            <Loading />
         }
         </>
     )

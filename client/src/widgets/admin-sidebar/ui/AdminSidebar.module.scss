@@ -21,6 +21,7 @@
         width: 100%;
         overflow: hidden;
         height: calc(100dvh - 51px);
+        padding: 8px 0;
     }
 
     &.active {
@@ -59,6 +60,10 @@
 
 .nav {
     padding: 0 24px;
+
+    @media (max-width: $mobile) {
+        padding: 0 16px;
+    }
 
     &__title {
         margin-top: 24px;

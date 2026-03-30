@@ -3,7 +3,7 @@ import styles from './ArtistReleases.module.scss'
 import { FC } from 'react'
 import { IArtist } from '@/entities/artist'
 import { TStatus } from '@/shared/types'
-import { TrackRow } from '@/entities/track'
+import { TrackRow, TrackRowSkelton } from '@/entities/track'
 import { useAppSelector, usePagination } from '@/shared/lib'
 import { getArtistTracksThunk, selectArtistTracks, selectArtistTracksPagination, selectArtistTracksStatus } from '@/features/artist'
 
@@ -26,12 +26,20 @@ export const ArtistReleases: FC<ArtistReleasesProps> = ({ artist, artistStatus }
                 {
                     tracks?.length > 0 ?
                     <>
-                        <p className={styles.text}>Показано {((+tracksPagination?.page - 1) * limit) + 1}-{(limit * +tracksPagination?.page)} из {+tracksPagination?.total}</p>
                         <ul className={styles.list}>
                             {
-                                tracksStatus === 'success' &&
-                                tracks.map((track) => {
-                                    return <TrackRow key={track.id} track={track} />
+                                tracksStatus === 'success' ?
+                                <>
+                                <p className={styles.text}>Показано {((+tracksPagination?.page - 1) * limit) + 1}-{(limit * +tracksPagination?.page)} из {+tracksPagination?.total}</p>
+                                {
+                                    tracks.map((track) => {
+                                        return <TrackRow key={track.id} track={track} />
+                                    })
+                                }
+                                </>
+                                :
+                                Array.from({ length: 10 }).map((_, index) => {
+                                    return <TrackRowSkelton key={index} />
                                 })
                             }
                         </ul>

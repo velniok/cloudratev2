@@ -1,5 +1,6 @@
 import { getOneUserThunk, selectUser, selectUserStatus } from "@/features/user"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
+import { Loading } from "@/shared/ui"
 import { UserReviews } from "@/widgets/user-reviews"
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
@@ -22,6 +23,6 @@ export const UserReviewsPage = () => {
         userStatus === 'success' ?
         <UserReviews user={user} />
         :
-        <>Загрузка...</>
+        <Loading />
     )
 }
