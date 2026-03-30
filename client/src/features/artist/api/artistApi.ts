@@ -12,8 +12,8 @@ export const createArtistApi = (params: IArtistReq) => {
     return axios.post<{ artist: IArtist }>('/artist/create', params)
 }
 
-export const getOneArtistApi = (params: { id: number, userId: number }) => {
-    return axios.get<{ artist: IArtist }>(`/artist/getOne/${params.id}`, { params: { userId: params.userId } })
+export const getOneArtistApi = (params: { id: number }) => {
+    return axios.get<{ artist: IArtist }>(`/artist/getOne/${params.id}`)
 }
 
 export const getArtistTracksApi = (params: { page: number, limit: number, id: number }) => {

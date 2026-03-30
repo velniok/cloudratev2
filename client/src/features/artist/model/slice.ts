@@ -29,7 +29,7 @@ export const createArtistThunk = createAsyncThunk<{ artist: IArtist }, IArtistRe
     }
 })
 
-export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number, userId: number }, { rejectValue: IApiError }>('/artist/getOneArtistThunk', async (params, { rejectWithValue }) => {
+export const getOneArtistThunk = createAsyncThunk<{artist: IArtist}, { id: number }, { rejectValue: IApiError }>('/artist/getOneArtistThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getOneArtistApi(params)
         return data

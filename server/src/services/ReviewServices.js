@@ -58,6 +58,33 @@ class ReviewServices {
         return reviewsRes.rows.map(mapToCamelCase)
     }
 
+    async getReviewsByTrackIdWithText(page, limit, trackId, userId) {
+        const offset = (+page - 1) * +limit
+        const [reviewsRes, countRes] = await Promise.all([            
+            pool.query(`
+                SELECT
+                    r.*,
+                    row_to_json(u) as user,
+                    (SELECT COUNT(*) FROM review_likes rl WHERE rl.review_id = r.id) as likes_count,
+                    (SELECT EXISTS (
+                        SELECT 1 FROM review_likes rl2
+                        WHERE rl2.review_id = r.id AND rl2.user_id = $2
+                    )) as is_liked
+                FROM reviews r
+                JOIN users u ON r.user_id = u.id
+                WHERE track_id = $1 AND text != ''
+                ORDER BY created_at DESC
+                LIMIT $3
+                OFFSET $4
+            `, [trackId, userId, limit, offset]),
+            pool.query(`SELECT COUNT(*) AS total FROM reviews WHERE track_id = $1 AND text != ''`, [trackId])
+        ])
+        return {
+            reviews: reviewsRes.rows.map(mapToCamelCase),
+            total: countRes.rows[0].total,
+        }
+    }
+
     async getReviewsByUserId(id) {
         const reviewsRes = await pool.query(`
             SELECT

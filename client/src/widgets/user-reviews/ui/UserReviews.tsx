@@ -33,31 +33,39 @@ export const UserReviews: FC<UserReviewsProps> = ({ user }) => {
             <div className="container">
                 <LinksList links={links} />
                 <Title>Все оценки {user?.nickname}</Title>
-                <p className={styles.text}>Показано {((+reviewListPagination?.page - 1) * limit) + 1}-{(limit * +reviewListPagination?.page)} из {+reviewListPagination?.total}</p>
-                <ul className={styles.list}>
                     {
                         reviewListStatus === 'success' ?
-                        reviewList.map((review) => {
-                            return <TrackCard track={review.track} key={review.id} review={review} />
-                        })
+                        <>
+                        {
+                            reviewList.length > 0 ?
+                            <>
+                            <p className={styles.text}>Показано {((+reviewListPagination?.page - 1) * limit) + 1}-{(limit * +reviewListPagination?.page)} из {+reviewListPagination?.total}</p>
+                            <ul className={styles.list}>
+                            {
+                                reviewList.map((review) => {
+                                    return <TrackCard track={review.track} key={review.id} review={review} />
+                                })
+                            }
+                            </ul>
+                            <div className={styles.bottom}>
+                                <PaginationButtons
+                                    page={+reviewListPagination.page}
+                                    totalPages={reviewListPagination.totalPages}
+                                    hundleNextPage={hundleNextPage}
+                                    hundlePrevPage={hundlePrevPage}
+                                    hundlePage={hundlePage}
+                                />
+                            </div>
+                            </>
+                            :
+                            <>Этот пользователь еще не оценил трек</>
+                        }
+                        </>
                         :
                         Array.from({ length: 10 }).map((_, index) => {
                             return <TrackCardSekelton key={index} />
                         })
                     }
-                </ul>
-                <div className={styles.bottom}>
-                    {
-                        reviewListStatus === 'success' &&
-                        <PaginationButtons
-                            page={+reviewListPagination.page}
-                            totalPages={reviewListPagination.totalPages}
-                            hundleNextPage={hundleNextPage}
-                            hundlePrevPage={hundlePrevPage}
-                            hundlePage={hundlePage}
-                        />
-                    }
-                </div>
             </div>
         </div>
     )

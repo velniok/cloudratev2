@@ -53,7 +53,7 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
                                 <Rating>{track.avgRating}</Rating>
                                 <div className={styles.rating__info}>
                                     <p className={styles.rating__title}>СРЕДНИЙ БАЛЛ</p>
-                                    <p className={styles.rating__desc}>На основе {track.reviews.length} {pluralize(track.reviews.length, 'оценки', 'оценок', 'оценок')}</p>
+                                    <p className={styles.rating__desc}>На основе {track.reviewsCount} {pluralize(track.reviewsCount, 'оценки', 'оценок', 'оценок')}</p>
                                 </div>
                             </div>
                             <CriteriasPopup close={() => setCriterias(false)} position='bottom' show={criterias} avgCriterias={Object.values(track.avgCriterias)} />

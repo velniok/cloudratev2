@@ -5,7 +5,8 @@ import { createTrackApi, deleteTrackApi, getOneTrackApi, getTracksApi, updateTra
 import { ITrackState } from "./trackSliceTypes";
 import { ITrackReq, ITrackUpdateReq } from "../api/trackApiTypes";
 import { IApiError, IPagination } from "@/shared/types";
-import { toggleLikeApi } from "@/features/review";
+import { getTrackReviewsTextApi, toggleLikeApi } from "@/features/review";
+import { IReview } from "@/entities/review";
 
 export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, { page: number, limit: number }, { rejectValue: IApiError }>('/track/getTracksThunk', async (params, { rejectWithValue }) => {
     try {
@@ -18,9 +19,20 @@ export const getTracksThunk = createAsyncThunk<{ tracks: ITrack[], pagination: I
     }
 })
 
-export const getOneTrackThunk = createAsyncThunk<{ track: ITrack }, { trackId: number, userId: number }, { rejectValue: IApiError }>('/track/getOneTrackThunk', async (params, { rejectWithValue }) => {
+export const getOneTrackThunk = createAsyncThunk<{ track: ITrack }, { trackId: number }, { rejectValue: IApiError }>('/track/getOneTrackThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getOneTrackApi(params)
+        return data
+    } catch (err) {
+            if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
+    }
+})
+
+export const getTrackReviewsTextThunk = createAsyncThunk<{ reviews: IReview[], pagination: IPagination }, { id: number, page: number, limit: number }, { rejectValue: IApiError }>('/track/getTrackReviewsTextThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await getTrackReviewsTextApi(params)
         return data
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
@@ -77,6 +89,11 @@ const initialState: ITrackState = {
     track: null,
     trackStatus: 'idle',
     trackError: null,
+
+    reviewsText: null,
+    reviewsTextPagination: null,
+    reviewsTextStatus: 'idle',
+
     trackList: null,
     trackListPagination: null,
     trackListStatus: 'idle',
@@ -121,6 +138,22 @@ const trackSlice = createSlice({
                 state.trackError = action.payload.message
             })
 
+            .addCase(getTrackReviewsTextThunk.pending, (state) => {
+                state.reviewsText = null,
+                state.reviewsTextStatus = 'loading',
+                state.reviewsTextPagination = null,
+                state.trackError = null
+            })
+            .addCase(getTrackReviewsTextThunk.fulfilled, (state, action) => {
+                state.reviewsText = action.payload.reviews
+                state.reviewsTextPagination = action.payload.pagination
+                state.reviewsTextStatus = 'success'
+            })
+            .addCase(getTrackReviewsTextThunk.rejected, (state, action) => {
+                state.reviewsTextStatus = 'error',
+                state.trackError = action.payload.message
+            })
+
             .addCase(createTrackThunk.pending, (state) => {
                 state.trackStatus = 'loading',
                 state.trackError = null
@@ -158,7 +191,7 @@ const trackSlice = createSlice({
                 state.trackError = null
             })
             .addCase(toggleLikeReviewThunk.fulfilled, (state, action) => {
-                state.track.reviews = state.track.reviews.map(review => {
+                state.reviewsText = state.reviewsText.map(review => {
                     if (review.id === action.meta.arg.reviewId) {
                         if (action.payload.liked) {
                             review.likesCount = String(+review.likesCount + 1)
@@ -170,10 +203,10 @@ const trackSlice = createSlice({
                     }
                     return review
                 })
-                state.trackStatus = 'success'
+                state.reviewsTextStatus = 'success'
             })
             .addCase(toggleLikeReviewThunk.rejected, (state, action) => {
-                state.trackStatus = 'error',
+                state.reviewsTextStatus = 'error',
                 state.trackError = action.payload.message
             })
 

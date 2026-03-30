@@ -163,7 +163,12 @@ class TrackServices {
                     SELECT json_agg(row_to_json(a))
                     FROM artists a
                     WHERE a.id = ANY(t.artist_ids)
-                ) as artists
+                ) as artists,
+                (
+                    SELECT COUNT(*)::int
+                    FROM reviews r
+                    WHERE r.track_id = t.id
+                ) as reviews_count
             FROM tracks t
             WHERE id = $1
         `, [id])

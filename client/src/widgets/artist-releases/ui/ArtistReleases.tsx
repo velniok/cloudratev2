@@ -23,19 +23,29 @@ export const ArtistReleases: FC<ArtistReleasesProps> = ({ artist, artistStatus }
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>ДИСКОГРАФИЯ АРТИСТА</Title>
-                    <ul className={styles.list}>
                         {
                             tracksStatus === 'success' ?
                             <>
                             {
                                 tracks.length > 0 ?
                                 <>
-                                <p className={styles.text}>Показано {((+tracksPagination?.page - 1) * limit) + 1}-{(limit * +tracksPagination?.page)} из {+tracksPagination?.total}</p>
-                                {
-                                    tracks.map((track) => {
-                                        return <TrackRow key={track.id} track={track} />
-                                    })
-                                }
+                                    <p className={styles.text}>Показано {((+tracksPagination?.page - 1) * limit) + 1}-{(limit * +tracksPagination?.page)} из {+tracksPagination?.total}</p>
+                                    <ul className={styles.list}>
+                                    {
+                                        tracks.map((track) => {
+                                            return <TrackRow key={track.id} track={track} />
+                                        })
+                                    }
+                                    </ul>
+                                    <div className={styles.bottom}>
+                                        <PaginationButtons
+                                            page={+tracksPagination.page}
+                                            totalPages={tracksPagination.totalPages}
+                                            hundleNextPage={hundleNextPage}
+                                            hundlePrevPage={hundlePrevPage}
+                                            hundlePage={hundlePage}
+                                        />
+                                    </div>
                                 </>
                                 :
                                 <>Треков нет</>
@@ -46,19 +56,6 @@ export const ArtistReleases: FC<ArtistReleasesProps> = ({ artist, artistStatus }
                                 return <TrackRowSkelton key={index} />
                             })
                         }
-                    </ul>
-                    <div className={styles.bottom}>
-                    {
-                        tracksStatus === 'success' &&
-                        <PaginationButtons
-                            page={+tracksPagination.page}
-                            totalPages={tracksPagination.totalPages}
-                            hundleNextPage={hundleNextPage}
-                            hundlePrevPage={hundlePrevPage}
-                            hundlePage={hundlePage}
-                        />
-                    }
-                    </div>
             </div>
         </div>
     )

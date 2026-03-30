@@ -76,7 +76,7 @@ class TrackControllers {
     async getOne(req, res, next) {
         try {
             const trackId = req.params.id
-            const { userId } = req.query
+            const userId = req.userId
             const track = await TrackServices.getTrackById(trackId)
             track.reviews = await ReviewServices.getReviewsByTrackId(trackId, userId)
 

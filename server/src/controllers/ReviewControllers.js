@@ -28,6 +28,28 @@ class ReviewControllers {
         }
     }
 
+    async getReviewsWithText(req, res, next) {
+        try {
+            const { trackId } = req.params
+            const { page, limit } = req.query
+            const userId = req.userId
+
+            const { reviews, total } = await ReviewServices.getReviewsByTrackIdWithText(page, limit, trackId, userId)
+            res.status(200).json({
+                reviews,
+                pagination: {
+                    page,
+                    limit,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
     async addText(req, res, next) {
         try {
             const reviewId = req.params.id

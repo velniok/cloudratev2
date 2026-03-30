@@ -43,7 +43,7 @@ class ArtistControllers {
     async getOne(req, res, next) {
         try {
             const artistId = req.params.id
-            const { userId } = req.query
+            const userId = req.userId
             const { artist, follow, tracks } = await ArtistServices.getArtistById(artistId, userId)
             artist.follow = follow
 

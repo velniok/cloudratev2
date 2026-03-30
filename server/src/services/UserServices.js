@@ -27,9 +27,13 @@ class UserServices {
             SELECT u.*,
             (
                 SELECT json_agg(row_to_json(a))
-                FROM artists a
-                JOIN artist_follows af ON af.artist_id = a.id
-                WHERE af.user_id = u.id 
+                FROM (
+                    SELECT a.*
+                    FROM artists a
+                    JOIN artist_follows af ON af.artist_id = a.id
+                    WHERE af.user_id = u.id
+                    LIMIT 15
+                ) a
             ) as follows
             FROM users u
             WHERE username = $1
