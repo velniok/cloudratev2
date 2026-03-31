@@ -83,6 +83,12 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                                     Мои оценки
                                 </Link>
                             </li>
+                            <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.username}/follows` ? styles.active : ''}`}>
+                                <Link to={`/user/${authUser?.username}/follows`} className={styles.nav__link} onClick={setSidebar}>
+                                    <i className={`ph${pathname === `/user/${authUser?.username}/follows` ? '-fill' : ''} ph-users`}></i>
+                                    Мои подписки
+                                </Link>
+                            </li>
                         </ul>
                     </nav>
             }

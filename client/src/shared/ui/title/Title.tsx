@@ -13,7 +13,9 @@ export const Title: FC<TitleProps> = ({ children, link, linkTitle }) => {
         <h3 className={styles.title}>
             {children}
             <div className={styles.line}></div>
-            <Link className={styles.link} to={link}>{linkTitle}</Link>
+            {
+                link && <Link className={styles.link} to={link}>{linkTitle}</Link>
+            }
         </h3>
     )
 }

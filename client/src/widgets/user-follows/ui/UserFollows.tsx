@@ -24,7 +24,7 @@ export const UserFollows: FC<UserFollowsProps> = ({ user }) => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
-                <Title>ПОДПИСКИ</Title>
+                <Title link={`/user/${user?.username}/follows`} linkTitle={'Показать все'}>ПОДПИСКИ</Title>
                 <Slider>
                     {
                         followsStatus === 'success' ?

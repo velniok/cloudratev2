@@ -5,7 +5,7 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 140px;
+    width: 175px;
 
     transition: transform 0.3s;
 
@@ -16,15 +16,15 @@
     }
 
     @media (max-width: $mobile) {
-        width: 100px;
+        width: 135px;
     }
 }
 
 .avatar {
 
     @media (max-width: $mobile) {
-        width: 100px !important;
-        height: 100px !important;
+        width: 135px !important;
+        height: 135px !important;
     }
 }
 

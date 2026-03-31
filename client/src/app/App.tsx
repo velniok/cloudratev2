@@ -25,6 +25,7 @@ import { AdminUsersPage } from "@/pages/admin-users-page"
 import { SearchPage } from "@/pages/search-page"
 import { Header } from "@/widgets/header"
 import { UserReviewsPage } from "@/pages/user-reviews-page"
+import { UserFollowsPage } from "@/pages/user-follows-page"
 
 function App() {
 
@@ -73,6 +74,7 @@ function App() {
                             <Route path="/user/:username" element={<UserPage />} />
                             <Route path="/user/:username/edit" element={<EditProfilePage />} />
                             <Route path="/user/:username/reviews" element={<UserReviewsPage />} />
+                            <Route path="/user/:username/follows" element={<UserFollowsPage />} />
         
                             <Route path="/registration" element={<RegPage />} />
                             <Route path="/login" element={<LoginPage />} />

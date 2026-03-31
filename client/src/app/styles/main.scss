@@ -98,6 +98,34 @@ ul {
 .container {
     position: relative;
     margin: 0 auto;
-    max-width: 1280px;
+    max-width: 1155px;
     padding: 0 15px;
+
+    @media (max-width: 1434px) {
+        max-width: 965px;
+    }
+
+    @media (max-width: 1244px) {
+        max-width: 775px;
+    }
+
+    @media (max-width: 1054px) {
+        max-width: 585px;
+    }
+
+    @media (max-width: 864px) {
+        max-width: 395px;
+    }
+
+    @media (max-width: $mobile) {
+        max-width: 615px;
+    }
+
+    @media (max-width: 614px) {
+        max-width: 465px;
+    }
+
+    @media (max-width: 464px) {
+        max-width: 315px;
+    }
 }
