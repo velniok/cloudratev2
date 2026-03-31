@@ -118,14 +118,6 @@ ul {
     }
 
     @media (max-width: $mobile) {
-        max-width: 615px;
-    }
-
-    @media (max-width: 614px) {
-        max-width: 465px;
-    }
-
-    @media (max-width: 464px) {
-        max-width: 315px;
+        max-width: 767px;
     }
 }
