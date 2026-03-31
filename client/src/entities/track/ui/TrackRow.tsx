@@ -43,7 +43,7 @@ export const TrackRow: FC<TrackRowProps> = ({ track }) => {
             </div>
             <div className={styles.row__right}>
                 <p className={styles.row__release}>{new Date(track.releaseData).getUTCFullYear()}</p>
-                <div className={styles.row__rating}>
+                {/* <div className={styles.row__rating}>
                     {
                         track.avgRating ?
                         <Rating active={criterias} isHover={true} onClick={(e: MouseEvent) => handleOpenCriterias(e)}>{track.avgRating}</Rating>
@@ -51,7 +51,7 @@ export const TrackRow: FC<TrackRowProps> = ({ track }) => {
                         <Rating>0</Rating>
                     }
                     <CriteriasPopup close={() => setCriterias(false)} position={'left'} show={criterias} avgCriterias={Object.values(track.avgCriterias)} />
-                </div>
+                </div> */}
             </div>
        </li>
     )

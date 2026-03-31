@@ -1,9 +1,9 @@
 import { LinksList, PaginationButtons, Title } from '@/shared/ui'
 import styles from './UserReviews.module.scss'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { IUser } from '@/entities/user'
 import { useAppSelector, usePagination } from '@/shared/lib'
-import { TrackCard, TrackCardSekelton } from '@/entities/track'
+import { TrackCard, TrackCardSekelton, TrackRow } from '@/entities/track'
 import { getUserReviewsThunk, selectUserReviews, selectUserReviewsPagination, selectUserReviewsStatus } from '@/features/user'
 
 interface UserReviewsProps {
@@ -40,10 +40,15 @@ export const UserReviews: FC<UserReviewsProps> = ({ user }) => {
                             reviewList.length > 0 ?
                             <>
                             <p className={styles.text}>Показано {((+reviewListPagination?.page - 1) * limit) + 1}-{(limit * +reviewListPagination?.page)} из {+reviewListPagination?.total}</p>
-                            <ul className={styles.list}>
+                            <ul className={`${styles.list} ${window.innerWidth <= 767 ? styles.row : ''}`}>
                             {
+                                window.innerWidth > 767 ?
                                 reviewList.map((review) => {
                                     return <TrackCard track={review.track} key={review.id} review={review} />
+                                })
+                                :
+                                reviewList.map((review) => {
+                                    return <TrackRow track={review.track} key={review.id} />
                                 })
                             }
                             </ul>

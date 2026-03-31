@@ -16,6 +16,17 @@
         }
     }
 
+    @media (max-width: $mobile) {
+        padding: 0;
+        border-bottom: 1px solid var(--border-subtle);
+        padding-bottom: 15px;
+        border-radius: 0;
+
+        &:nth-last-child(1) {
+            border-bottom: unset;
+        }
+    }
+
     &__left {
         display: flex;
         align-items: center;

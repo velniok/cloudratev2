@@ -10,12 +10,12 @@ interface TitleProps {
 
 export const Title: FC<TitleProps> = ({ children, link, linkTitle }) => {
     return (
-        <h3 className={styles.title}>
-            {children}
-            <div className={styles.line}></div>
+        <div className={styles.wrapper}>
+            <h3 className={styles.title}>{children}</h3>
+            {/* <div className={styles.line}></div> */}
             {
                 link && <Link className={styles.link} to={link}>{linkTitle}</Link>
             }
-        </h3>
+        </div>
     )
 }
