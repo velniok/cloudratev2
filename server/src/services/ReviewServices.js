@@ -96,11 +96,18 @@ class ReviewServices {
                 SELECT
                     r.*,
                     (
-                        SELECT jsonb_build_object('artists', (
-                            SELECT json_agg(row_to_json(a))
-                            FROM artists a
-                            WHERE a.id = ANY(t.artist_ids)
-                        )) || row_to_json(t)::jsonb
+                        SELECT jsonb_build_object(
+                            'artist', (
+                                SELECT row_to_json(a)
+                                FROM artists a
+                                WHERE a.id = t.artist_id
+                            ),
+                            'feat_artists', (
+                                SELECT json_agg(row_to_json(a))
+                                FROM artists a
+                                WHERE a.id = ANY(t.feat_artist_ids)
+                            )
+                        ) || row_to_json(t)::jsonb
                         FROM tracks t
                         WHERE t.id = r.track_id
                     ) as track

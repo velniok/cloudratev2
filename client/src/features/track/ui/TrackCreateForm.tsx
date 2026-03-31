@@ -78,7 +78,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
         e.preventDefault()
 
         const artistIds = addArtist.map((addArtist) => {
-            return String(addArtist.id)
+            return Number(addArtist.id)
         })
 
         if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
@@ -91,7 +91,8 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
             title: values.title,
             coverUrl: values.coverUrl,
             soundcloudUrl: values.soundcloudUrl,
-            artistIds: artistIds,
+            artistId: artistIds[0],
+            featArtistIds: artistIds.slice(1), 
             releaseData: values.releaseData,
         })).unwrap()
             .then(() => {

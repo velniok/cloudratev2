@@ -43,12 +43,12 @@ class ArtistServices {
                     (
                         SELECT COUNT(*)::int
                         FROM tracks t
-                        WHERE a.id = ANY(t.artist_ids)
+                        WHERE a.id = ANY(t.feat_artist_ids) OR a.id = t.artist_id
                     ) as tracks_count,
                     (
                         SELECT ROUND(AVG(r.rating)::numeric)
                         FROM reviews r, tracks t
-                        WHERE r.track_id = t.id AND a.id = ANY(t.artist_ids)
+                        WHERE r.track_id = t.id AND (a.id = ANY(t.feat_artist_ids) OR a.id = t.artist_id)
                     ) as avg_rating
                 FROM artists a
                 ORDER BY id
@@ -64,7 +64,7 @@ class ArtistServices {
     }
 
     async getArtist(id, userId) {
-            const [artistRes, followRes, tracksRes] = await Promise.all([
+            const [artistRes, followRes] = await Promise.all([
                 pool.query(`
                     WITH artist_top_tracks AS (
                         SELECT
@@ -75,10 +75,15 @@ class ArtistServices {
                                 WHERE r.track_id = t.id
                             ) as avg_rating,
                             (
-                                SELECT json_agg(row_to_json(ar))
+                                SELECT row_to_json(ar)
                                 FROM artists ar
-                                WHERE ar.id = ANY(t.artist_ids)
-                            ) as artists,
+                                WHERE ar.id = t.artist_id
+                            ) as artist,
+                            (
+                                SELECT json_agg(row_to_json(a))
+                                FROM artists a
+                                WHERE a.id = ANY(t.feat_artist_ids)
+                            ) as feat_artists,
                             (
                                 SELECT json_build_object(
                                     'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
@@ -91,7 +96,7 @@ class ArtistServices {
                                 WHERE r.track_id = t.id
                             ) as avg_criterias
                         FROM tracks t
-                        WHERE $1 = ANY(t.artist_ids)
+                        WHERE $1 = t.artist_id OR $1 = ANY(t.feat_artist_ids)
                         ORDER BY avg_rating DESC NULLS LAST
                         LIMIT 15
                     )
@@ -101,7 +106,7 @@ class ArtistServices {
                             SELECT ROUND(AVG(r.rating)::numeric)
                             FROM reviews r
                             JOIN tracks t ON t.id = r.track_id
-                            WHERE $1 = ANY(t.artist_ids)
+                            WHERE $1 = t.artist_id OR $1 = ANY(t.feat_artist_ids)
                         ) as avg_rating,
                         (
                             SELECT json_agg(row_to_json(at))
@@ -119,41 +124,11 @@ class ArtistServices {
                         ) as is_followed
                     FROM artist_follows
                     WHERE artist_id = $1
-                `, [id, userId]),
-                pool.query(`
-                    SELECT
-                        t.*,
-                        (
-                            SELECT ROUND(AVG(r.rating)::numeric)
-                            FROM reviews r
-                            WHERE r.track_id = t.id
-                        ) as avg_rating,
-                        (
-                            SELECT json_agg(row_to_json(ar))
-                            FROM artists ar
-                            WHERE ar.id = ANY(t.artist_ids)
-                        ) as artists,
-                        (
-                            SELECT json_build_object(
-                                'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
-                                'criteria2', ROUND(AVG(r.criteria2)::numeric, 1),
-                                'criteria3', ROUND(AVG(r.criteria3)::numeric, 1),
-                                'criteria4', ROUND(AVG(r.criteria4)::numeric, 1),
-                                'criteria5', ROUND(AVG(r.criteria5)::numeric, 1)
-                            )
-                            FROM reviews r
-                            WHERE r.track_id = t.id
-                        ) as avg_criterias
-                    FROM tracks t
-                    WHERE $1 = ANY(t.artist_ids)
-                    ORDER BY t.release_data DESC
-                    LIMIT 15
-                `, [id])
+                `, [id, userId])
             ])
             return {
                 artist: mapToCamelCase(artistRes.rows[0]),
-                follow: mapToCamelCase(followRes.rows[0]),
-                tracks: tracksRes.rows.map(mapToCamelCase)
+                follow: mapToCamelCase(followRes.rows[0])
             }
     }
 

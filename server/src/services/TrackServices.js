@@ -17,10 +17,11 @@ class TrackServices {
                         title,
                         cover_url,
                         soundcloud_url,
-                        artist_ids,
+                        artist_id,
+                        feat_artist_ids,
                         release_data
                     )
-                    SELECT $1, $2, $3, $4, $5
+                    SELECT $1, $2, $3, $4, $5, $6
                     WHERE NOT EXISTS (SELECT 1 FROM track_check)
                     RETURNING *
                 )
@@ -35,7 +36,7 @@ class TrackServices {
                             (
                                 SELECT json_agg(row_to_json(a))
                                 FROM artists a
-                                WHERE a.id = ANY(i.artist_ids)
+                                WHERE a.id = ANY(i.feat_artist_ids) AND a.id = i.artist_id
                             ) as artists
                         FROM inserted i
                     ) t
@@ -56,10 +57,15 @@ class TrackServices {
                         WHERE r.track_id = t.id
                     ) as avg_rating,
                     (
+                        SELECT row_to_json(a)
+                        FROM artists a
+                        WHERE a.id = t.artist_id
+                    ) as artist,
+                    (
                         SELECT json_agg(row_to_json(a))
                         FROM artists a
-                        WHERE a.id = ANY(t.artist_ids)
-                    ) as artists
+                        WHERE a.id = ANY(t.feat_artist_ids)
+                    ) as feat_artists
                 FROM tracks t
                 ORDER BY id
                 LIMIT $1
@@ -87,10 +93,15 @@ class TrackServices {
                         WHERE r.track_id = t.id
                     ) as avg_rating,
                     (
+                        SELECT row_to_json(a)
+                        FROM artists a
+                        WHERE a.id = t.artist_id
+                    ) as artist,
+                    (
                         SELECT json_agg(row_to_json(a))
                         FROM artists a
-                        WHERE a.id = ANY(t.artist_ids)
-                    ) as artists,
+                        WHERE a.id = ANY(t.feat_artist_ids)
+                    ) as feat_artists,
                     (
                         SELECT json_build_object(
                             'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
@@ -103,13 +114,13 @@ class TrackServices {
                         WHERE r.track_id = t.id
                     ) as avg_criterias
                 FROM tracks t
-                WHERE $3 = ANY(t.artist_ids)
+                WHERE $3 = t.artist_id OR $3 = ANY(t.feat_artist_ids)
                 ORDER BY t.release_data DESC
                 LIMIT $1
                 OFFSET $2
             `, [limit, offset, artistId]),
             pool.query(`
-                SELECT COUNT(*) AS total FROM tracks t WHERE $1 = ANY(t.artist_ids)
+                SELECT COUNT(*) AS total FROM tracks t WHERE $1 = t.artist_id OR $1 = ANY(t.feat_artist_ids)
             `, [artistId])
         ])
         return {
@@ -128,10 +139,15 @@ class TrackServices {
                     WHERE r.track_id = t.id
                 ) as avg_rating,
                 (
+                    SELECT row_to_json(a)
+                    FROM artists a
+                    WHERE a.id = t.artist_id
+                ) as artist,
+                (
                     SELECT json_agg(row_to_json(a))
                     FROM artists a
-                    WHERE a.id = ANY(t.artist_ids)
-                ) as artists
+                    WHERE a.id = ANY(t.feat_artist_ids)
+                ) as feat_artists
             FROM tracks t
             ORDER BY t.release_data DESC
             LIMIT 15
@@ -160,10 +176,15 @@ class TrackServices {
                     WHERE r.track_id = t.id
                 ) as avg_criterias,
                 (
+                    SELECT row_to_json(a)
+                    FROM artists a
+                    WHERE a.id = t.artist_id
+                ) as artist,
+                (
                     SELECT json_agg(row_to_json(a))
                     FROM artists a
-                    WHERE a.id = ANY(t.artist_ids)
-                ) as artists,
+                    WHERE a.id = ANY(t.feat_artist_ids)
+                ) as feat_artists,
                 (
                     SELECT COUNT(*)::int
                     FROM reviews r
@@ -186,7 +207,7 @@ class TrackServices {
                 track_check AS (
                     SELECT id
                     FROM tracks t
-                    WHERE title = $1 AND id != $5
+                    WHERE title = $1 AND id != $7
                 ),
                 updated as (
                     UPDATE tracks
@@ -194,8 +215,10 @@ class TrackServices {
                         title = $1,
                         cover_url = $2,
                         soundcloud_url = $3,
-                        release_data = $4
-                    WHERE id = $5 AND NOT EXISTS (SELECT 1 FROM track_check)
+                        artist_id = $4,
+                        feat_artist_ids = $5,
+                        release_data = $6
+                    WHERE id = $7 AND NOT EXISTS (SELECT 1 FROM track_check)
                     RETURNING *
                 )
             SELECT

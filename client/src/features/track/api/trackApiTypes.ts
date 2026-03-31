@@ -1,7 +1,8 @@
 export interface ITrackReq {
     title: string
     coverUrl: string
-    artistIds: string[]
+    artistId: number
+    featArtistIds: number[]
     soundcloudUrl: string
     releaseData: string
 }

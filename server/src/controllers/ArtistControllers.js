@@ -45,7 +45,7 @@ class ArtistControllers {
         try {
             const artistId = req.params.id
             const userId = req.userId
-            const { artist, follow, tracks } = await ArtistServices.getArtist(artistId, userId)
+            const { artist, follow } = await ArtistServices.getArtist(artistId, userId)
             artist.follow = follow
 
             res.status(200).json({ artist })

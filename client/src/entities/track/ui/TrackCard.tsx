@@ -40,9 +40,12 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
                 />
             </Link>
             <h3 className={styles.title}>{track.title}</h3>
+            <p className={styles.artist__item} onClick={() => navigate(`/artist/${track.artist.id}`)}>
+                {track.artist.name}
+            </p>
             <ul className={styles.artist__list}>
                 {
-                    track.artists.map((artist) => {
+                    track.featArtists?.map((artist) => {
                         return (
                             <li key={artist.id} className={styles.artist__item} onClick={() => navigate(`/artist/${artist.id}`)}>
                                 {artist.name}

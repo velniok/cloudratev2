@@ -29,9 +29,10 @@ export const TrackRow: FC<TrackRowProps> = ({ track }) => {
                 <Cover url={getOptimizedAvatar(track.coverUrl, 48, 48)} height='48px' width='48px' borderRadius='8px' />
                 <div className={styles.row__info}>
                     <h3 className={styles.row__title}>{track.title}</h3>
+                    <p className={styles.row__artistItem}>{track.artist.name}</p>
                     <ul className={styles.row__artistList}>
                         {
-                            track.artists.map((artist) => {
+                            track.featArtists?.map((artist) => {
                                 return (
                                     <li key={artist.id} className={styles.row__artistItem}>{artist.name}</li>
                                 )
