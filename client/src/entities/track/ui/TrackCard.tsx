@@ -59,7 +59,7 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
                     review ?
                     <>
                         <Rating active={criterias} isHover={true} onClick={(e: MouseEvent) => handleOpenCriterias(e)}>{review.rating}</Rating>
-                        {/* <CriteriasPopup review={Boolean(review.text)} close={() => setCriterias(false)} position={'top'} show={criterias} avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} /> */}
+                        <CriteriasPopup review={Boolean(review.text)} close={() => setCriterias(false)} position={'top'} show={criterias} avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
                     </>
                     :
                     <>

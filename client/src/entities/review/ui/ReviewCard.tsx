@@ -38,7 +38,7 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
                         <p className={styles.nickname}>{review.user.nickname}</p>
                     </Link>
                     <Rating active={criterias} isHover={true} onClick={(e) => handleOpenCriterias(e)}>{review.rating}</Rating>
-                    <CriteriasPopup close={() => setCriterias(false)} show={criterias} position="right" avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
+                    <CriteriasPopup column close={() => setCriterias(false)} show={criterias} position="right" avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
                     {
                         review.userId === authUser?.id && <p className={styles.yourText}>Ваша рецензия</p>
                     }

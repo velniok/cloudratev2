@@ -48,7 +48,7 @@ export const UserReviews: FC<UserReviewsProps> = ({ user }) => {
                                 })
                                 :
                                 reviewList.map((review) => {
-                                    return <TrackRow track={review.track} key={review.id} />
+                                    return <TrackRow track={review.track} key={review.id} review={review} />
                                 })
                             }
                             </ul>

@@ -8,9 +8,10 @@ interface CriteriasPopupProps {
     position: 'bottom' | 'top' | 'right' | 'left'
     close: () => void
     review?: boolean
+    column?: boolean
 }
 
-export const CriteriasPopup: FC<CriteriasPopupProps> = ({ show, avgCriterias, position, close, review }) => {
+export const CriteriasPopup: FC<CriteriasPopupProps> = ({ show, avgCriterias, position, close, review, column }) => {
 
     const criteriaTitles = ['Продакшн', 'Текст', 'Подача', 'Мелодия', 'Оригинальность']
 
@@ -24,7 +25,7 @@ export const CriteriasPopup: FC<CriteriasPopupProps> = ({ show, avgCriterias, po
     }, [])
 
     return (
-        <div className={`${styles.criterias} ${show ? styles.open : ''} ${styles[position]}`}>
+        <div className={`${styles.criterias} ${show ? styles.open : ''} ${column ? styles.column : ''} ${styles[position]}`}>
             {
                 review &&
                 <div className={styles.criterias__review}>
@@ -32,7 +33,7 @@ export const CriteriasPopup: FC<CriteriasPopupProps> = ({ show, avgCriterias, po
                     <span className={styles.criterias__reviewText}>ОТЗЫВ</span>
                 </div>
             }
-            <ul className={styles.criterias__list}>
+            <ul className={`${styles.criterias__list} ${column ? styles.column : ''}`}>
                 {
                     Object.values(avgCriterias).map((criteria, index) => {
                         return (

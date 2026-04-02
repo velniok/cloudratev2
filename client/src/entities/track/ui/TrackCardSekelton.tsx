@@ -4,7 +4,7 @@ import styles from './TrackCard.module.scss'
 export const TrackCardSekelton = () => {
     return (
         <div className={styles.card}>
-            <Skeleton className={styles.cover} width='200px' height='200px' borderRadius='12px' mb='16px' />
+            <Skeleton className={styles.cover} width='175px' height='175px' borderRadius='12px' mb='16px' />
             <h3 className={styles.title}>
                 <Skeleton width='75%' height='15px' borderRadius='6px' />
             </h3>

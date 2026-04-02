@@ -4,12 +4,14 @@ import { ITrack } from '../model/types'
 import { Cover, CriteriasPopup, Rating } from '@/shared/ui'
 import { getOptimizedAvatar } from '@/shared/lib'
 import { useNavigate } from 'react-router-dom'
+import { IReview } from '@/entities/review'
 
 interface TrackRowProps {
     track: ITrack
+    review: IReview
 }
 
-export const TrackRow: FC<TrackRowProps> = ({ track }) => {
+export const TrackRow: FC<TrackRowProps> = ({ track, review }) => {
 
     const navigate = useNavigate()
 
@@ -42,16 +44,38 @@ export const TrackRow: FC<TrackRowProps> = ({ track }) => {
                 </div>
             </div>
             <div className={styles.row__right}>
-                <p className={styles.row__release}>{new Date(track.releaseData).getUTCFullYear()}</p>
-                {/* <div className={styles.row__rating}>
+                {
+                    !review && <p className={styles.row__release}>{new Date(track.releaseData).getUTCFullYear()}</p>
+                }
+                <div className={styles.row__rating}>
                     {
-                        track.avgRating ?
-                        <Rating active={criterias} isHover={true} onClick={(e: MouseEvent) => handleOpenCriterias(e)}>{track.avgRating}</Rating>
+                        review ?
+                        <>
+                            <Rating active={criterias} isHover={true} onClick={(e: MouseEvent) => handleOpenCriterias(e)}>{review.rating}</Rating>
+                        </>
                         :
-                        <Rating>0</Rating>
+                        <>
+                            {
+                            track.avgRating ?
+                            <>
+                                {
+                                    track.avgCriterias ?
+                                    <Rating active={criterias} isHover={true} onClick={(e: MouseEvent) => handleOpenCriterias(e)}>{track.avgRating}</Rating>
+                                    :
+                                    <Rating>{track.avgRating}</Rating>
+                                }
+                            </>
+                            : <span className={styles.rating__text}>Оценок нет</span>
+                            }
+                        </>
                     }
-                    <CriteriasPopup close={() => setCriterias(false)} position={'left'} show={criterias} avgCriterias={Object.values(track.avgCriterias)} />
-                </div> */}
+                    {
+                        review ?
+                        <CriteriasPopup review={Boolean(review.text)} close={() => setCriterias(false)} position={'left'} show={criterias} avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
+                        :
+                        <CriteriasPopup close={() => setCriterias(false)} position={'top'} show={criterias} avgCriterias={Object.values(track.avgCriterias)} />
+                    }
+                </div>
             </div>
        </li>
     )
