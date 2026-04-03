@@ -1,0 +1,1 @@
+export { UserReviewsPagination } from './ui/UserReviewsPagination'

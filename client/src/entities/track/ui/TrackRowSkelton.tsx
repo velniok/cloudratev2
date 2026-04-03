@@ -1,7 +1,12 @@
 import { Skeleton } from '@/shared/ui'
 import styles from './TrackRow.module.scss'
+import { FC } from 'react'
 
-export const TrackRowSkelton = () => {
+interface TrackRowSkeltonProps {
+    review?: boolean
+}
+
+export const TrackRowSkelton: FC<TrackRowSkeltonProps> = ({ review }) => {
     return (
        <li className={styles.row}>
             <div className={styles.row__left}>
@@ -18,9 +23,12 @@ export const TrackRowSkelton = () => {
                 </div>
             </div>
             <div className={styles.row__right}>
-                <p className={styles.row__release}>
-                    <Skeleton height='17px' width='35px' borderRadius='6px' />
-                </p>
+                {
+                    !review &&
+                    <p className={styles.row__release}>
+                        <Skeleton height='17px' width='35px' borderRadius='6px' />
+                    </p>
+                }
                 <div className={styles.row__rating}>
                     <Skeleton height='32px' width='32px' borderRadius='50%' />
                 </div>

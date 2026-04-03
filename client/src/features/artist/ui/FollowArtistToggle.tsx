@@ -1,7 +1,6 @@
 import styles from './FollowArtistToggle.module.scss'
 import { Button } from '@/shared/ui'
-import { useState, type FC } from 'react'
-import { toggleFollowApi } from '../api/artistApi'
+import { MouseEvent, useState, type FC } from 'react'
 import { useAppDispatch, useAppSelector, useNotification } from '@/shared/lib'
 import { toggleFollowThunk } from '../model/slice'
 import { selectAuthUser } from '@/features/auth'
@@ -9,9 +8,10 @@ import { selectAuthUser } from '@/features/auth'
 interface FollowArtistToggleProps {
     isFollowed: boolean
     artistId: number
+    thunk: ( params: { artistId: number, userId: number } ) => any
 }
 
-export const FollowArtistToggle: FC<FollowArtistToggleProps> = ({ isFollowed, artistId }) => {
+export const FollowArtistToggle: FC<FollowArtistToggleProps> = ({ isFollowed, artistId, thunk }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
@@ -20,13 +20,14 @@ export const FollowArtistToggle: FC<FollowArtistToggleProps> = ({ isFollowed, ar
     const [isHovered, setIsHovered] = useState<boolean>(false)
     const [followLoading, setFollowLoading] = useState<boolean>(false)
 
-    const onSubmit = () => {
+    const onSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation()
 
         if (followLoading) return false
         if (!authUser?.id) return notify('Вы не авторизованы', 'Прежде чем сделать это, авторизуйтесь', 'error')
 
         setFollowLoading(true)
-        dispatch(toggleFollowThunk({
+        dispatch(thunk({
             artistId: artistId,
             userId: authUser?.id
         })).unwrap()

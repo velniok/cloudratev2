@@ -1,0 +1,52 @@
+@use '@/shared/styles/breakpoints' as *;
+
+.row {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 12px;
+
+    transition: background-color 0.3s;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--hover-white);
+        }
+    }
+
+    @media (max-width: $mobile) {
+        padding: 0;
+        border-bottom: 1px solid var(--border-subtle);
+        padding-bottom: 15px;
+        border-radius: 0;
+
+        &:nth-last-child(1) {
+            border-bottom: unset;
+        }
+    }
+
+    &__left {
+        display: flex;
+        align-items: center;
+        column-gap: 16px;
+        padding-right: 8px;
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        column-gap: 16px;
+    }
+
+    &__name {
+        font-family: var(--second-family);
+        margin-bottom: 2px;
+    }
+    
+    &__followers {
+        color: var(--text-secondary);
+        font-size: 12px;
+    }
+}

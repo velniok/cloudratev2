@@ -161,17 +161,30 @@ class ArtistServices {
         return mapToCamelCase(artistRes.rows[0])
     }
 
-    async getArtistsByUser(page, limit, userId) {
+    async getArtistsByUser(page, limit, userId, authId) {
         const offset = (+page - 1) * +limit
         const [artistsRes, countRes] = await Promise.all([
             pool.query(`
-                SELECT *
+                SELECT
+                    a.*,
+                    (
+                        SELECT json_build_object(
+                                'followers_count', COUNT (*)::int,
+                                'is_followed', EXISTS (
+                                    SELECT 1 FROM artist_follows
+                                    WHERE artist_id = a.id AND user_id = $4
+                                )
+                            )
+                        FROM artist_follows
+                        WHERE artist_id = a.id
+                    ) as follow
                 FROM artists a
                 JOIN artist_follows af ON af.artist_id = a.id
                 WHERE af.user_id = $3
+                ORDER BY af.id DESC
                 LIMIT $1
                 OFFSET $2
-            `, [limit, offset, userId]),
+            `, [limit, offset, userId, authId]),
             pool.query(`
                 SELECT COUNT(*)::int AS total
                 FROM artists a

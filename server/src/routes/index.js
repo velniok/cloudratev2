@@ -10,6 +10,7 @@ const TrackRouter = require('./TrackRouter')
 const ReviewRouter = require('./ReviewRouter')
 
 const upload = require('../config/multer')
+const getUser = require('../middlewares/getUser')
 
 const Router = require('express').Router
 const router = new Router()
@@ -35,6 +36,6 @@ router.use('/review', ReviewRouter)
 
 router.get('/general/get', checkAdmin, GeneralControllers.get)
 
-router.get('/search', SearchControllers.search)
+router.get('/search', getUser, SearchControllers.search)
 
 module.exports = router

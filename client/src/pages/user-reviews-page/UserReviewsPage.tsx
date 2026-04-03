@@ -1,7 +1,7 @@
 import { getUserProfileThunk, selectUser, selectUserStatus } from "@/features/user"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { Loading } from "@/shared/ui"
-import { UserReviews } from "@/widgets/user-reviews"
+import { UserReviewsPagination } from "@/widgets/user-reviews-pagination"
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 
@@ -21,7 +21,7 @@ export const UserReviewsPage = () => {
 
     return (
         userStatus === 'success' ?
-        <UserReviews user={user} />
+        <UserReviewsPagination user={user} />
         :
         <Loading />
     )

@@ -11,7 +11,8 @@
 .list {
     margin-top: 32px;
     display: flex;
-    column-gap: 28px;
+    column-gap: 15px;
+    row-gap: 18px;
 
     @media (max-width: $mobile) {
         margin-top: 16px;
@@ -26,26 +27,15 @@
     &.artists {
         display: flex;
         flex-wrap: wrap;
-        row-gap: 28px;
-        column-gap: 24px;
-
-        @media (max-width: $mobile) {
-            row-gap: 14px;
-            column-gap: 14px;
-        }
     }
 
     &.tracks {
         display: flex;
         flex-wrap: wrap;
-        row-gap: 28px;
+    }
 
-        @media (max-width: $mobile) {
-            display: flex;
-            flex-wrap: wrap;
-            row-gap: 14px;
-            column-gap: 14px;
-        }
+    &.row {
+        flex-direction: column;
     }
 }
 

@@ -1,1 +1,1 @@
-export { UserReviews } from './ui/UserReviews'
+export { UserReviews } from "./ui/UserReviews"

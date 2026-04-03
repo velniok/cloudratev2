@@ -8,7 +8,7 @@ import { IReview } from '@/entities/review'
 
 interface TrackRowProps {
     track: ITrack
-    review: IReview
+    review?: IReview
 }
 
 export const TrackRow: FC<TrackRowProps> = ({ track, review }) => {
@@ -73,7 +73,7 @@ export const TrackRow: FC<TrackRowProps> = ({ track, review }) => {
                         review ?
                         <CriteriasPopup review={Boolean(review.text)} close={() => setCriterias(false)} position={'left'} show={criterias} avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
                         :
-                        <CriteriasPopup close={() => setCriterias(false)} position={'top'} show={criterias} avgCriterias={Object.values(track.avgCriterias)} />
+                        <CriteriasPopup close={() => setCriterias(false)} position={'left'} show={criterias} avgCriterias={Object.values(track.avgCriterias)} />
                     }
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import { LatestRatedTracks } from "@/widgets/latest-rated-tracks"
+import { UserReviews } from "@/widgets/user-reviews"
 import { UserHeader } from "@/widgets/user-header"
 import { useEffect } from "react"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
@@ -27,7 +27,7 @@ export const UserPage = () => {
             userStatus === 'success' ?
             <>
                 <UserHeader user={user} userStatus={userStatus} />
-                <LatestRatedTracks user={user} userStatus={userStatus} />
+                <UserReviews user={user} userStatus={userStatus} />
                 <UserFollows user={user} />
             </>
             :

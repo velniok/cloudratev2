@@ -1,36 +1,9 @@
 @use '@/shared/styles/breakpoints' as *;
 
 .wrapper {
-    padding: 32px 0;
-
-    @media (max-width: $mobile) {
-        padding: 16px 0;
-    }
-}
-
-.text {
-    margin-bottom: 12px;
-    color: var(--text-secondary);
-
-    @media (max-width: $mobile) {
-        font-size: 12px;
-    }
-}
-
-.list {
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 15px;
-    row-gap: 15px;
-
-    &.row {
-        flex-direction: column;
-    }
-}
-
-.bottom {
     margin-top: 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+    @media (max-width: $mobile) {
+        margin-top: 16px;
+    }
 }

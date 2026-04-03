@@ -1,23 +1,21 @@
-import { FC } from 'react'
-import styles from './UserFollowsPagination.module.scss'
-import { IUser } from '@/entities/user'
 import { LinksList, PaginationButtons, Title } from '@/shared/ui'
+import styles from './UserReviewsPagination.module.scss'
+import { FC } from 'react'
+import { IUser } from '@/entities/user'
 import { useAppSelector, usePagination } from '@/shared/lib'
-import { getUserFollowsThunk, selectUserFollows, selectUserFollowsPagination, selectUserFollowsStatus, toggleFollowThunk } from '@/features/user'
-import { ArtistCard, ArtistCardSkeleton, ArtistRow, ArtistRowSkeleton } from '@/entities/artist'
-import { FollowArtistToggle } from '@/features/artist'
+import { TrackCard, TrackCardSekelton, TrackRow, TrackRowSkelton } from '@/entities/track'
+import { getUserReviewsThunk, selectUserReviews, selectUserReviewsPagination, selectUserReviewsStatus } from '@/features/user'
 
-interface UserFollowsPaginationProps {
+interface UserReviewsPaginationProps {
     user: IUser
 }
 
-export const UserFollowsPagination: FC<UserFollowsPaginationProps> = ({ user }) => {
+export const UserReviewsPagination: FC<UserReviewsPaginationProps> = ({ user }) => {
 
-    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getUserFollowsThunk, `/user/${user.username}/follows`, 16, user.id)
-
-    const follows = useAppSelector(selectUserFollows)
-    const followsStatus = useAppSelector(selectUserFollowsStatus)
-    const followsPagination = useAppSelector(selectUserFollowsPagination)
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getUserReviewsThunk, `/user/${user.username}/reviews`, 10, user.id)
+    const reviewList = useAppSelector(selectUserReviews)
+    const reviewListPagination = useAppSelector(selectUserReviewsPagination)
+    const reviewListStatus = useAppSelector(selectUserReviewsStatus)
 
     const links = [
         {
@@ -25,7 +23,7 @@ export const UserFollowsPagination: FC<UserFollowsPaginationProps> = ({ user }) 
             link: `/user/${user.username}`
         },
         {
-            title: 'Подписки',
+            title: 'Оценки',
             link: 'last'
         }
     ]
@@ -34,29 +32,29 @@ export const UserFollowsPagination: FC<UserFollowsPaginationProps> = ({ user }) 
         <div className={styles.wrapper}>
             <div className="container">
                 <LinksList links={links} />
-                <Title>ВСЕ ПОДПИСКИ {user?.nickname}</Title>
+                <Title>ВСЕ ОЦЕНКИ {user?.nickname}</Title>
                     {
-                        followsStatus === 'success' ?
+                        reviewListStatus === 'success' ?
                         <>
                         {
-                            follows.length > 0 ?
+                            reviewList.length > 0 ?
                             <>
-                            <p className={styles.text}>Показано {((+followsPagination?.page - 1) * limit) + 1}-{(limit * +followsPagination?.page)} из {+followsPagination?.total}</p>
+                            <p className={styles.text}>Показано {((+reviewListPagination?.page - 1) * limit) + 1}-{(limit * +reviewListPagination?.page)} из {+reviewListPagination?.total}</p>
                             <ul className={`${styles.list} ${window.innerWidth <= 767 ? styles.row : ''}`}>
                             {
-                                follows.map((artist) => {
+                                reviewList.map((review) => {
                                     if (window.innerWidth > 767) {
-                                        return <ArtistCard artist={artist} key={artist.id} />
+                                        return <TrackCard track={review.track} key={review.id} review={review} />
                                     } else {
-                                        return <ArtistRow artist={artist} key={artist.id} action={<FollowArtistToggle thunk={toggleFollowThunk} isFollowed={artist.follow.isFollowed} artistId={artist.id} />} />
+                                        return <TrackRow track={review.track} key={review.id} review={review} />
                                     }
                                 })
                             }
                             </ul>
                             <div className={styles.bottom}>
                                 <PaginationButtons
-                                    page={+followsPagination.page}
-                                    totalPages={followsPagination.totalPages}
+                                    page={+reviewListPagination.page}
+                                    totalPages={reviewListPagination.totalPages}
                                     hundleNextPage={hundleNextPage}
                                     hundlePrevPage={hundlePrevPage}
                                     hundlePage={hundlePage}
@@ -72,9 +70,9 @@ export const UserFollowsPagination: FC<UserFollowsPaginationProps> = ({ user }) 
                             {
                                 Array.from({ length: 10 }).map((_, index) => {
                                     if (window.innerWidth > 767) {
-                                        return <ArtistCardSkeleton key={index} />
+                                        return <TrackCardSekelton key={index} />
                                     } else {
-                                        return <ArtistRowSkeleton key={index} />
+                                        return <TrackRowSkelton key={index} review />
                                     }
                                 })
                             }

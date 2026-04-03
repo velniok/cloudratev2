@@ -7,6 +7,7 @@ import { IUpdateUserReq } from "../api/userApiTypes";
 import { IApiError, IPagination } from "@/shared/types";
 import { IArtist } from "@/entities/artist";
 import { IReview } from "@/entities/review";
+import { toggleFollowApi } from "@/features/artist";
 
 export const getUserProfileThunk = createAsyncThunk<{ user: IUser }, { username: string }, { rejectValue: IApiError }>('user/getUserProfileThunk', async (params, { rejectWithValue }) => {
     try {
@@ -38,6 +39,17 @@ export const getUserFollowsThunk = createAsyncThunk<{ artists: IArtist[], pagina
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+    }
+})
+
+export const toggleFollowThunk = createAsyncThunk<{followed: boolean}, { artistId: number, userId: number }, { rejectValue: IApiError }>('/user/toggleFollowThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await toggleFollowApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        } 
     }
 })
 
@@ -161,6 +173,28 @@ const userSlice = createSlice({
             .addCase(getUserFollowsThunk.rejected, (state, action) => {
                 state.followsStatus = 'error',
                 state.userError = action.payload.message
+            })
+
+            .addCase(toggleFollowThunk.pending, (state) => {
+                state.userError = null
+            })
+            .addCase(toggleFollowThunk.fulfilled, (state, action) => {
+                state.follows = state.follows.map((artist) => {
+                    if (artist.id === action.meta.arg.artistId) {
+                        if (action.payload.followed) {
+                            ++artist.follow.followersCount
+                            artist.follow.isFollowed = true
+                        } else {
+                            --artist.follow.followersCount
+                            artist.follow.isFollowed = false
+                        }
+                    }
+                    return artist
+                })
+            })
+            .addCase(toggleFollowThunk.rejected, (state) => {
+                state.followsStatus = 'error',
+                state.userError = null
             })
 
             .addCase(getUserReviewsThunk.pending, (state) => {

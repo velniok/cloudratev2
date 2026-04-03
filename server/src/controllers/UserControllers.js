@@ -55,8 +55,9 @@ class UserControllers {
     async getFollows(req, res, next) {
         try {
             const userId = req.params.userId
+            const authId = req.userId
             const { page, limit } = req.query
-            const { artists, total } = await ArtistServices.getArtistsByUser(page, limit, userId)
+            const { artists, total } = await ArtistServices.getArtistsByUser(page, limit, userId, authId)
 
             res.status(200).json({
                 artists,
