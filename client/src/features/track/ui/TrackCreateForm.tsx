@@ -7,6 +7,7 @@ import { IArtist } from '@/entities/artist'
 import { createTrackThunk } from '../model/slice'
 import { IApiError } from '@/shared/types'
 import { useNavigate } from 'react-router-dom'
+import { getSoundсloudTrack } from '../api/trackApi'
 
 interface TrackCreateFormProps {
     modalClose: () => void
@@ -41,9 +42,16 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
     }
     const [values, setValues] = useState(initialValues)
 
+    const [urlForInfo, setUrlForInfo] = useState<string>('')
+    const [soundcloudInfoLoading, setSoundcloudInfo] = useState<boolean>(false)
+
     const [addArtist, setAddArtists] = useState<IArtist[]>([])
 
     const [searchList, setSearchList] = useState<boolean>(false)
+    
+    const hundleChangeUrlForInfo = (e: ChangeEvent<HTMLInputElement>) => {
+        setUrlForInfo(e.target.value)
+    }
     
     const hundleCoverChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -114,12 +122,43 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
         setAddArtists([])
         setErrors(initialErrors)
         setSearch('')
+        setUrlForInfo('')
+    }
+
+    const hundleInfoTrack = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        setSoundcloudInfo(true)
+        getSoundсloudTrack({ url: urlForInfo })
+            .then((res) => {
+                setValues(prev => ({
+                    ...prev,
+                    title: res.data.title ?? '',
+                    soundcloudUrl: res.data.soundcloudUrl ?? '',
+                    releaseData: res.data.releaseData?.split('T')[0] ?? '',
+                    coverUrl: res.data.coverUrl ?? ''
+                }))
+                setSoundcloudInfo(false)
+            })
     }
 
     return (
         <form className={styles.form}>
             <div className={styles.content}>
                 <div className={styles.inputList}>
+                    <Input
+                        label='Получить информацию о треке через ссылку'
+                        placeholder='Введите ссылку на SoundCloud трека'
+                        type='text'
+                        labelFontSize='10px'
+                        isGray={true}
+                        value={urlForInfo}
+                        onChange={hundleChangeUrlForInfo}
+                    />
+                    <Button fontSize='12px' color='default' padding='12px 20px 10px 20px' onClick={hundleInfoTrack}>
+                        {
+                            soundcloudInfoLoading ? 'Загрузка..' : 'ПОЛУЧИТЬ ИНФО'
+                        }
+                    </Button>
                     <div className={styles.editCover}>
                         <Cover width='64px' height='64px' borderRadius='12px' url={values.coverUrl} isInput={true} />
                         <div className={styles.coverInput}>
@@ -130,7 +169,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
                     </div>
                     <Input
                         label='НАЗВАНИЕ ТРЕКА'
-                        placeholder='Введите никнейм артиста'
+                        placeholder='Введите название трека'
                         type='text'
                         labelFontSize='10px'
                         isGray={true}

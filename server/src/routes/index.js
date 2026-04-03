@@ -9,7 +9,7 @@ const ArtistRouter = require('./ArtistRouter')
 const TrackRouter = require('./TrackRouter')
 const ReviewRouter = require('./ReviewRouter')
 
-const upload = require('../config/multer')
+const { upload } = require('../config/multer')
 const getUser = require('../middlewares/getUser')
 
 const Router = require('express').Router

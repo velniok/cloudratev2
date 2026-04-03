@@ -2,6 +2,8 @@ const { validationResult } = require("express-validator")
 const ReviewServices = require("../services/ReviewServices")
 const TrackServices = require("../services/TrackServices")
 const AppError = require('../utils/AppError')
+const axios = require('axios')
+const { uploadFromSoundcloud } = require("../config/multer")
 
 class TrackControllers {
     async create(req, res, next) {
@@ -15,6 +17,28 @@ class TrackControllers {
             const track = trackCreate.track
 
             res.status(201).json({ track })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async getSoundcloudInfo(req, res, next) {
+        try {
+            const { url } = req.query
+            const clientId = 'tkIWLs4MIowq7bCXP80TOwx6DnDa7UPc'
+            const { data } = await axios.get(
+                `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
+            )
+            const coverUrl = await uploadFromSoundcloud(data.artwork_url)
+            console.log(data)
+
+            res.status(200).json({
+                title: data.title,
+                coverUrl: coverUrl,
+                releaseData: data.created_at,
+                soundcloudUrl: data.permalink_url
+            })
         } catch (err) {
             console.log(err)
             next(err)

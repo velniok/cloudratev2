@@ -64,7 +64,7 @@ export const UserFollowsPagination: FC<UserFollowsPaginationProps> = ({ user }) 
                             </div>
                             </>
                             :
-                            <>Этот пользователь еще не оценил трек</>
+                            <>Этот пользователь еще не подписался на артистов</>
                         }
                         </>
                         :

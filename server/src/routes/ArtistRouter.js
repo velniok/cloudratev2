@@ -8,6 +8,7 @@ const Router = require('express').Router
 const router = new Router()
 
 router.post('/create', checkAdmin, artistValidation, ArtistControllers.create)
+router.get('/soundcloud-info', checkAdmin, ArtistControllers.getSoundcloudInfo)
 router.get('/list', ArtistControllers.getList)
 router.get('/profile/:id', getUser, ArtistControllers.getProfile)
 router.get('/tracks/:id', getUser, ArtistControllers.getTracks)

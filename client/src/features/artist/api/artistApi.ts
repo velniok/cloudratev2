@@ -1,11 +1,15 @@
 import { IArtist } from "@/entities/artist"
 import { axios } from "@/shared/api"
-import { IArtistReq } from "./artistApiTypes"
+import { IArtistReq, ISoundcloudArtist } from "./artistApiTypes"
 import { IPagination } from "@/shared/types"
 import { ITrack } from "@/entities/track"
 
 export const getArtistListApi = (params: { page: number, limit: number }) => {
     return axios.get<{ artists: IArtist[], pagination: IPagination}>('/artist/list', { params: { page: params.page, limit: params.limit } })
+}
+
+export const getSoundсloudArtist = (params: { url: string }) => {
+    return axios.get<ISoundcloudArtist>('/artist/soundcloud-info', { params: { url: params.url }})
 }
 
 export const createArtistApi = (params: IArtistReq) => {

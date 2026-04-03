@@ -16,3 +16,10 @@ export interface ITrackUpdateReq {
         releaseData: string
     }
 }
+
+export interface ISoundcloudTrack {
+    title: string
+    coverUrl: string
+    soundcloudUrl: string
+    releaseData: string
+}

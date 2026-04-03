@@ -46,6 +46,7 @@ function App() {
         dispatch(authThunk())
     }, [])
 
+
     useEffect(() => {
         window.scrollTo({
             top: 0,

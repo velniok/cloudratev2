@@ -1,11 +1,15 @@
 import { ITrack } from "@/entities/track"
 import { axios } from "@/shared/api"
-import { ITrackReq, ITrackUpdateReq } from "./trackApiTypes"
+import { ISoundcloudTrack, ITrackReq, ITrackUpdateReq } from "./trackApiTypes"
 import { IPagination } from "@/shared/types"
 import { IReview } from "@/entities/review"
 
 export const getTrackListApi = (params: { page: number, limit: number }) => {
     return axios.get<{ tracks: ITrack[], pagination: IPagination }>('/track/list', { params: { page: params.page, limit: params.limit }})
+}
+
+export const getSoundсloudTrack = (params: { url: string }) => {
+    return axios.get<ISoundcloudTrack>('/track/soundcloud-info', { params: { url: params.url }})
 }
 
 export const getTrackProfileApi = (params: { trackId: number }) => {

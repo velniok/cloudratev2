@@ -7,6 +7,8 @@ import { createArtistThunk } from '../model/slice'
 import { IApiError } from '@/shared/types'
 import { useNavigate } from 'react-router-dom'
 import { IArtist } from '@/entities/artist'
+import { getSoundсloudArtist } from '../api/artistApi'
+import axios from 'axios'
 
 interface ArtistCreateFormProps {
     modalClose: () => void
@@ -35,12 +37,19 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
     }
     const [values, setValues] = useState(initialValues)
 
+    const [urlForInfo, setUrlForInfo] = useState<string>('')
+    const [soundcloudInfoLoading, setSoundcloudInfo] = useState<boolean>(false)
+
     const initialErrors = {
         name: '',
         avatarUrl: '',
         soundcloudUrl: '',
     }
     const [errors, setErrors] = useState(initialErrors)
+
+    const hundleChangeUrlForInfo = (e: ChangeEvent<HTMLInputElement>) => {
+        setUrlForInfo(e.target.value)
+    }
     
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -89,10 +98,39 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
         modalClose()
     }
 
+    const hundleInfoTrack = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        setSoundcloudInfo(true)
+        getSoundсloudArtist({ url: urlForInfo })
+            .then((res) => {
+                setValues(prev => ({
+                    ...prev,
+                    name: res.data.name ?? '',
+                    soundcloudUrl: res.data.soundcloudUrl ?? '',
+                    avatarUrl: res.data.avatarUrl ?? ''
+                }))
+                setSoundcloudInfo(false)
+            })
+    }
+
     return (
         <form className={styles.form}>
             <div className={styles.content}>
                 <div className={styles.inputList}>
+                    <Input
+                        label='Получить информацию об артисте через ссылку'
+                        placeholder='Введите ссылку на SoundCloud трека'
+                        type='text'
+                        labelFontSize='10px'
+                        isGray={true}
+                        value={urlForInfo}
+                        onChange={hundleChangeUrlForInfo}
+                    />
+                    <Button fontSize='12px' color='default' padding='12px 20px 10px 20px' onClick={hundleInfoTrack}>
+                        {
+                            soundcloudInfoLoading ? 'Загрузка..' : 'ПОЛУЧИТЬ ИНФО'
+                        }
+                    </Button>
                     <div className={styles.editAvatar}>
                         <Cover width='64px' height='64px' borderRadius='12px' url={values.avatarUrl} isInput={true} />
                         <div className={styles.avatarInput}>
