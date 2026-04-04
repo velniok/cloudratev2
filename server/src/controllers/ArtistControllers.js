@@ -51,9 +51,9 @@ class ArtistControllers {
             res.status(200).json({
                 artists,
                 pagination: {
-                    page,
-                    limit,
-                    total,
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
                     totalPages: Math.ceil(total / limit)
                 }
             })
@@ -86,9 +86,9 @@ class ArtistControllers {
             res.status(200).json({
                 tracks,
                 pagination: {
-                    page,
-                    limit,
-                    total,
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
                     totalPages: Math.ceil(total / limit)
                 }
             })

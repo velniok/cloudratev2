@@ -52,9 +52,11 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
     }
     
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        const { data } = await updateAvatarApi(file)
-        setValues(prev => ({ ...prev, avatarUrl: data.url }))
+        if (e.target.files?.[0]) {
+            const file = e.target.files[0]
+            const { data } = await updateAvatarApi(file)
+            setValues(prev => ({ ...prev, avatarUrl: data.url }))
+        }
     }
 
     const hundleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +91,7 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
                 hundleCancel(e)
             })
             .catch((err: IApiError) => {
-                setErrors(prev => ({ ...prev, [err.field]: err.message }))
+                setErrors(prev => ({ ...prev, [err.field ?? '']: err.message }))
             })
     }
 

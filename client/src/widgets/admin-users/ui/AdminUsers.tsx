@@ -1,16 +1,19 @@
 import { DeleteIcon, EditIcon, Modal, ProfileIcon, Table, Title } from '@/shared/ui'
 import styles from './AdminUsers.module.scss'
-import { FC, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IUser } from '@/entities/user'
-import { TStatus } from '@/shared/types'
-import { DeleteUserModal, UpdateRoleModal } from '@/features/user'
+import { DeleteUserModal, getUserListThunk, selectUserList, selectUserListStatus, UpdateRoleModal } from '@/features/user'
+import { useAppDispatch, useAppSelector } from '@/shared/lib'
 
-interface AdminUsersProps {
-    userList: IUser[]
-    userListStatus: TStatus
-}
+export const AdminUsers= () => {
 
-export const AdminUsers: FC<AdminUsersProps> = ({ userList, userListStatus }) => {
+    const dispatch = useAppDispatch()
+    const userList = useAppSelector(selectUserList)
+    const userListStatus = useAppSelector(selectUserListStatus)
+
+    useEffect(() => {
+        dispatch(getUserListThunk())
+    }, [])
 
     const [updateRole, setUpdateRole] = useState<boolean>(false)
     const [deleteUser, setDeleteUser] = useState<boolean>(false)
@@ -19,8 +22,10 @@ export const AdminUsers: FC<AdminUsersProps> = ({ userList, userListStatus }) =>
     const [user, setUser] = useState<IUser | null>(null)
 
     const hundleUpdateRole = (id: number) => {
-        setUser(prev => prev = userList.filter(user => user.id === id)[0])
-        setUpdateRole(true)
+        if (userList) {
+            setUser(prev => prev = userList.filter(user => user.id === id)[0])
+            setUpdateRole(true)
+        }
     }
 
     const hundleDeleteUser = (id: number) => {
@@ -71,7 +76,7 @@ export const AdminUsers: FC<AdminUsersProps> = ({ userList, userListStatus }) =>
                     modalOpen={updateRole}
                     modalClose={() => setUpdateRole(false)}
                 >
-                    <UpdateRoleModal user={user} modalClose={() => setUpdateRole(false)} />
+                    { user && <UpdateRoleModal user={user} modalClose={() => setUpdateRole(false)} /> }
                 </Modal>
                 <Modal
                     width='420px'
@@ -80,7 +85,7 @@ export const AdminUsers: FC<AdminUsersProps> = ({ userList, userListStatus }) =>
                     modalOpen={deleteUser}
                     modalClose={() => setDeleteUser(false)}
                 >
-                    <DeleteUserModal modalClose={() => setDeleteUser(false)} userId={userId} />
+                   { userId && <DeleteUserModal modalClose={() => setDeleteUser(false)} userId={userId} /> }
                 </Modal>
             </div>
         </div>

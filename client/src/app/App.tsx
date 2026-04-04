@@ -80,10 +80,10 @@ function App() {
                             <Route path="/registration" element={<RegPage />} />
                             <Route path="/login" element={<LoginPage />} />
         
-                            <Route path="/admin" element={<AdminPanelPage role={authUser?.role} />} />
-                            <Route path="/admin/artists" element={<AdminArtistsPage role={authUser?.role} />} />
-                            <Route path="/admin/tracks" element={<AdminTracksPage role={authUser?.role} />} />
-                            <Route path="/admin/users" element={<AdminUsersPage role={authUser?.role} />} />
+                            <Route path="/admin" element={<AdminPanelPage role={authUser?.role ?? 'user'} />} />
+                            <Route path="/admin/artists" element={<AdminArtistsPage role={authUser?.role ?? 'user'} />} />
+                            <Route path="/admin/tracks" element={<AdminTracksPage role={authUser?.role ?? 'user'} />} />
+                            <Route path="/admin/users" element={<AdminUsersPage role={authUser?.role ?? 'user'} />} />
                         </Routes>
                     </main>
                     <Notification />

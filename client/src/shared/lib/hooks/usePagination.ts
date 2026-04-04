@@ -3,7 +3,11 @@ import { useAppDispatch } from "./useAppDispatch"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useNotification } from "./useNotification"
 
-export const usePagination = (thunk: (params: { page: number, limit: number } | { page: number, limit: number, userId: number }) => any, path: string, limit: number, id?: number ) => {
+export const usePagination = (
+        thunk: (params: any) => any,
+        path: string, limit: number, id?: number
+    ) => {
+
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
     const navigate = useNavigate()

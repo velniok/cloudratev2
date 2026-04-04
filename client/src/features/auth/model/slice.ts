@@ -14,6 +14,7 @@ export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq & { verifyC
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -26,6 +27,7 @@ export const loginThunk = createAsyncThunk<IAuthRes, ILoginReq, { rejectValue: I
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -37,6 +39,7 @@ export const authThunk = createAsyncThunk<IAuthRes, void, { rejectValue: IApiErr
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -87,7 +90,7 @@ const authSlice = createSlice({
                 (action) => action.type.startsWith('auth') && action.type.endsWith('/rejected'),
                 (state, action: PayloadAction<IApiError>) => {
                     state.status = 'error',
-                    state.error = action.payload.message
+                    state.error = action.payload?.message ?? 'Непредвиденная ошибка'
                 }
             )
     }

@@ -32,7 +32,7 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
                 <Cover
                     isHovered={isHovered}
                     mb={'mb-16'}
-                    url={getOptimizedAvatar(track.coverUrl, 180, 180)}
+                    url={getOptimizedAvatar(track.coverUrl ?? '', 180, 180)}
                     width="175px"
                     height="175px"
                     borderRadius="12px"

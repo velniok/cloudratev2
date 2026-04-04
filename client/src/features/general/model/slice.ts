@@ -13,6 +13,7 @@ export const getGeneralThunk = createAsyncThunk<{ general: IGeneral }, void, { r
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -24,6 +25,7 @@ export const getArtistsCountThunk = createAsyncThunk<{ general: IGeneral }, void
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -39,20 +41,6 @@ const generalSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            // .addCase(getGeneralThunk.pending, (state) => {
-            //     state.general = null,
-            //     state.status = 'loading',
-            //     state.error = null
-            // })
-            // .addCase(getGeneralThunk.fulfilled, (state, action) => {
-            //     state.general = action.payload.general,
-            //     state.status = 'success'
-            // })
-            // .addCase(getGeneralThunk.rejected, (state, action) => {
-            //     state.status = 'error',
-            //     state.error = action.payload.message
-            // })
-
             .addMatcher(
                 (action) => action.type.startsWith('general') && action.type.endsWith('/pending'),
                 (state) => {
@@ -72,7 +60,7 @@ const generalSlice = createSlice({
                 (action) => action.type.startsWith('general') && action.type.endsWith('/rejected'),
                 (state, action: PayloadAction<IApiError>) => {
                     state.status = 'error',
-                    state.error = action.payload.message
+                    state.error = action.payload?.message ?? 'Непредвиденная ошибка'
                 }
             )
     }

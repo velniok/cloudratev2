@@ -207,7 +207,7 @@ class TrackServices {
                 track_check AS (
                     SELECT id
                     FROM tracks t
-                    WHERE title = $1 AND id != $7
+                    WHERE title = $1 AND id != $5
                 ),
                 updated as (
                     UPDATE tracks
@@ -215,10 +215,8 @@ class TrackServices {
                         title = $1,
                         cover_url = $2,
                         soundcloud_url = $3,
-                        artist_id = $4,
-                        feat_artist_ids = $5,
-                        release_data = $6
-                    WHERE id = $7 AND NOT EXISTS (SELECT 1 FROM track_check)
+                        release_data = $4
+                    WHERE id = $5 AND NOT EXISTS (SELECT 1 FROM track_check)
                     RETURNING *
                 )
             SELECT

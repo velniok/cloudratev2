@@ -25,18 +25,18 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
 
     return (
         <div className={styles.inner}>
-            <Cover url={getOptimizedAvatar(track.coverUrl, 200, 200)} width='200px' height='200px' borderRadius='12px' />
+            <Cover url={getOptimizedAvatar(track.coverUrl ?? '', 200, 200)} width='200px' height='200px' borderRadius='12px' />
             <div className={styles.info}>
                 <ul className={styles.artist__list}>
                     <div className={styles.artist__item} onClick={() => navigate(`/artist/${track.artist.id}`)}>
-                        <Cover width='32px' height='32px' borderRadius='50%' className={styles.artist__avatar} url={getOptimizedAvatar(track.artist.avatarUrl, 32, 32)} />
+                        <Cover width='32px' height='32px' borderRadius='50%' className={styles.artist__avatar} url={getOptimizedAvatar(track.artist.avatarUrl ?? '', 32, 32)} />
                         <h3 className={styles.artist__name}>{track.artist.name}</h3>
                     </div>
                     {
                         track.featArtists?.map((artist) => {
                             return (
                                 <li key={artist.id} className={styles.artist__item} onClick={() => navigate(`/artist/${artist.id}`)}>
-                                    <Cover width='32px' height='32px' borderRadius='50%' className={styles.artist__avatar} url={getOptimizedAvatar(artist.avatarUrl, 32, 32)} />
+                                    <Cover width='32px' height='32px' borderRadius='50%' className={styles.artist__avatar} url={getOptimizedAvatar(artist.avatarUrl ?? '', 32, 32)} />
                                     <h3 className={styles.artist__name}>{artist.name}</h3>
                                 </li>
                             )

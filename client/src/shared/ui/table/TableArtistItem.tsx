@@ -20,7 +20,7 @@ export const TableArtistItem: FC<TableArtistItemProps> = ({ artist, actions }) =
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
                 <Link to={`/artist/${artist.id}`} className={styles.artist}>
-                    <Cover width='40px' height='40px' borderRadius='6px' url={getOptimizedAvatar(artist.avatarUrl, 40, 40)} />
+                    <Cover width='40px' height='40px' borderRadius='6px' url={getOptimizedAvatar(artist.avatarUrl ?? '', 40, 40)} />
                     <p className={styles.artist__nickname}>{artist.name}</p>
                 </Link>
             </td>

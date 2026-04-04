@@ -3,17 +3,15 @@ import { Slider, Title } from "@/shared/ui"
 import styles from "./UserReviews.module.scss"
 import { FC, useEffect } from "react"
 import { IUser } from "@/entities/user"
-import { TStatus } from "@/shared/types"
 import { IReview } from "@/entities/review"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { getUserReviewsThunk, selectUserReviews, selectUserReviewsStatus } from "@/features/user"
 
 interface UserReviewsProps {
     user: IUser
-    userStatus: TStatus
 }
 
-export const UserReviews: FC<UserReviewsProps> = ({ user, userStatus }) => {
+export const UserReviews: FC<UserReviewsProps> = ({ user }) => {
 
     const dispatch = useAppDispatch()
     const reviews = useAppSelector(selectUserReviews)
@@ -29,13 +27,13 @@ export const UserReviews: FC<UserReviewsProps> = ({ user, userStatus }) => {
                 <Title link={`/user/${user?.username}/reviews`} linkTitle={'Показать все'}>НЕДАВНИЕ ОЦЕНКИ</Title>
                 <Slider>
                     {
-                        reviewsStatus === 'success'
+                        reviewsStatus === 'success' && reviews
                         ?
                         <>
                         {
                             reviews.length > 0 ?
                             reviews.map((review: IReview) => {
-                                return <TrackCard key={review.id} review={review} track={review.track} />
+                                if (review.track) return <TrackCard key={review.id} review={review} track={review.track} />
                             })
                             :
                             <>Пользователь ничего не оценил</>

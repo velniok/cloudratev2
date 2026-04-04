@@ -15,6 +15,7 @@ export const getArtistListThunk = createAsyncThunk<{ artists: IArtist[], paginat
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -25,7 +26,8 @@ export const createArtistThunk = createAsyncThunk<{ artist: IArtist }, IArtistRe
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -36,7 +38,8 @@ export const getArtistProfileThunk = createAsyncThunk<{artist: IArtist}, { id: n
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -47,7 +50,8 @@ export const getArtistTracksThunk = createAsyncThunk<{ tracks: ITrack[], paginat
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -58,7 +62,8 @@ export const updateArtistThunk = createAsyncThunk<{artist: IArtist}, { id: numbe
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -69,7 +74,8 @@ export const toggleFollowThunk = createAsyncThunk<{followed: boolean}, { artistI
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -81,6 +87,7 @@ export const deleteArtistThunk = createAsyncThunk<void, { id: number }, { reject
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -113,14 +120,12 @@ const artistSlice = createSlice({
         })
         .addCase(getArtistListThunk.fulfilled, (state, action) => {
             state.artistList = action.payload.artists
-            if (action.payload.pagination) {
-                state.artistListPagination = action.payload.pagination
-            }
+            if (action.payload.pagination) state.artistListPagination = action.payload.pagination
             state.artistListStatus = 'success'
         })
         .addCase(getArtistListThunk.rejected, (state, action) => {
             state.artistListStatus = 'error',
-            state.artistListError = action.payload.message
+            state.artistListError = action.payload?.message ?? 'Непредвиденная ошибка'
         })
 
         
@@ -136,7 +141,7 @@ const artistSlice = createSlice({
         .addCase(getArtistProfileThunk.rejected, (state, action) => {
             state.artist = null,
             state.artistStatus = 'error',
-            state.artistError = action.payload.message
+            state.artistError = action.payload?.message ?? 'Непредвиденная ошибка'
         })
 
         .addCase(getArtistTracksThunk.pending, (state) => {
@@ -145,14 +150,12 @@ const artistSlice = createSlice({
         })
         .addCase(getArtistTracksThunk.fulfilled, (state, action) => {
             state.tracks = action.payload.tracks
-            if (action.payload.pagination) {
-                state.tracksPagination = action.payload.pagination
-            }
+            if (action.payload.pagination) state.tracksPagination = action.payload.pagination
             state.tracksStatus = 'success'
         })
         .addCase(getArtistTracksThunk.rejected, (state, action) => {
             state.tracksStatus = 'error',
-            state.artistError = action.payload.message
+            state.artistError = action.payload?.message ?? 'Непредвиденная ошибка'
         })
         
         .addCase(createArtistThunk.pending, (state) => {
@@ -160,12 +163,12 @@ const artistSlice = createSlice({
             state.artistError = null
         })
         .addCase(createArtistThunk.fulfilled, (state, action) => {
-            state.artistList.push(action.payload.artist),
+            state.artistList?.push(action.payload.artist),
             state.artistStatus = 'idle'
         })
         .addCase(createArtistThunk.rejected, (state, action) => {
             state.artistStatus = 'error',
-            state.artistError = action.payload.message
+            state.artistError = action.payload?.message ?? 'Непредвиденная ошибка'
         })
 
         .addCase(updateArtistThunk.pending, (state) => {
@@ -173,14 +176,16 @@ const artistSlice = createSlice({
             state.artistError = null
         })
         .addCase(updateArtistThunk.fulfilled, (state, action) => {
-            state.artistList = state.artistList.map((artist) => {
-                if (artist.id === action.meta.arg.id) {
-                    Object.keys(action.meta.arg.req).map(key => {
-                        artist[key] = action.meta.arg.req[key]
-                    })
-                }
-                return artist
-            }),
+            if (state.artistList) {
+                state.artistList = state.artistList.map((artist) => {
+                    if (artist.id === action.meta.arg.id) {
+                        Object.keys(action.meta.arg.req).forEach(key => {
+                            (artist as any)[key] = (action.meta.arg.req as any)[key]
+                        })
+                    }
+                    return artist
+                })
+            }
             state.artistStatus = 'idle'
         })
         .addCase(updateArtistThunk.rejected, (state) => {
@@ -192,12 +197,14 @@ const artistSlice = createSlice({
             state.artistError = null
         })
         .addCase(toggleFollowThunk.fulfilled, (state, action) => {
-            if (action.payload.followed) {
-                ++state.artist.follow.followersCount
-                state.artist.follow.isFollowed = true
-            } else {
-                --state.artist.follow.followersCount
-                state.artist.follow.isFollowed = false
+            if (state.artist?.follow) {
+                if (action.payload.followed) {
+                    ++state.artist.follow.followersCount
+                    state.artist.follow.isFollowed = true
+                } else {
+                    --state.artist.follow.followersCount
+                    state.artist.follow.isFollowed = false
+                }
             }
         })
         .addCase(toggleFollowThunk.rejected, (state) => {
@@ -210,12 +217,12 @@ const artistSlice = createSlice({
             state.artistError = null
         })
         .addCase(deleteArtistThunk.fulfilled, (state, action) => {
-            state.artistList = state.artistList.filter((artist) => artist.id !== action.meta.arg.id),
+            if (state.artistList) state.artistList = state.artistList?.filter((artist) => artist.id !== action.meta.arg.id),
             state.artistStatus = 'idle'
         })
         .addCase(deleteArtistThunk.rejected, (state, action) => {
             state.artistStatus = 'error',
-            state.artistError = action.payload.message
+            state.artistError = action.payload?.message ?? 'Непредвиденная ошибка'
         })
     }
 })

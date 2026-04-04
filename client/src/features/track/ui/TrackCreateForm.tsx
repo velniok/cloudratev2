@@ -54,9 +54,11 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
     }
     
     const hundleCoverChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        const { data } = await updateAvatarApi(file)
-        setValues(prev => ({ ...prev, coverUrl: data.url }))
+        if (e.target.files) {
+            const file = e.target.files?.[0]
+            const { data } = await updateAvatarApi(file)
+            setValues(prev => ({ ...prev, coverUrl: data.url }))
+        }
     }
 
     const hundleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +114,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
                 }
                 hundleCancel(e)
             })
-            .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))
+            .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field ?? '']: err.message })))
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {
@@ -217,7 +219,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
                                 addArtist.map((artist) => {
                                     return (
                                         <li key={artist.id} className={styles.addArtistItem} onClick={() => onClickRemoveArtist(artist.id)}>
-                                            <Cover width='22px' height='22px' borderRadius='50%' url={artist.avatarUrl} />
+                                            <Cover width='22px' height='22px' borderRadius='50%' url={artist.avatarUrl ?? undefined} />
                                             <p className={styles.addArtistName}>{artist.name}</p>
                                         </li>
                                     )
@@ -235,8 +237,8 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
                                         ?
                                         <>
                                         {
-                                            result.artists.filter((artist) => !addArtist.some((addArtist) => addArtist.id === artist.id)).length > 0 ?
-                                            result.artists.map((artist) => {
+                                            result?.artists.filter((artist) => !addArtist.some((addArtist) => addArtist.id === artist.id))?.length ?
+                                            result?.artists.map((artist) => {
                                                 if (!addArtist.some((addArtist) => addArtist.id === artist.id)) {
                                                     return (
                                                         <SearchItem key={artist.id} data={artist} onClick={() => onClickAddArtist(artist)} /> 
@@ -244,7 +246,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
                                                 }
                                             })
                                             :
-                                            <>Ничего не найдено</>
+                                            <p className={styles.search__text}>Ничего не найдено</p>
                                         }
                                         </>
                                         :
@@ -254,7 +256,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
                                     }
                                     </>
                                     :
-                                    <>Пишите</>
+                                    <p className={styles.search__text}>Начните писать для поиска...</p>
                                 }
                             </ul>
                         </div>

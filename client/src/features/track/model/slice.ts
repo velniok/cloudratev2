@@ -15,7 +15,8 @@ export const getTrackListThunk = createAsyncThunk<{ tracks: ITrack[], pagination
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -26,7 +27,8 @@ export const getTrackProfileThunk = createAsyncThunk<{ track: ITrack }, { trackI
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -37,7 +39,8 @@ export const getTrackReviewsTextThunk = createAsyncThunk<{ reviews: IReview[], p
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -48,7 +51,8 @@ export const createTrackThunk = createAsyncThunk<{ track: ITrack }, ITrackReq, {
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -59,7 +63,8 @@ export const updateTrackThunk = createAsyncThunk<{ track: ITrack }, ITrackUpdate
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -70,7 +75,8 @@ export const toggleLikeReviewThunk = createAsyncThunk<{ liked: boolean }, { revi
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -81,7 +87,8 @@ export const deleteTrackThunk = createAsyncThunk<void, { id: number }, { rejectV
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -121,7 +128,7 @@ const trackSlice = createSlice({
             })
             .addCase(getTrackListThunk.rejected, (state, action) => {
                 state.trackListStatus = 'error',
-                state.trackListError = action.payload.message
+                state.trackListError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(getTrackProfileThunk.pending, (state) => {
@@ -135,7 +142,7 @@ const trackSlice = createSlice({
             })
             .addCase(getTrackProfileThunk.rejected, (state, action) => {
                 state.trackStatus = 'error',
-                state.trackError = action.payload.message
+                state.trackError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(getTrackReviewsTextThunk.pending, (state) => {
@@ -151,7 +158,7 @@ const trackSlice = createSlice({
             })
             .addCase(getTrackReviewsTextThunk.rejected, (state, action) => {
                 state.reviewsTextStatus = 'error',
-                state.trackError = action.payload.message
+                state.trackError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(createTrackThunk.pending, (state) => {
@@ -159,12 +166,12 @@ const trackSlice = createSlice({
                 state.trackError = null
             })
             .addCase(createTrackThunk.fulfilled, (state, action) => {
-                state.trackList.push(action.payload.track),
+                state.trackList?.push(action.payload.track),
                 state.trackStatus = 'idle'
             })
             .addCase(createTrackThunk.rejected, (state, action) => {
                 state.trackStatus = 'error',
-                state.trackError = action.payload.message
+                state.trackError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(updateTrackThunk.pending, (state) => {
@@ -172,42 +179,46 @@ const trackSlice = createSlice({
                 state.trackError = null
             })
             .addCase(updateTrackThunk.fulfilled, (state, action) => {
-                state.trackList = state.trackList.map(track => {
-                    if (track.id === action.meta.arg.id) {
-                        Object.keys(action.meta.arg.req).map((key) => {
-                            track[key] = action.meta.arg.req[key]
-                        })
-                    }
-                    return track
-                }),
+                if (state.trackList) {
+                    state.trackList = state.trackList.map(track => {
+                        if (track.id === action.meta.arg.id) {
+                            Object.keys(action.meta.arg.req).map((key) => {
+                                (track as any)[key] = (action.meta.arg.req as any)[key]
+                            })
+                        }
+                        return track
+                    })
+                }
                 state.trackStatus = 'idle'
             })
             .addCase(updateTrackThunk.rejected, (state, action) => {
                 state.trackStatus = 'error',
-                state.trackError = action.payload.message
+                state.trackError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(toggleLikeReviewThunk.pending, (state) => {
                 state.trackError = null
             })
             .addCase(toggleLikeReviewThunk.fulfilled, (state, action) => {
-                state.reviewsText = state.reviewsText.map(review => {
-                    if (review.id === action.meta.arg.reviewId) {
-                        if (action.payload.liked) {
-                            review.likesCount = String(+review.likesCount + 1)
-                            review.isLiked = true
-                        } else {
-                            review.likesCount = String(+review.likesCount - 1)
-                            review.isLiked = false
+                if (state.reviewsText) {
+                    state.reviewsText = state.reviewsText.map(review => {
+                        if (review.id === action.meta.arg.reviewId) {
+                            if (action.payload.liked) {
+                                review.likesCount = String(+review.likesCount + 1)
+                                review.isLiked = true
+                            } else {
+                                review.likesCount = String(+review.likesCount - 1)
+                                review.isLiked = false
+                            }
                         }
-                    }
-                    return review
-                })
+                        return review
+                    })
+                }
                 state.reviewsTextStatus = 'success'
             })
             .addCase(toggleLikeReviewThunk.rejected, (state, action) => {
                 state.reviewsTextStatus = 'error',
-                state.trackError = action.payload.message
+                state.trackError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(deleteTrackThunk.pending, (state) => {
@@ -215,12 +226,12 @@ const trackSlice = createSlice({
                 state.trackError = null
             })
             .addCase(deleteTrackThunk.fulfilled, (state, action) => {
-                state.trackList = state.trackList.filter((track) => track.id !== action.meta.arg.id),
+                if (state.trackList) state.trackList = state.trackList.filter((track) => track.id !== action.meta.arg.id),
                 state.trackStatus = 'idle'
             })
             .addCase(deleteTrackThunk.rejected, (state, action) => {
                 state.trackStatus = 'error',
-                state.trackError = action.payload.message
+                state.trackError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
     }
 })

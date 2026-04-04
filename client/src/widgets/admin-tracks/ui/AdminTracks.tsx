@@ -1,18 +1,16 @@
 import { Button, DeleteIcon, EditIcon, Input, Modal, PaginationButtons, PlusIcon, Table, Title } from '@/shared/ui'
 import styles from './AdminTracks.module.scss'
-import { FC, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ITrack } from '@/entities/track'
-import { IPagination, TStatus } from '@/shared/types'
-import { getTrackListThunk, TrackCreateForm, TrackDeleteModal, TrackUpdateForm } from '@/features/track'
-import { usePagination, useSearch } from '@/shared/lib'
+import { getTrackListThunk, selectTrackList, selectTrackListPagination, selectTrackListStatus, TrackCreateForm, TrackDeleteModal, TrackUpdateForm } from '@/features/track'
+import { useAppSelector, usePagination, useSearch } from '@/shared/lib'
+import { TStatus } from '@/shared/types'
 
-interface AdminTracksProps {
-    trackList: ITrack[]
-    trackListPagination: IPagination
-    trackListStatus: TStatus
-}
+export const AdminTracks = () => {
 
-export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, trackListPagination }) => {
+    const trackList = useAppSelector(selectTrackList)
+    const trackListPagination = useAppSelector(selectTrackListPagination)
+    const trackListStatus = useAppSelector(selectTrackListStatus)
 
     const { result, resultStatus, search, onChangeSearch } = useSearch('tracks')
     const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getTrackListThunk, '/admin/tracks', 10)
@@ -27,8 +25,8 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, 
         }
     }, [trackListStatus, trackList, result])
 
-    const [data, setData] = useState(null)
-    const [dataStatus, setDataStatus] = useState(null)
+    const [data, setData] = useState<ITrack[] | null>(null)
+    const [dataStatus, setDataStatus] = useState<TStatus>('idle')
 
     const [createTrack, setCreateTrack] = useState<boolean>(false)
     const [updateTrack, setUpdateTrack] = useState<boolean>(false)
@@ -43,8 +41,10 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, 
     }
 
     const hundleUpdateTrack = (id: number) => {
-        setTrack((prev) => prev = trackList.filter(track => track.id === id)[0])
-        setUpdateTrack(true)
+        if (trackList) {
+            setTrack((prev) => prev = trackList.filter(track => track.id === id)[0])
+            setUpdateTrack(true)
+        }
     }
 
     return (
@@ -53,7 +53,7 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, 
                 <Title>ТРЕКИ</Title>
                 <div className={styles.top}>
                     {
-                        trackListStatus === 'success' ? <p className={styles.count}>Всего: {trackListPagination.total} артистов</p> : <>Загрузка</>
+                        trackListStatus === 'success' && trackListPagination ? <p className={styles.count}>Всего: {trackListPagination.total} артистов</p> : <>Загрузка</>
                     }
                     <Button color='accent' padding='10px 20px 10px 20px' onClick={() => setCreateTrack(true)}>
                         <div className={styles.buttonInner}>
@@ -94,13 +94,13 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, 
                     ]}
                 />
                 {
-                    trackListStatus === 'success' &&
+                    trackListStatus === 'success' && trackListPagination &&
                         <div className={styles.bottom}>
                             <div className={styles.left}>
-                                <p className={styles.text}>Показано {((+trackListPagination.page - 1) * limit) + 1}-{limit * +trackListPagination.page} из {trackListPagination.total}</p>
+                                <p className={styles.text}>Показано {((trackListPagination.page - 1) * limit) + 1}-{limit * trackListPagination.page} из {trackListPagination.total}</p>
                             </div>
                             <PaginationButtons
-                                page={+trackListPagination.page}
+                                page={trackListPagination.page}
                                 totalPages={trackListPagination.totalPages}
                                 hundleNextPage={hundleNextPage}
                                 hundlePrevPage={hundlePrevPage}
@@ -115,7 +115,15 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, 
                     modalOpen={createTrack}
                     modalClose={() => setCreateTrack(false)}
                 >
-                    { trackListStatus === 'success' && <TrackCreateForm trackListLength={trackList.length} lastPage={trackListPagination.totalPages} limit={limit} modalClose={() => setCreateTrack(false)} /> }
+                    {
+                        trackListStatus === 'success' && trackList && trackListPagination &&
+                        <TrackCreateForm
+                            trackListLength={trackList.length}
+                            lastPage={trackListPagination.totalPages}
+                            limit={limit}
+                            modalClose={() => setCreateTrack(false)}
+                        />
+                    }
                 </Modal>
                 <Modal
                     width='520px'
@@ -135,7 +143,16 @@ export const AdminTracks: FC<AdminTracksProps> = ({ trackList, trackListStatus, 
                     modalOpen={deleteTrack}
                     modalClose={() => setDeleteTrack(false)}
                 >
-                    { trackListStatus === 'success' && <TrackDeleteModal trackListLength={trackList.length} lastPage={trackListPagination.totalPages} limit={limit} modalClose={() => setDeleteTrack(false)} trackId={trackId} /> }
+                    {
+                        trackListStatus === 'success' && trackList && trackListPagination && trackId &&
+                        <TrackDeleteModal
+                            trackListLength={trackList.length}
+                            lastPage={trackListPagination.totalPages}
+                            limit={limit}
+                            modalClose={() => setDeleteTrack(false)}
+                            trackId={trackId}
+                            />
+                    }
                 </Modal>
             </div>
         </div>

@@ -2,7 +2,6 @@ import { Title } from '@/shared/ui'
 import styles from './SearchWidget.module.scss'
 import { SearchInput } from '@/features/search'
 import { SearchTabs } from '@/features/search'
-import { useState } from 'react'
 import { useSearch } from '@/shared/lib'
 
 export const SearchWidget = () => {

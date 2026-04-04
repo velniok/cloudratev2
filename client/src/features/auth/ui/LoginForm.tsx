@@ -2,7 +2,7 @@ import { useState, type ChangeEvent, type MouseEvent } from "react"
 import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { Button, Input } from "@/shared/ui"
 import { clearError, loginThunk } from "../model/slice"
-import { selectAuthError, selectAuthStatus } from "../model/selectors"
+import { selectAuthError } from "../model/selectors"
 import { useNavigate } from "react-router-dom"
 
 export const LoginForm = () => {

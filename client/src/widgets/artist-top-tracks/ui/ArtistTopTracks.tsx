@@ -2,15 +2,13 @@ import type { FC } from "react"
 import { TrackCard, TrackCardSekelton  } from "@/entities/track"
 import { Slider, Title } from "@/shared/ui"
 import styles from "./ArtistTopTracks.module.scss"
-import { TStatus } from "@/shared/types"
 import { IArtist } from "@/entities/artist"
 
 interface ArtistTopTracksProps {
     artist: IArtist
-    artistStatus: TStatus
 }
 
-export const ArtistTopTracks: FC<ArtistTopTracksProps> = ({ artist, artistStatus }) => {
+export const ArtistTopTracks: FC<ArtistTopTracksProps> = ({ artist }) => {
 
     return (
         <div className={styles.wrapper}>
@@ -18,26 +16,16 @@ export const ArtistTopTracks: FC<ArtistTopTracksProps> = ({ artist, artistStatus
                 <Title>ТОП ТРЕКОВ</Title>
                 <Slider>
                     {
-                        artistStatus === 'success'
-                        ?
+                        artist.topTracks ?
                         <>
                         {
-                            artist.topTracks ?
-                            <>
-                            {
-                                artist.topTracks.map((track) => {
-                                    return <TrackCard key={track.id} track={track} />
-                                })
-                            }
-                            </>
-                            :
-                            <>Треков нет</>
+                            artist.topTracks.map((track) => {
+                                return <TrackCard key={track.id} track={track} />
+                            })
                         }
                         </>
                         :
-                        Array.from({ length: 5 }).map((_, index) => {
-                            return <TrackCardSekelton key={index} />
-                        })
+                        <>Треков нет</>
                     }
                 </Slider>
             </div>

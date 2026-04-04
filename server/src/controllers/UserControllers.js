@@ -41,9 +41,9 @@ class UserControllers {
             res.status(200).json({
                 reviews,
                 pagination: {
-                    page,
-                    limit,
-                    total,
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
                     totalPages: Math.ceil(total / limit)
                 } })
         } catch (err) {
@@ -62,9 +62,9 @@ class UserControllers {
             res.status(200).json({
                 artists,
                 pagination: {
-                    page,
-                    limit,
-                    total,
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
                     totalPages: Math.ceil(total / limit)
                 }
             })

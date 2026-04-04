@@ -7,7 +7,8 @@ import { useAppSelector } from '@/shared/lib'
 import { selectAuthUser } from '@/features/auth'
 
 interface LeaveReviewProps {
-    onSubmit: (req: IReviewReq | { id: number, req: { text: string, userId: number } }) => void
+    onSubmit?: (req: IReviewReq) => void
+    onSubmitText?: (req: { id: number, req: { text: string, userId: number } }) => void
     userId: number
     trackId: number
     textOnly?: boolean
@@ -17,7 +18,7 @@ interface LeaveReviewProps {
     createReviewLoading: boolean
 }
 
-export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, textOnly, review, errorText, clearErrorText, createReviewLoading }) => {
+export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, textOnly, review, errorText, onSubmitText, clearErrorText, createReviewLoading }) => {
 
     const authUser = useAppSelector(selectAuthUser)
 
@@ -25,7 +26,7 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
         if (textOnly) {
             setValues(prev => prev.map((_, index) => {
                 const criteria = `criteria` + `${index + 1}`
-                return review[criteria]
+                return (review as any)[criteria]
             }))
         }
     }, [])
@@ -170,15 +171,15 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
                     textOnly ?
                     <>
                     {
-                        textarea &&
+                        textarea && review && authUser &&
                         <Button
                             color='accent'
                             padding='14px 24px 10px 24px'
-                            onClick={() => onSubmit({
+                            onClick={() => onSubmitText?.({
                                 id: review.id,
                                 req: {
                                     text: text,
-                                    userId: authUser?.id,
+                                    userId: authUser.id,
                                 }
                             })}
                         >
@@ -192,7 +193,7 @@ export const LeaveReview: FC<LeaveReviewProps> = ({ onSubmit, userId, trackId, t
                     <Button
                         color='accent'
                         padding='14px 24px 10px 24px'
-                        onClick={() => onSubmit({
+                        onClick={() => onSubmit?.({
                             text: text,
                             userId: userId,
                             trackId: trackId,

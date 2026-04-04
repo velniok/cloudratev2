@@ -49,13 +49,13 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
             })
     }
 
-    if (!review) {
+    if (!review && user) {
         return <LeaveReview onSubmit={onSubmit} createReviewLoading={createReviewLoading} trackId={track.id} userId={user.id} errorText={errorText} clearErrorText={() => setErrorText('')} />
     }
 
-    if (!review.text) {
-        return <LeaveReview onSubmit={onSubmitText} createReviewLoading={createReviewLoading} trackId={track.id} userId={user.id} review={review} textOnly={true} errorText={errorText} clearErrorText={() => setErrorText('')} />
+    if (!review?.text && user) {
+        return <LeaveReview onSubmitText={onSubmitText} createReviewLoading={createReviewLoading} trackId={track.id} userId={user.id} review={review} textOnly={true} errorText={errorText} clearErrorText={() => setErrorText('')} />
     }
 
-    return <LeavedReview review={review} />
+    if (review) return <LeavedReview review={review} />
 }

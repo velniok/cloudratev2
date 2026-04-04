@@ -8,7 +8,6 @@ import { IReview, ReviewCard, ReviewCardSkeleton } from '@/entities/review'
 export const NewReviews = () => {
 
     const dispatch = useAppDispatch()
-    const newReviews = useAppSelector(selectNewReviews)
     const newReviewsStatus = useAppSelector(selectNewReviewsStatus)
 
     const [chunk, setChunk] = useState<IReview[][]>([])
@@ -39,11 +38,13 @@ export const NewReviews = () => {
                                 <ul key={index}>
                                     {
                                         group.map((review) => {
-                                            return (
-                                                <li key={review.id}>
-                                                    <ReviewCard showMore={true} review={review} track={review.track} />
-                                                </li>
-                                            )
+                                            if (review.user && review.track) {
+                                                return (
+                                                    <li key={review.id}>
+                                                        <ReviewCard showMore={true} review={review} track={review.track} user={review.user} />
+                                                    </li>
+                                                )
+                                            }
                                         })
                                     }
                                 </ul>

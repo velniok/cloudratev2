@@ -19,7 +19,7 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
 
     useEffect(() => {
         setValues(prev => ({ ...prev, name: artist.name }))
-        setValues(prev => ({ ...prev, avatarUrl: artist.avatarUrl }))
+        setValues(prev => ({ ...prev, avatarUrl: artist.avatarUrl ?? '' }))
         setValues(prev => ({ ...prev, soundcloudUrl: artist.soundcloudUrl }))
         setErrors(initialErrors)
     }, [artist, modalClose])
@@ -41,9 +41,11 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
     const [errors, setErrors] = useState(initialErrors)
 
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        const { data } = await updateAvatarApi(file)
-        setValues(prev => ({ ...prev, avatarUrl: data.url }))
+        if (e.target.files?.[0]) {
+            const file = e.target.files[0]
+            const { data } = await updateAvatarApi(file)
+            setValues(prev => ({ ...prev, avatarUrl: data.url }))
+        }
     }
 
     const hundleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +78,7 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
                 hundleCancel(e)
             })
             .catch((err: IApiError) => {
-                setErrors(prev => ({ ...prev, [err.field]: err.message }))
+                setErrors(prev => ({ ...prev, [err.field ?? '']: err.message }))
             })
     }
 

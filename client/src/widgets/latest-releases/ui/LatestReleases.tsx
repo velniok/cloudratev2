@@ -21,8 +21,7 @@ export const LatestReleases = () => {
                 <Title>СВЕЖИЕ РЕЛИЗЫ</Title>
                 <Slider>
                     {
-                        newTracksStatus === 'success'
-                        ?
+                        newTracksStatus === 'success' && newTracks ?
                         <>
                         {
                             newTracks.map((track) => {

@@ -35,16 +35,18 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
     const [errors, setErrors] = useState(initialErrors)
 
     useEffect(() => {
-        setValues(prev => ({ ...prev, title: track.title }))
-        setValues(prev => ({ ...prev, coverUrl: track.coverUrl }))
-        setValues(prev => ({ ...prev, soundcloudUrl: track.soundcloudUrl }))
-        setValues(prev => ({ ...prev, releaseData: track.releaseData }))
+        setValues(prev => ({ ...prev, title: track.title ?? '' }))
+        setValues(prev => ({ ...prev, coverUrl: track.coverUrl ?? '' }))
+        setValues(prev => ({ ...prev, soundcloudUrl: track.soundcloudUrl ?? '' }))
+        setValues(prev => ({ ...prev, releaseData: track.releaseData ?? '' }))
     }, [track, modalClose])
 
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        const { data } = await updateAvatarApi(file)
-        setValues(prev => ({ ...prev, coverUrl: data.url }))
+        if (e.target.files?.[0]) {
+            const file = e.target.files?.[0]
+            const { data } = await updateAvatarApi(file)
+            setValues(prev => ({ ...prev, coverUrl: data.url }))
+        }
     }
 
     const hundleChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +83,7 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
                 notify('Трек изменён', 'Трек успешно изменён', 'edit')
                 hundleCancel(e)
             })
-            .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field]: err.message })))
+            .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field ?? '']: err.message })))
     }
 
     const hundleCancel = (e: MouseEvent<HTMLButtonElement>) => {

@@ -3,13 +3,13 @@ import { ITrack } from "@/entities/track";
 import { IPagination, TStatus } from "@/shared/types";
 
 export interface ITrackState {
-    track: ITrack
+    track: ITrack | null
     trackStatus: TStatus
     trackError: string | null
 
     reviewsText: IReview[] | null
     reviewsTextStatus: TStatus
-    reviewsTextPagination: IPagination
+    reviewsTextPagination: IPagination | null
 
     trackList: ITrack[] | null
     trackListPagination: IPagination | null

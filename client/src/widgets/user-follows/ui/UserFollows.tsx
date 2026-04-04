@@ -27,7 +27,7 @@ export const UserFollows: FC<UserFollowsProps> = ({ user }) => {
                 <Title link={`/user/${user?.username}/follows`} linkTitle={'Показать все'}>ПОДПИСКИ</Title>
                 <Slider>
                     {
-                        followsStatus === 'success' ?
+                        followsStatus === 'success' && follows ?
                         <>
                         {
                             follows.length > 0 ?

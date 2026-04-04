@@ -8,14 +8,10 @@ export interface IArtist {
     name: string
     avatarUrl: string | null
     soundcloudUrl: string
-    avgRating: number | null
-    tracks: {
-        trackList: ITrack[]
-        pagination: IPagination
-    }
-    topTracks: ITrack[] | null
+    avgRating?: number | null
+    topTracks?: ITrack[]
     tracksCount?: number
-    follow: {
+    follow?: {
         followersCount: number
         isFollowed: boolean
     }

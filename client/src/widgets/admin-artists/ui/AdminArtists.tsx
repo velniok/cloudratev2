@@ -1,19 +1,17 @@
 import { Button, DeleteIcon, EditIcon, Input, Modal, PaginationButtons, PlusIcon, Table, Title } from '@/shared/ui'
 import styles from './AdminArtists.module.scss'
-import { usePagination, useSearch } from '@/shared/lib'
+import { useAppSelector, usePagination, useSearch } from '@/shared/lib'
 import { IArtist } from '@/entities/artist'
-import { FC, useEffect, useState } from 'react'
-import { IPagination, TStatus } from '@/shared/types'
-import { ArtistCreateForm, ArtistDeleteModal, getArtistListThunk } from '@/features/artist'
+import { useEffect, useState } from 'react'
+import { TStatus } from '@/shared/types'
+import { ArtistCreateForm, ArtistDeleteModal, getArtistListThunk, selectArtistList, selectArtistListPagination, selectArtistListStatus } from '@/features/artist'
 import { ArtistUpdateForm } from '@/features/artist/ui/ArtistUpdateForm'
 
-interface AdminArtistsProps {
-    artistList: IArtist[]
-    artistListStatus: TStatus
-    artistListPagination: IPagination
-}
+export const AdminArtists = () => {
 
-export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStatus, artistListPagination }) => {
+    const artistList = useAppSelector(selectArtistList)
+    const artistListPagination = useAppSelector(selectArtistListPagination)
+    const artistListStatus = useAppSelector(selectArtistListStatus)
 
     const { result, resultStatus, search, onChangeSearch } = useSearch('artists')
     const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getArtistListThunk, '/admin/artists', 10)
@@ -28,8 +26,8 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
         }
     }, [artistListStatus, artistList, result])
 
-    const [data, setData] = useState(null)
-    const [dataStatus, setDataStatus] = useState(null)
+    const [data, setData] = useState<IArtist[] | null>(null)
+    const [dataStatus, setDataStatus] = useState<TStatus>('idle')
 
     const [createArtist, setCreateArtist] = useState<boolean>(false)
     const [updateArtist, setUpdateArtist] = useState<boolean>(false)
@@ -39,8 +37,10 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
     const [artist, setArtist] = useState<IArtist | null>(null)
 
     const hundleUpdateArtist = (id: number) => {
-        setArtist(prev => prev = artistList.filter(artist => artist.id === id)[0])
-        setUpdateArtist(true)
+        if (artistList) {
+            setArtist(prev => prev = artistList.filter(artist => artist.id === id)[0])
+            setUpdateArtist(true)
+        }
     }
 
     const hundleDeleteArtist = (id: number) => {
@@ -54,7 +54,12 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                 <Title>АРТИСТЫ</Title>
                 <div className={styles.top}>
                     {
-                        artistListStatus === 'success' ? <p className={styles.count}>Всего: {artistListPagination.total} артистов</p> : <>Загрузка</>
+                        artistListStatus === 'success' && artistListPagination ?
+                            <p className={styles.count}>
+                                Всего: {artistListPagination.total} артистов
+                            </p>
+                        :
+                            <>Загрузка</>
                     }
                     <Button color='accent' padding='10px 20px 10px 20px' onClick={() => setCreateArtist(true)}>
                         <div className={styles.buttonInner}>
@@ -98,13 +103,13 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                     result?.artists?.length === 0 && <p className={styles.text}>Ничего не найдено</p>
                 }
                 {
-                    artistListStatus === 'success' &&
+                    artistListStatus === 'success' && artistListPagination &&
                         <div className={styles.bottom}>
                             <div className={styles.left}>
-                                <p className={styles.text}>Показано {((+artistListPagination.page - 1) * limit) + 1}-{limit * +artistListPagination.page} из {artistListPagination.total}</p>
+                                <p className={styles.text}>Показано {((artistListPagination.page - 1) * limit) + 1}-{limit * artistListPagination.page} из {artistListPagination.total}</p>
                             </div>
                             <PaginationButtons
-                                page={+artistListPagination.page}
+                                page={artistListPagination.page}
                                 totalPages={artistListPagination.totalPages}
                                 hundleNextPage={hundleNextPage}
                                 hundlePrevPage={hundlePrevPage}
@@ -119,7 +124,15 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                     modalOpen={createArtist}
                     modalClose={() => setCreateArtist(false)}
                 >
-                    { artistListStatus === 'success' && <ArtistCreateForm artistListLength={artistList.length} modalClose={() => setCreateArtist(false)} lastPage={artistListPagination.totalPages} limit={limit} /> }
+                    {
+                        artistListStatus === 'success' && artistList && artistListPagination &&
+                        <ArtistCreateForm
+                            artistListLength={artistList.length}
+                            modalClose={() => setCreateArtist(false)}
+                            lastPage={artistListPagination.totalPages}
+                            limit={limit}
+                        />
+                    }
                 </Modal>
                 <Modal
                     width='520px'
@@ -139,7 +152,16 @@ export const AdminArtists: FC<AdminArtistsProps> = ({ artistList, artistListStat
                     modalOpen={deleteArtist}
                     modalClose={() => setDeleteArtist(false)}
                 >
-                    { artistListStatus === 'success' && <ArtistDeleteModal artistListLength={artistList.length} lastPage={artistListPagination.totalPages} limit={limit} modalClose={() => setDeleteArtist(false)} artistId={artistId} /> }
+                    { 
+                        artistListStatus === 'success' && artistListPagination && artistList && artistId &&
+                        <ArtistDeleteModal
+                        artistListLength={artistList.length}
+                        lastPage={artistListPagination.totalPages}
+                        limit={limit} 
+                        modalClose={() => setDeleteArtist(false)}
+                        artistId={artistId}
+                        />
+                    }
                 </Modal>
             </div>
         </div>

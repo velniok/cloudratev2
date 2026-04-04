@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import styles from './AdminSidebar.module.scss'
-import { DashboardIcon, HomeIcon, LogoIcon, ProfileIcon, TrackIcon, UsersIcon } from '@/shared/ui'
+import { LogoIcon } from '@/shared/ui'
 import { FC } from 'react'
 
 interface AdminSidebarProps {

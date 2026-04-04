@@ -36,26 +36,26 @@ export const UserFollowsPagination: FC<UserFollowsPaginationProps> = ({ user }) 
                 <LinksList links={links} />
                 <Title>ВСЕ ПОДПИСКИ {user?.nickname}</Title>
                     {
-                        followsStatus === 'success' ?
+                        followsStatus === 'success' && follows && followsPagination ?
                         <>
                         {
                             follows.length > 0 ?
                             <>
-                            <p className={styles.text}>Показано {((+followsPagination?.page - 1) * limit) + 1}-{(limit * +followsPagination?.page)} из {+followsPagination?.total}</p>
+                            <p className={styles.text}>Показано {((followsPagination.page - 1) * limit) + 1}-{(limit * followsPagination.page)} из {followsPagination.total}</p>
                             <ul className={`${styles.list} ${window.innerWidth <= 767 ? styles.row : ''}`}>
                             {
                                 follows.map((artist) => {
                                     if (window.innerWidth > 767) {
                                         return <ArtistCard artist={artist} key={artist.id} />
                                     } else {
-                                        return <ArtistRow artist={artist} key={artist.id} action={<FollowArtistToggle thunk={toggleFollowThunk} isFollowed={artist.follow.isFollowed} artistId={artist.id} />} />
+                                        return <ArtistRow artist={artist} key={artist.id} action={<FollowArtistToggle thunk={toggleFollowThunk} isFollowed={artist.follow?.isFollowed ?? false} artistId={artist.id} />} />
                                     }
                                 })
                             }
                             </ul>
                             <div className={styles.bottom}>
                                 <PaginationButtons
-                                    page={+followsPagination.page}
+                                    page={followsPagination.page}
                                     totalPages={followsPagination.totalPages}
                                     hundleNextPage={hundleNextPage}
                                     hundlePrevPage={hundlePrevPage}

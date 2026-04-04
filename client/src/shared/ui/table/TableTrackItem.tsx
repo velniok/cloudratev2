@@ -19,13 +19,13 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
         <tr className={styles.table__row}>
             <td className={styles.table__data}>
                 <Link to={`/track/${track.id}`} className={styles.track}>
-                    <Cover width='40px' height='40px' borderRadius='6px' url={getOptimizedAvatar(track.coverUrl, 40, 40)} />
+                    <Cover width='40px' height='40px' borderRadius='6px' url={getOptimizedAvatar(track.coverUrl ?? '', 40, 40)} />
                     <p className={styles.track__title}>{track.title}</p>
                 </Link>
             </td>
             <td className={styles.table__data}>
                 <li className={styles.track__artistItem}>
-                    <Cover width='32px' height='32px' borderRadius='50%' url={track.artist?.avatarUrl} />
+                    <Cover width='32px' height='32px' borderRadius='50%' url={track.artist.avatarUrl ?? ''} />
                     <p className={styles.track__artistNickname}>{track.artist?.name}</p>
                 </li>
                 {/* <ul className={styles.track__artistList}>

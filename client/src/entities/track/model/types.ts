@@ -17,7 +17,7 @@ export interface ITrack {
         criteria4: number | null
         criteria5: number | null
     }
-    artitstId: number
+    artistId: number
     artist: IArtist
     featArtistIds: number[]
     featArtists: IArtist[] | null

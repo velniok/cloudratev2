@@ -1,20 +1,17 @@
 import { PaginationButtons, Table, Title } from '@/shared/ui'
 import styles from './ArtistReleases.module.scss'
 import { FC } from 'react'
-import { IArtist } from '@/entities/artist'
-import { TStatus } from '@/shared/types'
 import { TrackRow, TrackRowSkelton } from '@/entities/track'
 import { useAppSelector, usePagination } from '@/shared/lib'
 import { getArtistTracksThunk, selectArtistTracks, selectArtistTracksPagination, selectArtistTracksStatus } from '@/features/artist'
 
 interface ArtistReleasesProps {
-    artist: IArtist
-    artistStatus: TStatus
+    artistId: number
 }
 
-export const ArtistReleases: FC<ArtistReleasesProps> = ({ artist, artistStatus }) => {
+export const ArtistReleases: FC<ArtistReleasesProps> = ({ artistId }) => {
 
-    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getArtistTracksThunk, `/artist/${artist.id}`, 10, artist.id )
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getArtistTracksThunk, `/artist/${artistId}`, 10, artistId)
     const tracksStatus = useAppSelector(selectArtistTracksStatus)
     const tracks = useAppSelector(selectArtistTracks)
     const tracksPagination = useAppSelector(selectArtistTracksPagination)
@@ -24,12 +21,12 @@ export const ArtistReleases: FC<ArtistReleasesProps> = ({ artist, artistStatus }
             <div className="container">
                 <Title>ДИСКОГРАФИЯ АРТИСТА</Title>
                         {
-                            tracksStatus === 'success' ?
+                            tracksStatus === 'success' && tracks && tracksPagination ?
                             <>
                             {
                                 tracks.length > 0 ?
                                 <>
-                                    <p className={styles.text}>Показано {((+tracksPagination?.page - 1) * limit) + 1}-{(limit * +tracksPagination?.page)} из {+tracksPagination?.total}</p>
+                                    <p className={styles.text}>Показано {((tracksPagination?.page - 1) * limit) + 1}-{(limit * tracksPagination?.page)} из {tracksPagination?.total}</p>
                                     <ul className={styles.list}>
                                     {
                                         tracks.map((track) => {
@@ -39,7 +36,7 @@ export const ArtistReleases: FC<ArtistReleasesProps> = ({ artist, artistStatus }
                                     </ul>
                                     <div className={styles.bottom}>
                                         <PaginationButtons
-                                            page={+tracksPagination.page}
+                                            page={tracksPagination.page}
                                             totalPages={tracksPagination.totalPages}
                                             hundleNextPage={hundleNextPage}
                                             hundlePrevPage={hundlePrevPage}

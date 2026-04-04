@@ -21,11 +21,11 @@ export const ArtistPage = () => {
     return (
         <>
         {
-            artistStatus === 'success' ?
+            artistStatus === 'success' && artist ?
             <>
-                <ArtistHeader artist={artist} artistStatus={artistStatus} />
-                <ArtistTopTracks artist={artist} artistStatus={artistStatus} />
-                <ArtistReleases artist={artist} artistStatus={artistStatus} />
+                <ArtistHeader artist={artist} />
+                <ArtistTopTracks artist={artist} />
+                <ArtistReleases artistId={artist.id} />
             </>
             :
             <Loading />

@@ -45,7 +45,7 @@ const searchSlice = createSlice({
             })
             .addCase(searchThunk.rejected, (state, action) => {
                 state.status = 'error',
-                state.error = action.payload.message
+                state.error = action.payload?.message ?? ''
             })
     }
 })

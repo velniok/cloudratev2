@@ -1,9 +1,9 @@
 import { Tabs } from '@/shared/ui'
 import styles from './SearchTabs.module.scss'
 import { FC } from 'react'
-import { TrackCard, TrackCardSekelton, TrackRow, TrackRowSkelton } from '@/entities/track'
-import { ArtistCard, ArtistCardSkeleton, ArtistRow, ArtistRowSkeleton } from '@/entities/artist'
-import { UserCard, UserCardSkeleton } from '@/entities/user'
+import { ITrack, TrackCard, TrackCardSekelton, TrackRow, TrackRowSkelton } from '@/entities/track'
+import { ArtistCard, ArtistCardSkeleton, ArtistRow, ArtistRowSkeleton, IArtist } from '@/entities/artist'
+import { IUser, UserCard, UserCardSkeleton } from '@/entities/user'
 import { ISearch } from '../api/searchApiTypes'
 import { TStatus } from '@/shared/types'
 import { FollowArtistToggle } from '@/features/artist'
@@ -12,7 +12,7 @@ import { toggleFollowThunk } from '@/features/user'
 interface SearchTabsProps {
     filter: string
     hundleFilter: (tab: 'artists' | 'tracks' | 'users') => void
-    result: ISearch
+    result: ISearch | null
     resultStatus: TStatus
 }
 
@@ -37,14 +37,14 @@ export const SearchTabs: FC<SearchTabsProps> = ({ hundleFilter, filter, result, 
         <div className={styles.wrapper}>
             <Tabs tabs={tabs} activeTab={filter} hundleActiveTab={hundleFilter} />
             {
-                resultStatus === 'success' ?
+                resultStatus === 'success' && result ?
                 <>
                 {
-                    result[filter]?.length === 0 ?
+                    (result as any)[filter].length === 0 ?
                     <p className={styles.text}>Ничего не найдено.</p>
                     :
                     <div className={`${styles.list} ${styles[filter]} ${window.innerWidth <= 767 ? styles.row : ''}`}>
-                        {filter === 'tracks' && result.tracks?.map(t => 
+                        {filter === 'tracks' && result.tracks.map(t => 
                         {
                             if (window.innerWidth > 767) {
                                 return <TrackCard key={t.id} track={t} />
@@ -53,16 +53,16 @@ export const SearchTabs: FC<SearchTabsProps> = ({ hundleFilter, filter, result, 
                             }
                         }
                         )}
-                        {filter === 'artists' && result.artists?.map(a =>
+                        {filter === 'artists' && result.artists.map(a =>
                         {
                             if (window.innerWidth > 767) {
                                 return <ArtistCard key={a.id} artist={a} />
                             } else {
-                                return <ArtistRow key={a.id} artist={a} action={<FollowArtistToggle thunk={toggleFollowThunk} isFollowed={a.follow.isFollowed} artistId={a.id} />} />
+                                return <ArtistRow key={a.id} artist={a} action={<FollowArtistToggle thunk={toggleFollowThunk} isFollowed={a.follow?.isFollowed ?? false} artistId={a.id} />} />
                             }
                         }
                     )}
-                        {filter === 'users' && result.users?.map(u => <UserCard key={u.id} user={u} />)}
+                        {filter === 'users' && result.users.map(u => <UserCard key={u.id} user={u} />)}
                     </div>
                 }
                 </>

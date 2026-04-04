@@ -96,7 +96,7 @@ export const RegForm = () => {
             .catch((err: IApiError) => {
                 if (axios.isAxiosError(err) && err.response) {
                     const apiError: IApiError = err.response.data
-                    setErrors(prev => ({ ...prev, [apiError.field]: apiError.message }))
+                    setErrors(prev => ({ ...prev, [apiError.field ?? '']: apiError.message }))
                 }
             })
     }
@@ -117,7 +117,7 @@ export const RegForm = () => {
                 navigate('/')
             })
             .catch((err: IApiError) => {
-                setErrors(prev => ({ ...prev, [err.field]: err.message }))
+                setErrors(prev => ({ ...prev, [err.field ?? '']: err.message }))
             })
     }
 

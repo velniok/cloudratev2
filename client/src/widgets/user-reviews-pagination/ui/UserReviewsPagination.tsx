@@ -34,26 +34,26 @@ export const UserReviewsPagination: FC<UserReviewsPaginationProps> = ({ user }) 
                 <LinksList links={links} />
                 <Title>ВСЕ ОЦЕНКИ {user?.nickname}</Title>
                     {
-                        reviewListStatus === 'success' ?
+                        reviewListStatus === 'success' && reviewList && reviewListPagination ?
                         <>
                         {
                             reviewList.length > 0 ?
                             <>
-                            <p className={styles.text}>Показано {((+reviewListPagination?.page - 1) * limit) + 1}-{(limit * +reviewListPagination?.page)} из {+reviewListPagination?.total}</p>
+                            <p className={styles.text}>Показано {((reviewListPagination.page - 1) * limit) + 1}-{(limit * reviewListPagination.page)} из {reviewListPagination.total}</p>
                             <ul className={`${styles.list} ${window.innerWidth <= 767 ? styles.row : ''}`}>
                             {
                                 reviewList.map((review) => {
                                     if (window.innerWidth > 767) {
-                                        return <TrackCard track={review.track} key={review.id} review={review} />
+                                        if (review.track) return <TrackCard track={review.track} key={review.id} review={review} />
                                     } else {
-                                        return <TrackRow track={review.track} key={review.id} review={review} />
+                                        if (review.track) return <TrackRow track={review.track} key={review.id} review={review} />
                                     }
                                 })
                             }
                             </ul>
                             <div className={styles.bottom}>
                                 <PaginationButtons
-                                    page={+reviewListPagination.page}
+                                    page={reviewListPagination.page}
                                     totalPages={reviewListPagination.totalPages}
                                     hundleNextPage={hundleNextPage}
                                     hundlePrevPage={hundlePrevPage}

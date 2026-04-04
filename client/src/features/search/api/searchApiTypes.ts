@@ -8,7 +8,7 @@ export interface ISearchReq {
 }
 
 export interface ISearch {
-    artists: IArtist[]
+    artists: IArtist[] 
     tracks: ITrack[]
     users: IUser[]
 }

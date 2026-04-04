@@ -16,7 +16,7 @@ export const ArtistCard: FC<ArtistCardProps> = ({ artist }) => {
     return (
         <div className={styles.card} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <Link to={`/artist/${artist.id}`}>
-                <Cover className={styles.avatar} isHovered={isHovered} width='175px' height='175px' borderRadius='50%' url={getOptimizedAvatar(artist.avatarUrl, 200, 200)} />
+                <Cover className={styles.avatar} isHovered={isHovered} width='175px' height='175px' borderRadius='50%' url={getOptimizedAvatar(artist.avatarUrl ?? '', 200, 200)} />
             </Link>
             <h3 className={styles.name}>{artist.name}</h3>
         </div>

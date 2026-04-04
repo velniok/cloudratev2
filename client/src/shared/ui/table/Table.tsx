@@ -11,9 +11,9 @@ import { TableUserItem } from './TableUserItem'
 
 interface TableProps {
     header: string[]
-    data: IArtist[] | ITrack[] | IUser[]
+    data: IArtist[] | ITrack[] | IUser[] | null
     dataStatus: TStatus
-    actions?: {
+    actions: {
         name: string
         func: (id: number) => ReactNode
     }[]
@@ -35,7 +35,7 @@ export const Table: FC<TableProps> = ({ header, data, dataStatus, actions }) => 
                 </thead>
                 <tbody className={styles.table__body}>
                     {
-                        dataStatus === 'success'
+                        dataStatus === 'success' && data
                         ?
                         data.map((item: IArtist | ITrack | IUser) => {
                             switch (item.kind) {

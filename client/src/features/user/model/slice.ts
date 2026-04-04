@@ -17,6 +17,7 @@ export const getUserProfileThunk = createAsyncThunk<{ user: IUser }, { username:
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -28,6 +29,7 @@ export const getUserListThunk = createAsyncThunk<{ users: IUser[] }, void, { rej
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -39,6 +41,7 @@ export const getUserFollowsThunk = createAsyncThunk<{ artists: IArtist[], pagina
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -49,7 +52,8 @@ export const toggleFollowThunk = createAsyncThunk<{followed: boolean}, { artistI
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -61,6 +65,7 @@ export const getUserReviewsThunk = createAsyncThunk<{ reviews: IReview[], pagina
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -72,6 +77,7 @@ export const updateUserThunk = createAsyncThunk<{ user: IUser }, IUpdateUserReq,
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -83,6 +89,7 @@ export const updateUserRoleThunk = createAsyncThunk<{ role: string }, { id: numb
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -94,6 +101,7 @@ export const deleteUserThunk = createAsyncThunk<void, { id: number }, { rejectVa
         if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
         }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -143,7 +151,7 @@ const userSlice = createSlice({
             })
             .addCase(getUserProfileThunk.rejected, (state, action) => {
                 state.userStatus = 'error',
-                state.userError = action.payload.message
+                state.userError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(getUserListThunk.pending, (state) => {
@@ -157,7 +165,7 @@ const userSlice = createSlice({
             })
             .addCase(getUserListThunk.rejected, (state, action) => {
                 state.userListStatus = 'error',
-                state.userListError = action.payload.message
+                state.userListError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(getUserFollowsThunk.pending, (state) => {
@@ -172,25 +180,27 @@ const userSlice = createSlice({
             })
             .addCase(getUserFollowsThunk.rejected, (state, action) => {
                 state.followsStatus = 'error',
-                state.userError = action.payload.message
+                state.userError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(toggleFollowThunk.pending, (state) => {
                 state.userError = null
             })
             .addCase(toggleFollowThunk.fulfilled, (state, action) => {
-                state.follows = state.follows.map((artist) => {
-                    if (artist.id === action.meta.arg.artistId) {
-                        if (action.payload.followed) {
-                            ++artist.follow.followersCount
-                            artist.follow.isFollowed = true
-                        } else {
-                            --artist.follow.followersCount
-                            artist.follow.isFollowed = false
+                if (state.follows) {
+                    state.follows = state.follows.map((artist) => {
+                        if (artist.id === action.meta.arg.artistId) {
+                            if (action.payload.followed) {
+                                ++artist.follow.followersCount
+                                artist.follow.isFollowed = true
+                            } else {
+                                --artist.follow.followersCount
+                                artist.follow.isFollowed = false
+                            }
                         }
-                    }
-                    return artist
-                })
+                        return artist
+                    })
+                }
             })
             .addCase(toggleFollowThunk.rejected, (state) => {
                 state.followsStatus = 'error',
@@ -209,7 +219,7 @@ const userSlice = createSlice({
             })
             .addCase(getUserReviewsThunk.rejected, (state, action) => {
                 state.reviewsStatus = 'error',
-                state.userError = action.payload.message
+                state.userError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(updateUserThunk.pending, (state) => {
@@ -222,7 +232,7 @@ const userSlice = createSlice({
             })
             .addCase(updateUserThunk.rejected, (state, action) => {
                 state.updateStatus = 'error',
-                state.updateError = action.payload.message
+                state.updateError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(updateUserRoleThunk.pending, (state) => {
@@ -230,17 +240,19 @@ const userSlice = createSlice({
                 state.updateError = null
             })
             .addCase(updateUserRoleThunk.fulfilled, (state, action) => {
-                state.userList = state.userList.map(user => {
-                    if (user.id === action.meta.arg.id) {
-                        user.role = action.meta.arg.role
-                    }
-                    return user
-                })
+                if (state.userList) {
+                    state.userList = state.userList.map(user => {
+                        if (user.id === action.meta.arg.id) {
+                            user.role = action.meta.arg.role
+                        }
+                        return user
+                    })
+                }
                 state.userListStatus = 'success'
             })
             .addCase(updateUserRoleThunk.rejected, (state, action) => {
                 state.userListStatus = 'error',
-                state.userListError = action.payload.message
+                state.userListError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(deleteUserThunk.pending, (state) => {
@@ -248,12 +260,12 @@ const userSlice = createSlice({
                 state.userListError = null
             })
             .addCase(deleteUserThunk.fulfilled, (state, action) => {
-                state.userList = state.userList.filter((user) => user.id !== action.meta.arg.id),
+                if (state.userList) state.userList = state.userList.filter((user) => user.id !== action.meta.arg.id),
                 state.userListStatus = 'success'
             })
             .addCase(deleteUserThunk.rejected, (state, action) => {
                 state.userListStatus = 'error',
-                state.userListError = action.payload.message
+                state.userListError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
     }
 })

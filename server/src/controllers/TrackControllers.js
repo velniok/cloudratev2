@@ -53,9 +53,9 @@ class TrackControllers {
             res.status(200).json({
                 tracks,
                 pagination: {
-                    page,
-                    limit,
-                    total,
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
                     totalPages: Math.ceil(total / limit)
                 }
             })
@@ -99,9 +99,9 @@ class TrackControllers {
             res.status(200).json({
                 reviews,
                 pagination: {
-                    page,
-                    limit,
-                    total,
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
                     totalPages: Math.ceil(total / limit)
                 }
             })
@@ -117,9 +117,9 @@ class TrackControllers {
             if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
             const trackId = req.params.id
-            const { title, coverUrl, soundcloudUrl, artistId, featArtistIds, releaseData } = req.body
+            const { title, coverUrl, soundcloudUrl, releaseData } = req.body
 
-            const trackUpdate = await TrackServices.updateTrack(trackId, [title, coverUrl, soundcloudUrl, artistId, featArtistIds, releaseData])
+            const trackUpdate = await TrackServices.updateTrack(trackId, [title, coverUrl, soundcloudUrl, releaseData])
             if (trackUpdate.status === 'track_taken') throw new AppError(`Название трека уже занято`, 409, `title`)
             const track = trackUpdate.track
 

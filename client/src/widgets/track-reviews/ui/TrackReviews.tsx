@@ -2,20 +2,17 @@ import type { FC } from "react"
 import { ReviewCard, ReviewCardSkeleton, type IReview } from "@/entities/review"
 import { PaginationButtons, Title } from "@/shared/ui"
 import styles from "./TrackReviews.module.scss"
-import { TStatus } from "@/shared/types"
-import { ITrack } from "@/entities/track"
 import { ReviewLikeToggle } from "@/features/review"
 import { useAppSelector, usePagination } from "@/shared/lib"
 import { getTrackReviewsTextThunk, selectTrackReviewsText, selectTrackReviewsTextPagination, selectTrackReviewsTextStatus } from "@/features/track"
 
 interface TrackReviewsProps {
-    track: ITrack
-    trackStatus: TStatus
+    trackId: number
 }
 
-export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
+export const TrackReviews: FC<TrackReviewsProps> = ({ trackId }) => {
 
-    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getTrackReviewsTextThunk, `/track/${track.id}`, 10, track.id )
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getTrackReviewsTextThunk, `/track/${trackId}`, 10, trackId )
     const reviewsText = useAppSelector(selectTrackReviewsText)
     const reviewsTextStatus = useAppSelector(selectTrackReviewsTextStatus)
     const reviewsTextPagination = useAppSelector(selectTrackReviewsTextPagination)
@@ -25,7 +22,7 @@ export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
             <div className="container">
                 <Title>ОТЗЫВЫ ПОЛЬЗОВАТЕЛЕЙ</Title>
                 {
-                    reviewsTextStatus === 'success'
+                    reviewsTextStatus === 'success' && reviewsText && reviewsTextPagination
                     ?
                     <>
                     {
@@ -33,14 +30,15 @@ export const TrackReviews: FC<TrackReviewsProps> = ({ track, trackStatus }) => {
                         <p className={styles.text}>Отзывов нет</p>
                         :
                         <>
-                        <p className={styles.text}>Показано {((+reviewsTextPagination?.page - 1) * limit) + 1}-{(limit * +reviewsTextPagination?.page)} из {+reviewsTextPagination?.total}</p>
+                        <p className={styles.text}>Показано {((reviewsTextPagination?.page - 1) * limit) + 1}-{(limit * reviewsTextPagination?.page)} из {reviewsTextPagination?.total}</p>
                         <ul className={styles.list}>
                             {
                                 reviewsText.map((review: IReview) => {
-                                    if (review.text) return (
+                                    if (review.text && review.user) return (
                                         <ReviewCard
                                             key={review.id}
                                             review={review}
+                                            user={review.user}
                                             actions={<ReviewLikeToggle reviewId={review.id} likesCount={+review.likesCount} isLiked={review.isLiked} />}
                                         />
                                     )

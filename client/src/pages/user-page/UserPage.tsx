@@ -16,18 +16,20 @@ export const UserPage = () => {
     const userStatus = useAppSelector(selectUserStatus)
 
     useEffect(() => {
-        dispatch(getUserProfileThunk({ username: username }))
-            .then()
-            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
+        if (username) {
+            dispatch(getUserProfileThunk({ username: username }))
+                .then()
+                .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error')) 
+        }
     }, [username])
 
     return (
         <>
         {
-            userStatus === 'success' ?
+            userStatus === 'success' && user ?
             <>
-                <UserHeader user={user} userStatus={userStatus} />
-                <UserReviews user={user} userStatus={userStatus} />
+                <UserHeader user={user} />
+                <UserReviews user={user} />
                 <UserFollows user={user} />
             </>
             :

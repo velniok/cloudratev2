@@ -7,10 +7,9 @@ import { LinksList } from '@/shared/ui'
 
 interface EditProfileProps {
     user: IUser
-    userStatus: TStatus
 }
 
-export const EditProfile: FC<EditProfileProps> = ({ user, userStatus }) => {
+export const EditProfile: FC<EditProfileProps> = ({ user }) => {
 
     const links = [
         {

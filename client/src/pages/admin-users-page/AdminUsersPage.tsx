@@ -10,18 +10,10 @@ interface AdminUsersPageProps {
 
 export const AdminUsersPage: FC<AdminUsersPageProps> = ({ role }) => {
 
-    const dispatch = useAppDispatch()
-    const userList = useAppSelector(selectUserList)
-    const userListStatus = useAppSelector(selectUserListStatus)
-
-    useEffect(() => {
-        dispatch(getUserListThunk())
-    }, [])
-
     return (
         <>
         {
-            role === 'admin' && <AdminUsers userList={userList} userListStatus={userListStatus} />
+            role === 'admin' && <AdminUsers />
         }
         </>
     )

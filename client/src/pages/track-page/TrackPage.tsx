@@ -21,11 +21,11 @@ export const TrackPage = () => {
     return (
         <>
         {
-            trackStatus === 'success' ?
+            trackStatus === 'success' && track ?
             <>
-                <TrackHeader track={track} trackStatus={trackStatus} />
-                <TrackGrade track={track} trackStatus={trackStatus} />
-                <TrackReviews track={track} trackStatus={trackStatus} />
+                <TrackHeader track={track} />
+                <TrackGrade track={track} />
+                <TrackReviews trackId={track.id} />
             </>
             :
             <Loading />

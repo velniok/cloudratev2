@@ -2,7 +2,6 @@ import { Button, SuccessIcon } from '@/shared/ui'
 import styles from './UpdateRoleModal.module.scss'
 import { FC, useEffect, useState } from 'react'
 import { IUser } from '@/entities/user'
-import { axios } from '@/shared/api'
 import { useAppDispatch, useNotification } from '@/shared/lib'
 import { updateUserRoleThunk } from '../model/slice'
 
