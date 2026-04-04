@@ -9,7 +9,7 @@ export const useSearch = (fixedTab?: 'tracks' | 'artists' | 'users') => {
     const resultStatus = useAppSelector(selectSearchStatus)
     const [search, setSearch] = useState<string>('')
     const [filter, setFilter] = useState<'artists' | 'tracks' | 'users'>(fixedTab || 'artists')
-    
+
     useEffect(() => {
         if (!search) {
             dispatch(clearSearch())
@@ -24,16 +24,13 @@ export const useSearch = (fixedTab?: 'tracks' | 'artists' | 'users') => {
         }
     }, [search])
 
-    useEffect(() => {
-        setSearch('')
-        dispatch(clearSearch())
-    }, [filter, fixedTab])
-
     const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
     }
 
     const hundleFilter = (tab: 'artists' | 'tracks' | 'users') => {
+        setSearch('')
+        dispatch(clearSearch())
         setFilter(tab)
     }
 
