@@ -31,7 +31,7 @@ class ArtistControllers {
                 `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
             )
 
-            const avatarUrl = await uploadFromSoundcloud(data.avatar_url)
+            const avatarUrl = await uploadFromSoundcloud(data.avatar_url.replace('-large.jpg', '-t200x200.jpg'))
             res.status(200).json({
                 name: data.username,
                 soundcloudUrl: data.permalink_url,

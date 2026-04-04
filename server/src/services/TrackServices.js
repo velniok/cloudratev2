@@ -34,10 +34,10 @@ class TrackServices {
                         SELECT
                             i.*,
                             (
-                                SELECT json_agg(row_to_json(a))
+                                SELECT row_to_json(a)
                                 FROM artists a
-                                WHERE a.id = ANY(i.feat_artist_ids) AND a.id = i.artist_id
-                            ) as artists
+                                WHERE a.id = i.artist_id
+                            ) as artist
                         FROM inserted i
                     ) t
                 ) as track

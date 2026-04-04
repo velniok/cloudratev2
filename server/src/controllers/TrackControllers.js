@@ -30,8 +30,7 @@ class TrackControllers {
             const { data } = await axios.get(
                 `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
             )
-            const coverUrl = await uploadFromSoundcloud(data.artwork_url)
-            console.log(data)
+            const coverUrl = await uploadFromSoundcloud(data.artwork_url.replace('-large.jpg', '-t500x500.jpg'))
 
             res.status(200).json({
                 title: data.title,

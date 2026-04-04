@@ -26,7 +26,7 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
             <td className={styles.table__data}>
                 <li className={styles.track__artistItem}>
                     <Cover width='32px' height='32px' borderRadius='50%' url={track.artist.avatarUrl ?? ''} />
-                    <p className={styles.track__artistNickname}>{track.artist?.name}</p>
+                    <p className={styles.track__artistNickname}>{track.artist.name}</p>
                 </li>
                 {/* <ul className={styles.track__artistList}>
                     {
