@@ -167,7 +167,6 @@ const trackSlice = createSlice({
             })
             .addCase(createTrackThunk.fulfilled, (state, action) => {
                 state.trackList?.push(action.payload.track),
-                console.log(action.payload.track)
                 state.trackStatus = 'idle'
             })
             .addCase(createTrackThunk.rejected, (state, action) => {

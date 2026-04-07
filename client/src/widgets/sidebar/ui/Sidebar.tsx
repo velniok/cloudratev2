@@ -89,12 +89,18 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                                     Мои подписки
                                 </Link>
                             </li>
+                            <li className={`${styles.nav__item} ${ pathname === '/track-suggestion' ? styles.active : ''}`}>
+                                <Link to='/track-suggestion' className={styles.nav__link} onClick={setSidebar}>
+                                    <i className={`ph${pathname === '/track-suggestion' ? '-fill' : ''} ph-plus-circle`}></i>
+                                    Предложить трек
+                                </Link>
+                            </li>
                         </ul>
                     </nav>
             }
             <div className={styles.bottom}>
                 {
-                    authStatus === 'success' ?
+                    authStatus === 'success' && authUser ?
                     <>
                         <div className={`${styles.user__info} ${openUser ? styles.open : ''}`}>
                             <ul className={styles.user__infoList}>
@@ -114,7 +120,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                         </div>
                         <div className={styles.bottom__inner} onClick={(e) => {e.stopPropagation(); setOpenUser(!openUser)}}>
                             <div className={styles.user}>
-                                <Cover url={getOptimizedAvatar(authUser.avatarUrl)} width="40px" height="40px" borderRadius="50%" />
+                                <Cover url={getOptimizedAvatar(authUser.avatarUrl ?? '')} width="40px" height="40px" borderRadius="50%" />
                                 <div className={styles.user__bio}>
                                     <h3 className={styles.user__nickname}>{authUser.nickname}</h3>
                                     {

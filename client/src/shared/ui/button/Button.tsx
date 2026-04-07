@@ -5,14 +5,15 @@ interface ButtonProps {
     children: ReactNode
     padding: string
     onClick?: (e: MouseEvent<HTMLButtonElement>) => void
-    color: 'accent' | 'default' | 'white'
+    color: 'accent' | 'default' | 'white' | 'orange'
     fontSize?: string
     active?: boolean
     className?: string
     setIsHovered?: (prev: boolean) => void
+    icon?: ReactNode
 }
 
-export const Button: FC<ButtonProps> = ({ children, padding, onClick, color, fontSize, active, className, setIsHovered }) => {
+export const Button: FC<ButtonProps> = ({ children, padding, icon, onClick, color, fontSize, active, className, setIsHovered }) => {
     return (
         <button
             type="button"
@@ -23,10 +24,12 @@ export const Button: FC<ButtonProps> = ({ children, padding, onClick, color, fon
                 ${className ?? className}
                 ${styles[color]}
                 ${active ? styles.active : ''}
+                ${icon ? styles.icon : ''}
             `}
             style={ { padding: `${padding}`, fontSize: `${fontSize}` } }
             onClick={onClick}>
-            {children}
+                {icon}
+                {children}
         </button>
     )
 }

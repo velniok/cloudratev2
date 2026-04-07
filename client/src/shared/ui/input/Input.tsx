@@ -1,6 +1,6 @@
 import { ReactNode, useState, type ChangeEvent, type FC, type MouseEvent } from "react"
 import styles from "./Input.module.scss"
-import { EyeIcon, InfoIcon, SearchIcon } from "../icon"
+import { EyeIcon, InfoIcon } from "../icon"
 
 interface InputProps {
     label?: string
@@ -11,15 +11,14 @@ interface InputProps {
     error?: string | null
     eyeIcon?: boolean
     isGray?: boolean
-    labelFontSize?: string
-    inputFontSize?: string
-    isSearch?: boolean
+    children?: ReactNode
+    icon?: ReactNode
+    focusColor?: string
     onFocus?: () => void
     onBlur?: () => void
-    children?: ReactNode
 }
 
-export const Input: FC<InputProps> = ({ children, label, isSearch, placeholder, type, value, onFocus, onBlur, onChange, error, eyeIcon, isGray, labelFontSize, inputFontSize }) => {
+export const Input: FC<InputProps> = ({ icon, children, label, placeholder, type, value, onChange, onFocus, onBlur, error, eyeIcon, isGray, focusColor }) => {
 
     const [showPass, setShowPass] = useState<boolean>(false)
 
@@ -30,20 +29,19 @@ export const Input: FC<InputProps> = ({ children, label, isSearch, placeholder, 
 
     return (
         <div className={styles.wrapper}>
-            <label className={styles.label} style={{ fontSize: `${labelFontSize}` }}>{label}</label>
+            { label && <label className={styles.label}>{label}</label> }
             {children}
-            <div className={`${styles.inputWrapper} ${isSearch ? styles.search : ''}`}>
+            <div className={`${styles.inputWrapper} ${icon ? styles.search : ''}`}>
                 {
-                    isSearch && <SearchIcon />
+                    icon && icon
                 }
                 <input
                     type={`${showPass ? "text" : type}`}
                     autoComplete="off"
-                    className={`${styles.input} ${isGray ? styles.gray : ''} ${error ? styles.error : ''}`}
+                    className={`${styles.input} ${isGray ? styles.gray : ''} ${focusColor ? styles[`focus__${focusColor}`] : ''} ${error ? styles.error : ''}`}
                     placeholder={`${placeholder}`}
                     value={value}
                     onChange={onChange}
-                    style={{ fontSize: `${inputFontSize}` }}
                     onFocus={onFocus}
                     onBlur={onBlur}
                 />

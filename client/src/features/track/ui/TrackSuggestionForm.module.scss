@@ -1,0 +1,202 @@
+.wrapper {
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: var(--gray-color);
+}
+
+.soundcloud {
+    background-color: var(--orange-color-bg);
+    padding: 24px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        column-gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    &__logo {
+        background-color: var(--orange-color-dim);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & i {
+            font-size: 24px;
+            color: var(--orange-color);
+        }
+    }
+
+    &__title {
+        font-size: 18px;
+        font-weight: 700;
+        font-family: var(--second-family);
+        letter-spacing: 0.05em;
+    }
+
+    &__desc {
+        color: var(--text-secondary);
+        font-size: 12px;
+    }
+
+    &__form {
+        display: flex;
+        column-gap: 12px;
+
+        & button {
+
+            & i {
+                font-size: 20px;
+            }
+        }
+    }
+}
+
+.form {
+    padding: 24px;
+
+    &__header {
+        margin-bottom: 32px;
+        display: flex;
+        justify-content: center;
+        color: var(--text-secondary);
+        font-weight: 700;
+        font-family: var(--second-family);
+        letter-spacing: 0.05em;
+    }
+
+    &__content {
+        margin-bottom: 32px;
+
+        &:nth-last-child(1) {
+            margin-bottom: 0;
+        }
+    }
+
+    &__title {
+        font-size: 18px;
+        display: flex;
+        align-items: flex-start;
+        font-family: var(--second-family);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        column-gap: 8px;
+        margin-bottom: 24px;
+
+        & i {
+            color: var(--accent-color);
+        }
+    }
+
+    &__inputs {
+        display: flex;
+        flex-direction: column;
+        row-gap: 24px;
+    }
+
+    &__search {
+        position: relative;
+
+        &Wrapper {
+            position: absolute;
+            z-index: 9999;
+            top: calc(100% + 6px);
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            width: 100%;
+        }
+    }
+
+    &__cover {
+        position: relative;
+        cursor: pointer;
+        height: 300px;
+        width: 300px;
+        background-color: var(--bg-secondary);
+        border: 2px dashed var(--border-subtle);
+        overflow: hidden;
+        border-radius: 12px;
+
+        transition: border 0.3s;
+
+        @media (hover:hover) {
+            &:hover {
+                border: 2px dashed var(--accent-color);
+
+                & .form__cover {
+                    
+                    &Logo {
+                        background-color: var(--accent-color-dim);
+                        color: var(--accent-color);
+                    }
+
+                    &Title {
+                        color: var(--accent-color);
+                    }
+
+                    &Upload {
+                        opacity: 0.3;
+                    }
+                }
+            }
+        }
+
+        &Upload {
+            transition: opacity 0.3s;
+        }
+
+        &Container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 24px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            align-items: center;
+        }
+
+        &Logo {
+            margin-bottom: 16px;
+            background-color: var(--gray-color);
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 30px;
+            color: var(--text-secondary);
+
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        &Title {
+            font-size: 16px;
+            margin-bottom: 4px;
+
+            transition: color 0.3s;
+        }
+
+        &Desc {
+            color: var(--text-secondary);
+        }
+    }
+
+    &__footer {
+        border-top: 1px solid var(--border-subtle);
+        padding-top: 24px;
+
+        & button {
+
+            & i {
+                font-size: 18px;
+            }
+        }
+    }
+}

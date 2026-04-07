@@ -3,6 +3,7 @@
 .wrapper {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .label {
@@ -34,6 +35,15 @@
             color: var(--text-secondary);
         }
 
+        & i {
+            font-size: 18px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 14px;
+            color: var(--text-secondary);
+        }
+
         & .input {
             padding-left: 42px;
         }
@@ -44,7 +54,7 @@
     width: 100%;
     padding: 14px 16px;
     background-color: var(--bg-color);
-    border: 1px solid var(--border-subtle);
+    border: 2px solid var(--border-subtle);
     border-radius: 12px;
     font-size: 16px;
     font-family: var(--font-family);
@@ -58,16 +68,20 @@
     }
 
     &:focus {
-        border: 1px solid var(--accent-color);
+        border: 2px solid var(--accent-color);
     }
 
     &.gray {
         background-color: var(--bg-secondary);
-        border: 1px solid var(--border-highlight);
+        border: 2px solid var(--border-highlight);
 
         &:focus {
-            border: 1px solid var(--accent-color);
+            border: 2px solid var(--accent-color);
         }
+    }
+
+    &.focus__orange:focus {
+        border: 2px solid var(--orange-color);
     }
 
     &.error {

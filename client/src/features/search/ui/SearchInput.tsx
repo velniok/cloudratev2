@@ -1,4 +1,4 @@
-import { Input } from '@/shared/ui'
+import { Input, SearchIcon } from '@/shared/ui'
 import { ChangeEvent, FC } from 'react'
 
 interface SearchInputProps {
@@ -12,7 +12,7 @@ export const SearchInput: FC<SearchInputProps> = ({ onChangeSearch, search }) =>
         <Input
             placeholder='Начните вводить текст...'
             type='text'
-            isSearch={true}
+            icon={<SearchIcon />}
             isGray={true}
             value={search}
             onChange={onChangeSearch}

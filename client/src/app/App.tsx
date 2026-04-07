@@ -26,6 +26,7 @@ import { SearchPage } from "@/pages/search-page"
 import { Header } from "@/widgets/header"
 import { UserReviewsPage } from "@/pages/user-reviews-page"
 import { UserFollowsPage } from "@/pages/user-follows-page"
+import { TrackSuggestionPage } from "@/pages/track-suggestion-page"
 
 function App() {
 
@@ -58,7 +59,9 @@ function App() {
     return (
         <div className="app-shell">
             {
-                authStatus === 'success' ?
+                authStatus === 'loading' || (localStorage.getItem('isAuth') && authStatus === 'idle') ?
+                <Loading />
+                :
                 <>
                     <Header setSidebar={setSidebar} sidebar={sidebar} />
                     {
@@ -70,6 +73,8 @@ function App() {
                             <Route path="/search" element={<SearchPage />} />
         
                             <Route path="/track/:id" element={<TrackPage />} />
+                            <Route path="/track-suggestion" element={<TrackSuggestionPage />} />
+
                             <Route path="/artist/:id" element={<ArtistPage />} />
         
                             <Route path="/user/:username" element={<UserPage />} />
@@ -88,8 +93,6 @@ function App() {
                     </main>
                     <Notification />
                 </>
-                :
-                <Loading />
             }
         </div>
     )
