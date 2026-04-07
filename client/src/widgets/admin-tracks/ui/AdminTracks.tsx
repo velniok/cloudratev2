@@ -65,7 +65,6 @@ export const AdminTracks = () => {
                 <Input
                     placeholder='Поиск по названию трека...'
                     type='text'
-                    isSearch={true}
                     isGray={true}
                     onChange={onChangeSearch}
                     value={search}

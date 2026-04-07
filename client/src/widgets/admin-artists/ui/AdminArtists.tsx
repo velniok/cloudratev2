@@ -71,7 +71,6 @@ export const AdminArtists = () => {
                 <Input
                     placeholder='Поиск по никнейму артисту...'
                     type='text'
-                    isSearch={true}
                     isGray={true}
                     onChange={onChangeSearch}
                     value={search}
