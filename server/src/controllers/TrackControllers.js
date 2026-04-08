@@ -23,6 +23,31 @@ class TrackControllers {
         }
     }
 
+    async createSuggestion(req, res, next) {
+        try {
+            const { title, artistId, featArtistIds, soundcloudUrl, coverUrl, releaseData } = req.body
+            const userId = req.userId
+            if (!userId) throw new AppError(`Нужно авторизоваться`, 401)
+            
+            await TrackServices.createTrackSuggestion([title, coverUrl, soundcloudUrl, artistId, featArtistIds, releaseData], userId)
+            res.status(201).json({ message: 'Заявка отправлена' })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async getSuggestions(req, res, next) {
+        try {
+            const suggestions = await TrackServices.getTrackSuggestions()
+
+            res.status(200).json({ suggestions })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
     async getSoundcloudInfo(req, res, next) {
         try {
             const { url } = req.query
@@ -30,6 +55,8 @@ class TrackControllers {
             const { data } = await axios.get(
                 `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
             )
+                .catch(() => {throw new AppError(`Трек не найден`, 404)})
+            
             const coverUrl = await uploadFromSoundcloud(data.artwork_url.replace('-large.jpg', '-t500x500.jpg'))
 
             res.status(200).json({

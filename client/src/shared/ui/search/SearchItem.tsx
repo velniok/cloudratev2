@@ -11,7 +11,7 @@ interface SearchItemProps {
 export const SearchItem: FC<SearchItemProps> = ({ data, onClick }) => {
     return (
         <li className={styles.search__item} onClick={() => onClick(data)}>
-            <Cover width='30px' height='30px' borderRadius='50%' url={data.avatarUrl} />
+            <Cover width='30px' height='30px' borderRadius='50%' url={data.avatarUrl ?? ''} />
             <p className={styles.search__name}>{data.name}</p>
         </li> 
     )

@@ -18,7 +18,7 @@ interface TrackCreateFormProps {
 
 export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackListLength, lastPage, limit }) => {
 
-    const { result, resultStatus, search, onChangeSearch, setSearch  } = useSearch('artists')
+    const { result, resultStatus, search, onChangeSearch, setSearch } = useSearch('artists')
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()

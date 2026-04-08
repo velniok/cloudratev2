@@ -91,7 +91,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                             </li>
                             <li className={`${styles.nav__item} ${ pathname === '/track-suggestion' ? styles.active : ''}`}>
                                 <Link to='/track-suggestion' className={styles.nav__link} onClick={setSidebar}>
-                                    <i className={`ph${pathname === '/track-suggestion' ? '-fill' : ''} ph-plus-circle`}></i>
+                                    <i className={`ph${pathname === '/track-suggestion' ? '-fill' : ''} ph-music-notes-plus`}></i>
                                     Предложить трек
                                 </Link>
                             </li>

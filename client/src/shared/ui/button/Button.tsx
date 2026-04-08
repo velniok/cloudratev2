@@ -11,9 +11,10 @@ interface ButtonProps {
     className?: string
     setIsHovered?: (prev: boolean) => void
     icon?: ReactNode
+    isLoading?: boolean
 }
 
-export const Button: FC<ButtonProps> = ({ children, padding, icon, onClick, color, fontSize, active, className, setIsHovered }) => {
+export const Button: FC<ButtonProps> = ({ children, padding, icon, isLoading, onClick, color, fontSize, active, className, setIsHovered }) => {
     return (
         <button
             type="button"
@@ -25,6 +26,7 @@ export const Button: FC<ButtonProps> = ({ children, padding, icon, onClick, colo
                 ${styles[color]}
                 ${active ? styles.active : ''}
                 ${icon ? styles.icon : ''}
+                ${isLoading ? styles.loading : ''}
             `}
             style={ { padding: `${padding}`, fontSize: `${fontSize}` } }
             onClick={onClick}>

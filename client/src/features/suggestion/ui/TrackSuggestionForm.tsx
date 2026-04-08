@@ -1,16 +1,33 @@
-import { Button, Cover, Input, LinkIcon } from '@/shared/ui'
+import { Button, Cover, Input } from '@/shared/ui'
 import styles from './TrackSuggestionForm.module.scss'
-import { ChangeEvent, useRef, useState } from 'react'
-import { getOptimizedAvatar, useSearch } from '@/shared/lib'
+import { ChangeEvent, MouseEvent, useRef, useState } from 'react'
+import { getOptimizedAvatar, useNotification, useSearch } from '@/shared/lib'
 import { updateAvatarApi } from '@/shared/api'
-import { ArtistRow } from '@/entities/artist'
+import { IArtist } from '@/entities/artist'
+import { trackSuggestionApi } from '@/features/suggestion'
+import { getSoundсloudTrack } from '../../track/api/trackApi'
+import { IApiError } from '@/shared/types'
+import { SearchArtistListToTrack, SearchArtistsToTrack } from '@/entities/search'
 
 export const TrackSuggestionForm = () => {
 
-    const { result, resultStatus, search, onChangeSearch, setSearch  } = useSearch('artists')
+    const { notify } = useNotification()
+    const { result, resultStatus, search, onChangeSearch, setSearch } = useSearch('artists')
     const [searchList, setSearchList] = useState<boolean>(false)
 
     const [soundcloudUrl, setSoundcloudUrl] = useState<string>('')
+    const [soundcloudUrlError, setSoundcloudUrlError] = useState<string>('')
+    const [soundcloudLoading, setSoundcloudLoading] = useState<boolean>(false)
+    const [artists, setArtists] = useState<IArtist[]>([])
+
+    const initialErrors = {
+        title: '',
+        artistIds: '',
+        soundcloudUrl: '',
+        releaseData: '',
+        coverUrl: '',
+    }
+    const [errors, setErrors] = useState(initialErrors)
 
     const initValues = {
         title: '',
@@ -31,15 +48,70 @@ export const TrackSuggestionForm = () => {
     }
 
     const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, title: '' }))
         setValues((prev) => ({...prev, title: e.target.value}))
     }
 
     const onChangeReleaseData = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, releaseData: '' }))
         setValues((prev) => ({...prev, releaseData: e.target.value}))
     }
 
     const onChangeSoundcloudUrl = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, soundcloudUrl: '' }))
         setValues((prev) => ({...prev, soundcloudUrl: e.target.value}))
+    }
+
+    const onSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+
+        if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
+        if (!values.soundcloudUrl) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Укажите ссылку на SoundCloud трека' }))
+        if (!URL.canParse(values.soundcloudUrl)) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Неверный формат ссылки' }))
+        if (!values.coverUrl) return setErrors(prev => ({ ...prev, coverUrl: 'Выберите обложку для трека' }))
+        if (artists.length === 0) return setErrors(prev => ({ ...prev, artistIds: 'Укажите хотя бы одного артиста' }))
+        if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
+
+        const artistsIds = artists.map((artist) => { return artist.id })
+
+        trackSuggestionApi({
+            title: values.title,
+            coverUrl: values.coverUrl,
+            soundcloudUrl: values.soundcloudUrl,
+            releaseData: values.releaseData,
+            artistId: artistsIds[0],
+            featArtistIds: artistsIds.slice(1),
+        })
+            .then(() => {
+                notify('Заявка отправлена', 'Заявка успешно была отправлена', 'success')
+                setValues(initValues)
+                setArtists([])
+            })
+    }
+
+    const getInfo = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+
+        if (soundcloudLoading) return false
+        if (!soundcloudUrl) return setSoundcloudUrlError('Укажите ссылку на SoundCloud трека')
+        if (!URL.canParse(soundcloudUrl)) return setSoundcloudUrlError('Неверный формат ссылки')
+        
+        setSoundcloudLoading(true)
+        getSoundсloudTrack({ url: soundcloudUrl })
+            .then((res) => {
+                setValues(prev => ({
+                    ...prev,
+                    title: res.data.title ?? '',
+                    soundcloudUrl: res.data.soundcloudUrl ?? '',
+                    releaseData: res.data.releaseData?.split('T')[0] ?? '',
+                    coverUrl: res.data.coverUrl ?? ''
+                }))
+                setSoundcloudLoading(false)
+            })
+            .catch((err: { response: { data: IApiError } }) => {
+                setSoundcloudUrlError(err.response.data.message)
+                setSoundcloudLoading(false)
+            })
     }
 
     return (
@@ -60,12 +132,18 @@ export const TrackSuggestionForm = () => {
                         type='text'
                         isGray={true}
                         value={soundcloudUrl}
-                        onChange={(e) => setSoundcloudUrl(e.target.value)}
+                        onChange={(e) => {setSoundcloudUrlError(''); setSoundcloudUrl(e.target.value)}}
                         icon={<i className='ph ph-link'></i>}
-                        error={null}
+                        error={soundcloudUrlError}
                         focusColor='orange'
                     />
-                    <Button color='orange' padding='16px 24px 14px 24px' icon={<i className='ph ph-cloud-arrow-down'></i>}>Загрузить</Button>
+                    <Button
+                        onClick={getInfo}
+                        color='orange'
+                        padding='16px 24px 14px 24px'
+                        icon={<i className='ph ph-cloud-arrow-down'></i>}
+                        isLoading={soundcloudLoading}
+                    >Загрузить</Button>
                 </form>
             </div>
             <form className={styles.form}>
@@ -83,6 +161,7 @@ export const TrackSuggestionForm = () => {
                             icon={<i className='ph ph-music-notes'></i>}
                             onChange={onChangeTitle}
                             value={values.title}
+                            error={errors.title}
                         />
                         <div className={styles.form__search}>
                             <Input
@@ -94,28 +173,26 @@ export const TrackSuggestionForm = () => {
                                 value={search}
                                 onFocus={() => setSearchList(true)}
                                 onBlur={() => setSearchList(false)}
-                            />
+                                error={errors.artistIds}
+                            >
                             {
-                                searchList &&
-                                <div className={styles.form__searchWrapper}>
-                                    {
-                                        search !== '' ?
-                                        resultStatus === 'success' &&
-                                        <>
-                                            {
-                                                result?.artists.length ?
-                                                result.artists.map((artist) => {
-                                                    return <ArtistRow key={artist.id} artist={artist} />
-                                                })
-                                                :
-                                                <>Ничего не найдено</>
-                                            }
-                                        </>
-                                        :
-                                        <>Пишите</>
-                                    }
-                                </div>
+                                artists.length > 0 &&
+                                <SearchArtistListToTrack
+                                    artists={artists}
+                                    setArtists={setArtists}
+                                />
                             }
+                            </Input>
+                            <SearchArtistsToTrack
+                                searchList={searchList}
+                                search={search}
+                                resultStatus={resultStatus}
+                                result={result?.artists}
+                                setSearch={setSearch}
+                                setErrors={setErrors}
+                                artists={artists}
+                                setArtists={setArtists}
+                            />
                         </div>
                         <Input
                             label='Ссылка на SoundCloud трека'
@@ -124,6 +201,7 @@ export const TrackSuggestionForm = () => {
                             icon={<i className='ph ph-link'></i>}
                             onChange={onChangeSoundcloudUrl}
                             value={values.soundcloudUrl}
+                            error={errors.soundcloudUrl}
                         />
                         <Input
                             label='Дата релиза'
@@ -132,6 +210,7 @@ export const TrackSuggestionForm = () => {
                             icon={<i className='ph ph-calendar-blank'></i>}
                             onChange={onChangeReleaseData}
                             value={values.releaseData}
+                            error={errors.releaseData}
                         />
                     </div>
                 </div>
@@ -140,7 +219,7 @@ export const TrackSuggestionForm = () => {
                         <i className='ph ph-image'></i>
                         Обложка
                     </h5>
-                    <div className={styles.form__cover} onClick={() => inputRef.current?.click()}>
+                    <div className={`${styles.form__cover} ${values.coverUrl ? styles.active : ''}`} onClick={() => inputRef.current?.click()}>
                         <input ref={inputRef} hidden type="file" onChange={hundleCoverChange} />
                         {
                             values.coverUrl &&
@@ -162,7 +241,7 @@ export const TrackSuggestionForm = () => {
                     </div>
                 </div>
                 <div className={styles.form__footer}>
-                    <Button icon={<i className='ph ph-paper-plane-tilt'></i>} color='accent' padding='16px 24px 14px 24px'>Отправить на модерацию</Button>
+                    <Button onClick={onSubmit} icon={<i className='ph ph-paper-plane-tilt'></i>} color='accent' padding='16px 24px 14px 24px'>Отправить на модерацию</Button>
                 </div>
             </form>
         </div>

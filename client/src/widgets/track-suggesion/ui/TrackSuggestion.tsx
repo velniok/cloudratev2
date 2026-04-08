@@ -1,6 +1,6 @@
 import { Title } from '@/shared/ui'
 import styles from './TrackSuggestion.module.scss'
-import { TrackSuggestionForm } from '@/features/track'
+import { TrackSuggestionForm } from '@/features/suggestion'
 
 export const TrackSuggestion = () => {
     return (

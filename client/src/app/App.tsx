@@ -27,6 +27,7 @@ import { Header } from "@/widgets/header"
 import { UserReviewsPage } from "@/pages/user-reviews-page"
 import { UserFollowsPage } from "@/pages/user-follows-page"
 import { TrackSuggestionPage } from "@/pages/track-suggestion-page"
+import { AdminTrackSuggestionsPage } from "@/pages/admin-track-suggestions-page/AdminTrackSuggestionsPage"
 
 function App() {
 
@@ -89,6 +90,7 @@ function App() {
                             <Route path="/admin/artists" element={<AdminArtistsPage role={authUser?.role ?? 'user'} />} />
                             <Route path="/admin/tracks" element={<AdminTracksPage role={authUser?.role ?? 'user'} />} />
                             <Route path="/admin/users" element={<AdminUsersPage role={authUser?.role ?? 'user'} />} />
+                            <Route path="/admin/tracks-suggestions" element={<AdminTrackSuggestionsPage role={authUser?.role ?? 'user'} />} />
                         </Routes>
                     </main>
                     <Notification />
