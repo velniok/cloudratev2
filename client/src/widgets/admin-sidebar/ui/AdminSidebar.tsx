@@ -44,9 +44,9 @@ export const AdminSidebar: FC<AdminSidebarProps> = ({ sidebar, setSidebar }) => 
                             Треки
                         </Link>
                     </li>
-                    <li className={`${styles.nav__item} ${ pathname === '/admin/tracks-suggestions' ? styles.active : ''}`}>
-                        <Link to={'/admin/tracks-suggestions'} className={styles.nav__link} onClick={setSidebar}>
-                            <i className={`ph${pathname === '/admin/tracks-suggestions' ? '-fill' : ''} ph-music-notes-plus`}></i>
+                    <li className={`${styles.nav__item} ${ pathname === '/admin/suggestions-tracks' ? styles.active : ''}`}>
+                        <Link to={'/admin/suggestions-tracks'} className={styles.nav__link} onClick={setSidebar}>
+                            <i className={`ph${pathname === '/admin/suggestions-tracks' ? '-fill' : ''} ph-music-notes-plus`}></i>
                             Заявки на трек
                         </Link>
                     </li>

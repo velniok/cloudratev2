@@ -17,42 +17,81 @@
 
     &__track {
         width: 400px;
-        
+        border-right: 1px solid var(--border-subtle);
+        padding-right: 8px;
+
         &Info {
             display: flex;
             align-items: center;
-            column-gap: 8px;
-            margin-bottom: 6px;
+            column-gap: 6px;
+
+            & i {
+                font-size: 20px;
+                color: var(--orange-color);
+
+                transition: opacity 0.3s;
+
+                @media (hover: hover) {
+                    &:hover {
+                        opacity: 0.7;
+                    }
+                }
+            }
         }
     }
 
     &__title {
+        padding-top: 4px;
         font-family: var(--second-family);
-        font-size: 18px;
+        font-size: 16px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        margin-bottom: 4px;
     }
 
     &__status {
         padding: 6px 12px;
-        font-size: 10px;
-        border: 1px solid var(--yellow-color);
-        color: var(--yellow-color);
-        background-color: var(--yellow-color-dim);
+        font-size: 12px;
         border-radius: 12px;
         letter-spacing: 0.05em;
         text-wrap: nowrap;
+        display: flex;
+        align-items: center;
+        column-gap: 2px;
+
+        & i {
+            font-size: 14px;
+        }
+
+        &.pending {
+            border: 1px solid var(--yellow-color);
+            color: var(--yellow-color);
+            background-color: var(--yellow-color-dim);
+        }
+
+        &.accepted {
+            border: 1px solid var(--green-color);
+            color: var(--green-color);
+            background-color: var(--green-color-dim);
+        }
+
+        &.rejected {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            background-color: var(--accent-color-dim);
+        }
     }
 
     &__artist {
         cursor: pointer;
         display: inline-flex;
         align-items: center;
-        column-gap: 8px;
-        padding: 4px 8px;
+        column-gap: 6px;
+        padding: 0px 8px;
         border-radius: 12px;
-        margin-left: -4px;
+        margin-left: -8px;
+        margin-bottom: 4px;
 
         transition: background-color 0.3s;
 
@@ -65,14 +104,53 @@
         &Name {
             color: var(--text-secondary);
             font-family: var(--second-family);
-            padding-top: 4px;
             font-size: 12px;
         }
     }
 
+    &__feat {
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+        margin-bottom: 4px;
+        
+        & p {
+            padding-bottom: 3px;
+        }
+
+        &Name {
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-family: var(--second-family);
+            font-size: 12px;
+
+            transition: opacity 0.3s;
+
+            @media (hover: hover) {
+                &:hover {
+                    opacity: 0.7;
+                }
+            }
+        }
+    }
+
+    &__release {
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+        font-size: 12px;
+        font-family: var(--second-family);
+
+        & i {
+            font-size: 18px;
+        }
+    }
+
     &__user {
+        width: 250px;
         cursor: pointer;
-        padding: 4px 8px;
+        padding: 6px 12px;
         border-radius: 12px;
         display: flex;
         column-gap: 8px;
@@ -83,6 +161,71 @@
         @media (hover: hover) {
             &:hover {
                 background-color: var(--gray-color);
+            }
+        }
+
+        &Nickname {
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            row-gap: 4px;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+
+        &Button {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 16px;
+
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        &Success {
+            color: var(--green-color);
+            background-color: var(--green-color-dim);
+            border: 1px solid var(--green-color);
+
+            @media (hover: hover) {
+                &:hover {
+                    background-color: var(--green-color);
+                    color: var(--white-color);
+                }
+            }
+        }
+
+        &Delete {
+            color: var(--accent-color);
+            background-color: var(--accent-color-dim);
+            border: 1px solid var(--accent-color);
+
+            @media (hover: hover) {
+                &:hover {
+                    background-color: var(--accent-color);
+                    color: var(--white-color);
+                }
+            }
+        }
+
+        &Edit {
+            color: var(--yellow-color);
+            background-color: var(--yellow-color-dim);
+            border: 1px solid var(--yellow-color);
+
+            @media (hover: hover) {
+                &:hover {
+                    background-color: var(--yellow-color);
+                    color: var(--white-color);
+                }
             }
         }
     }

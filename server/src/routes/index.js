@@ -8,6 +8,7 @@ const UserRouter = require('./UserRouter')
 const ArtistRouter = require('./ArtistRouter')
 const TrackRouter = require('./TrackRouter')
 const ReviewRouter = require('./ReviewRouter')
+const SuggestionsRouter = require('./SuggestionsRouter')
 
 const { upload } = require('../config/multer')
 const getUser = require('../middlewares/getUser')
@@ -33,6 +34,7 @@ router.use('/user', UserRouter)
 router.use('/artist', ArtistRouter)
 router.use('/track', TrackRouter)
 router.use('/review', ReviewRouter)
+router.use('/suggestion', SuggestionsRouter)
 
 router.get('/general/get', checkAdmin, GeneralControllers.get)
 

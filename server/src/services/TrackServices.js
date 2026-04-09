@@ -45,43 +45,6 @@ class TrackServices {
         return mapToCamelCase(newTrackRes.rows[0])
     }
 
-    async createTrackSuggestion(values, userId) {
-        const suggestionTrackRes = await pool.query(`
-            INSERT INTO track_suggestions
-                (
-                    title,
-                    cover_url,
-                    soundcloud_url,
-                    artist_id,
-                    feat_artist_ids,
-                    release_data,
-                    user_id
-                )
-                SELECT $1, $2, $3, $4, $5, $6, $7
-                RETURNING *
-        `, [...values, userId])
-        return mapToCamelCase(suggestionTrackRes.rows[0])
-    }
-
-    async getTrackSuggestions() {
-        const suggestionsRes = await pool.query(`
-            SELECT
-                s.*,
-                (
-                    SELECT (row_to_json(u)::jsonb - 'password')::json
-                    FROM users u
-                    WHERE u.id = s.user_id
-                ) as user,
-                (
-                    SELECT row_to_json(a)
-                    FROM artists a
-                    WHERE a.id = s.artist_id
-                ) as artist
-            FROM track_suggestions s
-        `)
-        return suggestionsRes.rows.map(mapToCamelCase)
-    }
-
     async getTrackList(page, limit) {
         const offset = (+page - 1) * +limit
         const [tracksRes, countRes] = await Promise.all([

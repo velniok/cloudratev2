@@ -3,9 +3,17 @@ import { ISuggestionTrackReq } from "./suggestionApiTypes"
 import { ISuggestion } from "@/entities/suggestion"
 
 export const trackSuggestionApi = (params: ISuggestionTrackReq) => {
-    return axios.post<{ message: string }>('/track/suggestion', params)
+    return axios.post<{ message: string }>('/suggestion/track', params)
 }
 
 export const getTrackSuggestionApi = () => {
-    return axios.get<{ suggestions: ISuggestion[] }>('/track/suggestion')
+    return axios.get<{ suggestions: ISuggestion[] }>('/suggestion/track')
+}
+
+export const acceptTrackSuggestionApi = (params: { suggestion: ISuggestion }) => {
+    return axios.post('/suggestion/track-accept', params)
+}
+
+export const rejectTrackSuggestionApi = (params: { suggestion: ISuggestion }) => {
+    return axios.post('/suggestion/track-reject', params)
 }

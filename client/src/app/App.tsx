@@ -90,7 +90,7 @@ function App() {
                             <Route path="/admin/artists" element={<AdminArtistsPage role={authUser?.role ?? 'user'} />} />
                             <Route path="/admin/tracks" element={<AdminTracksPage role={authUser?.role ?? 'user'} />} />
                             <Route path="/admin/users" element={<AdminUsersPage role={authUser?.role ?? 'user'} />} />
-                            <Route path="/admin/tracks-suggestions" element={<AdminTrackSuggestionsPage role={authUser?.role ?? 'user'} />} />
+                            <Route path="/admin/suggestions-tracks" element={<AdminTrackSuggestionsPage role={authUser?.role ?? 'user'} />} />
                         </Routes>
                     </main>
                     <Notification />

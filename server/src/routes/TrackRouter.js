@@ -7,9 +7,7 @@ const Router = require('express').Router
 const router = new Router()
 
 router.post('/create', checkAdmin, trackValidation.trackCreateValidation, TrackControllers.create)
-router.post('/suggestion', getUser, TrackControllers.createSuggestion)
-router.get('/suggestion', TrackControllers.getSuggestions)
-router.get('/soundcloud-info', checkAdmin, TrackControllers.getSoundcloudInfo)
+router.get('/soundcloud-info', TrackControllers.getSoundcloudInfo)
 router.get('/list', TrackControllers.getList)
 router.get('/new-tracks', TrackControllers.getNewTracks)
 router.get('/profile/:id', getUser, TrackControllers.getProfile)

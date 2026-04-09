@@ -10,11 +10,13 @@ export interface ISuggestion {
     soundcloudUrl: string
     coverUrl: string
     releaseData: string
-    status: 'pending'
+    status: 'pending' | 'accepted' | 'rejected'
     rejectReason: string | null
     createdAt: string
     reviewedAt: string | null
     reviewedBy: number | null
     user: IUser
     artist: IArtist
+    featArtists: IArtist[]
+    reviewedByUser: IUser
 }
