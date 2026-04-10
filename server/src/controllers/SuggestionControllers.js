@@ -32,10 +32,17 @@ class SuggestionControllers {
         try {
             const { suggestion } = req.body
             const adminId = req.userId
-            await TrackServices.createTrack([suggestion.title, suggestion.coverUrl, suggestion.soundcloudUrl, suggestion.artistId, suggestion.featArtistIds, suggestion.releaseData])
-            const newSuggestion = await SuggestionServices.acceptSuggestionTrack(suggestion.id, adminId)
+            const trackCreate = await TrackServices.createTrack([suggestion.title, suggestion.coverUrl, suggestion.soundcloudUrl, suggestion.artistId, suggestion.featArtistIds, suggestion.releaseData])
+            const newSuggestion = await SuggestionServices.acceptSuggestionTrack(suggestion.id, adminId, trackCreate.track.id)
 
-            res.status(200).json({ suggestion: newSuggestion })
+            res.status(200).json({
+                suggestion: {
+                    ...newSuggestion,
+                    user: suggestion.user,
+                    artist: suggestion.artist,
+                    featArtists: suggestion.featArtists
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)
@@ -46,9 +53,16 @@ class SuggestionControllers {
         try {
             const { suggestion } = req.body
             const adminId = req.userId
-            const newSuggestion = await SuggestionServices.rejectSuggestionTrack(suggestion.id, adminId)
+            const newSuggestion = await SuggestionServices.rejectSuggestionTrack(suggestion.id, adminId, 'ТЕСТ ПРИЧИНА')
 
-            res.status(200).json({ suggestion: newSuggestion })
+            res.status(200).json({
+                suggestion: {
+                    ...newSuggestion,
+                    user: suggestion.user,
+                    artist: suggestion.artist,
+                    featArtists: suggestion.featArtists
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)

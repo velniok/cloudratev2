@@ -1,0 +1,57 @@
+.actions {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+
+    &__button {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: 16px;
+
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    &__success {
+        color: var(--green-color);
+        background-color: var(--green-color-dim);
+        border: 1px solid var(--green-color);
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--green-color);
+                color: var(--white-color);
+            }
+        }
+    }
+
+    &__delete {
+        color: var(--accent-color);
+        background-color: var(--accent-color-dim);
+        border: 1px solid var(--accent-color);
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--accent-color);
+                color: var(--white-color);
+            }
+        }
+    }
+
+    &__edit {
+        color: var(--yellow-color);
+        background-color: var(--yellow-color-dim);
+        border: 1px solid var(--yellow-color);
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--yellow-color);
+                color: var(--white-color);
+            }
+        }
+    }
+}

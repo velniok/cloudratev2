@@ -2,7 +2,7 @@ import { Title } from '@/shared/ui'
 import styles from './AdminTrackSuggestions.module.scss'
 import { useAppDispatch, useAppSelector } from '@/shared/lib'
 import { useEffect } from 'react'
-import { getSuggestionList, selectSuggestionList, selectSuggestionListStatus } from '@/features/suggestion'
+import { getSuggestionList, selectSuggestionList, selectSuggestionListStatus, TrackSuggestionActions } from '@/features/suggestion'
 import { SuggestionRow } from '@/entities/suggestion'
 
 export const AdminTrackSuggestions = () => {
@@ -24,7 +24,11 @@ export const AdminTrackSuggestions = () => {
                     <ul className={styles.list}>
                         {
                             suggestionList.map((suggestion) => {
-                                return <SuggestionRow key={suggestion.id} suggestion={suggestion} />
+                                return <SuggestionRow
+                                    key={suggestion.id}
+                                    suggestion={suggestion}
+                                    actions={<TrackSuggestionActions suggestion={suggestion} />}
+                                />
                             })
                         }
                     </ul>

@@ -32,6 +32,7 @@ export const AdminGeneral = () => {
                         <GeneralItem title='Артисты' count={general.artists ?? '0'} />
                         <GeneralItem title='Треки' count={general.tracks ?? '0'} />
                         <GeneralItem title='Оценки' count={general.reviews ?? '0'} />
+                        <GeneralItem title='Заявки на трек' count={general.trackSuggestions ?? '0'} />
                     </>
                     :
                     <>
@@ -39,6 +40,7 @@ export const AdminGeneral = () => {
                         <GeneralItemSkeleton title='Артисты' />
                         <GeneralItemSkeleton title='Треки' />
                         <GeneralItemSkeleton title='Оценки'/>
+                        <GeneralItemSkeleton title='Заявки на трек'/>
                     </>
                 }
                 </ul>

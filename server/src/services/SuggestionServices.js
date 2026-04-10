@@ -45,31 +45,56 @@ class SuggestionServices {
                     WHERE s.reviewed_by = u.id
                 ) as reviewed_by_user
             FROM track_suggestions s
+            ORDER BY s.created_at DESC
         `)
         return suggestionsRes.rows.map(mapToCamelCase)
     }
 
-    async acceptSuggestionTrack(id, adminId) {
+    async acceptSuggestionTrack(id, adminId, trackId) {
         const suggestionsRes = await pool.query(`
-            UPDATE track_suggestions
-            SET
-                status = 'accepted',
-                reviewed_by = $2
-            WHERE id = $1
-            RETURNING *
-        `, [id, adminId])
+            WITH updated AS (
+                UPDATE track_suggestions
+                SET
+                    status = 'accepted',
+                    reviewed_by = $2,
+                    reviewed_at = NOW(),
+                    track_id = $3
+                WHERE id = $1
+                RETURNING *
+            )
+            SELECT
+                u.*,
+                (
+                    SELECT (row_to_json(admin)::jsonb - 'password')::json
+                    FROM users admin
+                    WHERE admin.id = u.reviewed_by
+                ) AS reviewed_by_user
+            FROM updated u
+        `, [id, adminId, trackId])
         return mapToCamelCase(suggestionsRes.rows[0])
     }
 
-    async rejectSuggestionTrack(id, adminId) {
+    async rejectSuggestionTrack(id, adminId, rejectReason) {
         const suggestionsRes = await pool.query(`
-            UPDATE track_suggestions
-            SET
-                status = 'rejected',
-                reviewed_by = $2
-            WHERE id = $1
-            RETURNING *
-        `, [id, adminId])
+            WITH updated AS (
+                UPDATE track_suggestions
+                SET
+                    status = 'rejected',
+                    reviewed_by = $2,
+                    reviewed_at = NOW(),
+                    reject_reason = $3
+                WHERE id = $1
+                RETURNING *
+            )
+            SELECT
+                u.*,
+                (
+                    SELECT (row_to_json(admin)::jsonb - 'password')::json
+                    FROM users admin
+                    WHERE admin.id = u.reviewed_by
+                ) AS reviewed_by_user
+            FROM updated u
+        `, [id, adminId, rejectReason])
         return mapToCamelCase(suggestionsRes.rows[0])
     }
 }

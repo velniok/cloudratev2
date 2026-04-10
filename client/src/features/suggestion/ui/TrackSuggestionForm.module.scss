@@ -1,3 +1,5 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .wrapper {
     border-radius: 16px;
     overflow: hidden;
@@ -13,6 +15,10 @@
         align-items: center;
         column-gap: 12px;
         margin-bottom: 16px;
+
+        @media (max-width: $mobile) {
+            column-gap: 6px;
+        }
     }
 
     &__logo {
@@ -28,6 +34,15 @@
             font-size: 24px;
             color: var(--orange-color);
         }
+
+        @media (max-width: $mobile) {
+            width: 32px;
+            height: 32px;
+
+            & i {
+                font-size: 18px;
+            }
+        }
     }
 
     &__title {
@@ -35,11 +50,21 @@
         font-weight: 700;
         font-family: var(--second-family);
         letter-spacing: 0.05em;
+        text-wrap: wrap;
+
+        @media (max-width: $mobile) {
+            font-size: 16px;
+        }
     }
 
     &__desc {
         color: var(--text-secondary);
         font-size: 12px;
+        text-wrap: wrap;
+
+        @media (max-width: $mobile) {
+            font-size: 10px;
+        }
     }
 
     &__form {
@@ -51,6 +76,17 @@
 
             & i {
                 font-size: 20px;
+            }
+        }
+
+        @media (max-width: $mobile) {
+            flex-direction: column;
+            row-gap: 12px;
+
+            & button {
+                width: 100%;
+                justify-content: center;
+                padding: 8px !important;
             }
         }
     }
@@ -100,93 +136,6 @@
 
     &__search {
         position: relative;
-
-        &Wrapper {
-            transform: translateY(-6px);
-            opacity: 0;
-            visibility: hidden;
-            border-radius: 12px;
-            position: absolute;
-            z-index: 9999;
-            top: calc(100% + 6px);
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-subtle);
-            width: 100%;
-
-            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
-
-            &.open {
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-            }
-        }
-
-        &List {
-            padding: 12px;
-        }
-
-        &Item {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            column-gap: 12px;
-            padding: 8px;
-            border-radius: 12px;
-
-            transition: background-color 0.3s;
-
-            @media (hover: hover) {
-                &:hover {
-                    background-color: var(--hover-white);
-                }
-            }
-        }
-
-        &Name {
-            font-family: var(--second-family);
-        }
-
-        &Artist {
-
-            &List {
-                display: flex;
-                margin-bottom: 8px;
-                column-gap: 8px;
-            }
-
-            &Item {
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                column-gap: 6px;
-                background-color: var(--bg-secondary);
-                padding: 4px 12px;
-                border-radius: 12px;
-                border: 1px solid var(--border-subtle);
-                color: var(--text-secondary);
-
-                transition: background-color 0.3s, color 0.3s, border 0.3s;
-
-                @media (hover: hover) {
-                    &:hover {
-                        background-color: var(--accent-color-dim);
-                        color: var(--accent-color);
-                        border: 1px solid var(--accent-color);
-                    }
-                }
-
-                & i {
-                    font-size: 18px;
-                    color: var(--accent-color);
-                }
-            }
-
-            &Name {
-                font-family: var(--second-family);
-                font-size: 12px;
-            }
-        }
 
         &Text {
             color: var(--text-secondary);
@@ -282,6 +231,26 @@
 
         &Desc {
             color: var(--text-secondary);
+        }
+
+        @media (max-width: $mobile) {
+            width: 200px;
+            height: 200px;
+            
+            &Logo {
+                margin-bottom: 8px;
+                width: 48px;
+                height: 48px;
+                font-size: 22px;
+            }
+
+            &Title {
+                font-size: 14px;
+            }
+
+            &Desc {
+                font-size: 10px;
+            }
         }
     }
 

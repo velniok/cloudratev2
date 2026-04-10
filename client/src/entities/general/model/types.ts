@@ -3,4 +3,5 @@ export interface IGeneral {
     artists: string
     reviews: string
     users: string
+    trackSuggestions: string
 }

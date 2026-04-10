@@ -1,6 +1,9 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     column-gap: 12px;
     background-color: var(--gray-color);
     padding: 16px;
@@ -13,6 +16,18 @@
         &:hover {
             background-color: var(--white-hover);
         }
+    }
+
+    &__left {
+        display: flex;
+        align-items: center;
+        column-gap: 12px;
+    }
+
+    &__right {
+        display: flex;
+        align-items: center;
+        column-gap: 12px;
     }
 
     &__track {
@@ -50,39 +65,7 @@
         margin-bottom: 4px;
     }
 
-    &__status {
-        padding: 6px 12px;
-        font-size: 12px;
-        border-radius: 12px;
-        letter-spacing: 0.05em;
-        text-wrap: nowrap;
-        display: flex;
-        align-items: center;
-        column-gap: 2px;
-
-        & i {
-            font-size: 14px;
-        }
-
-        &.pending {
-            border: 1px solid var(--yellow-color);
-            color: var(--yellow-color);
-            background-color: var(--yellow-color-dim);
-        }
-
-        &.accepted {
-            border: 1px solid var(--green-color);
-            color: var(--green-color);
-            background-color: var(--green-color-dim);
-        }
-
-        &.rejected {
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-            background-color: var(--accent-color-dim);
-        }
-    }
-
+    
     &__artist {
         cursor: pointer;
         display: inline-flex;
@@ -92,22 +75,33 @@
         border-radius: 12px;
         margin-left: -8px;
         margin-bottom: 4px;
-
-        transition: background-color 0.3s;
-
+        
         @media (hover: hover) {
             &:hover {
-                background-color: var(--gray-color);
+
+                .item__artistName {
+                    color: var(--accent-color);
+                }
+
+                img {
+                    border: 1px solid var(--accent-color);
+                }
+
+                div {
+                    border: 1px solid var(--accent-color);
+                }
             }
         }
-
+        
         &Name {
             color: var(--text-secondary);
             font-family: var(--second-family);
             font-size: 12px;
+
+            transition: color 0.3s;
         }
     }
-
+    
     &__feat {
         display: flex;
         align-items: center;
@@ -117,23 +111,23 @@
         & p {
             padding-bottom: 3px;
         }
-
+        
         &Name {
             cursor: pointer;
             color: var(--text-secondary);
             font-family: var(--second-family);
             font-size: 12px;
-
-            transition: opacity 0.3s;
-
+            
+            transition: color 0.3s;
+            
             @media (hover: hover) {
                 &:hover {
-                    opacity: 0.7;
+                    color: var(--accent-color);
                 }
             }
         }
     }
-
+    
     &__release {
         color: var(--text-secondary);
         display: flex;
@@ -141,42 +135,66 @@
         column-gap: 4px;
         font-size: 12px;
         font-family: var(--second-family);
-
+        
         & i {
             font-size: 18px;
         }
     }
-
+    
     &__user {
-        width: 250px;
-        cursor: pointer;
-        padding: 6px 12px;
-        border-radius: 12px;
-        display: flex;
-        column-gap: 8px;
-        align-items: center;
+        width: 200px;
 
-        transition: background-color 0.3s;
-
-        @media (hover: hover) {
-            &:hover {
-                background-color: var(--gray-color);
+        &Profile {
+            cursor: pointer;
+            border-radius: 12px;
+            display: inline-flex;
+            column-gap: 8px;
+            align-items: center;
+            height: 100%;
+            
+            transition: color 0.3s;
+            
+            @media (hover: hover) {
+                &:hover {
+                    color: var(--accent-color);
+    
+                    img {
+                        border: 1px solid var(--accent-color);
+                    }
+    
+                    div {
+                        border: 1px solid var(--accent-color);
+                    }
+                }
             }
         }
-
+        
         &Nickname {
             font-size: 16px;
             display: flex;
             flex-direction: column;
             row-gap: 4px;
         }
-    }
 
+        &Created {
+            margin-top: 4px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            column-gap: 4px;
+            font-size: 12px;
+
+            & i {
+                font-size: 14px;
+            }
+        }
+    }
+    
     &__actions {
         display: flex;
         align-items: center;
         column-gap: 8px;
-
+        
         &Button {
             cursor: pointer;
             width: 40px;
@@ -186,15 +204,15 @@
             justify-content: center;
             border-radius: 12px;
             font-size: 16px;
-
+            
             transition: background-color 0.3s, color 0.3s;
         }
-
+        
         &Success {
             color: var(--green-color);
             background-color: var(--green-color-dim);
             border: 1px solid var(--green-color);
-
+            
             @media (hover: hover) {
                 &:hover {
                     background-color: var(--green-color);
@@ -202,12 +220,12 @@
                 }
             }
         }
-
+        
         &Delete {
             color: var(--accent-color);
             background-color: var(--accent-color-dim);
             border: 1px solid var(--accent-color);
-
+            
             @media (hover: hover) {
                 &:hover {
                     background-color: var(--accent-color);
@@ -215,12 +233,12 @@
                 }
             }
         }
-
+        
         &Edit {
             color: var(--yellow-color);
             background-color: var(--yellow-color-dim);
             border: 1px solid var(--yellow-color);
-
+            
             @media (hover: hover) {
                 &:hover {
                     background-color: var(--yellow-color);
@@ -228,5 +246,112 @@
                 }
             }
         }
+    }
+
+    &__status {
+        width: 150px;
+        display: flex;
+        justify-content: center;
+    
+        &Badge {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 12px;
+            letter-spacing: 0.05em;
+            text-wrap: nowrap;
+            display: inline-flex;
+            align-items: center;
+            column-gap: 2px;
+    
+            & i {
+                font-size: 14px;
+            }
+    
+            &.pending {
+                border: 1px solid var(--yellow-color);
+                color: var(--yellow-color);
+                background-color: var(--yellow-color-dim);
+            }
+    
+            &.accepted {
+                border: 1px solid var(--green-color);
+                color: var(--green-color);
+                background-color: var(--green-color-dim);
+            }
+    
+            &.rejected {
+                border: 1px solid var(--accent-color);
+                color: var(--accent-color);
+                background-color: var(--accent-color-dim);
+            }
+        }
+    }
+
+    &__admin {
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+
+        &User {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            column-gap: 4px;
+    
+            transition: color 0.3s;
+    
+            @media (hover: hover) {
+                &:hover {
+                    color: var(--accent-color);
+    
+                    img {
+                        border: 1px solid var(--accent-color);
+                    }
+    
+                    div {
+                        border: 1px solid var(--accent-color);
+                    }
+                }
+            }
+        }
+
+        &Text {
+            color: var(--text-secondary);
+        }
+    }
+
+    &__accept {
+        margin-top: 4px;
+
+        &Link {
+            margin-top: 2px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text-secondary);
+
+            transition: color 0.3s;
+
+            @media (hover: hover) {
+                &:hover {
+                    color: var(--accent-color);
+                }
+            }
+        }
+    }
+
+    &__reject {
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+
+        &Title {
+            color: var(--accent-color);
+        }
+    }
+
+    @media (max-width: $mobile) {
+        overflow-y: scroll;
     }
 }

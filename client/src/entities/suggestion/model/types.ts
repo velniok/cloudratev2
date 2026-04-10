@@ -18,5 +18,6 @@ export interface ISuggestion {
     user: IUser
     artist: IArtist
     featArtists: IArtist[]
-    reviewedByUser: IUser
+    reviewedByUser: IUser | null
+    trackId: number | null
 }
