@@ -75,12 +75,17 @@ export const TrackSuggestionForm = () => {
         let tempArtist:ITempArtist | null = null
         const tempFeatArtists:ITempArtist[] = []
 
-        const artistsIds = artists.map((artist) => {
+        const artistsIds = artists.map((artist, index) => {
             if (artist.temp === false) return artist.id
-            if (artist.temp === true && !tempArtist) tempArtist = artist
-            if (artist.temp === true && tempArtist) tempFeatArtists.push(artist)
-            return null
+            if (artist.temp === true) {
+                if (index === 0 && tempArtist === null) {
+                    tempArtist = artist
+                } else {
+                    tempFeatArtists.push(artist)
+                }
+            }
         })
+
 
         console.log(tempArtist)
 
