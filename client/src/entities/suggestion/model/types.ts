@@ -1,11 +1,11 @@
-import { IArtist } from "@/entities/artist"
+import { IArtist, ITempArtist } from "@/entities/artist"
 import { IUser } from "@/entities/user"
 
 export interface ISuggestion {
     id: number
     userId: number
     title: string
-    artistId: number
+    artistId: string
     featArtistIds: number[]
     soundcloudUrl: string
     coverUrl: string
@@ -20,4 +20,6 @@ export interface ISuggestion {
     featArtists: IArtist[]
     reviewedByUser: IUser | null
     trackId: number | null
+    tempArtist: ITempArtist
+    tempFeatArtists: ITempArtist[]
 }

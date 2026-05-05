@@ -7,6 +7,8 @@ const router = new Router()
 
 router.post('/track', getUser, SuggestionControllers.createTrack)
 router.get('/track', SuggestionControllers.getTracks)
+router.patch('/track-update-artist/:id', checkAdmin, SuggestionControllers.updateTrackArtist)
+router.patch('/track-update-feat/:id', checkAdmin, SuggestionControllers.updateTrackFeat)
 router.post('/track-accept', checkAdmin, getUser, SuggestionControllers.acceptTrack)
 router.post('/track-reject', checkAdmin, getUser, SuggestionControllers.rejectTrack)
 

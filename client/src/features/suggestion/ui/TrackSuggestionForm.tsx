@@ -3,7 +3,7 @@ import styles from './TrackSuggestionForm.module.scss'
 import { ChangeEvent, MouseEvent, useRef, useState } from 'react'
 import { getOptimizedAvatar, useNotification, useSearch } from '@/shared/lib'
 import { updateAvatarApi } from '@/shared/api'
-import { IArtist } from '@/entities/artist'
+import { IArtist, ITempArtist } from '@/entities/artist'
 import { trackSuggestionApi } from '@/features/suggestion'
 import { getSoundсloudTrack } from '../../track/api/trackApi'
 import { IApiError } from '@/shared/types'
@@ -18,7 +18,7 @@ export const TrackSuggestionForm = () => {
     const [soundcloudUrl, setSoundcloudUrl] = useState<string>('')
     const [soundcloudUrlError, setSoundcloudUrlError] = useState<string>('')
     const [soundcloudLoading, setSoundcloudLoading] = useState<boolean>(false)
-    const [artists, setArtists] = useState<IArtist[]>([])
+    const [artists, setArtists] = useState<(IArtist | ITempArtist)[]>([])
 
     const initialErrors = {
         title: '',
@@ -72,7 +72,15 @@ export const TrackSuggestionForm = () => {
         if (artists.length === 0) return setErrors(prev => ({ ...prev, artistIds: 'Укажите хотя бы одного артиста' }))
         if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
 
-        const artistsIds = artists.map((artist) => { return artist.id })
+        const tempArtists:ITempArtist[] = []
+
+        const artistsIds = artists.map((artist) => {
+            if (artist.temp === false) return artist.id
+            if (artist.temp === true) tempArtists.push(artist)
+            return null
+        })
+
+        console.log(tempArtists)
 
         trackSuggestionApi({
             title: values.title,
@@ -81,6 +89,8 @@ export const TrackSuggestionForm = () => {
             releaseData: values.releaseData,
             artistId: artistsIds[0],
             featArtistIds: artistsIds.slice(1),
+            tempArtist: tempArtists[0],
+            tempFeatArtists: tempArtists.slice(1)
         })
             .then(() => {
                 notify('Заявка отправлена', 'Заявка успешно была отправлена', 'success')

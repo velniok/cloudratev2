@@ -3,6 +3,7 @@ import { axios } from "@/shared/api"
 import { ISoundcloudTrack, ITrackReq, ITrackUpdateReq } from "./trackApiTypes"
 import { IPagination } from "@/shared/types"
 import { IReview } from "@/entities/review"
+import { IArtist } from "@/entities/artist"
 
 export const getTrackListApi = (params: { page: number, limit: number }) => {
     return axios.get<{ tracks: ITrack[], pagination: IPagination }>('/track/list', { params: { page: params.page, limit: params.limit }})

@@ -4,14 +4,16 @@ import { ISuggestion } from '../model/types'
 import { Badges, Cover } from '@/shared/ui'
 import { getMonth, getOptimizedAvatar } from '@/shared/lib'
 import { useNavigate } from 'react-router-dom'
-import { acceptTrackSuggestionApi, rejectTrackSuggestionApi } from '@/features/suggestion'
 
 interface SuggestionRowProps {
     suggestion: ISuggestion
     actions: ReactNode
+    openModal: () => void
+    setSuggestionId: (id: number) => void
+    setTempId: (id: string | null) => void
 }
 
-export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions }) => {
+export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, openModal, setSuggestionId, setTempId }) => {
 
     const navigate = useNavigate()
 
@@ -31,23 +33,37 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions }) =
                             <i className="ph ph-link"></i>
                         </a>
                     </div>
-                    <div className={styles.item__artist} onClick={() => navigate(`/artist/${suggestion.artistId}`)}>
-                        <Cover
-                            url={getOptimizedAvatar(suggestion.artist.avatarUrl ?? '', 25, 25)}
-                            width='25px'
-                            height='25px'
-                            borderRadius='50%'
-                        />
-                        <h4 className={styles.item__artistName}>{suggestion.artist.name}</h4>
-                    </div>
+                    {
+                        suggestion.artist ?
+                            <div className={styles.item__artist} onClick={() => navigate(`/artist/${suggestion.artistId}`)}>
+                                <Cover
+                                    url={getOptimizedAvatar(suggestion.artist.avatarUrl ?? '', 25, 25)}
+                                    width='25px'
+                                    height='25px'
+                                    borderRadius='50%'
+                                />
+                                <h4 className={styles.item__artistName}>{suggestion.artist.name}</h4>
+                            </div>
+                        :
+                            <div className={styles.item__artist} onClick={() => {setSuggestionId(suggestion.id), setTempId(null), openModal()}}>
+                                <h4 className={`${styles.item__artistName} ${styles.item__artistNameTemp}`}>{suggestion.tempArtist.name}</h4>
+                            </div>
+                    }
                     <ul className={styles.item__feat}>
                         {
-                            suggestion.featArtists?.length > 0 && <p className="">feat.</p>
+                            (suggestion.tempFeatArtists?.length > 0 || suggestion.featArtists?.length > 0) && <p className="">feat.</p>
                         }
                         {
                             suggestion.featArtists?.map((artist) => {
                                 return (
                                     <h4 key={artist.id} onClick={() => navigate(`/artist/${artist.id}`)} className={styles.item__featName}>{artist.name}</h4>  
+                                )
+                            })
+                        }
+                        {
+                            suggestion.tempFeatArtists?.map((tempArtist) => {
+                                return (
+                                    <h4 key={tempArtist.id} onClick={() => {setSuggestionId(suggestion.id), setTempId(tempArtist.id), openModal()}} className={`${styles.item__featName} ${styles.item__featNameTemp}`}>{tempArtist.name}</h4>
                                 )
                             })
                         }

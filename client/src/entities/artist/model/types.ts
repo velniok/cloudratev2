@@ -1,4 +1,3 @@
-import { IPagination } from "@/shared/types"
 import type { ITrack } from "../../track"
 
 export interface IArtist {
@@ -15,4 +14,12 @@ export interface IArtist {
         followersCount: number
         isFollowed: boolean
     }
+    temp?: false
+}
+
+export interface ITempArtist {
+    id: string
+    name: string
+    avatarUrl: null
+    temp: true
 }

@@ -12,9 +12,11 @@ class SuggestionServices {
                     artist_id,
                     feat_artist_ids,
                     release_data,
+                    temp_artist,
+                    temp_feat_artists,
                     user_id
                 )
-                SELECT $1, $2, $3, $4, $5, $6, $7
+                SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9
                 RETURNING *
         `, [...values, userId])
         return mapToCamelCase(suggestionTrackRes.rows[0])
@@ -37,7 +39,7 @@ class SuggestionServices {
                 (
                     SELECT json_agg(row_to_json(a))
                     FROM artists a
-                    WHERE a.id = ANY(s.feat_artist_ids) 
+                    WHERE a.id = ANY(s.feat_artist_ids)
                 ) as feat_artists,
                 (
                     SELECT row_to_json(u)
@@ -48,6 +50,30 @@ class SuggestionServices {
             ORDER BY s.created_at DESC
         `)
         return suggestionsRes.rows.map(mapToCamelCase)
+    }
+
+    async updateArtistTrack(id, artistId) {
+        await pool.query(`
+            UPDATE track_suggestions
+            SET artist_id = $2
+            WHERE id = $1
+            RETURNING *
+        `, [id, artistId])
+    }
+
+    async updateFeatTrack(id, artistId, tempId) {
+        await pool.query(`
+            UPDATE track_suggestions
+            SET
+                feat_artist_ids = array_append(feat_artist_ids, $2),
+                temp_feat_artists = (
+                    SELECT array_agg(elem)
+                    FROM unnest(temp_feat_artists) AS elem
+                    WHERE elem->>'id' != $3::text
+                )
+            WHERE id = $1
+            RETURNING *
+        `, [id, artistId, tempId])
     }
 
     async acceptSuggestionTrack(id, adminId, trackId) {

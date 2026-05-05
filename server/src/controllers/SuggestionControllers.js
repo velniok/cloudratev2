@@ -5,11 +5,11 @@ const AppError = require('../utils/AppError')
 class SuggestionControllers {
     async createTrack(req, res, next) {
         try {
-            const { title, artistId, featArtistIds, soundcloudUrl, coverUrl, releaseData } = req.body
+            const { title, artistId, featArtistIds, soundcloudUrl, coverUrl, releaseData, tempArtist, tempFeatArtists } = req.body
             const userId = req.userId
             if (!userId) throw new AppError(`Нужно авторизоваться`, 401)
             
-            await SuggestionServices.createSuggestionTrack([title, coverUrl, soundcloudUrl, artistId, featArtistIds, releaseData], userId)
+            await SuggestionServices.createSuggestionTrack([title, coverUrl, soundcloudUrl, artistId, featArtistIds, releaseData, tempArtist, tempFeatArtists], userId)
             res.status(201).json({ message: 'Заявка отправлена' })
         } catch (err) {
             console.log(err)
@@ -28,6 +28,32 @@ class SuggestionControllers {
         }
     }
 
+    async updateTrackArtist(req, res, next) {
+        try {
+            const suggestionId = req.params.id
+            const { id } = req.body
+            const suggestion = await SuggestionServices.updateArtistTrack(suggestionId, id)
+
+            res.status(200).json({ suggestion })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async updateTrackFeat(req, res,next) {
+        try {
+            const suggestionId = req.params.id
+            const { id, tempId } = req.body
+            const suggestion = await SuggestionServices.updateFeatTrack(suggestionId, id, tempId)
+
+            res.status(200).json({ suggestion })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+ 
     async acceptTrack(req, res, next) {
         try {
             const { suggestion } = req.body

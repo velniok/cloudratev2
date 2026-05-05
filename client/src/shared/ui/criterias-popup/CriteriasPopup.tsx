@@ -40,7 +40,7 @@ export const CriteriasPopup: FC<CriteriasPopupProps> = ({ show, avgCriterias, po
                             <li key={index} className={styles.criterias__item}>
                                 <p className={styles.criterias__title}>{criteriaTitles[index]}</p>
                                 <div className={styles.criterias__line}>
-                                    <div className={styles.criterias__fill} style={{ width: `${criteria ?? 0 * 10}%` }}></div>
+                                    <div className={styles.criterias__fill} style={{ width: `${(criteria ?? 0) * 10}%` }}></div>
                                 </div>
                                 <span className={styles.criterias__rating}>{criteria}</span>
                             </li>

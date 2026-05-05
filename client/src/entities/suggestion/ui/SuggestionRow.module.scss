@@ -99,6 +99,10 @@
             font-size: 12px;
 
             transition: color 0.3s;
+
+            &Temp {
+                color: var(--white-color);
+            }
         }
     }
     
@@ -124,6 +128,10 @@
                 &:hover {
                     color: var(--accent-color);
                 }
+            }
+
+            &Temp {
+                color: var(--white-color);
             }
         }
     }

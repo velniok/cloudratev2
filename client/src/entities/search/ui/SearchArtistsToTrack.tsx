@@ -1,8 +1,8 @@
 import { FC } from 'react'
 import styles from './SearchArtistsToTrack.module.scss'
 import { getOptimizedAvatar } from '@/shared/lib'
-import { Cover } from '@/shared/ui'
-import { IArtist } from '@/entities/artist'
+import { Button, Cover } from '@/shared/ui'
+import { IArtist, ITempArtist } from '@/entities/artist'
 import { TStatus } from '@/shared/types'
 
 interface SearchArtistsToTrackProps {
@@ -12,14 +12,19 @@ interface SearchArtistsToTrackProps {
     result: IArtist[] | undefined
     setSearch: (prev: any) => void
     setErrors: (prev: any) => void
-    artists: IArtist[]
+    artists: (IArtist | ITempArtist)[]
     setArtists: (prev: any) => void
 }
 
 export const SearchArtistsToTrack: FC<SearchArtistsToTrackProps> = ({ searchList, search, resultStatus, result, setErrors, setSearch, artists, setArtists }) => {
 
-    const addArtist = (artist: IArtist) => {
-        setArtists((prev: IArtist[]) => [...prev, artist])
+    const addArtist = (artist: IArtist | string) => {
+        if (typeof artist === 'string') {
+            const tempId = Date.now() + Math.floor(Math.random() * 1000)
+            setArtists((prev: ITempArtist[]) => [...prev, { id: tempId, name: search, temp: true}])
+        } else {
+            setArtists((prev: IArtist[]) => [...prev, {...artist, temp: false}])
+        }
         setSearch('')
         setErrors((prev: { [key: string]: string }) => ({ ...prev, artistIds: '' }))
     }
@@ -51,7 +56,9 @@ export const SearchArtistsToTrack: FC<SearchArtistsToTrackProps> = ({ searchList
                             }
                         </ul>
                         :
-                        <p className={styles.search__text}>Ничего не найдено</p>
+                        <ul className={styles.search__list}>
+                            <Button fontSize='12px' padding='8px 12px 8px 12px' color='accent' onClick={() => addArtist(search)}>Добавить в список</Button>
+                        </ul>
                     }
                 </>
                 :
@@ -62,13 +69,13 @@ export const SearchArtistsToTrack: FC<SearchArtistsToTrackProps> = ({ searchList
 }
 
 interface SearchArtistListToTrackProps {
-    artists: IArtist[]
+    artists: (IArtist | ITempArtist)[]
     setArtists: (prev: any) => void
 }
 
 export const SearchArtistListToTrack: FC<SearchArtistListToTrackProps> = ({ artists, setArtists }) => {
 
-    const removeArtist = (id: number) => {
+    const removeArtist = (id: number | string) => {
         setArtists((prev: IArtist[]) => prev = prev.filter((artist: IArtist) => artist.id !== id))
     }
 

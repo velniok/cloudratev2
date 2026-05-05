@@ -9,15 +9,18 @@ import { useNavigate } from 'react-router-dom'
 import { IArtist } from '@/entities/artist'
 import { getSoundсloudArtist } from '../api/artistApi'
 import axios from 'axios'
+import { updateTrackSuggestionArtistApi, updateTrackSuggestionFeatApi } from '@/features/suggestion'
 
 interface ArtistCreateFormProps {
     modalClose: () => void
-    lastPage: number
-    limit: number
-    artistListLength: number
+    lastPage?: number
+    limit?: number
+    artistListLength?: number
+    suggestionId?: number | null
+    tempId?: string | null
 }
 
-export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPage, limit, artistListLength }) => {
+export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPage, limit, artistListLength, suggestionId, tempId }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
@@ -81,12 +84,19 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
             avatarUrl: values.avatarUrl,
             soundcloudUrl: values.soundcloudUrl,
         })).unwrap()
-            .then(() => {
+            .then((res) => {
                 notify('Артист создан', 'Новый артист успешно добавлен', 'success')
-                if (artistListLength === limit) {
-                    navigate(`/admin/artists?page=${lastPage + 1}&limit=${limit}`)
-                } else {
-                    navigate(`/admin/artists?page=${lastPage}&limit=${limit}`)
+                if (suggestionId && tempId) {
+                    updateTrackSuggestionFeatApi({ id: suggestionId, tempId: tempId, req: res.artist })
+                } else if (suggestionId) {
+                    updateTrackSuggestionArtistApi({ id: suggestionId, req: res.artist })
+                } else if (lastPage) {
+                    if (artistListLength === limit) {
+                        console.log(artistListLength, limit)
+                        navigate(`/admin/artists?page=${lastPage + 1}&limit=${limit}`)
+                    } else {
+                        navigate(`/admin/artists?page=${lastPage}&limit=${limit}`)
+                    }
                 }
                 hundleCancel(e)
             })
