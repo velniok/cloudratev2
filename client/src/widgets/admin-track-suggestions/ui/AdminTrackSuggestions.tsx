@@ -18,28 +18,40 @@ export const AdminTrackSuggestions = () => {
 
     const [createArtist, setCreateArtist] = useState<boolean>(false)
     const [suggestionId, setSuggestionId] = useState<number | null>(null)
-    const [tempId, setTempId] = useState<string | null>(null)
+    const [tempArtistId, setTempArtistId] = useState<string | null>(null)
+
+    const openModalHundler = (suggestionId: number, tempArtistId: string | null) => {
+        setSuggestionId((prev) => prev = suggestionId)
+        setTempArtistId((prev) => prev = tempArtistId)
+        setCreateArtist(true)
+    }
 
     return (
         <div className={styles.wrapper}>
             <div className="container">
-                <Title>Заявки на треки</Title>
+                <Title>ЗАЯВКИ НА ТРЕКИ</Title>
                 {
                     suggestionListStatus === 'success' && suggestionList &&
-                    <ul className={styles.list}>
-                        {
-                            suggestionList.map((suggestion) => {
-                                return <SuggestionRow
-                                    key={suggestion.id}
-                                    suggestion={suggestion}
-                                    actions={<TrackSuggestionActions suggestion={suggestion} />}
-                                    openModal={() => setCreateArtist(true)}
-                                    setSuggestionId={(id: number) => setSuggestionId((prev) => prev = id)}
-                                    setTempId={(id: string | null) => setTempId((prev) => prev = id)}
-                                />
-                            })
-                        }
-                    </ul>
+                    <>
+                    {
+                        suggestionList.length === 0 ?
+                        <>Пусто..</>
+                        :
+                        <ul className={styles.list}>
+                            {
+                                suggestionList.map((suggestion) => {
+                                    return <SuggestionRow
+                                        key={suggestion.id}
+                                        suggestion={suggestion}
+                                        actions={<TrackSuggestionActions suggestion={suggestion} />}
+                                        openModalHundler={(suggestionId: number, tempArtistId: string | null) => openModalHundler(suggestionId, tempArtistId)}
+                                        admin
+                                    />
+                                })
+                            }
+                        </ul>
+                    }
+                    </>
                 }
             </div>
             <Modal
@@ -53,7 +65,7 @@ export const AdminTrackSuggestions = () => {
                     <ArtistCreateForm
                         modalClose={() => setCreateArtist(false)}
                         suggestionId={suggestionId}
-                        tempId={tempId}
+                        tempId={tempArtistId}
                     />
                 }
             </Modal>

@@ -123,6 +123,36 @@ class SuggestionServices {
         `, [id, adminId, rejectReason])
         return mapToCamelCase(suggestionsRes.rows[0])
     }
+
+    async getTrackSuggestionsByUser(userId, status) {
+        const suggestionsRes = await pool.query(`
+            SELECT
+                s.*,
+                (
+                    SELECT (row_to_json(u)::jsonb - 'password')::json
+                    FROM users u
+                    WHERE u.id = s.user_id
+                ) as user,
+                (
+                    SELECT row_to_json(a)
+                    FROM artists a
+                    WHERE a.id = s.artist_id
+                ) as artist,
+                (
+                    SELECT json_agg(row_to_json(a))
+                    FROM artists a
+                    WHERE a.id = ANY(s.feat_artist_ids)
+                ) as feat_artists,
+                (
+                    SELECT row_to_json(u)
+                    FROM users u
+                    WHERE s.reviewed_by = u.id
+                ) as reviewed_by_user
+            FROM track_suggestions s
+            WHERE user_id = $1 AND ($2::text IS NULL OR status = $2) 
+        `, [userId, status])
+        return suggestionsRes.rows.map(mapToCamelCase)
+    }
 }
 
 module.exports = new SuggestionServices()

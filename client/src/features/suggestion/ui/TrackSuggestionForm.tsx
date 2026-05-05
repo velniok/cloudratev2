@@ -84,6 +84,7 @@ export const TrackSuggestionForm = () => {
                     tempFeatArtists.push(artist)
                 }
             }
+            return null
         })
 
 

@@ -6,7 +6,7 @@ export const TrackSuggestion = () => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
-                <Title>Предложить трек</Title>
+                <Title>ПРЕДЛОЖИТЬ ТРЕК</Title>
                 <TrackSuggestionForm />
             </div>
         </div>

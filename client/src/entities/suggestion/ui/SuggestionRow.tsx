@@ -7,13 +7,12 @@ import { useNavigate } from 'react-router-dom'
 
 interface SuggestionRowProps {
     suggestion: ISuggestion
-    actions: ReactNode
-    openModal: () => void
-    setSuggestionId: (id: number) => void
-    setTempId: (id: string | null) => void
+    actions?: ReactNode
+    openModalHundler?: (suggestionId: number, tempArtistId: string | null) => void
+    admin?: boolean
 }
 
-export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, openModal, setSuggestionId, setTempId }) => {
+export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, openModalHundler, admin }) => {
 
     const navigate = useNavigate()
 
@@ -44,9 +43,13 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                                 />
                                 <h4 className={styles.item__artistName}>{suggestion.artist.name}</h4>
                             </div>
+                        : admin && openModalHundler ?
+                            <div className={styles.item__artist} onClick={() => openModalHundler(suggestion.id, null)}>
+                                <h4 className={`${styles.item__artistName} ${styles.item__artistNameTemp}`}>{suggestion.tempArtist?.name ?? 'Удалено'}</h4>
+                            </div>
                         :
-                            <div className={styles.item__artist} onClick={() => {setSuggestionId(suggestion.id), setTempId(null), openModal()}}>
-                                <h4 className={`${styles.item__artistName} ${styles.item__artistNameTemp}`}>{suggestion.tempArtist.name}</h4>
+                            <div className={styles.item__artist}>
+                                <h4 className={`${styles.item__artistName} ${styles.item__artistNameTemp}`}>{suggestion.tempArtist?.name ?? 'Удалено'}</h4>
                             </div>
                     }
                     <ul className={styles.item__feat}>
@@ -61,9 +64,16 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                             })
                         }
                         {
+                            admin && openModalHundler ?
                             suggestion.tempFeatArtists?.map((tempArtist) => {
                                 return (
-                                    <h4 key={tempArtist.id} onClick={() => {setSuggestionId(suggestion.id), setTempId(tempArtist.id), openModal()}} className={`${styles.item__featName} ${styles.item__featNameTemp}`}>{tempArtist.name}</h4>
+                                    <h4 key={tempArtist.id} onClick={() => openModalHundler(suggestion.id, tempArtist.id)} className={`${styles.item__featName} ${styles.item__featNameTemp}`}>{tempArtist.name}</h4>
+                                )
+                            })
+                            :
+                            suggestion.tempFeatArtists?.map((tempArtist) => {
+                                return (
+                                    <h4 key={tempArtist.id} className={`${styles.item__featName} ${styles.item__featNameTemp}`}>{tempArtist.name}</h4>
                                 )
                             })
                         }
@@ -73,30 +83,37 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                         {new Date(suggestion.releaseData).toLocaleDateString()}
                     </p>
                 </div>
-                <div className={styles.item__user}>
-                    <div className={styles.item__userProfile} onClick={() => navigate(`/user/${suggestion.user.username}`)}>
-                        <Cover
-                            url={getOptimizedAvatar(suggestion.user.avatarUrl ?? '', 50, 50)}
-                            width='50px'
-                            height='50px'
-                            borderRadius='50%'
-                        />
-                        <h4 className={styles.item__userNickname}>
-                            {suggestion.user.nickname}
-                            <Badges role={suggestion.user.role} size='small' />
-                        </h4>
+                {
+                    admin &&
+                    <div className={styles.item__user}>
+                        <div className={styles.item__userProfile} onClick={() => navigate(`/user/${suggestion.user.username}`)}>
+                            <Cover
+                                url={getOptimizedAvatar(suggestion.user.avatarUrl ?? '', 50, 50)}
+                                width='50px'
+                                height='50px'
+                                borderRadius='50%'
+                            />
+                            <h4 className={styles.item__userNickname}>
+                                {suggestion.user.nickname}
+                                <Badges role={suggestion.user.role} size='small' />
+                            </h4>
+                        </div>
+                        <p className={styles.item__userCreated}>
+                            <i className="ph ph-clock"></i>
+                            {new Date(suggestion.createdAt).getUTCDate()} {getMonth(suggestion.createdAt, 'pluralize')} {new Date(suggestion.createdAt).getUTCFullYear()}
+                        </p>
                     </div>
-                    <p className={styles.item__userCreated}>
-                        <i className="ph ph-clock"></i>
-                        {new Date(suggestion.createdAt).getUTCDate()} {getMonth(suggestion.createdAt, 'pluralize')} {new Date(suggestion.createdAt).getUTCFullYear()}
-                    </p>
-                </div>
+                }
             </div>
             <div className={styles.item__right}>
                 <div className={styles.item__status}>
                     <p className={`${styles.item__statusBadge} ${styles[suggestion.status]}`}>
                         {
-                            suggestion.status === 'pending' ? <>На рассмотрении</>
+                            suggestion.status === 'pending' ?
+                            <>
+                                <i className="ph-fill ph-clock"></i>
+                                На рассмотрении
+                            </>
                             :
                             suggestion.status === 'accepted' ?
                             <>
@@ -112,9 +129,8 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                         }
                     </p>
                 </div>
-                <div className={styles.item__info}>
                     {
-                        suggestion.status !== 'pending' && suggestion.reviewedByUser &&
+                        suggestion.status !== 'pending' && suggestion.reviewedByUser && admin &&
                         <div className={styles.item__admin}>
                             <p className={styles.item__adminText}>Модератор:</p>
                             <div className={styles.item__adminUser} onClick={() => navigate(`/user/${suggestion.reviewedByUser?.username}`)}>
@@ -139,7 +155,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                         </div>
                     }
                     {
-                        suggestion.status === 'rejected' &&
+                        suggestion.status === 'rejected' && suggestion.reviewedAt &&
                         <>
                             <div className={styles.item__reject}>
                                 <p className={styles.item__rejectTitle}>Причина:</p>
@@ -147,15 +163,21 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                             </div>
                             <p className={styles.item__userCreated}>
                                 <i className="ph ph-clock"></i>
-                                {new Date(suggestion.createdAt).getUTCDate()} {getMonth(suggestion.createdAt, 'pluralize')} {new Date(suggestion.createdAt).getUTCFullYear()}
+                                {new Date(suggestion.createdAt).getUTCDate()} {getMonth(suggestion.createdAt, 'pluralize')} {new Date(suggestion.reviewedAt).getUTCFullYear()}
                             </p>
                         </>
                     }
                     {
-                        suggestion.status === 'pending' && actions
+                        suggestion.status === 'pending' &&
+                        <>
+                            {actions}
+                            <p className={styles.item__userCreated}>
+                                <i className="ph ph-clock"></i>
+                                {new Date(suggestion.createdAt).getUTCDate()} {getMonth(suggestion.createdAt, 'pluralize')} {new Date(suggestion.createdAt).getUTCFullYear()}
+                            </p>
+                        </>
                     }
                 </div>
-            </div>
         </li>
     )
 }

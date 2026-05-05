@@ -115,6 +115,13 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
         setSoundcloudInfo(true)
         getSoundсloudArtist({ url: urlForInfo })
             .then((res) => {
+                if (res.data.artist) {
+                    if (suggestionId && tempId) {
+                        updateTrackSuggestionFeatApi({ id: suggestionId, tempId: tempId, req: res.data.artist })
+                    } else if (suggestionId) {
+                        updateTrackSuggestionArtistApi({ id: suggestionId, req: res.data.artist })
+                    }
+                }
                 setValues(prev => ({
                     ...prev,
                     name: res.data.name ?? '',

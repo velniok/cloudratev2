@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteUserApi, getUserFollowsApi, getUserListApi, getUserProfileApi, getUserReviewsApi, updateUserApi, updateUserRoleApi } from "../api/userApi";
+import { deleteUserApi, getUserFollowsApi, getUserListApi, getUserProfileApi, getUserReviewsApi, getUserSuggestionsApi, updateUserApi, updateUserRoleApi } from "../api/userApi";
 import axios from "axios";
 import type { IUserState } from "./userSliceTypes";
 import type { IUser } from "@/entities/user";
@@ -8,6 +8,7 @@ import { IApiError, IPagination } from "@/shared/types";
 import { IArtist } from "@/entities/artist";
 import { IReview } from "@/entities/review";
 import { toggleFollowApi } from "@/features/artist";
+import { ISuggestion } from "@/entities/suggestion";
 
 export const getUserProfileThunk = createAsyncThunk<{ user: IUser }, { username: string }, { rejectValue: IApiError }>('user/getUserProfileThunk', async (params, { rejectWithValue }) => {
     try {
@@ -69,6 +70,18 @@ export const getUserReviewsThunk = createAsyncThunk<{ reviews: IReview[], pagina
     }
 })
 
+export const getUserSuggestionsThunk = createAsyncThunk<{ suggestions: ISuggestion[] }, { id: number, filter: string | null }, { rejectValue: IApiError }>('user/getUserSuggestionsThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await getUserSuggestionsApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
+    }
+})
+
 export const updateUserThunk = createAsyncThunk<{ user: IUser }, IUpdateUserReq, { rejectValue: IApiError }>('user/updateUserThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await updateUserApi(params)
@@ -120,6 +133,9 @@ const initialState: IUserState = {
     reviews: null,
     reviewsPagination: null,
     reviewsStatus: 'idle',
+
+    suggestions: null,
+    suggestionsStatus: 'idle',
 
     userList: null,
     userListStatus: 'idle',
@@ -189,7 +205,7 @@ const userSlice = createSlice({
             .addCase(toggleFollowThunk.fulfilled, (state, action) => {
                 if (state.follows) {
                     state.follows = state.follows.map((artist) => {
-                        if (artist.id === action.meta.arg.artistId) {
+                        if (artist.id === action.meta.arg.artistId && artist.follow) {
                             if (action.payload.followed) {
                                 ++artist.follow.followersCount
                                 artist.follow.isFollowed = true
@@ -219,6 +235,19 @@ const userSlice = createSlice({
             })
             .addCase(getUserReviewsThunk.rejected, (state, action) => {
                 state.reviewsStatus = 'error',
+                state.userError = action.payload?.message ?? 'Непредвиденная ошибка'
+            })
+
+            .addCase(getUserSuggestionsThunk.pending, (state) => {
+                state.suggestions = null,
+                state.suggestionsStatus = 'loading'
+            })
+            .addCase(getUserSuggestionsThunk.fulfilled, (state, action) => {
+                state.suggestionsStatus = 'success',
+                state.suggestions = action.payload.suggestions
+            })
+            .addCase(getUserSuggestionsThunk.rejected, (state, action) => {
+                state.suggestionsStatus = 'error',
                 state.userError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 

@@ -26,17 +26,21 @@ class ArtistControllers {
     async getSoundcloudInfo(req, res, next) {
         try {
             const { url } = req.query
-            const clientId = 'tkIWLs4MIowq7bCXP80TOwx6DnDa7UPc'
-            const { data } = await axios.get(
-                `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
-            )
-
-            const avatarUrl = await uploadFromSoundcloud(data.avatar_url.replace('-large.jpg', '-t200x200.jpg'))
-            res.status(200).json({
-                name: data.username,
-                soundcloudUrl: data.permalink_url,
-                avatarUrl: avatarUrl
-            })
+            const artist = await ArtistServices.getArtistBySCUrl(url)
+            if (!artist) {
+                const clientId = 'tkIWLs4MIowq7bCXP80TOwx6DnDa7UPc'
+                const { data } = await axios.get(
+                    `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
+                )
+                const avatarUrl = await uploadFromSoundcloud(data.avatar_url.replace('-large.jpg', '-t200x200.jpg'))
+                res.status(200).json({
+                    name: data.username,
+                    soundcloudUrl: data.permalink_url,
+                    avatarUrl: avatarUrl
+                })
+            } else {
+                res.status(200).json({ artist })
+            }
         } catch (err) {
             console.log(err)
             next(err)

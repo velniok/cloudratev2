@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator')
 const pool = require("../config/db")
 const UserDto = require("../dtos/UserDto")
 const ArtistServices = require("../services/ArtistServices")
+const SuggestionServices = require("../services/SuggestionServices")
 
 class UserControllers {
 
@@ -74,6 +75,20 @@ class UserControllers {
         }
     }
 
+    async getTrackSuggestions(req, res, next) {
+        try {
+            const userId = req.params.userId
+            const { status } = req.query
+            
+            const suggestions = await SuggestionServices.getTrackSuggestionsByUser(userId, status)
+
+            res.status(200).json({ suggestions })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+ 
     async update(req, res, next) {
         try {
             const errors = validationResult(req)
@@ -91,9 +106,8 @@ class UserControllers {
             if (updatedUser.status === 'username_taken') throw new AppError('Уникальный никнейм занят', 409, 'username')
             const user = updatedUser.user
             const userDto = new UserDto(user)
-            const reviews = await ReviewServices.getReviewsByUser(userId)
 
-            res.status(200).json({ user: { ...userDto, reviews } })
+            res.status(200).json({ user: userDto })
         } catch (err) {
             console.log(err)
             next(err)

@@ -9,7 +9,7 @@ export const getArtistListApi = (params: { page: number, limit: number }) => {
 }
 
 export const getSoundсloudArtist = (params: { url: string }) => {
-    return axios.get<ISoundcloudArtist>('/artist/soundcloud-info', { params: { url: params.url }})
+    return axios.get<ISoundcloudArtist & { artist: IArtist }>('/artist/soundcloud-info', { params: { url: params.url }})
 }
 
 export const createArtistApi = (params: IArtistReq) => {

@@ -132,6 +132,13 @@ class ArtistServices {
             }
     }
 
+    async getArtistBySCUrl(url) {
+        const artistRes = await pool.query(`
+            SELECT * FROM artists WHERE soundcloud_url = $1
+        `, [url])
+        return mapToCamelCase(artistRes.rows[0])
+    }
+
     async updateArtist(id, values) {
         const artistRes = await pool.query(`
             WITH
