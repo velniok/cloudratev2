@@ -72,15 +72,17 @@ export const TrackSuggestionForm = () => {
         if (artists.length === 0) return setErrors(prev => ({ ...prev, artistIds: 'Укажите хотя бы одного артиста' }))
         if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
 
-        const tempArtists:ITempArtist[] = []
+        let tempArtist:ITempArtist | null = null
+        const tempFeatArtists:ITempArtist[] = []
 
         const artistsIds = artists.map((artist) => {
             if (artist.temp === false) return artist.id
-            if (artist.temp === true) tempArtists.push(artist)
+            if (artist.temp === true && !tempArtist) tempArtist = artist
+            if (artist.temp === true && tempArtist) tempFeatArtists.push(artist)
             return null
         })
 
-        console.log(tempArtists)
+        console.log(tempArtist)
 
         trackSuggestionApi({
             title: values.title,
@@ -89,8 +91,8 @@ export const TrackSuggestionForm = () => {
             releaseData: values.releaseData,
             artistId: artistsIds[0],
             featArtistIds: artistsIds.slice(1),
-            tempArtist: tempArtists[0],
-            tempFeatArtists: tempArtists.slice(1)
+            tempArtist: tempArtist,
+            tempFeatArtists: tempFeatArtists
         })
             .then(() => {
                 notify('Заявка отправлена', 'Заявка успешно была отправлена', 'success')
