@@ -1,11 +1,11 @@
 import { getUserProfileThunk, selectUser, selectUserStatus } from "@/features/user"
 import { useAppDispatch, useAppSelector, useDocumentTitle, useNotification } from "@/shared/lib"
 import { Loading } from "@/shared/ui"
-import { UserTrackSuggestions } from "@/widgets/user-track-suggestions"
+import { UserSuggestionsPagination } from "@/widgets/user-suggestions-pagination"
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
 
-export const UserTrackSuggestionsPage = () => {
+export const UserSuggestionsPage = () => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
@@ -25,7 +25,7 @@ export const UserTrackSuggestionsPage = () => {
 
     return (
         userStatus === 'success' && user ?
-        <UserTrackSuggestions user={user} />
+        <UserSuggestionsPagination user={user} />
         :
         <Loading />
     )

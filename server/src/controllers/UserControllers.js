@@ -75,14 +75,22 @@ class UserControllers {
         }
     }
 
-    async getTrackSuggestions(req, res, next) {
+    async getSuggestions(req, res, next) {
         try {
             const userId = req.params.userId
-            const { status } = req.query
+            const { status, page, limit } = req.query
             
-            const suggestions = await SuggestionServices.getTrackSuggestionsByUser(userId, status)
+            const { suggestions, total } = await SuggestionServices.getSuggestionsByUser(userId, status, page, limit)
 
-            res.status(200).json({ suggestions })
+            res.status(200).json({
+                suggestions,
+                pagination: {
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)

@@ -70,7 +70,7 @@ export const getUserReviewsThunk = createAsyncThunk<{ reviews: IReview[], pagina
     }
 })
 
-export const getUserSuggestionsThunk = createAsyncThunk<{ suggestions: ISuggestion[] }, { id: number, filter: string | null }, { rejectValue: IApiError }>('user/getUserSuggestionsThunk', async (params, { rejectWithValue }) => {
+export const getUserSuggestionsThunk = createAsyncThunk<{ suggestions: ISuggestion[], pagination: IPagination }, { id: number, filter: string | null, page: number, limit: number }, { rejectValue: IApiError }>('user/getUserSuggestionsThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getUserSuggestionsApi(params)
         return data
@@ -135,6 +135,7 @@ const initialState: IUserState = {
     reviewsStatus: 'idle',
 
     suggestions: null,
+    suggestionsPagination: null,
     suggestionsStatus: 'idle',
 
     userList: null,
@@ -240,11 +241,14 @@ const userSlice = createSlice({
 
             .addCase(getUserSuggestionsThunk.pending, (state) => {
                 state.suggestions = null,
-                state.suggestionsStatus = 'loading'
+                state.suggestionsStatus = 'loading',
+                state.suggestionsPagination = null
+
             })
             .addCase(getUserSuggestionsThunk.fulfilled, (state, action) => {
                 state.suggestionsStatus = 'success',
-                state.suggestions = action.payload.suggestions
+                state.suggestions = action.payload.suggestions,
+                state.suggestionsPagination = action.payload.pagination
             })
             .addCase(getUserSuggestionsThunk.rejected, (state, action) => {
                 state.suggestionsStatus = 'error',

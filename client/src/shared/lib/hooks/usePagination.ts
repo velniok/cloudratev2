@@ -5,7 +5,7 @@ import { useNotification } from "./useNotification"
 
 export const usePagination = (
         thunk: (params: any) => any,
-        path: string, limit: number, id?: number
+        path: string, limit: number, id?: number, isFilter?: boolean
     ) => {
 
     const dispatch = useAppDispatch()
@@ -14,27 +14,35 @@ export const usePagination = (
     const search = useLocation().search
     const params = new URLSearchParams(search)
     const page = Number(params.get('page') || 1)
+    const filter = params.get('filter') || 'all'
 
     useEffect(() => {
-        const query = {page: page, limit: limit, id: id}
+        const query = {page: page, limit: limit, id: id, filter: filter}
         dispatch(thunk(query)).unwrap()
             .then()
             .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
-    }, [page, limit, id])
+    }, [page, limit, id, filter])
 
     const hundleNextPage = () => {
+        if (isFilter) return navigate(`${path}?page=${page + 1}&limit=${limit}&filter=${filter}`)
         navigate(`${path}?page=${page + 1}&limit=${limit}`)
     }
 
     const hundlePrevPage = () => {
-        if (page <= 1) return
+        if (page <= 1) return false
+        if (isFilter) return navigate(`${path}?page=${page - 1}&limit=${limit}&filter=${filter}`)
         navigate(`${path}?page=${page - 1}&limit=${limit}`)
     }
 
     const hundlePage = (fixPage: number) => {
         if (fixPage <= 0) return
+        if (isFilter) return navigate(`${path}?page=${fixPage}&limit=${limit}&filter=${filter}`)
         navigate(`${path}?page=${fixPage}&limit=${limit}`)
     }
 
-    return { hundleNextPage, hundlePrevPage, hundlePage, page, limit }
+    const hundleFilter = (filter: string) => {
+        navigate(`${path}?page=1&limit=${limit}&filter=${filter}`)
+    }
+
+    return { hundleNextPage, hundlePrevPage, hundlePage, hundleFilter, filter, page, limit }
 } 

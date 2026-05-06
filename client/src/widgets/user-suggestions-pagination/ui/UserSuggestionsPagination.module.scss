@@ -13,3 +13,10 @@
     flex-direction: column;
     row-gap: 12px;
 }
+
+.bottom {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

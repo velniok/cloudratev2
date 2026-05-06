@@ -16,6 +16,7 @@ export const selectUserReviewsStatus = (state: RootState) => state.user.reviewsS
 export const selectUserReviewsPagination = (state: RootState) => state.user.reviewsPagination
 
 export const selectUserSuggestions = (state: RootState) => state.user.suggestions
+export const selectUserSuggestionsPagination = (state: RootState) => state.user.suggestionsPagination
 export const selectUserSuggestionsStatus = (state: RootState) => state.user.suggestionsStatus
 
 export const selectUserList = (state: RootState) => state.user.userList

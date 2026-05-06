@@ -22,8 +22,8 @@ export const getUserFollowsApi = (params: { page: number, limit: number, id: num
     return axios.get<{ artists: IArtist[], pagination: IPagination }>(`/user/follows/${params.id}`, { params: { page: params.page, limit: params.limit }})
 }
 
-export const getUserSuggestionsApi = (params: { id: number, filter: string | null }) => {
-    return axios.get<{ suggestions: ISuggestion[] }>(`/user/track-suggestions/${params.id}`, { params: { status: params.filter } })
+export const getUserSuggestionsApi = (params: { id: number, filter: string | null, page: number, limit: number }) => {
+    return axios.get<{ suggestions: ISuggestion[], pagination: IPagination }>(`/user/suggestions/${params.id}`, { params: { status: params.filter, page: params.page, limit: params.limit } })
 }
 
 export const updateUserApi = (params: IUpdateUserReq) => {

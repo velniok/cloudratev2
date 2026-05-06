@@ -2,15 +2,15 @@ import { FC } from 'react'
 import styles from './SuggestionFilter.module.scss'
 
 interface SuggestionFilterProps {
-    setFilterStatus: (status: string | null) => void
-    filterStatus: string | null
+    setFilterStatus: (status: string) => void
+    filterStatus: string
 }
 
 export const SuggestionFilter: FC<SuggestionFilterProps> = ({ setFilterStatus, filterStatus }) => {
     return (
         <div className={styles.wrapper}>
             <ul className={styles.list}>
-                <li className={`${styles.item} ${filterStatus === null ? styles.active : ''}`} onClick={() => setFilterStatus(null)}>Все заявки</li>
+                <li className={`${styles.item} ${filterStatus === 'all' ? styles.active : ''}`} onClick={() => setFilterStatus('all')}>Все заявки</li>
                 <li className={`
                         ${styles.item}
                         ${styles.pending}

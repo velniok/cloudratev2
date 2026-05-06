@@ -21,6 +21,7 @@ export interface IUserState {
     reviewsStatus: TStatus
 
     suggestions: ISuggestion[] | null
+    suggestionsPagination: IPagination | null
     suggestionsStatus: TStatus
 
     userList: IUser[] | null
