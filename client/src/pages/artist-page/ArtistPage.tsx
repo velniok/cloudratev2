@@ -14,7 +14,7 @@ export const ArtistPage = () => {
     const artist = useAppSelector(selectArtist)
     const artistStatus = useAppSelector(selectArtistStatus)
 
-    useDocumentTitle(artist?.name ? `${artist.name}` : 'Загрузка...')
+    useDocumentTitle(artist ? `${artist.name}` : 'Загрузка...')
 
     useEffect(() => {
         dispatch(getArtistProfileThunk({ id: Number(id) }))

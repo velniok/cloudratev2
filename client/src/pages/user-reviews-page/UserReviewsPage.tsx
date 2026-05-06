@@ -1,5 +1,5 @@
 import { getUserProfileThunk, selectUser, selectUserStatus } from "@/features/user"
-import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
+import { useAppDispatch, useAppSelector, useDocumentTitle, useNotification } from "@/shared/lib"
 import { Loading } from "@/shared/ui"
 import { UserReviewsPagination } from "@/widgets/user-reviews-pagination"
 import { useEffect } from "react"
@@ -12,6 +12,8 @@ export const UserReviewsPage = () => {
     const username = useParams().username
     const user = useAppSelector(selectUser)
     const userStatus = useAppSelector(selectUserStatus)
+
+    useDocumentTitle(user ? `${user.nickname}` : 'Загрузка...')
 
     useEffect(() => {
         if (username) {

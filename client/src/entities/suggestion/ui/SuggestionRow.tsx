@@ -35,7 +35,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                     </div>
                     {
                         suggestion.artist ?
-                            <Link className={styles.item__artist} to={`/artist/${suggestion.artistId}`}>
+                            <Link className={styles.item__artist} to={`/artist/${suggestion.artist.id}`}>
                                 <Cover
                                     url={getOptimizedAvatar(suggestion.artist.avatarUrl ?? '', 25, 25)}
                                     width='25px'

@@ -2,7 +2,7 @@ const pool = require("../config/db")
 const mapToCamelCase = require("../utils/toCamelCase")
 
 class SuggestionServices {
-    async createSuggestionTrack(values, userId) {
+    async createSuggestion(values, userId) {
         const suggestionTrackRes = await pool.query(`
             INSERT INTO track_suggestions
                 (
@@ -22,7 +22,7 @@ class SuggestionServices {
         return mapToCamelCase(suggestionTrackRes.rows[0])
     }
 
-    async getSuggestionTracks() {
+    async getSuggestionList() {
         const suggestionsRes = await pool.query(`
             SELECT
                 s.*,
@@ -36,10 +36,13 @@ class SuggestionServices {
                     FROM artists a
                     WHERE a.id = s.artist_id
                 ) as artist,
-                (
-                    SELECT json_agg(row_to_json(a))
-                    FROM artists a
-                    WHERE a.id = ANY(s.feat_artist_ids)
+                COALESCE(
+                    (
+                        SELECT json_agg(row_to_json(a))
+                        FROM artists a
+                        WHERE a.id = ANY(s.feat_artist_ids)
+                    ),
+                    '[]'::json
                 ) as feat_artists,
                 (
                     SELECT row_to_json(u)
@@ -52,7 +55,7 @@ class SuggestionServices {
         return suggestionsRes.rows.map(mapToCamelCase)
     }
 
-    async updateArtistTrack(id, artistId) {
+    async updateSuggestionArtist(id, artistId) {
         await pool.query(`
             UPDATE track_suggestions
             SET artist_id = $2
@@ -61,7 +64,7 @@ class SuggestionServices {
         `, [id, artistId])
     }
 
-    async updateFeatTrack(id, artistId, tempId) {
+    async updateSuggestionFeat(id, artistId, tempId) {
         await pool.query(`
             UPDATE track_suggestions
             SET
@@ -76,7 +79,7 @@ class SuggestionServices {
         `, [id, artistId, tempId])
     }
 
-    async acceptSuggestionTrack(id, adminId, trackId) {
+    async acceptSuggestion(id, adminId, trackId) {
         const suggestionsRes = await pool.query(`
             WITH updated AS (
                 UPDATE track_suggestions
@@ -100,7 +103,7 @@ class SuggestionServices {
         return mapToCamelCase(suggestionsRes.rows[0])
     }
 
-    async rejectSuggestionTrack(id, adminId, rejectReason) {
+    async rejectSuggestion(id, adminId, rejectReason) {
         const suggestionsRes = await pool.query(`
             WITH updated AS (
                 UPDATE track_suggestions
@@ -124,7 +127,7 @@ class SuggestionServices {
         return mapToCamelCase(suggestionsRes.rows[0])
     }
 
-    async getTrackSuggestionsByUser(userId, status) {
+    async getSuggestionsByUser(userId, status) {
         const suggestionsRes = await pool.query(`
             SELECT
                 s.*,

@@ -15,7 +15,7 @@ export const UserPage = () => {
     const user = useAppSelector(selectUser)
     const userStatus = useAppSelector(selectUserStatus)
 
-    useDocumentTitle(user?.nickname ? `${user.nickname}` : 'Загрузка...')
+    useDocumentTitle(user ? `${user.nickname}` : 'Загрузка...')
 
     useEffect(() => {
         if (username) {

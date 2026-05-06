@@ -14,7 +14,7 @@ export const TrackPage = () => {
     const track = useAppSelector(selectTrack)
     const trackStatus = useAppSelector(selectTrackStatus)
 
-    useDocumentTitle(track?.title ? `${track.title}` : 'Загрузка...')
+    useDocumentTitle(track ? `${track.title}` : 'Загрузка...')
 
     useEffect(() => {
         dispatch(getTrackProfileThunk({ trackId: Number(id) }))

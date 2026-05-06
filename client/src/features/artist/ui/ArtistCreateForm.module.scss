@@ -4,6 +4,75 @@
     border-bottom: 1px solid var(--border-subtle);
 }
 
+.soundcloud {
+    background-color: var(--orange-color-bg);
+    padding: 24px;
+    border-radius: 12px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        column-gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    &__logo {
+        background-color: var(--orange-color-dim);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & i {
+            font-size: 24px;
+            color: var(--orange-color);
+        }
+    }
+
+    &__title {
+        font-size: 18px;
+        font-weight: 700;
+        font-family: var(--second-family);
+        letter-spacing: 0.05em;
+        text-wrap: wrap;
+    }
+
+    &__desc {
+        color: var(--text-secondary);
+        font-size: 12px;
+        text-wrap: wrap;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        row-gap: 12px;
+
+        & button {
+            display: flex;
+            justify-content: center;
+
+            & i {
+                font-size: 20px;
+            }
+        }
+    }
+
+    &__artist {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        column-gap: 8px;
+
+        &Name {
+            font-family: var(--second-family);
+
+        }
+    }
+}
+
 .inputList {
     display: flex;
     flex-direction: column;

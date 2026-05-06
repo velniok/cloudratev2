@@ -1,15 +1,14 @@
-import { Button, Cover, Input, ProfileIcon } from '@/shared/ui'
+import { Button, Cover, Input } from '@/shared/ui'
 import styles from './ArtistCreateForm.module.scss'
 import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
-import { useAppDispatch, useNotification } from '@/shared/lib'
+import { getOptimizedAvatar, useAppDispatch, useNotification } from '@/shared/lib'
 import { updateAvatarApi } from '@/shared/api'
 import { createArtistThunk } from '../model/slice'
 import { IApiError } from '@/shared/types'
 import { useNavigate } from 'react-router-dom'
 import { IArtist } from '@/entities/artist'
 import { getSoundсloudArtist } from '../api/artistApi'
-import axios from 'axios'
-import { updateTrackSuggestionArtistApi, updateTrackSuggestionFeatApi } from '@/features/suggestion'
+import { updateSuggestionArtistThunk, updateSuggestionFeatThunk } from '@/features/suggestion'
 
 interface ArtistCreateFormProps {
     modalClose: () => void
@@ -31,6 +30,8 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
     useEffect(() => {
         setValues(initialValues)
         setErrors(initialErrors)
+        setFindArtist(null)
+        setUrlForInfo('')
     }, [modalClose])
 
     const initialValues = {
@@ -42,6 +43,7 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
 
     const [urlForInfo, setUrlForInfo] = useState<string>('')
     const [soundcloudInfoLoading, setSoundcloudInfo] = useState<boolean>(false)
+    const [findArtist, setFindArtist] = useState<IArtist | null>(null)
 
     const initialErrors = {
         name: '',
@@ -87,12 +89,11 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
             .then((res) => {
                 notify('Артист создан', 'Новый артист успешно добавлен', 'success')
                 if (suggestionId && tempId) {
-                    updateTrackSuggestionFeatApi({ id: suggestionId, tempId: tempId, req: res.artist })
+                    dispatch(updateSuggestionFeatThunk({ id: suggestionId, tempId: tempId, req: res.artist }))
                 } else if (suggestionId) {
-                    updateTrackSuggestionArtistApi({ id: suggestionId, req: res.artist })
+                    dispatch(updateSuggestionArtistThunk({ id: suggestionId, req: res.artist }))
                 } else if (lastPage) {
                     if (artistListLength === limit) {
-                        console.log(artistListLength, limit)
                         navigate(`/admin/artists?page=${lastPage + 1}&limit=${limit}`)
                     } else {
                         navigate(`/admin/artists?page=${lastPage}&limit=${limit}`)
@@ -116,11 +117,7 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
         getSoundсloudArtist({ url: urlForInfo })
             .then((res) => {
                 if (res.data.artist) {
-                    if (suggestionId && tempId) {
-                        updateTrackSuggestionFeatApi({ id: suggestionId, tempId: tempId, req: res.data.artist })
-                    } else if (suggestionId) {
-                        updateTrackSuggestionArtistApi({ id: suggestionId, req: res.data.artist })
-                    }
+                    setFindArtist(res.data.artist)
                 }
                 setValues(prev => ({
                     ...prev,
@@ -132,23 +129,62 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
             })
     }
 
+    const addToTrack = (e: MouseEvent<HTMLButtonElement>) => {
+        if (!findArtist) return false
+        if (suggestionId && tempId) {
+            dispatch(updateSuggestionFeatThunk({ id: suggestionId, tempId: tempId, req: findArtist }))
+        } else if (suggestionId) {
+            dispatch(updateSuggestionArtistThunk({ id: suggestionId, req: findArtist }))
+        }
+        hundleCancel(e)
+    }
+
     return (
         <form className={styles.form}>
             <div className={styles.content}>
                 <div className={styles.inputList}>
-                    <Input
-                        label='Получить информацию об артисте через ссылку'
-                        placeholder='Введите ссылку на SoundCloud трека'
-                        type='text'
-                        isGray={true}
-                        value={urlForInfo}
-                        onChange={hundleChangeUrlForInfo}
-                    />
-                    <Button fontSize='12px' color='default' padding='12px 20px 10px 20px' onClick={hundleInfoTrack}>
+                    <div className={styles.soundcloud}>
+                        <div className={styles.soundcloud__header}>
+                            <div className={styles.soundcloud__logo}>
+                                <i className='ph-fill ph-soundcloud-logo'></i>
+                            </div>
+                            <div className={styles.soundcloud__text}>
+                                <h4 className={styles.soundcloud__title}>Загрузить из SoundCloud</h4>
+                                <p className={styles.soundcloud__desc}>Вставьте ссылку на трек и мы автоматически заполним поля</p>
+                            </div>
+                        </div>
+                        <div className={styles.soundcloud__form}>
+                            <Input
+                                placeholder='https://soundcloud.com/artist/track'
+                                type='text'
+                                isGray={true}
+                                value={urlForInfo}
+                                onChange={(e) => {hundleChangeUrlForInfo(e)}}
+                                icon={<i className='ph ph-link'></i>}
+                                focusColor='orange'
+                            />
+                            <Button
+                                onClick={hundleInfoTrack}
+                                color='orange'
+                                padding='16px 24px 14px 24px'
+                                icon={<i className='ph ph-cloud-arrow-down'></i>}
+                                isLoading={soundcloudInfoLoading}
+                            >Загрузить</Button>
+                        </div>
                         {
-                            soundcloudInfoLoading ? 'Загрузка..' : 'ПОЛУЧИТЬ ИНФО'
+                            findArtist &&
+                            <div className={styles.soundcloud__artist}>
+                                <Cover
+                                    url={getOptimizedAvatar(findArtist.avatarUrl ?? '', 50, 50)}
+                                    width='50px'
+                                    height='50px'
+                                    borderRadius='12px'
+                                />
+                                <p className={styles.soundcloud__artistName}>{findArtist.name}</p>
+                                <Button color='orange' padding='14px 8px 12px 8px' onClick={addToTrack}>Добавить</Button>
+                            </div>
                         }
-                    </Button>
+                    </div>
                     <div className={styles.editAvatar}>
                         <Cover width='64px' height='64px' borderRadius='12px' url={values.avatarUrl} isInput={true} />
                         <div className={styles.avatarInput}>

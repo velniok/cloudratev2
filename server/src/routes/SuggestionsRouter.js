@@ -6,11 +6,11 @@ const suggestionValidation = require('../middlewares/validators/suggestionsValid
 const Router = require('express').Router
 const router = new Router()
 
-router.post('/track', getUser, suggestionValidation, SuggestionControllers.createTrack)
-router.get('/track', SuggestionControllers.getTracks)
-router.patch('/track-update-artist/:id', checkAdmin, SuggestionControllers.updateTrackArtist)
-router.patch('/track-update-feat/:id', checkAdmin, SuggestionControllers.updateTrackFeat)
-router.post('/track-accept', checkAdmin, getUser, SuggestionControllers.acceptTrack)
-router.post('/track-reject', checkAdmin, getUser, SuggestionControllers.rejectTrack)
+router.post('/create', getUser, suggestionValidation, SuggestionControllers.create)
+router.get('/list', SuggestionControllers.getList)
+router.patch('/update-artist/:id', checkAdmin, SuggestionControllers.updateArtist)
+router.patch('/update-feat/:id', checkAdmin, SuggestionControllers.updateFeat)
+router.post('/accept', checkAdmin, getUser, SuggestionControllers.accept)
+router.post('/reject', checkAdmin, getUser, SuggestionControllers.reject)
 
 module.exports = router

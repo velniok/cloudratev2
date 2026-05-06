@@ -4,25 +4,25 @@ import { ISuggestion } from "@/entities/suggestion"
 import { IArtist } from "@/entities/artist"
 
 export const trackSuggestionApi = (params: ISuggestionTrackReq) => {
-    return axios.post<{ message: string }>('/suggestion/track', params)
+    return axios.post<{ message: string }>('/suggestion/create', params)
 }
 
-export const getTrackSuggestionApi = () => {
-    return axios.get<{ suggestions: ISuggestion[] }>('/suggestion/track')
+export const getSuggestionListApi = () => {
+    return axios.get<{ suggestions: ISuggestion[] }>('/suggestion/list')
 }
 
-export const updateTrackSuggestionArtistApi = (params: {id: number, req: IArtist}) => {
-    return axios.patch<{ suggestion: ISuggestion }>(`/suggestion/track-update-artist/${params.id}`, params.req)
+export const updateSuggestionArtistApi = (params: {id: number, req: IArtist}) => {
+    return axios.patch<{ suggestion: ISuggestion }>(`/suggestion/update-artist/${params.id}`, params.req)
 }
 
-export const updateTrackSuggestionFeatApi = (params: {id: number, tempId: string, req: IArtist}) => {
-    return axios.patch<{ suggestion: ISuggestion }>(`/suggestion/track-update-feat/${params.id}`, {...params.req, tempId: params.tempId})
+export const updateSuggestionFeatApi = (params: {id: number, tempId: string, req: IArtist}) => {
+    return axios.patch<{ suggestion: ISuggestion }>(`/suggestion/update-feat/${params.id}`, {...params.req, tempId: params.tempId})
 }
 
-export const acceptTrackSuggestionApi = (params: { suggestion: ISuggestion }) => {
-    return axios.post('/suggestion/track-accept', params)
+export const acceptSuggestionApi = (params: { suggestion: ISuggestion }) => {
+    return axios.post('/suggestion/accept', params)
 }
 
-export const rejectTrackSuggestionApi = (params: { suggestion: ISuggestion }) => {
-    return axios.post('/suggestion/track-reject', params)
+export const rejectSuggestionApi = (params: { suggestion: ISuggestion }) => {
+    return axios.post('/suggestion/reject', params)
 }
