@@ -56,7 +56,7 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
             <div className={styles.bottom}>
                 <p className={styles.createdAt}>{new Date(review.createdAt).getUTCDate()} {getMonth(review.createdAt, 'pluralize')} {new Date(review.createdAt).getUTCFullYear()}</p>
                 {
-                    actions && <>{actions}</>
+                    actions && actions
                 }
             </div>
         </div>

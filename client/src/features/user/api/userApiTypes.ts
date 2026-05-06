@@ -6,5 +6,6 @@ export interface IUpdateUserReq {
         email: string
         avatarUrl: string
         password: string
+        soundcloudUrl: string
     }
 }

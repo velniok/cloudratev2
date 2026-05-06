@@ -19,6 +19,7 @@ export const AdminTrackSuggestions = () => {
     const [createArtist, setCreateArtist] = useState<boolean>(false)
     const [suggestionId, setSuggestionId] = useState<number | null>(null)
     const [tempArtistId, setTempArtistId] = useState<string | null>(null)
+    const [error, setError] = useState<{ id: number, error: string } | null>(null)
 
     const openModalHundler = (suggestionId: number, tempArtistId: string | null) => {
         setSuggestionId((prev) => prev = suggestionId)
@@ -40,10 +41,20 @@ export const AdminTrackSuggestions = () => {
                         <ul className={styles.list}>
                             {
                                 suggestionList.map((suggestion) => {
+                                    if (error?.id === suggestion.id) return (
+                                        <SuggestionRow
+                                            key={suggestion.id}
+                                            suggestion={suggestion}
+                                            actions={<TrackSuggestionActions suggestion={suggestion} setError={(id: number, error: string) => setError((prev) => prev = {id, error})} />}
+                                            openModalHundler={(suggestionId: number, tempArtistId: string | null) => openModalHundler(suggestionId, tempArtistId)}
+                                            error={error.error}
+                                            admin
+                                        />
+                                    )
                                     return <SuggestionRow
                                         key={suggestion.id}
                                         suggestion={suggestion}
-                                        actions={<TrackSuggestionActions suggestion={suggestion} />}
+                                        actions={<TrackSuggestionActions suggestion={suggestion} setError={(id: number, error: string) => setError((prev) => prev = {id, error})} />}
                                         openModalHundler={(suggestionId: number, tempArtistId: string | null) => openModalHundler(suggestionId, tempArtistId)}
                                         admin
                                     />

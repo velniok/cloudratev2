@@ -30,10 +30,12 @@ export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
                     <CalendarIcon />
                     <p className={styles.created__text}>Дата регистрации: <strong className={styles.created__bold}>{getMonth(user.createdAt)} {new Date(user.createdAt).getUTCFullYear()}</strong></p>
                 </div>
-                <a href="#!" className={styles.soundcloud}>
-                    <LinkIcon />
-                    SoundCloud
-                </a>
+                {
+                    user.soundcloudUrl &&
+                    <a href={user.soundcloudUrl} className={styles.soundcloud}>
+                        <i className="ph ph-soundcloud-logo"></i>
+                    </a>
+                }
                 <div className={styles.stats}>
                     <div className={styles.stats__item}>
                         <span className={styles.stats__count}>{user.reviewsCount}</span>

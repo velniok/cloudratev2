@@ -7,14 +7,19 @@ import { acceptSuggestionThunk, rejectSuggestionThunk } from '../model/slice'
 
 interface TrackSuggestionActionsProps {
     suggestion: ISuggestion
+    setError: (id: number, error: string) => void
 }
 
-export const TrackSuggestionActions: FC<TrackSuggestionActionsProps> = ({ suggestion }) => {
+export const TrackSuggestionActions: FC<TrackSuggestionActionsProps> = ({ suggestion, setError }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
 
     const onAccept = () => {
+
+        if (!suggestion.artistId) return setError(suggestion.id, 'Ошибка'), notify('Ошибка', 'Для начала добавьте артиста на сайт', 'error')
+        if (suggestion.tempFeatArtists) return setError(suggestion.id, 'Ошибка'), notify('Ошибка', 'Для начала добавьте всех артистов на сайт', 'error')
+
         dispatch(acceptSuggestionThunk({ suggestion: suggestion })).unwrap()
             .then(() => {
                 notify('Заявка принята', 'Вы успешно приняли заявку', 'success')

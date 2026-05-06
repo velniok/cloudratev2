@@ -30,6 +30,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
         email: `${user.email}`,
         password: '',
         confirmPassword: '',
+        soundcloudUrl: `${user.soundcloudUrl}`,
     }
     const [values, setValues] = useState(initialValues)
 
@@ -39,6 +40,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
         email: '',
         password: '',
         confirmPassword: '',
+        soundcloudUrl: '',
     }
     const [errors, setErrors] = useState(initialErrors)
 
@@ -55,6 +57,11 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
         setErrors(prev => ({ ...prev, email: '' }))
         setValues(prev => ({ ...prev, email: e.target.value }))
+    }
+
+    const handleSoundcloudChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setErrors(prev => ({ ...prev, soundcloudUrl: '' }))
+        setValues(prev => ({ ...prev, soundcloudUrl: e.target.value }))
     }
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +91,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
         if (!/^[a-zA-Z]/.test(values.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм должен начинаться с латинской буквы' }))
         if (!/^[a-zA-Z0-9_]+$/.test(values.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм может содержать только латинские буквы, цифры и _' }))
         if (!/\S+@\S+\.\S+/.test(values.email)) return setErrors(prev => ({ ...prev, email: 'Неверный формат email' }))
+        if (values.soundcloudUrl !== '' && !URL.canParse(values.soundcloudUrl)) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Неверный формат ссылки' }))
         if (values.password && values.password.length < 6) return setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 6 символа' }))
         if (values.password !== values.confirmPassword) return setErrors(prev => ({ ...prev, confirmPassword: 'Пароли не совпадают' }))
 
@@ -95,7 +103,8 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 username: values.username,
                 email: values.email,
                 avatarUrl: values.avatarUrl,
-                password: values.password
+                password: values.password,
+                soundcloudUrl: values.soundcloudUrl
             }
         })).unwrap()
             .then(() => {
@@ -158,6 +167,18 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                             error={errors.email}
                         />
                 </div>
+                </div>
+                <h3 className={styles.title}>СОЦАЛЬНЫЕ СЕТИ</h3>
+                <div className={styles.formWrapper}>
+                    <Input
+                        label='SoundCloud'
+                        placeholder='Введите ссылку на ваш SoundCloud'
+                        value={values.soundcloudUrl}
+                        onChange={handleSoundcloudChange}
+                        type='text'
+                        isGray={true}
+                        error={errors.soundcloudUrl}
+                    />
                 </div>
                 <h3 className={styles.title}>БЕЗОПАСНОСТЬ</h3>
                 <div className={styles.securityWrapper}>

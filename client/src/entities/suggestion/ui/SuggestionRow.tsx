@@ -3,21 +3,22 @@ import styles from './SuggestionRow.module.scss'
 import { ISuggestion } from '../model/types'
 import { Badges, Cover } from '@/shared/ui'
 import { getMonth, getOptimizedAvatar } from '@/shared/lib'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 interface SuggestionRowProps {
     suggestion: ISuggestion
     actions?: ReactNode
     openModalHundler?: (suggestionId: number, tempArtistId: string | null) => void
+    error?: string
     admin?: boolean
 }
 
-export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, openModalHundler, admin }) => {
+export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, openModalHundler, admin, error }) => {
 
     const navigate = useNavigate()
 
     return (
-        <li className={styles.item}>
+        <li className={`${styles.item} ${error ? styles.error : ''}`}>
             <div className={styles.item__left}>
                 <Cover
                     url={getOptimizedAvatar(suggestion.coverUrl ?? '', 100, 100)}
@@ -29,12 +30,12 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                     <div className={styles.item__trackInfo}>
                         <h3 className={styles.item__title}>{suggestion.title}</h3>
                         <a href={suggestion.soundcloudUrl} className={styles.item__soundcloud}>
-                            <i className="ph ph-link"></i>
+                            <i className="ph ph-soundcloud-logo"></i>
                         </a>
                     </div>
                     {
                         suggestion.artist ?
-                            <div className={styles.item__artist} onClick={() => navigate(`/artist/${suggestion.artistId}`)}>
+                            <Link className={styles.item__artist} to={`/artist/${suggestion.artistId}`}>
                                 <Cover
                                     url={getOptimizedAvatar(suggestion.artist.avatarUrl ?? '', 25, 25)}
                                     width='25px'
@@ -42,10 +43,10 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                                     borderRadius='50%'
                                 />
                                 <h4 className={styles.item__artistName}>{suggestion.artist.name}</h4>
-                            </div>
+                            </Link>
                         : admin && openModalHundler ?
                             <div className={styles.item__artist} onClick={() => openModalHundler(suggestion.id, null)}>
-                                <h4 className={`${styles.item__artistName} ${styles.item__artistNameTemp}`}>{suggestion.tempArtist?.name ?? 'Удалено'}</h4>
+                                <h4 className={`${styles.item__artistName} ${styles.item__artistNameTemp} ${error ? styles.error : ''}`}>{suggestion.tempArtist?.name ?? 'Удалено'}</h4>
                             </div>
                         :
                             <div className={styles.item__artist}>
@@ -59,7 +60,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                         {
                             suggestion.featArtists?.map((artist) => {
                                 return (
-                                    <h4 key={artist.id} onClick={() => navigate(`/artist/${artist.id}`)} className={styles.item__featName}>{artist.name}</h4>  
+                                    <Link key={artist.id} to={`/artist/${artist.id}`} className={styles.item__featName}>{artist.name}</Link>  
                                 )
                             })
                         }
@@ -86,7 +87,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                 {
                     admin &&
                     <div className={styles.item__user}>
-                        <div className={styles.item__userProfile} onClick={() => navigate(`/user/${suggestion.user.username}`)}>
+                        <Link className={styles.item__userProfile} to={`/user/${suggestion.user.username}`}>
                             <Cover
                                 url={getOptimizedAvatar(suggestion.user.avatarUrl ?? '', 50, 50)}
                                 width='50px'
@@ -97,7 +98,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                                 {suggestion.user.nickname}
                                 <Badges role={suggestion.user.role} size='small' />
                             </h4>
-                        </div>
+                        </Link>
                         <p className={styles.item__userCreated}>
                             <i className="ph ph-clock"></i>
                             {new Date(suggestion.createdAt).getUTCDate()} {getMonth(suggestion.createdAt, 'pluralize')} {new Date(suggestion.createdAt).getUTCFullYear()}
@@ -133,7 +134,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                         suggestion.status !== 'pending' && suggestion.reviewedByUser && admin &&
                         <div className={styles.item__admin}>
                             <p className={styles.item__adminText}>Модератор:</p>
-                            <div className={styles.item__adminUser} onClick={() => navigate(`/user/${suggestion.reviewedByUser?.username}`)}>
+                            <Link className={styles.item__adminUser} to={`/user/${suggestion.reviewedByUser?.username}`}>
                                 <Cover
                                     url={getOptimizedAvatar(suggestion.reviewedByUser.avatarUrl ?? '', 20, 20)}
                                     width='20px'
@@ -141,7 +142,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                                     borderRadius='50%'
                                 />
                                 <p className={styles.item__adminNickname}>{suggestion.reviewedByUser.nickname}</p>
-                            </div>
+                            </Link>
                         </div>
                     }
                     {
@@ -151,7 +152,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                                 <i className="ph ph-clock"></i>
                                 {new Date(suggestion.reviewedAt).getUTCDate()} {getMonth(suggestion.reviewedAt, 'pluralize')} {new Date(suggestion.reviewedAt).getUTCFullYear()}
                             </p>
-                            <p className={styles.item__acceptLink} onClick={() => navigate(`/track/${suggestion.trackId}`)}>Перейти к треку</p>
+                            <Link className={styles.item__acceptLink} to={`/track/${suggestion.trackId}`}>Перейти к треку</Link>
                         </div>
                     }
                     {

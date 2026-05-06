@@ -1,5 +1,5 @@
 import { getArtistProfileThunk, selectArtist, selectArtistStatus } from "@/features/artist"
-import { useAppDispatch, useAppSelector } from "@/shared/lib"
+import { useAppDispatch, useAppSelector, useDocumentTitle } from "@/shared/lib"
 import { Loading } from "@/shared/ui"
 import { ArtistHeader } from "@/widgets/artist-header"
 import { ArtistReleases } from "@/widgets/artist-releases"
@@ -13,6 +13,8 @@ export const ArtistPage = () => {
     const id = useParams<{ id: string }>().id
     const artist = useAppSelector(selectArtist)
     const artistStatus = useAppSelector(selectArtistStatus)
+
+    useDocumentTitle(artist?.name ? `${artist.name}` : 'Загрузка...')
 
     useEffect(() => {
         dispatch(getArtistProfileThunk({ id: Number(id) }))

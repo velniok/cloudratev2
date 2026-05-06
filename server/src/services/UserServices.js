@@ -66,11 +66,11 @@ class UserServices {
             WITH email_check AS (
                 SELECT id
                 FROM users
-                WHERE email = $1 AND id != $5
+                WHERE email = $1 AND id != $6
             ),
             username_check AS (
                 SELECT id FROM users
-                WHERE username = $3 AND id != $5
+                WHERE username = $3 AND id != $6
             ),
             updated AS (
                 UPDATE users
@@ -78,8 +78,9 @@ class UserServices {
                     email = $1,
                     nickname = $2,
                     username = $3,
-                    avatar_url = $4
-                WHERE id = $5
+                    avatar_url = $4,
+                    soundcloud_url = $5
+                WHERE id = $6
                 AND NOT EXISTS (SELECT 1 FROM email_check)
                 AND NOT EXISTS (SELECT 1 FROM username_check)
                 RETURNING *

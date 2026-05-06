@@ -95,13 +95,13 @@ class UserControllers {
             if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
             const userId = Number(req.params.userId)
-            const { nickname, username, email, avatarUrl, password } = req.body
+            const { nickname, username, email, avatarUrl, password, soundcloudUrl } = req.body
 
             if (password) {
                 await UserServices.updateUserPassword(userId, password)
             }
 
-            const updatedUser = await UserServices.updateUser(userId, [email, nickname, username, avatarUrl])
+            const updatedUser = await UserServices.updateUser(userId, [email, nickname, username, avatarUrl, soundcloudUrl])
             if (updatedUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
             if (updatedUser.status === 'username_taken') throw new AppError('Уникальный никнейм занят', 409, 'username')
             const user = updatedUser.user

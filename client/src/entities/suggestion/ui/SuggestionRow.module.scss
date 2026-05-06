@@ -12,6 +12,17 @@
 
     transition: background-color 0.3s;
 
+    &.error {
+        border: 1px solid var(--accent-color);
+        background-color: var(--accent-color-dim);
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--accent-color-dim);
+            }
+        }
+    }
+
     @media (hover: hover) {
         &:hover {
             background-color: var(--white-hover);
@@ -40,20 +51,28 @@
             display: flex;
             align-items: center;
             column-gap: 6px;
-
-            & i {
-                font-size: 20px;
-                color: var(--orange-color);
-
-                transition: opacity 0.3s;
-
-                @media (hover: hover) {
-                    &:hover {
-                        opacity: 0.7;
-                    }
-                }
-            }
         }
+    }
+
+    &__soundcloud {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        border: 1px solid var(--orange-color);
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        color: var(--orange-color);
+
+        transition: background-color 0.3s, color 0.3s;
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--orange-color);
+                color: var(--text-primary);
+            }
+    }
     }
 
     &__title {
@@ -103,6 +122,16 @@
 
             &Temp {
                 color: var(--white-color);
+            }
+
+            &.error {
+                color: var(--accent-color);
+
+                @media (hover: hover) {
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
             }
         }
     }

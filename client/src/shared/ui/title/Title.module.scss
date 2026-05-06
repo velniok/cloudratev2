@@ -22,14 +22,13 @@
 .link {
     color: var(--accent-color);
     font-size: 14px;
-    font-weight: 400;
     white-space: nowrap;
     
     transition: opacity 0.3s;
 
     @media (hover: hover) {
         &:hover {
-            opacity: 0.7;
+            text-decoration: underline;
         }
     }
 }

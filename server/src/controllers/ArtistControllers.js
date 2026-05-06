@@ -28,7 +28,7 @@ class ArtistControllers {
             const { url } = req.query
             const artist = await ArtistServices.getArtistBySCUrl(url)
             if (!artist) {
-                const clientId = 'tkIWLs4MIowq7bCXP80TOwx6DnDa7UPc'
+                const clientId = 'JNsHQvoXu3CrVm6Jv30i95VRZQ7h8lXX'
                 const { data } = await axios.get(
                     `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
                 )

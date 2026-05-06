@@ -1,3 +1,4 @@
+import { useDocumentTitle } from "@/shared/lib"
 import { AdminTracks } from "@/widgets/admin-tracks"
 import { FC } from "react"
 
@@ -6,6 +7,8 @@ interface AdminTracksPageProps {
 }
 
 export const AdminTracksPage: FC<AdminTracksPageProps> = ({ role }) => {
+
+    useDocumentTitle('Админ-панель (Треки)')
 
     return (
         <>

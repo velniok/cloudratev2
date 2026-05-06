@@ -14,11 +14,12 @@ export const ArtistHeaderInfo: FC<ArtistHeaderInfoProps> = ({ artist, actions })
         <div className={styles.inner}>
             <Cover className={styles.avatar} width='200px' height='200px' borderRadius='12px' url={getOptimizedAvatar(artist.avatarUrl ?? '', 200, 200)} />
             <div className={styles.info}>
-                <h2 className={styles.name}>{artist.name}</h2>
-                <a href={`${artist.soundcloudUrl}`} className={styles.soundcloud}>
-                <LinkIcon />
-                SoundCloud
-                </a>
+                <h2 className={styles.name}>
+                    {artist.name}
+                    <a href={`${artist.soundcloudUrl}`} className={styles.soundcloud}>
+                        <i className="ph ph-soundcloud-logo"></i>
+                    </a>
+                </h2>
                 <ul className={styles.stats__list}>
                     <li className={styles.stats__item}>
                         <span className={styles.stats__count}>{artist.follow?.followersCount ?? 0}</span>

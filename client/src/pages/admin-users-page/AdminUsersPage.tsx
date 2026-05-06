@@ -1,6 +1,6 @@
 import { getUserListThunk } from "@/features/user"
 import { selectUserList, selectUserListStatus } from "@/features/user/model/selectors"
-import { useAppDispatch, useAppSelector } from "@/shared/lib"
+import { useAppDispatch, useAppSelector, useDocumentTitle } from "@/shared/lib"
 import { AdminUsers } from "@/widgets/admin-users"
 import { FC, useEffect } from "react"
 
@@ -9,6 +9,8 @@ interface AdminUsersPageProps {
 }
 
 export const AdminUsersPage: FC<AdminUsersPageProps> = ({ role }) => {
+
+    useDocumentTitle('Админ-панель (Пользователи)')
 
     return (
         <>

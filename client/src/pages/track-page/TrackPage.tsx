@@ -1,5 +1,5 @@
 import { getTrackProfileThunk, selectTrack, selectTrackStatus } from "@/features/track"
-import { useAppDispatch, useAppSelector } from "@/shared/lib"
+import { useAppDispatch, useAppSelector, useDocumentTitle } from "@/shared/lib"
 import { Loading } from "@/shared/ui"
 import { TrackGrade } from "@/widgets/track-grade"
 import { TrackHeader } from "@/widgets/track-header"
@@ -13,6 +13,8 @@ export const TrackPage = () => {
     const id = useParams<{ id: string }>().id
     const track = useAppSelector(selectTrack)
     const trackStatus = useAppSelector(selectTrackStatus)
+
+    useDocumentTitle(track?.title ? `${track.title}` : 'Загрузка...')
 
     useEffect(() => {
         dispatch(getTrackProfileThunk({ trackId: Number(id) }))

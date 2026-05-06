@@ -10,6 +10,7 @@ export interface IUser {
     username: string
     email: string
     avatarUrl: string | null
+    soundcloudUrl: string | null
     reviewsCount: number
     reviewsTextCount: number
 }

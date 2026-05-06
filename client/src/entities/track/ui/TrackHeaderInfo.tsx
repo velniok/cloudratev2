@@ -43,11 +43,12 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
                         })
                     }
                 </ul>
-                <h2 className={styles.title}>{track.title}</h2>
-                <a href={`${track.soundcloudUrl}`} className={styles.soundcloud}>
-                    <LinkIcon />
-                    SoundCloud
-                </a>
+                <h2 className={styles.title}>
+                    {track.title}
+                    <a href={`${track.soundcloudUrl}`} className={styles.soundcloud}>
+                        <i className="ph ph-soundcloud-logo"></i>
+                    </a>
+                </h2>
                 <p className={styles.release}>Дата релиза <strong className={styles.release__strong}>{new Date(track.releaseData).toLocaleDateString()}</strong></p>
                 {
                     track.avgRating

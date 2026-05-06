@@ -22,7 +22,7 @@ export const TrackSuggestionForm = () => {
 
     const initialErrors = {
         title: '',
-        artistIds: '',
+        artistId: '',
         soundcloudUrl: '',
         releaseData: '',
         coverUrl: '',
@@ -71,6 +71,7 @@ export const TrackSuggestionForm = () => {
         if (!values.coverUrl) return setErrors(prev => ({ ...prev, coverUrl: 'Выберите обложку для трека' }))
         if (artists.length === 0) return setErrors(prev => ({ ...prev, artistIds: 'Укажите хотя бы одного артиста' }))
         if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
+        if (!values.coverUrl) return setErrors(prev => ({ ...prev, coverUrl: 'Добавьте обложку трека' }))
 
         let tempArtist:ITempArtist | null = null
         const tempFeatArtists:ITempArtist[] = []
@@ -87,8 +88,7 @@ export const TrackSuggestionForm = () => {
             return null
         })
 
-
-        console.log(tempArtist)
+        console.log(artists)
 
         trackSuggestionApi({
             title: values.title,
@@ -105,6 +105,7 @@ export const TrackSuggestionForm = () => {
                 setValues(initValues)
                 setArtists([])
             })
+            .catch((err: { response: {data: IApiError} }) => setErrors(prev => ({ ...prev, [err.response.data.field ?? '']: err.response.data.message })))
     }
 
     const getInfo = (e: MouseEvent<HTMLButtonElement>) => {
@@ -191,7 +192,7 @@ export const TrackSuggestionForm = () => {
                                 value={search}
                                 onFocus={() => setSearchList(true)}
                                 onBlur={() => setSearchList(false)}
-                                error={errors.artistIds}
+                                error={errors.artistId}
                             >
                             {
                                 artists.length > 0 &&
@@ -237,7 +238,7 @@ export const TrackSuggestionForm = () => {
                         <i className='ph ph-image'></i>
                         Обложка
                     </h5>
-                    <div className={`${styles.form__cover} ${values.coverUrl ? styles.active : ''}`} onClick={() => inputRef.current?.click()}>
+                    <div className={`${styles.form__cover} ${values.coverUrl ? styles.active : ''} ${errors.coverUrl ? styles.error : ''}`} onClick={() => inputRef.current?.click()}>
                         <input ref={inputRef} hidden type="file" onChange={hundleCoverChange} />
                         {
                             values.coverUrl &&
@@ -257,6 +258,13 @@ export const TrackSuggestionForm = () => {
                             <p className={styles.form__coverDesc}>или нажмите для выбора файла</p>
                         </div>
                     </div>
+                    {
+                        errors.coverUrl &&
+                        <p className={styles.form__coverError}>
+                            <i className="ph ph-info"></i>
+                            {errors.coverUrl}
+                        </p>
+                    }
                 </div>
                 <div className={styles.form__footer}>
                     <Button onClick={onSubmit} icon={<i className='ph ph-paper-plane-tilt'></i>} color='accent' padding='16px 24px 14px 24px'>Отправить на модерацию</Button>

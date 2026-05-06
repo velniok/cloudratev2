@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator')
 const SuggestionServices = require('../services/SuggestionServices')
 const TrackServices = require('../services/TrackServices')
 const AppError = require('../utils/AppError')
@@ -5,6 +6,9 @@ const AppError = require('../utils/AppError')
 class SuggestionControllers {
     async createTrack(req, res, next) {
         try {
+            const errors = validationResult(req)
+            if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
+
             const { title, artistId, featArtistIds, soundcloudUrl, coverUrl, releaseData, tempArtist, tempFeatArtists } = req.body
             const userId = req.userId
             if (!userId) throw new AppError(`Нужно авторизоваться`, 401)
