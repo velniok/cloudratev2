@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import { acceptTrackSuggestionApi, rejectTrackSuggestionApi } from '../api/suggestionApi'
 import styles from './TrackSuggestionActions.module.scss'
 import { ISuggestion } from '@/entities/suggestion'
 import { useAppDispatch, useNotification } from '@/shared/lib'
