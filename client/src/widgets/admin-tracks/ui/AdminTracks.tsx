@@ -132,7 +132,7 @@ export const AdminTracks = () => {
                     modalClose={() => setUpdateTrack(false)}
                 >
                     {
-                        track && <TrackUpdateForm track={track} modalClose={() => setUpdateTrack(false)} />
+                        track && <TrackUpdateForm key={track.id} track={track} modalClose={() => setUpdateTrack(false)} />
                     }
                 </Modal>
                 <Modal

@@ -24,22 +24,27 @@ export const TableTrackItem: FC<TableTrackItemProps> = ({ track, actions }) => {
                 </Link>
             </td>
             <td className={styles.table__data}>
-                <li className={styles.track__artistItem}>
-                    <Cover width='32px' height='32px' borderRadius='50%' url={track.artist.avatarUrl ?? ''} />
-                    <p className={styles.track__artistNickname}>{track.artist.name}</p>
-                </li>
-                {/* <ul className={styles.track__artistList}>
-                    {
-                        track.artists.map((artist) => {
-                            return (
-                                <li key={artist.id} className={styles.track__artistItem}>
-                                    <Cover width='32px' height='32px' borderRadius='50%' url={artist.avatarUrl} />
-                                    <p className={styles.track__artistNickname}>{artist.name}</p>
-                                </li>
-                            )
-                        })
-                    }
-                </ul> */}
+                <div className={styles.track__artist}>
+                    <Link to={`/artist/${track.artistId}`} className={styles.track__artistItem}>
+                        <Cover width='32px' height='32px' borderRadius='50%' url={track.artist.avatarUrl ?? ''} />
+                        <p className={styles.track__artistNickname}>{track.artist.name}</p>
+                    </Link>
+                    <ul className={styles.track__artistList}>
+                        {
+                            track.featArtists &&
+                            <div className={styles.track__feat}>
+                            feat.
+                            {
+                                track.featArtists.map((artist) => {
+                                    return (
+                                        <Link key={artist.id} to={`/artist/${artist.id}`} className={styles.track__featNickname}>{artist.name}</Link>
+                                    )
+                                })
+                            }
+                            </div>
+                        }
+                    </ul>
+                </div>
             </td>
             <td className={styles.table__data}>
                 {

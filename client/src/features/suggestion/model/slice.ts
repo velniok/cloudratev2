@@ -1,14 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { IApiError } from "@/shared/types";
+import { IApiError, IPagination } from "@/shared/types";
 import axios from "axios";
 import { ISuggestionState } from "./suggestionSliceTypes";
-import { ISuggestion } from "@/entities/suggestion";
+import { ISuggestion, SuggestionFilter } from "@/entities/suggestion";
 import { IArtist } from "@/entities/artist";
-import { acceptSuggestionApi, getSuggestionListApi, rejectSuggestionApi, updateSuggestionArtistApi, updateSuggestionFeatApi } from "../api/suggestionApi";
+import { acceptSuggestionApi, getSuggestionListApi, rejectSuggestionApi, updateSuggestionApi, updateSuggestionArtistApi, updateSuggestionFeatApi } from "../api/suggestionApi";
+import { ISuggestionUpdateReq } from "../api/suggestionApiTypes";
 
-export const getSuggestionList = createAsyncThunk<{ suggestions: ISuggestion[] }, void, { rejectValue: IApiError }>('/suggestion/getSuggestionList', async (_, { rejectWithValue }) => {
+export const getSuggestionList = createAsyncThunk<{ suggestions: ISuggestion[], pagination: IPagination }, { page: number, limit: number, filter: string }, { rejectValue: IApiError }>('/suggestion/getSuggestionList', async (params, { rejectWithValue }) => {
     try {
-        const { data } = await getSuggestionListApi()
+        const { data } = await getSuggestionListApi(params)
         return data
     } catch (err) {
             if (axios.isAxiosError(err) && err.response) {
@@ -66,8 +67,21 @@ export const updateSuggestionFeatThunk = createAsyncThunk<{ suggestion: ISuggest
     }
 })
 
+export const updateSuggestionThunk = createAsyncThunk<{ suggestion: ISuggestion }, ISuggestionUpdateReq, { rejectValue: IApiError }>('/suggestion/updateSuggestionThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await updateSuggestionApi(params)
+        return data
+    } catch (err) {
+            if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
+    }
+})
+
 const initialState: ISuggestionState = {
     suggestionList: null,
+    suggestionListPagination: null,
     suggestionListStatus: 'idle',
     suggestionListError: null,
 }
@@ -84,7 +98,8 @@ const suggestionSlice = createSlice({
                 state.suggestionListError = null
             })
             .addCase(getSuggestionList.fulfilled, (state, action) => {
-                state.suggestionList = action.payload.suggestions
+                state.suggestionList = action.payload.suggestions,
+                state.suggestionListPagination = action.payload.pagination,
                 state.suggestionListStatus = 'success'
             })
             .addCase(getSuggestionList.rejected, (state, action) => {
@@ -170,6 +185,24 @@ const suggestionSlice = createSlice({
                 }
             })
             .addCase(updateSuggestionFeatThunk.rejected, (state, action) => {
+                state.suggestionListStatus = 'error',
+                state.suggestionListError = action.payload?.message ?? 'Непредвиденная ошибка'
+            })
+
+            .addCase(updateSuggestionThunk.pending, (state) => {
+                state.suggestionListError = null
+            })
+            .addCase(updateSuggestionThunk.fulfilled, (state, action) => {
+                if (state.suggestionList) state.suggestionList = state.suggestionList.map((suggestion) => {
+                    if (suggestion.id === action.payload.suggestion.id) {
+                        Object.keys(action.payload.suggestion).map((key) => {
+                            (suggestion as any)[key] = (action.payload.suggestion as any)[key]
+                        })
+                    }
+                    return suggestion
+                })
+            })
+            .addCase(updateSuggestionThunk.rejected, (state, action) => {
                 state.suggestionListStatus = 'error',
                 state.suggestionListError = action.payload?.message ?? 'Непредвиденная ошибка'
             })

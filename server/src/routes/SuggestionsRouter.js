@@ -7,9 +7,10 @@ const Router = require('express').Router
 const router = new Router()
 
 router.post('/create', getUser, suggestionValidation, SuggestionControllers.create)
-router.get('/list', SuggestionControllers.getList)
+router.get('/list', checkAdmin, SuggestionControllers.getList)
 router.patch('/update-artist/:id', checkAdmin, SuggestionControllers.updateArtist)
 router.patch('/update-feat/:id', checkAdmin, SuggestionControllers.updateFeat)
+router.patch('/update/:id', checkAdmin, SuggestionControllers.update)
 router.post('/accept', checkAdmin, getUser, SuggestionControllers.accept)
 router.post('/reject', checkAdmin, getUser, SuggestionControllers.reject)
 

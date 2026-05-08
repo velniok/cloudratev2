@@ -22,37 +22,53 @@ class SuggestionServices {
         return mapToCamelCase(suggestionTrackRes.rows[0])
     }
 
-    async getSuggestionList() {
-        const suggestionsRes = await pool.query(`
-            SELECT
-                s.*,
-                (
-                    SELECT (row_to_json(u)::jsonb - 'password')::json
-                    FROM users u
-                    WHERE u.id = s.user_id
-                ) as user,
-                (
-                    SELECT row_to_json(a)
-                    FROM artists a
-                    WHERE a.id = s.artist_id
-                ) as artist,
-                COALESCE(
+    async getSuggestionList(status, page, limit) {
+        const offset = (+page - 1) * +limit
+        if (status === 'all') status = null
+
+        const [suggestionsRes, countRes] = await Promise.all([
+            pool.query(`
+                SELECT
+                    s.*,
                     (
-                        SELECT json_agg(row_to_json(a))
+                        SELECT (row_to_json(u)::jsonb - 'password')::json
+                        FROM users u
+                        WHERE u.id = s.user_id
+                    ) as user,
+                    (
+                        SELECT row_to_json(a)
                         FROM artists a
-                        WHERE a.id = ANY(s.feat_artist_ids)
-                    ),
-                    '[]'::json
-                ) as feat_artists,
-                (
-                    SELECT row_to_json(u)
-                    FROM users u
-                    WHERE s.reviewed_by = u.id
-                ) as reviewed_by_user
-            FROM track_suggestions s
-            ORDER BY s.created_at DESC
-        `)
-        return suggestionsRes.rows.map(mapToCamelCase)
+                        WHERE a.id = s.artist_id
+                    ) as artist,
+                    COALESCE(
+                        (
+                            SELECT json_agg(row_to_json(a))
+                            FROM artists a
+                            WHERE a.id = ANY(s.feat_artist_ids)
+                        ),
+                        '[]'::json
+                    ) as feat_artists,
+                    (
+                        SELECT row_to_json(u)
+                        FROM users u
+                        WHERE s.reviewed_by = u.id
+                    ) as reviewed_by_user
+                FROM track_suggestions s
+                WHERE $3::text IS NULL OR status = $3
+                ORDER BY s.created_at DESC
+                LIMIT $1
+                OFFSET $2
+            `, [limit, offset, status]),
+            pool.query(`
+                SELECT COUNT(*)::int AS total
+                FROM track_suggestions s
+                WHERE $1::text IS NULL OR status = $1
+            `, [status])
+        ]) 
+        return {
+            suggestions: suggestionsRes.rows.map(mapToCamelCase),
+            total: countRes.rows[0].total,
+        }
     }
 
     async updateSuggestionArtist(id, artistId) {
@@ -77,6 +93,20 @@ class SuggestionServices {
             WHERE id = $1
             RETURNING *
         `, [id, artistId, tempId])
+    }
+
+    async updateSuggestion(id, values) {
+        const suggestionsRes = await pool.query(`
+            UPDATE track_suggestions
+            SET
+                title = $1,
+                cover_url = $2,
+                soundcloud_url = $3,
+                release_data = $4
+            WHERE id = $5
+            RETURNING *
+        `, [...values, id])
+        return mapToCamelCase(suggestionsRes.rows[0])
     }
 
     async acceptSuggestion(id, adminId, trackId) {

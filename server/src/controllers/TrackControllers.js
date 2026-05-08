@@ -118,9 +118,9 @@ class TrackControllers {
             if (!errors.isEmpty()) throw new AppError(`${errors.array()[0].msg}`, 400, `${errors.array()[0].path}`)
 
             const trackId = req.params.id
-            const { title, coverUrl, soundcloudUrl, releaseData } = req.body
+            const { title, coverUrl, soundcloudUrl, releaseData, artistId, featArtistIds } = req.body
 
-            const trackUpdate = await TrackServices.updateTrack(trackId, [title, coverUrl, soundcloudUrl, releaseData])
+            const trackUpdate = await TrackServices.updateTrack(trackId, [title, coverUrl, soundcloudUrl, releaseData, artistId, featArtistIds])
             if (trackUpdate.status === 'track_taken') throw new AppError(`Название трека уже занято`, 409, `title`)
             const track = trackUpdate.track
 

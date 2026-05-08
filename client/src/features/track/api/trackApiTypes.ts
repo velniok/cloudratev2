@@ -14,6 +14,8 @@ export interface ITrackUpdateReq {
         coverUrl: string
         soundcloudUrl: string
         releaseData: string
+        artistId: number
+        featArtistIds: number[]
     }
 }
 

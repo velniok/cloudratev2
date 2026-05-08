@@ -10,3 +10,13 @@ export interface ISuggestionTrackReq {
     tempArtist: ITempArtist | null
     tempFeatArtists: ITempArtist[]
 }
+
+export interface ISuggestionUpdateReq {
+    id: number
+    req: {
+        title: string
+        coverUrl: string
+        soundcloudUrl: string
+        releaseData: string
+    }
+}

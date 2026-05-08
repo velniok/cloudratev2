@@ -28,7 +28,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                 />
                 <div className={styles.item__track}>
                     <div className={styles.item__trackInfo}>
-                        <h3 className={styles.item__title}>{suggestion.title}</h3>
+                        <h3 className={styles.item__title} title={`${suggestion.title}`}>{suggestion.title}</h3>
                         <a href={suggestion.soundcloudUrl} className={styles.item__soundcloud}>
                             <i className="ph ph-soundcloud-logo"></i>
                         </a>

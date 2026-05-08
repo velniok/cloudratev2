@@ -75,9 +75,10 @@
 .review {
     color: var(--text-secondary);
     white-space: pre-wrap;
+    font-size: 16px;
 
     @media (max-width: $mobile) {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     &.visible {

@@ -7,9 +7,10 @@ import { acceptSuggestionThunk, rejectSuggestionThunk } from '../model/slice'
 interface TrackSuggestionActionsProps {
     suggestion: ISuggestion
     setError: (id: number, error: string) => void
+    openUpdateModal: (suggestion: ISuggestion) => void
 }
 
-export const TrackSuggestionActions: FC<TrackSuggestionActionsProps> = ({ suggestion, setError }) => {
+export const TrackSuggestionActions: FC<TrackSuggestionActionsProps> = ({ suggestion, setError, openUpdateModal }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
@@ -40,7 +41,7 @@ export const TrackSuggestionActions: FC<TrackSuggestionActionsProps> = ({ sugges
             <div className={`${styles.actions__button} ${styles.actions__delete}`} onClick={onReject}>
                 <i className="ph ph-bold ph-x"></i>
             </div>
-            <div className={`${styles.actions__button} ${styles.actions__edit}`}>
+            <div className={`${styles.actions__button} ${styles.actions__edit}`} onClick={() => openUpdateModal(suggestion)}>
                 <i className="ph ph-pencil-simple"></i>
             </div>
         </div>

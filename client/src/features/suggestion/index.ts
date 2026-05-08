@@ -4,3 +4,4 @@ export * from './model/selectors'
 
 export { TrackSuggestionForm } from './ui/TrackSuggestionForm'
 export { TrackSuggestionActions } from './ui/TrackSuggestionActions'
+export { SuggestionUpdateForm } from './ui/SuggestionUpdateForm'

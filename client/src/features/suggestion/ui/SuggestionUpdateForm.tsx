@@ -1,34 +1,28 @@
 import { Button, Cover, Input } from '@/shared/ui'
-import styles from './TrackUpdateForm.module.scss'
+import styles from './SuggestionUpdateForm.module.scss'
 import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { updateAvatarApi } from '@/shared/api'
-import { ITrack } from '@/entities/track'
-import { useAppDispatch, useNotification, useSearch } from '@/shared/lib'
-import { updateTrackThunk } from '../model/slice'
+import { ISuggestion } from '@/entities/suggestion'
+import { useAppDispatch, useNotification } from '@/shared/lib'
+import { updateSuggestionThunk } from '../model/slice'
 import { IApiError } from '@/shared/types'
-import { SearchArtistListToTrack, SearchArtistsToTrack } from '@/entities/search'
-import { IArtist } from '@/entities/artist'
 
-interface TrackUpdateFormProps {
+interface SuggestionUpdateFormProps {
     modalClose: () => void
-    track: ITrack
+    suggestion: ISuggestion
 }
 
-export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track }) => {
+export const SuggestionUpdateForm: FC<SuggestionUpdateFormProps> = ({ suggestion, modalClose }) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
     const inputRef = useRef<HTMLInputElement>(null)
 
-    const { result, resultStatus, search, onChangeSearch, setSearch } = useSearch('artists')
-    const [searchList, setSearchList] = useState<boolean>(false)
-    const [artists, setArtists] = useState<(IArtist)[]>([track.artist, ...(track.featArtists || [])])
-    
     const initialValues = {
-        title: track.title ?? '',
-        coverUrl: track.coverUrl ?? '',
-        soundcloudUrl:  track.soundcloudUrl ?? '',
-        releaseData: track.releaseData ?? '',
+        title: '',
+        coverUrl: '',
+        soundcloudUrl: '',
+        releaseData: '',
     }
     const [values, setValues] = useState(initialValues)
 
@@ -36,9 +30,15 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
         title: '',
         soundcloudUrl: '',
         releaseData: '',
-        artistId: '',
     }
     const [errors, setErrors] = useState(initialErrors)
+
+    useEffect(() => {
+        setValues(prev => ({ ...prev, title: suggestion.title ?? '' }))
+        setValues(prev => ({ ...prev, coverUrl: suggestion.coverUrl ?? '' }))
+        setValues(prev => ({ ...prev, soundcloudUrl: suggestion.soundcloudUrl ?? '' }))
+        setValues(prev => ({ ...prev, releaseData: suggestion.releaseData ?? '' }))
+    }, [suggestion])
 
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
@@ -63,29 +63,24 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
         setValues(prev => ({ ...prev, releaseData: e.target.value }))
     }
 
-    const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault()
-
-        const artistIds = artists.map((artist) => {
-            return Number(artist.id)
-        })
+    const onSubmit = (e: MouseEvent<HTMLButtonElement>) => {
 
         if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
         if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
+        if (!values.soundcloudUrl) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Укажите ссылку на SoundCloud трека' }))
+        if (!URL.canParse(values.soundcloudUrl)) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Неверный формат ссылки' }))
 
-        dispatch(updateTrackThunk({
-            id: track.id,
+        dispatch(updateSuggestionThunk({
+            id: suggestion.id,
             req: {
                 title: values.title,
                 coverUrl: values.coverUrl,
                 soundcloudUrl: values.soundcloudUrl,
                 releaseData: values.releaseData,
-                artistId: artistIds[0],
-                featArtistIds: artistIds.slice(1),
             }
         })).unwrap()
             .then(() => {
-                notify('Трек изменён', 'Трек успешно изменён', 'edit')
+                notify('Заявка изменена', 'Заявка успешно изменена', 'edit')
                 hundleCancel(e)
             })
             .catch((err: IApiError) => setErrors(prev => ({ ...prev, [err.field ?? '']: err.message })))
@@ -118,37 +113,6 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
                         onChange={hundleChangeTitle}
                         error={errors.title}
                     />
-                    <div className={styles.form__search}>
-                        <Input
-                            label='Арист(-ы)'
-                            placeholder='Введите артиста(-ов)'
-                            type='text'
-                            icon={<i className='ph ph-user'></i>}
-                            onChange={onChangeSearch}
-                            value={search}
-                            onFocus={() => setSearchList(true)}
-                            onBlur={() => setSearchList(false)}
-                            error={errors.artistId}
-                        >
-                        {
-                            artists.length > 0 &&
-                            <SearchArtistListToTrack
-                                artists={artists}
-                                setArtists={setArtists}
-                            />
-                        }
-                        </Input>
-                        <SearchArtistsToTrack
-                            searchList={searchList}
-                            search={search}
-                            resultStatus={resultStatus}
-                            result={result?.artists}
-                            setSearch={setSearch}
-                            setErrors={setErrors}
-                            artists={artists}
-                            setArtists={setArtists}
-                        />
-                    </div>
                     <Input
                         label='ССЫЛКА НА SoundCloud трека'
                         placeholder='Введите ссылку на SoundCloud трека'
@@ -171,7 +135,7 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
             </div>
             <div className={styles.footer}>
                 <Button fontSize='12px' color='default' padding='12px 20px 10px 20px' onClick={hundleCancel}>ОТМЕНА</Button>
-                <Button fontSize='12px' color='accent' padding='12px 20px 10px 20px' onClick={handleSubmit}>СОХРАНИТЬ ИЗМЕНЕНИЯ</Button>
+                <Button fontSize='12px' color='accent' padding='12px 20px 10px 20px' onClick={onSubmit}>СОХРАНИТЬ ИЗМЕНЕНИЯ</Button>
             </div>
         </form>
     )

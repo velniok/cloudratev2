@@ -113,7 +113,7 @@
 
     @media (hover: hover) {
         &:hover {
-            background-color: var(--lightgray-color);
+            background-color: var(--hover-white);
         }
     }
 
@@ -133,10 +133,13 @@
     }
 
     &__artist {
+        display: flex;
+        flex-direction: column;
+        row-gap: 6px;
         
         &List {
             display: flex;
-            column-gap: 12px;
+            column-gap: 6px;
 
             @media (max-width: $mobile) {
                 column-gap: 10px;
@@ -147,6 +150,16 @@
             display: flex;
             align-items: center;
             column-gap: 10px;
+            padding: 4px;
+            border-radius: 12px;
+
+            transition: background-color 0.3s;
+
+            @media (hover: hover) {
+                &:hover {
+                    background-color: var(--hover-white);
+                }
+            }
 
             @media (max-width: $mobile) {
                 column-gap: 6px;
@@ -161,10 +174,32 @@
 
         &Nickname {
             color: var(--text-secondary);
+            text-wrap: nowrap;
 
             @media (max-width: $mobile) {
                 font-size: 12px;
             }
+        }
+    }
+
+    &__feat {
+        display: flex;
+        column-gap: 4px;
+        padding-left: 6px;
+
+        &Nickname {
+            color: var(--text-secondary);
+            text-wrap: nowrap;
+            
+            @media (hover: hover) {
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            @media (max-width: $mobile) {
+                font-size: 12px;
+            } 
         }
     }
 

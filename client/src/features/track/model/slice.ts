@@ -181,9 +181,9 @@ const trackSlice = createSlice({
             .addCase(updateTrackThunk.fulfilled, (state, action) => {
                 if (state.trackList) {
                     state.trackList = state.trackList.map(track => {
-                        if (track.id === action.meta.arg.id) {
-                            Object.keys(action.meta.arg.req).map((key) => {
-                                (track as any)[key] = (action.meta.arg.req as any)[key]
+                        if (track.id === action.payload.track.id) {
+                            Object.keys(action.payload.track).map((key) => {
+                                (track as any)[key] = (action.payload.track as any)[key]
                             })
                         }
                         return track

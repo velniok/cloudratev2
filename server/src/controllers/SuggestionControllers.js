@@ -23,9 +23,18 @@ class SuggestionControllers {
 
     async getList(req, res, next) {
         try {
-            const suggestions = await SuggestionServices.getSuggestionList()
+            const { status, page, limit } = req.query
+            const {suggestions, total} = await SuggestionServices.getSuggestionList(status, page, limit)
 
-            res.status(200).json({ suggestions })
+            res.status(200).json({
+                suggestions,
+                pagination: {
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)
@@ -45,11 +54,24 @@ class SuggestionControllers {
         }
     }
 
-    async updateFeat(req, res,next) {
+    async updateFeat(req, res, next) {
         try {
             const suggestionId = req.params.id
             const { id, tempId } = req.body
             const suggestion = await SuggestionServices.updateSuggestionFeat(suggestionId, id, tempId)
+
+            res.status(200).json({ suggestion })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async update(req, res, next) {
+        try {
+            const suggestionId = req.params.id
+            const { title, coverUrl, soundcloudUrl, releaseData } = req.body
+            const suggestion = await SuggestionServices.updateSuggestion(suggestionId, [title, coverUrl, soundcloudUrl, releaseData])
 
             res.status(200).json({ suggestion })
         } catch (err) {
