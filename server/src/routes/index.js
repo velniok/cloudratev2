@@ -12,6 +12,7 @@ const SuggestionsRouter = require('./SuggestionsRouter')
 
 const { upload } = require('../config/multer')
 const getUser = require('../middlewares/getUser')
+const NotificationControllers = require('../controllers/NotificationControllers')
 
 const Router = require('express').Router
 const router = new Router()
@@ -37,6 +38,8 @@ router.use('/review', ReviewRouter)
 router.use('/suggestion', SuggestionsRouter)
 
 router.get('/general/get', checkAdmin, GeneralControllers.get)
+
+router.patch('/notification/read/:id', NotificationControllers.read)
 
 router.get('/search', getUser, SearchControllers.search)
 

@@ -16,9 +16,9 @@ export const TrackSuggestionActions: FC<TrackSuggestionActionsProps> = ({ sugges
     const { notify } = useNotification()
 
     const onAccept = () => {
-
+        console.log(suggestion.tempFeatArtists)
         if (!suggestion.artistId) return setError(suggestion.id, 'Ошибка'), notify('Ошибка', 'Для начала добавьте артиста на сайт', 'error')
-        if (suggestion.tempFeatArtists) return setError(suggestion.id, 'Ошибка'), notify('Ошибка', 'Для начала добавьте всех артистов на сайт', 'error')
+        if (!(suggestion.tempFeatArtists.length === 0)) return setError(suggestion.id, 'Ошибка'), notify('Ошибка', 'Для начала добавьте всех артистов на сайт', 'error')
 
         dispatch(acceptSuggestionThunk({ suggestion: suggestion })).unwrap()
             .then(() => {

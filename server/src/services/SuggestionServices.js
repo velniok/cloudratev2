@@ -130,6 +130,18 @@ class SuggestionServices {
                 ) AS reviewed_by_user
             FROM updated u
         `, [id, adminId, trackId])
+        await pool.query(`
+            INSERT INTO notifications
+                (
+                    user_id,
+                    type,
+                    title,
+                    message,
+                    metadata
+                )
+            SELECT $1, $2, $3, $4, $5
+            RETURNING *    
+        `, [suggestionsRes.rows[0].user_id, 'suggestion_accepted', 'Заявка принята', 'Ваша заявка на трек одобрена!', JSON.stringify({ trackId: suggestionsRes.rows[0].track_id })])
         return mapToCamelCase(suggestionsRes.rows[0])
     }
 

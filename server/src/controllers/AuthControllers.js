@@ -5,6 +5,7 @@ const AppError = require('../utils/AppError');
 const MailServices = require('../services/MailServices');
 const TokenServices = require('../services/TokenServices');
 const UserDto = require('../dtos/UserDto');
+const NotificationServices = require('../services/NotificationServices');
 require('dotenv').config()
 
 class AuthControllers {
@@ -88,6 +89,7 @@ class AuthControllers {
             const user = await AuthServices.auth(decoded.id)
             if (!user) throw new AppError('Пользователь не найден', 404)
             const userDto = new UserDto(user)
+            const notifications = await NotificationServices.get(user.id)
 
             const { accessToken, refreshToken: newRefresh } = TokenServices.generateTokens({ id: userDto.id, role: userDto.role })
             res.cookie('refreshToken', newRefresh, {
@@ -97,7 +99,7 @@ class AuthControllers {
                 maxAge: 30 * 24 * 60 * 60 * 1000
             })
 
-            res.json({ user: userDto, token: accessToken })
+            res.json({ user: userDto, notifications: notifications, token: accessToken })
         } catch (err) {
             console.log(err)
             next(err)

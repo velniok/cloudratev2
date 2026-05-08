@@ -1,10 +1,12 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import styles from "./Sidebar.module.scss"
-import { AdminPanelIcon, Badges, Button, Cover, HomeIcon, InfoIcon, LogoIcon, LogoutIcon, NewsIcon, ProfileIcon, SearchIcon } from "../../../shared/ui"
+import { Badges, Button, Cover, LogoIcon } from "../../../shared/ui"
 import { getOptimizedAvatar, useAppDispatch, useAppSelector } from "../../../shared/lib"
 import { logoutApi, selectAuthStatus, selectAuthUser } from "../../../features/auth"
 import { logout } from "../../../features/auth"
 import { FC, useEffect, useState } from "react"
+import { UserNotificationPopup } from "@/widgets/user-notification-modal"
+import { selectAuthNotifications } from "@/features/auth/model/selectors"
 
 interface SidebarProps {
     sidebar: boolean
@@ -17,8 +19,10 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
     const navigate = useNavigate()
     const authStatus = useAppSelector(selectAuthStatus)
     const authUser = useAppSelector(selectAuthUser)
+    const userNotifications = useAppSelector(selectAuthNotifications)
 
     const [openUser, setOpenUser] = useState<boolean>(false)
+    const [openNotification, setOpenNotification] = useState<boolean>(false)
 
     const pathname = useLocation().pathname
 
@@ -76,6 +80,24 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                                     <i className={`ph${pathname === `/user/${authUser?.username}` ? '-fill' : ''} ph-user`}></i>
                                     Мой профиль
                                 </Link>
+                            </li>
+                            <li className={`${styles.nav__item} ${ openNotification ? styles.active : ''}`}>
+                                {
+                                    userNotifications &&
+                                    <>
+                                        <div className={`${styles.notifications} ${(userNotifications.filter((obj) => obj.isRead === false).length >= 1) ? styles.have : ''}`} onClick={() => setOpenNotification(!openNotification)}>
+                                            <i className={`ph${openNotification ? '-fill' : ''} ph-bell`}></i>
+                                            Уведомления
+                                            {
+                                                userNotifications.filter((obj) => obj.isRead === false).length >= 1 &&
+                                                <span className={styles.notifications__number}>{userNotifications.filter((obj) => obj.isRead === false).length}</span>
+                                            }
+                                        </div>
+                                        {
+                                            openNotification && userNotifications && <UserNotificationPopup closeNotification={() => setOpenNotification(false)} notifications={userNotifications} />
+                                        }
+                                    </>
+                                }
                             </li>
                             <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.username}/reviews` ? styles.active : ''}`}>
                                 <Link to={`/user/${authUser?.username}/reviews`} className={styles.nav__link} onClick={setSidebar}>

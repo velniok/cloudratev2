@@ -46,6 +46,7 @@ export const authThunk = createAsyncThunk<IAuthRes, void, { rejectValue: IApiErr
 const initialState: IAuthState = {
     user: null,
     token: null,
+    notifications: null,
     status: 'idle',
     error: null,
 }
@@ -81,6 +82,7 @@ const authSlice = createSlice({
                 (action) => action.type.startsWith('auth') && action.type.endsWith('/fulfilled'),
                 (state, action: PayloadAction<IAuthRes>) => {
                     state.user = action.payload.user,
+                    state.notifications = action.payload.notifications,
                     state.token = action.payload.token,
                     state.status = 'success',
                     state.error = null
