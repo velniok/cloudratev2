@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { RegForm } from "@/features/auth"
 import { LogoIcon } from "@/shared/ui"
 import styles from "./AuthForm.module.scss"
-import type { FC } from "react"
+import { useEffect, useState, type FC } from "react"
 import { LoginForm } from "@/features/auth"
 
 interface AuthFormProps {
@@ -10,6 +10,7 @@ interface AuthFormProps {
 }
 
 export const AuthForm: FC<AuthFormProps> = ({ pathname }) => {
+
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>

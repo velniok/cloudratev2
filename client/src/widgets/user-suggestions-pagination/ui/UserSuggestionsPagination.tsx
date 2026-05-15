@@ -37,22 +37,29 @@ export const UserSuggestionsPagination: FC<UserSuggestionsPaginationProps> = ({ 
                 {
                     suggestionsListStatus === 'success' && suggestionsList && suggestionsListPagination &&
                     <>
-                        <ul className={styles.list}>
-                            {
-                                suggestionsList.map((suggestion) => {
-                                    return <SuggestionRow key={suggestion.id} suggestion={suggestion} />
-                                })
-                            }
-                        </ul>
-                        <div className={styles.bottom}>
-                            <PaginationButtons
-                                page={suggestionsListPagination.page}
-                                totalPages={suggestionsListPagination.totalPages}
-                                hundleNextPage={hundleNextPage}
-                                hundlePrevPage={hundlePrevPage}
-                                hundlePage={hundlePage}
-                            />
-                        </div>
+                    {
+                        suggestionsList.length > 0 ?
+                        <>
+                            <ul className={styles.list}>
+                                {
+                                    suggestionsList.map((suggestion) => {
+                                        return <SuggestionRow key={suggestion.id} suggestion={suggestion} />
+                                    })
+                                }
+                            </ul>
+                            <div className={styles.bottom}>
+                                <PaginationButtons
+                                    page={suggestionsListPagination.page}
+                                    totalPages={suggestionsListPagination.totalPages}
+                                    hundleNextPage={hundleNextPage}
+                                    hundlePrevPage={hundlePrevPage}
+                                    hundlePage={hundlePage}
+                                />
+                            </div>
+                        </>
+                        :
+                        <p className={styles.none}>Заявок нет</p>
+                    }
                     </>
                 }
             </div>

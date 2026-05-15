@@ -17,12 +17,12 @@ export const UserNotificationPopup: FC<UserNotificationPopupProps> = ({ notifica
             </div>
             <ul className={styles.list}>
                 {
-                    notifications.length === 0 ?
-                    <>Пусто...</>
-                    :
+                    notifications.length > 0 ?                    
                     notifications.map((notification) => {
-                        return <UserNotificationItem closeNotification={closeNotification} notification={notification} />
+                        return <UserNotificationItem key={notification.id} closeNotification={closeNotification} notification={notification} />
                     })
+                    :
+                    <p className={styles.none}>Уведомлений нет</p>
                 }
             </ul>
         </div>

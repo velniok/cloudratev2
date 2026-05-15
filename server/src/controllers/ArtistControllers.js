@@ -32,7 +32,7 @@ class ArtistControllers {
                 const { data } = await axios.get(
                     `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
                 )
-                const avatarUrl = await uploadFromSoundcloud(data.avatar_url.replace('-large.jpg', '-t200x200.jpg'))
+                const avatarUrl = await uploadFromSoundcloud(data.avatar_url.replace(/-large(\.(jpg|png|jpeg|gif))$/i, '-t200x200$1'))
                 res.status(200).json({
                     name: data.username,
                     soundcloudUrl: data.permalink_url,

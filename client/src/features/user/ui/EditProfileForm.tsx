@@ -26,7 +26,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const initialValues = {
         nickname: `${user.nickname}`,
         username: `${user.username}`,
-        avatarUrl: `${user.avatarUrl}`,
+        avatarUrl: `${user.avatarUrl ?? ''}`,
         email: `${user.email}`,
         password: '',
         confirmPassword: '',
@@ -86,7 +86,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
         e.preventDefault()
 
         if (values.nickname.length < 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
-        if (!/^[a-zA-Z0-9_#@-]+$/.test(values.nickname)) return setErrors(prev => ({ ...prev, nickname: 'Уник. никнейм может содержать только латинские буквы, цифры, _, @, - и #' }))
+        if (!/^[a-zA-Z0-9_#@ -]+$/.test(values.nickname)) return setErrors(prev => ({ ...prev, nickname: 'Никнейм может содержать только латинские буквы, цифры, _, @, - и #' }))
         if (values.username.length < 4) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм должен содержать минимум 4 символа' }))
         if (!/^[a-zA-Z]/.test(values.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм должен начинаться с латинской буквы' }))
         if (!/^[a-zA-Z0-9_]+$/.test(values.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм может содержать только латинские буквы, цифры и _' }))
@@ -147,6 +147,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                             type='text'
                             isGray={true}
                             error={errors.nickname}
+                            icon={<i className="ph ph-user"></i>}
                         />
                         <Input
                             label='Уник. никнейм'
@@ -156,6 +157,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                             type='text'
                             isGray={true}
                             error={errors.username}
+                            icon={<i className="ph ph-at"></i>}
                         />
                         <Input
                             label='Email'
@@ -165,6 +167,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                             type='email'
                             isGray={true}
                             error={errors.email}
+                            icon={<i className="ph ph-envelope-simple"></i>}
                         />
                 </div>
                 </div>
@@ -178,6 +181,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                         type='text'
                         isGray={true}
                         error={errors.soundcloudUrl}
+                        icon={<i className="ph ph-soundcloud-logo"></i>}
                     />
                 </div>
                 <h3 className={styles.title}>БЕЗОПАСНОСТЬ</h3>
@@ -191,6 +195,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                         eyeIcon={true}
                         isGray={true}
                         error={errors.password}
+                        icon={<i className="ph ph-password"></i>}
                     />
                     <Input
                         label='Подтвердите пароль'
@@ -201,6 +206,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                         eyeIcon={true}
                         isGray={true}
                         error={errors.confirmPassword}
+                        icon={<i className="ph ph-password"></i>}
                     />
                 </div>
                 <div className={styles.bottom}>

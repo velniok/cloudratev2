@@ -9,3 +9,7 @@ export const getNewTracksApi = () => {
 export const getNewReviewsApi = () => {
     return axios.get<{ reviews: IReview[] }>('/review/new-reviews')
 }
+
+export const getLatestTracksApi = () => {
+    return axios.get<{ tracks: ITrack[] }>('/review/latest-tracks')
+}

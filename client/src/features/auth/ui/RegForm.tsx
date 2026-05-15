@@ -1,8 +1,7 @@
 import { useEffect, useState, type ChangeEvent, type MouseEvent } from "react"
-import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
+import { useAppDispatch, useNotification } from "@/shared/lib"
 import { Button, Input } from "@/shared/ui"
 import { registerThunk } from "../model/slice"
-import { selectAuthStatus } from "../model/selectors"
 import { useNavigate } from "react-router-dom"
 import { IApiError } from "@/shared/types"
 import { sendVerifyCodeApi } from "../api/authApi"
@@ -12,13 +11,8 @@ import styles from './Auth.module.scss'
 export const RegForm = () => {
 
     const dispatch = useAppDispatch()
-    const status = useAppSelector(selectAuthStatus)
     const { notify } = useNotification()
     const navigate = useNavigate()
-
-    if (status === 'success') {
-        navigate('/')
-    }
 
     const [verifyPage, setVerifyPage] = useState<boolean>(false)
     const [seconds, setSeconds] = useState<number>(60)
@@ -126,16 +120,7 @@ export const RegForm = () => {
         {
             verifyPage ?
             <>
-                <p className={styles.text}>Код отправлен на почту <span>{values.email}</span></p>
-                <div className={styles.retry}>
-                    {
-                        seconds === 0 ?
-                        
-                        <Button className={styles.retry__btn} color="default" padding="10px 8px 8px 8px" onClick={(e) => {handleSendVerifyCode(e); setSeconds(60)}}>Отправить код еще раз</Button>
-                        :
-                        <p className={styles.retry__text}>Код можно отправить еще раз через <span>{seconds}</span> сек.</p>
-                    }
-                </div>
+                <p className={styles.text}>Код подтверждения отправлен на почту <span>{values.email}</span></p>
                 <Input
                     type="text"
                     label="Код активации"
@@ -144,6 +129,15 @@ export const RegForm = () => {
                     onChange={handleVerifyCode}
                     error={errors.verifyCode}
                 />
+                <div className={styles.retry}>
+                    {
+                        seconds === 0 ?
+                        
+                        <Button className={styles.retry__btn} color="default" padding="10px 8px 8px 8px" onClick={(e) => {handleSendVerifyCode(e); setSeconds(60)}}>Получить новый код</Button>
+                        :
+                        <p className={styles.retry__text}>Получить новый код через: <span>{seconds} сек.</span></p>
+                    }
+                </div>
                 <Button color="accent" padding="20px 16px 16px 16px" onClick={hundleRegister}>Зарегистрироваться</Button>
                 <Button color="default" padding="16px 12px 12px 12px" onClick={() => setVerifyPage(false)}>Отмена</Button>
             </>
@@ -156,6 +150,7 @@ export const RegForm = () => {
                     value={values.nickname}
                     onChange={handleNicknameChange}
                     error={errors.nickname}
+                    icon={<i className="ph ph-user"></i>}
                 />
                 <Input
                     type="email"
@@ -164,6 +159,7 @@ export const RegForm = () => {
                     value={values.email}
                     onChange={handleEmailChange}
                     error={errors.email}
+                    icon={<i className="ph ph-envelope-simple"></i>}
                 />
                 <Input
                     type="password"
@@ -173,6 +169,7 @@ export const RegForm = () => {
                     onChange={handlePasswordChange}
                     error={errors.password}
                     eyeIcon={true}
+                    icon={<i className="ph ph-password"></i>}
                 />
                 <Input
                     type="password"
@@ -182,6 +179,7 @@ export const RegForm = () => {
                     onChange={handleConfirmPasswordChange}
                     error={errors.confirmPassword}
                     eyeIcon={true}
+                    icon={<i className="ph ph-password"></i>}
                 />
                 <Button color="accent" padding="20px 16px 16px 16px" onClick={handleSendVerifyCode}>Зарегистрироваться</Button>
             </>

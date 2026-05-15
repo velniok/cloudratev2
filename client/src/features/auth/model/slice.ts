@@ -71,30 +71,55 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addMatcher(
-                (action) => action.type.startsWith('auth') && action.type.endsWith('/pending'),
-                (state) => {
-                    state.status = 'loading',
-                    state.error = null
-                }
-            )
-            .addMatcher(
-                (action) => action.type.startsWith('auth') && action.type.endsWith('/fulfilled'),
-                (state, action: PayloadAction<IAuthRes>) => {
-                    state.user = action.payload.user,
-                    state.notifications = action.payload.notifications,
-                    state.token = action.payload.token,
-                    state.status = 'success',
-                    state.error = null
-                }
-            )
-            .addMatcher(
-                (action) => action.type.startsWith('auth') && action.type.endsWith('/rejected'),
-                (state, action: PayloadAction<IApiError>) => {
-                    state.status = 'error',
-                    state.error = action.payload?.message ?? 'Непредвиденная ошибка'
-                }
-            )
+            .addCase(registerThunk.pending, (state) => {
+                state.error = null
+            })
+            .addCase(registerThunk.fulfilled, (state, action) => {
+                state.user = action.payload.user,
+                state.notifications = action.payload.notifications,
+                state.token = action.payload.token,
+                state.status = 'success',
+                state.error = null
+                state.status = 'success'
+            })
+            .addCase(registerThunk.rejected, (state, action) => {
+                state.status = 'error',
+                state.error = action.payload?.message ?? 'Непредвиденная ошибка'
+            })
+
+            .addCase(loginThunk.pending, (state) => {
+                state.status = 'loading',
+                state.error = null
+            })
+            .addCase(loginThunk.fulfilled, (state, action) => {
+                state.user = action.payload.user,
+                state.notifications = action.payload.notifications,
+                state.token = action.payload.token,
+                state.status = 'success',
+                state.error = null
+                state.status = 'success'
+            })
+            .addCase(loginThunk.rejected, (state, action) => {
+                state.status = 'error',
+                state.error = action.payload?.message ?? 'Непредвиденная ошибка'
+            })
+
+            .addCase(authThunk.pending, (state) => {
+                state.status = 'loading',
+                state.error = null
+            })
+            .addCase(authThunk.fulfilled, (state, action) => {
+                state.user = action.payload.user,
+                state.notifications = action.payload.notifications,
+                state.token = action.payload.token,
+                state.status = 'success',
+                state.error = null
+                state.status = 'success'
+            })
+            .addCase(authThunk.rejected, (state, action) => {
+                state.status = 'error',
+                state.error = action.payload?.message ?? 'Непредвиденная ошибка'
+            })
     }
 })
 

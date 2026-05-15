@@ -36,7 +36,7 @@ export const UserReviews: FC<UserReviewsProps> = ({ user }) => {
                                 if (review.track) return <TrackCard key={review.id} review={review} track={review.track} />
                             })
                             :
-                            <>Пользователь ничего не оценил</>
+                            <p className={styles.none}>Оценок нет</p>
                         }
                         </>
                         :

@@ -155,6 +155,32 @@ class TrackServices {
         return tracksRes.rows.map(mapToCamelCase)
     }
 
+    async getLatestTracks() {
+        const tracksRes = await pool.query(`
+            SELECT
+                t.*,
+                (
+                    SELECT ROUND(AVG(r.rating)::numeric)
+                    FROM reviews r
+                    WHERE r.track_id = t.id
+                ) as avg_rating,
+                (
+                    SELECT row_to_json(a)
+                    FROM artists a
+                    WHERE a.id = t.artist_id
+                ) as artist,
+                (
+                    SELECT json_agg(row_to_json(a))
+                    FROM artists a
+                    WHERE a.id = ANY(t.feat_artist_ids)
+                ) as feat_artists
+            FROM tracks t
+            ORDER BY t.created_at DESC
+            LIMIT 15
+        `)
+        return tracksRes.rows.map(mapToCamelCase)
+    }
+
     async getTrack(trackId, userId) {
         const trackRes = await pool.query(`
             SELECT

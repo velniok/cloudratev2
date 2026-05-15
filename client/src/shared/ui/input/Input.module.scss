@@ -98,9 +98,8 @@
     color: var(--accent-color);
     font-size: 12px;
 
-    & svg {
-        width: 20px;
-        height: 20px;
+    & i {
+        font-size: 14px;
     }
 }
 
@@ -110,10 +109,10 @@
     height: 20px;
     top: 50%;
     transform: translateY(-50%);
-    right: 16px;
+    right: 30px;
     color: var(--text-secondary);
 
-    & svg {
+    & i {
         cursor: pointer;
 
         transition: color 0.3s;

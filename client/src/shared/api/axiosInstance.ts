@@ -1,6 +1,6 @@
 import axios from "axios"
 import { API_URL } from "../config"
-import { logout, logoutApi, refreshApi, setToken } from "@/features/auth"
+import { logout, logoutApi, setToken } from "@/features/auth"
 import { store } from "@/app/store"
 
 export const instance = axios.create({

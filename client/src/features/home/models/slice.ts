@@ -3,7 +3,7 @@ import { IHomeState } from "./homeSliceTypes";
 import { ITrack } from "@/entities/track";
 import { IApiError } from "@/shared/types";
 import axios from "axios";
-import { getNewReviewsApi, getNewTracksApi } from "../api/homeApi";
+import { getLatestTracksApi, getNewReviewsApi, getNewTracksApi } from "../api/homeApi";
 import { IReview } from "@/entities/review";
 
 export const getNewTracksThunk = createAsyncThunk<{ tracks: ITrack[] }, void, { rejectValue: IApiError }>('/home/getNewTracksThunk', async (_, { rejectWithValue }) => {
@@ -11,9 +11,10 @@ export const getNewTracksThunk = createAsyncThunk<{ tracks: ITrack[] }, void, { 
         const { data } = await getNewTracksApi()
         return data
     } catch (err) {
-            if (axios.isAxiosError(err) && err.response) {
+        if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -22,9 +23,22 @@ export const getNewReviewsThunk = createAsyncThunk<{ reviews: IReview[] }, void,
         const { data } = await getNewReviewsApi()
         return data
     } catch (err) {
-            if (axios.isAxiosError(err) && err.response) {
+        if (axios.isAxiosError(err) && err.response) {
             return rejectWithValue(err.response.data)
-        } 
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
+    }
+})
+
+export const getLatestTracksThunk = createAsyncThunk<{ tracks: ITrack[] }, void, { rejectValue: IApiError }>('/home/getLatestTracksThunk', async (_, { rejectWithValue }) => {
+    try {
+        const { data } = await getLatestTracksApi()
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
     }
 })
 
@@ -34,6 +48,9 @@ const initialState: IHomeState = {
 
     newReviews: null,
     newReviewsStatus: 'idle',
+
+    latestTracks: null,
+    latestTracksStatus: 'idle',
 
     error: null
 }
@@ -55,7 +72,21 @@ const homeSlice = createSlice({
             })
             .addCase(getNewTracksThunk.rejected, (state, action) => {
                 state.newTracksStatus = 'error',
-                state.error = action.payload.message
+                state.error = action.payload?.message ?? 'Непредвиденная ошибка'
+            })
+
+            .addCase(getLatestTracksThunk.pending, (state) => {
+                state.latestTracks = null,
+                state.latestTracksStatus = 'loading',
+                state.error = null
+            })
+            .addCase(getLatestTracksThunk.fulfilled, (state, action) => {
+                state.latestTracks = action.payload.tracks
+                state.latestTracksStatus = 'success'
+            })
+            .addCase(getLatestTracksThunk.rejected, (state, action) => {
+                state.latestTracksStatus = 'error',
+                state.error = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 
             .addCase(getNewReviewsThunk.pending, (state) => {
@@ -69,7 +100,7 @@ const homeSlice = createSlice({
             })
             .addCase(getNewReviewsThunk.rejected, (state, action) => {
                 state.newReviewsStatus = 'error',
-                state.error = action.payload.message
+                state.error = action.payload?.message ?? 'Непредвиденная ошибка'
             })
     }
 })

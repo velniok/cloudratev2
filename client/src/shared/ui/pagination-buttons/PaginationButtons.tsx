@@ -16,7 +16,7 @@ export const PaginationButtons: FC<PaginationButtonsProps> = ({ page, totalPages
             {
                 totalPages !== 1 &&
                 <>
-                    <Button padding='10px 14px 7px 14px' color='default' onClick={hundlePrevPage}>Назад</Button>
+                    <Button padding='10px 14px 7px 14px' color='default' onClick={hundlePrevPage}><i className="ph ph-arrow-left"></i></Button>
         
                     <Button padding='10px 14px 7px 14px' color='default' active={page === 1} onClick={() => hundlePage(1)}>1</Button>
                                         
@@ -46,7 +46,7 @@ export const PaginationButtons: FC<PaginationButtonsProps> = ({ page, totalPages
                     <Button padding='10px 14px 7px 14px' color='default' onClick={() => {
                         if (totalPages === page) return false
                         hundleNextPage()
-                    }}>Вперед</Button>
+                    }}><i className="ph ph-arrow-right"></i></Button>
                 </>
             }
         </div>

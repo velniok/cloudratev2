@@ -103,6 +103,7 @@ export const TrackSuggestionForm = () => {
             .then(() => {
                 notify('Заявка отправлена', 'Заявка успешно была отправлена', 'success')
                 setValues(initValues)
+                setSoundcloudUrl('')
                 setArtists([])
             })
             .catch((err: { response: {data: IApiError} }) => setErrors(prev => ({ ...prev, [err.response.data.field ?? '']: err.response.data.message })))

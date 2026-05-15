@@ -35,7 +35,7 @@ export const UserFollows: FC<UserFollowsProps> = ({ user }) => {
                                 return <ArtistCard artist={artist} key={artist.id} />
                             })
                             :
-                            <>Подписок нет</>
+                            <p className={styles.none}>Подписок нет</p>
                         }
                         </>
                         :

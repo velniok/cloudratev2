@@ -49,6 +49,7 @@ export const LoginForm = () => {
                 value={values.email}
                 onChange={handleEmailChange}
                 error={error}
+                icon={<i className="ph ph-envelope-simple"></i>}
             />
             <Input
                 type="password"
@@ -58,6 +59,7 @@ export const LoginForm = () => {
                 onChange={handlePasswordChange}
                 error={error}
                 eyeIcon={true}
+                icon={<i className="ph ph-password"></i>}
             />
             <Button color="accent" padding="20px 16px 16px 16px" onClick={handleSubmit}>Войти</Button>
         </>

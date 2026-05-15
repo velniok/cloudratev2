@@ -10,6 +10,7 @@ router.post('/create', checkAdmin, trackValidation.trackCreateValidation, TrackC
 router.get('/soundcloud-info', TrackControllers.getSoundcloudInfo)
 router.get('/list', TrackControllers.getList)
 router.get('/new-tracks', TrackControllers.getNewTracks)
+router.get('/latest-tracks', TrackControllers.getLatestTracks)
 router.get('/profile/:id', getUser, TrackControllers.getProfile)
 router.get('/reviews-text/:id', getUser, TrackControllers.getReviewsText)
 router.patch('/update/:id', checkAdmin, trackValidation.trackUpdateValidation, TrackControllers.update)

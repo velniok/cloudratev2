@@ -12,11 +12,15 @@ class AuthControllers {
 
     async sendVerifyCode(req, res, next) {
         try {
-            const { email } = req.body
+            const { email, password, nickname } = req.body
 
             await MailServices.sendVerifyCode(email)
 
-            res.status(200).json({ message: 'Код отправлен' })
+            res.status(200).json({
+                email,
+                password,
+                nickname
+            })
         } catch (err) {
             console.log(err)
             next(err)

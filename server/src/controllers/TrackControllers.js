@@ -31,8 +31,9 @@ class TrackControllers {
                 `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
             )
                 .catch(() => {throw new AppError(`Трек не найден`, 404)})
-            
-            const coverUrl = await uploadFromSoundcloud(data.artwork_url.replace('-large.jpg', '-t500x500.jpg'))
+                
+            const coverUrl = await uploadFromSoundcloud(data.artwork_url.replace(/-large(\.(jpg|png|jpeg|gif))$/i, '-t500x500$1'))
+
 
             res.status(200).json({
                 title: data.title,
@@ -69,6 +70,17 @@ class TrackControllers {
     async getNewTracks(req, res, next) {
         try {
             const tracks = await TrackServices.getNewTracks()
+
+            res.status(200).json({ tracks })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async getLatestTracks(req, res, next) {
+        try {
+            const tracks = await TrackServices.getLatestTracks()
 
             res.status(200).json({ tracks })
         } catch (err) {

@@ -17,6 +17,11 @@
 .bottom {
     margin-top: 32px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+}
+
+.none {
+    color: var(--text-secondary);
+    font-size: 14px;
 }

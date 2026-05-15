@@ -120,7 +120,7 @@
 }
 
 .textarea {
-    min-height: 100px;
+    min-height: 150px;
     margin-top: 14px;
     width: 100%;
     padding: 14px 16px;
@@ -131,7 +131,7 @@
     font-family: var(--font-family);
     color: var(--text-primary);
     border-radius: 12px;
-    resize: vertical;
+    resize: none;
 
     &.error {
         border: 1px solid var(--accent-color);

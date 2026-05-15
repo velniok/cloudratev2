@@ -62,7 +62,7 @@ export const UserReviewsPagination: FC<UserReviewsPaginationProps> = ({ user }) 
                             </div>
                             </>
                             :
-                            <>Этот пользователь еще не оценил трек</>
+                            <p className={styles.none}>Оценок нет</p>
                         }
                         </>
                         :

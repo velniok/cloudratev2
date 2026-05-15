@@ -19,7 +19,7 @@ import { AdminArtistsPage } from "@/pages/admin-artists-page"
 import { useAppDispatch, useAppSelector } from "@/shared/lib"
 import { Loading, Notification } from "@/shared/ui"
 
-import { authThunk, clearError, selectAuthStatus, selectAuthUser } from "@/features/auth"
+import { authThunk, selectAuthStatus, selectAuthUser } from "@/features/auth"
 import { AdminTracksPage } from "@/pages/admin-tracks-page"
 import { AdminUsersPage } from "@/pages/admin-users-page"
 import { SearchPage } from "@/pages/search-page"

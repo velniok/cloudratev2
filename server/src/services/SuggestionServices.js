@@ -141,7 +141,12 @@ class SuggestionServices {
                 )
             SELECT $1, $2, $3, $4, $5
             RETURNING *    
-        `, [suggestionsRes.rows[0].user_id, 'suggestion_accepted', 'Заявка принята', 'Ваша заявка на трек одобрена!', JSON.stringify({ trackId: suggestionsRes.rows[0].track_id })])
+        `, [
+            suggestionsRes.rows[0].user_id,
+            'suggestion_accepted', 'Заявка принята',
+            `Ваша заявка на трек ${suggestionsRes.rows[0].title} одобрена!`,
+            JSON.stringify({ trackId: suggestionsRes.rows[0].track_id })
+    ])
         return mapToCamelCase(suggestionsRes.rows[0])
     }
 

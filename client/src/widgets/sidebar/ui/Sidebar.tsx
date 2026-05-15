@@ -83,14 +83,13 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                             </li>
                             <li className={`${styles.nav__item} ${ openNotification ? styles.active : ''}`}>
                                 {
-                                    userNotifications &&
                                     <>
-                                        <div className={`${styles.notifications} ${(userNotifications.filter((obj) => obj.isRead === false).length >= 1) ? styles.have : ''}`} onClick={() => setOpenNotification(!openNotification)}>
+                                        <div className={`${styles.notifications} ${((userNotifications?.filter((obj) => obj.isRead === false).length ?? 0) >= 1) ? styles.have : ''}`} onClick={() => setOpenNotification(!openNotification)}>
                                             <i className={`ph${openNotification ? '-fill' : ''} ph-bell`}></i>
                                             Уведомления
                                             {
-                                                userNotifications.filter((obj) => obj.isRead === false).length >= 1 &&
-                                                <span className={styles.notifications__number}>{userNotifications.filter((obj) => obj.isRead === false).length}</span>
+                                                (userNotifications?.filter((obj) => obj.isRead === false).length ?? 0) >= 1 &&
+                                                <span className={styles.notifications__number}>{userNotifications?.filter((obj) => obj.isRead === false).length}</span>
                                             }
                                         </div>
                                         {

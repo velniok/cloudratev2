@@ -47,13 +47,13 @@ export const Input: FC<InputProps> = ({ icon, children, label, placeholder, type
                 />
                 {
                     eyeIcon && <div className={styles.eyeIcon}>
-                        <EyeIcon onClick={handleShowPass} />
+                        <i className="ph ph-eye" onClick={handleShowPass}></i>
                     </div>
                 }
             </div>
             {
                 error && <p className={styles.errorMessage}>
-                    <InfoIcon />
+                    <i className="ph ph-info"></i>
                     {error}
                 </p>
             }
