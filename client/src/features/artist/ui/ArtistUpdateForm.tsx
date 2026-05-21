@@ -40,11 +40,13 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
     }
     const [errors, setErrors] = useState(initialErrors)
 
+    const [avatarFile, setAvatarFile] = useState<File | null>(null)
+
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
             const file = e.target.files[0]
-            const { data } = await updateAvatarApi(file)
-            setValues(prev => ({ ...prev, avatarUrl: data.url }))
+            setAvatarFile(file)
+            setValues(prev => ({ ...prev, avatarUrl: URL.createObjectURL(file) }))
         }
     }
 
@@ -58,8 +60,14 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
         setValues(prev => ({ ...prev, soundcloudUrl: e.target.value }))
     }
 
-    const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+
+        let avatarUrl: string = ''
+        if (avatarFile) {
+            const { data } = await updateAvatarApi(avatarFile, 'artist')
+            avatarUrl = data.url
+        }
 
         if (!values.name) return setErrors(prev => ({ ...prev, name: 'Укажите никнейм артиста' }))
         if (!values.soundcloudUrl) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Укажите ссылку на SoundCloud артиста' }))
@@ -69,7 +77,7 @@ export const ArtistUpdateForm: FC<ArtistUpdateFormProps> = ({ modalClose, artist
             id: artist.id,
             req: {
                 name: values.name,
-                avatarUrl: values.avatarUrl,
+                avatarUrl: avatarUrl,
                 soundcloudUrl: values.soundcloudUrl,
             }
         })).unwrap()

@@ -2,7 +2,7 @@ import { Button, Cover, Input } from '@/shared/ui'
 import styles from './ArtistCreateForm.module.scss'
 import { ChangeEvent, FC, MouseEvent, useEffect, useRef, useState } from 'react'
 import { getOptimizedAvatar, useAppDispatch, useNotification } from '@/shared/lib'
-import { updateAvatarApi } from '@/shared/api'
+import { updateAvatarApi, updateAvatarUrlApi } from '@/shared/api'
 import { createArtistThunk } from '../model/slice'
 import { IApiError } from '@/shared/types'
 import { useNavigate } from 'react-router-dom'
@@ -44,6 +44,7 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
     const [urlForInfo, setUrlForInfo] = useState<string>('')
     const [soundcloudInfoLoading, setSoundcloudInfo] = useState<boolean>(false)
     const [findArtist, setFindArtist] = useState<IArtist | null>(null)
+    const [avatarFile, setAvatarFile] = useState<File | null>(null)
 
     const initialErrors = {
         name: '',
@@ -59,8 +60,8 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
             const file = e.target.files[0]
-            const { data } = await updateAvatarApi(file)
-            setValues(prev => ({ ...prev, avatarUrl: data.url }))
+            setAvatarFile(file)
+            setValues(prev => ({ ...prev, avatarUrl: URL.createObjectURL(file) }))
         }
     }
 
@@ -74,8 +75,18 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
         setValues(prev => ({ ...prev, soundcloudUrl: e.target.value }))
     }
 
-    const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+
+        let avatarUrl: string = ''
+        if (avatarFile) {
+            const { data } = await updateAvatarApi(avatarFile, 'artist')
+            avatarUrl = data.url
+            setValues(prev => ({ ...prev, avatarUrl: data.url }))
+        } else if (values.avatarUrl) {
+            const { data } = await updateAvatarUrlApi(values.avatarUrl, 'artist')
+            avatarUrl = data.url
+        }
 
         if (!values.name) return setErrors(prev => ({ ...prev, name: 'Укажите никнейм артиста' }))
         if (!values.soundcloudUrl) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Укажите ссылку на SoundCloud артиста' }))
@@ -83,7 +94,7 @@ export const ArtistCreateForm: FC<ArtistCreateFormProps> = ({ modalClose, lastPa
 
         dispatch(createArtistThunk({
             name: values.name,
-            avatarUrl: values.avatarUrl,
+            avatarUrl: avatarUrl,
             soundcloudUrl: values.soundcloudUrl,
         })).unwrap()
             .then((res) => {

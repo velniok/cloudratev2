@@ -245,7 +245,7 @@ class TrackServices {
                         artist_id = $5,
                         feat_artist_ids = $6
                     WHERE id = $7 AND NOT EXISTS (SELECT 1 FROM track_check)
-                    RETURNING *
+                    RETURNING *, (SELECT cover_url FROM tracks WHERE id = $7 AND NOT EXISTS (SELECT 1 FROM track_check)) as old_cover_url
                 )
             SELECT
                 CASE WHEN EXISTS (SELECT 1 FROM track_check)
@@ -274,11 +274,13 @@ class TrackServices {
     }
 
     async deleteTrack(id) {
-        await pool.query(`
+        const trackRes = await pool.query(`
             DELETE
             FROM tracks
             WHERE id = $1
+            RETURNING *
         `, [id])
+        return mapToCamelCase(trackRes.rows[0])
     }
 }
 

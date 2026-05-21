@@ -2,7 +2,7 @@ import { Button, Cover, Input } from '@/shared/ui'
 import styles from './TrackSuggestionForm.module.scss'
 import { ChangeEvent, MouseEvent, useRef, useState } from 'react'
 import { getOptimizedAvatar, useNotification, useSearch } from '@/shared/lib'
-import { updateAvatarApi } from '@/shared/api'
+import { updateAvatarApi, updateAvatarUrlApi } from '@/shared/api'
 import { IArtist, ITempArtist } from '@/entities/artist'
 import { trackSuggestionApi } from '@/features/suggestion'
 import { getSoundсloudTrack } from '../../track/api/trackApi'
@@ -19,6 +19,7 @@ export const TrackSuggestionForm = () => {
     const [soundcloudUrlError, setSoundcloudUrlError] = useState<string>('')
     const [soundcloudLoading, setSoundcloudLoading] = useState<boolean>(false)
     const [artists, setArtists] = useState<(IArtist | ITempArtist)[]>([])
+    const [coverFile, setCoverFile] = useState<File | null>(null)
 
     const initialErrors = {
         title: '',
@@ -42,8 +43,8 @@ export const TrackSuggestionForm = () => {
     const hundleCoverChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const file = e.target.files?.[0]
-            const { data } = await updateAvatarApi(file)
-            setValues(prev => ({ ...prev, coverUrl: data.url }))
+            setCoverFile(file)
+            setValues(prev => ({ ...prev, coverUrl: URL.createObjectURL(file) }))
         }
     }
 
@@ -62,8 +63,17 @@ export const TrackSuggestionForm = () => {
         setValues((prev) => ({...prev, soundcloudUrl: e.target.value}))
     }
 
-    const onSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    const onSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+
+        let coverUrl: string = ''
+        if (coverFile) {
+            const { data } = await updateAvatarApi(coverFile, 'track')
+            coverUrl = data.url
+        } else if (values.coverUrl) {
+            const { data } = await updateAvatarUrlApi(values.coverUrl, 'track')
+            coverUrl = data.url
+        }
 
         if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
         if (!values.soundcloudUrl) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Укажите ссылку на SoundCloud трека' }))
@@ -92,7 +102,7 @@ export const TrackSuggestionForm = () => {
 
         trackSuggestionApi({
             title: values.title,
-            coverUrl: values.coverUrl,
+            coverUrl: coverUrl,
             soundcloudUrl: values.soundcloudUrl,
             releaseData: values.releaseData,
             artistId: artistsIds[0],

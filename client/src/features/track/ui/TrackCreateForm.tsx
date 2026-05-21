@@ -2,7 +2,7 @@ import { Button, Cover, Input, SearchItem, SearchItemSkeleton } from '@/shared/u
 import styles from './TrackCreateForm.module.scss'
 import { ChangeEvent, FC, MouseEvent, useRef, useState } from 'react'
 import { useAppDispatch, useNotification, useSearch } from '@/shared/lib'
-import { updateAvatarApi } from '@/shared/api'
+import { updateAvatarApi, updateAvatarUrlApi } from '@/shared/api'
 import { IArtist } from '@/entities/artist'
 import { createTrackThunk } from '../model/slice'
 import { IApiError } from '@/shared/types'
@@ -45,6 +45,8 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
     const [urlForInfo, setUrlForInfo] = useState<string>('')
     const [soundcloudInfoLoading, setSoundcloudInfo] = useState<boolean>(false)
 
+    const [coverFile, setCoverFile] = useState<File | null>(null)
+
     const [addArtist, setAddArtists] = useState<IArtist[]>([])
 
     const [searchList, setSearchList] = useState<boolean>(false)
@@ -53,11 +55,11 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
         setUrlForInfo(e.target.value)
     }
     
-    const hundleCoverChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const hundleCoverChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const file = e.target.files?.[0]
-            const { data } = await updateAvatarApi(file)
-            setValues(prev => ({ ...prev, coverUrl: data.url }))
+            setCoverFile(file)
+            setValues(prev => ({ ...prev, coverUrl: URL.createObjectURL(file) }))
         }
     }
 
@@ -84,8 +86,17 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
         setAddArtists((prev) => prev = prev.filter((artist) => artist.id !== id))
     }
 
-    const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+
+        let coverUrl: string = ''
+        if (coverFile) {
+            const { data } = await updateAvatarApi(coverFile, 'track')
+            coverUrl = data.url
+        } else if (values.coverUrl) {
+            const { data } = await updateAvatarUrlApi(values.coverUrl, 'track')
+            coverUrl = data.url
+        }
 
         const artistIds = addArtist.map((addArtist) => {
             return Number(addArtist.id)
@@ -99,7 +110,7 @@ export const TrackCreateForm: FC<TrackCreateFormProps> = ({ modalClose, trackLis
 
         dispatch(createTrackThunk({
             title: values.title,
-            coverUrl: values.coverUrl,
+            coverUrl: coverUrl,
             soundcloudUrl: values.soundcloudUrl,
             artistId: artistIds[0],
             featArtistIds: artistIds.slice(1), 

@@ -23,6 +23,7 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
     const { result, resultStatus, search, onChangeSearch, setSearch } = useSearch('artists')
     const [searchList, setSearchList] = useState<boolean>(false)
     const [artists, setArtists] = useState<(IArtist)[]>([track.artist, ...(track.featArtists || [])])
+    const [coverFile, setCoverFile] = useState<File | null>(null)
     
     const initialValues = {
         title: track.title ?? '',
@@ -43,8 +44,8 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
             const file = e.target.files?.[0]
-            const { data } = await updateAvatarApi(file)
-            setValues(prev => ({ ...prev, coverUrl: data.url }))
+            setCoverFile(file)
+            setValues(prev => ({ ...prev, coverUrl: URL.createObjectURL(file) }))
         }
     }
 
@@ -63,8 +64,14 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
         setValues(prev => ({ ...prev, releaseData: e.target.value }))
     }
 
-    const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+        
+        let coverUrl: string = ''
+        if (coverFile) {
+            const { data } = await updateAvatarApi(coverFile, 'track')
+            coverUrl = data.url
+        }
 
         const artistIds = artists.map((artist) => {
             return Number(artist.id)
@@ -77,7 +84,7 @@ export const TrackUpdateForm: FC<TrackUpdateFormProps> = ({ modalClose, track })
             id: track.id,
             req: {
                 title: values.title,
-                coverUrl: values.coverUrl,
+                coverUrl: coverUrl,
                 soundcloudUrl: values.soundcloudUrl,
                 releaseData: values.releaseData,
                 artistId: artistIds[0],

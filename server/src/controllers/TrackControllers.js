@@ -3,7 +3,9 @@ const ReviewServices = require("../services/ReviewServices")
 const TrackServices = require("../services/TrackServices")
 const AppError = require('../utils/AppError')
 const axios = require('axios')
-const { uploadFromSoundcloud } = require("../config/multer")
+const { uploadFromSoundcloud, deleteImg } = require("../config/multer")
+const getPublicId = require("../utils/getPublicId")
+const cloudinary = require('cloudinary').v2
 
 class TrackControllers {
     async create(req, res, next) {
@@ -31,13 +33,11 @@ class TrackControllers {
                 `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
             )
                 .catch(() => {throw new AppError(`Трек не найден`, 404)})
-                
-            const coverUrl = await uploadFromSoundcloud(data.artwork_url.replace(/-large(\.(jpg|png|jpeg|gif))$/i, '-t500x500$1'))
 
 
             res.status(200).json({
                 title: data.title,
-                coverUrl: coverUrl,
+                coverUrl: data.artwork_url,
                 releaseData: data.created_at,
                 soundcloudUrl: data.permalink_url
             })
@@ -135,6 +135,7 @@ class TrackControllers {
             const trackUpdate = await TrackServices.updateTrack(trackId, [title, coverUrl, soundcloudUrl, releaseData, artistId, featArtistIds])
             if (trackUpdate.status === 'track_taken') throw new AppError(`Название трека уже занято`, 409, `title`)
             const track = trackUpdate.track
+            await deleteImg(track.oldCoverUrl)
 
             res.status(200).json({ track })
         } catch (err) {
@@ -146,8 +147,9 @@ class TrackControllers {
     async delete(req, res, next) {
         try {
             const trackId = req.params.id
-            await TrackServices.deleteTrack(trackId)
-
+            const track = await TrackServices.deleteTrack(trackId)
+            await deleteImg(track.coverUrl)
+            
             res.status(200).json({ message: 'Трек успешно удален' })
         } catch (err) {
             console.log(err)

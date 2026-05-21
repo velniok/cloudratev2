@@ -83,7 +83,7 @@ class UserServices {
                 WHERE id = $6
                 AND NOT EXISTS (SELECT 1 FROM email_check)
                 AND NOT EXISTS (SELECT 1 FROM username_check)
-                RETURNING *
+                RETURNING *, (SELECT avatar_url FROM users WHERE id = $6 AND NOT EXISTS (SELECT 1 FROM email_check) AND NOT EXISTS (SELECT 1 FROM username_check)) as old_avatar_url
             )
             SELECT
                 CASE

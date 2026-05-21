@@ -20,6 +20,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const navigate = useNavigate()
 
     const [updateUserLoading, setUpdateUserLoading] = useState<boolean>(false)
+    const [avatarFile, setAvatarFile] = useState<File | null>(null)
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -77,13 +78,19 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
             const file = e.target.files[0]
-            const { data } = await updateAvatarApi(file)
-            setValues(prev => ({ ...prev, avatarUrl: data.url }))
+            setAvatarFile(file)
+            setValues(prev => ({ ...prev, avatarUrl: URL.createObjectURL(file) }))
         }
     }
 
-    const hundleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    const hundleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+
+        let avatarUrl: string = ''
+        if (avatarFile) {
+            const { data } = await updateAvatarApi(avatarFile, 'user')
+            avatarUrl = data.url
+        }
 
         if (values.nickname.length < 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
         if (!/^[a-zA-Z0-9_#@ -]+$/.test(values.nickname)) return setErrors(prev => ({ ...prev, nickname: 'Никнейм может содержать только латинские буквы, цифры, _, @, - и #' }))
@@ -102,7 +109,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 nickname: values.nickname,
                 username: values.username,
                 email: values.email,
-                avatarUrl: values.avatarUrl,
+                avatarUrl: avatarUrl,
                 password: values.password,
                 soundcloudUrl: values.soundcloudUrl
             }

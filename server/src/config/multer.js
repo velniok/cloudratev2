@@ -2,6 +2,7 @@ const multer = require('multer')
 const cloudinary = require('cloudinary').v2
 const { CloudinaryStorage } = require('multer-storage-cloudinary')
 const path = require('path')
+const getPublicId = require('../utils/getPublicId')
 require('dotenv').config()
 
 cloudinary.config({
@@ -12,9 +13,13 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary,
-    params: {
-      folder: 'images',
-      allowed_formats: ['jpg', 'png', 'jpeg'],
+    params: async (req, file) => {
+        const { folder } = req.query
+        return {
+            folder: folder,
+            allowed_formats: ['jpg', 'png', 'jpeg']
+        }
+
     },
 })
 
@@ -23,8 +28,13 @@ const upload = multer({
 })
 
 const uploadFromSoundcloud = async (imageUrl) => {
-    const result = await cloudinary.uploader.upload(imageUrl)
+    const result = await cloudinary.uploader.upload(imageUrl, { folder: 'temp' })
     return result.secure_url
 }
 
-module.exports = { upload, uploadFromSoundcloud }
+const deleteImg = async (url) => {
+    const publicId = getPublicId(url)
+    await cloudinary.uploader.destroy(publicId)
+}
+
+module.exports = { upload, uploadFromSoundcloud, deleteImg }

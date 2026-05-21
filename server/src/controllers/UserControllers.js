@@ -6,6 +6,7 @@ const pool = require("../config/db")
 const UserDto = require("../dtos/UserDto")
 const ArtistServices = require("../services/ArtistServices")
 const SuggestionServices = require("../services/SuggestionServices")
+const { deleteImg } = require("../config/multer")
 
 class UserControllers {
 
@@ -113,6 +114,7 @@ class UserControllers {
             if (updatedUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
             if (updatedUser.status === 'username_taken') throw new AppError('Уникальный никнейм занят', 409, 'username')
             const user = updatedUser.user
+            await deleteImg(user.oldAvatarUrl)
             const userDto = new UserDto(user)
 
             res.status(200).json({ user: userDto })

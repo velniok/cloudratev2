@@ -154,7 +154,7 @@ class ArtistServices {
                         avatar_url = $2,
                         soundcloud_url = $3
                     WHERE id = $4 AND NOT EXISTS (SELECT 1 FROM artist_check)
-                    RETURNING *
+                    RETURNING *, (SELECT avatar_url FROM artists WHERE id = $4 AND NOT EXISTS (SELECT 1 FROM artist_check)) as old_avatar_url
                 )
             SELECT
                 CASE WHEN EXISTS (SELECT 1 FROM artist_check)
@@ -220,11 +220,13 @@ class ArtistServices {
     }
 
     async deleteArtist(id) {
-        await pool.query(`
+        const artistsRes = await pool.query(`
             DELETE
             FROM artists
             WHERE id = $1
+            RETURNING *
         `, [id])
+        return mapToCamelCase(artistsRes.rows[0])
     }
 }
 

@@ -2,7 +2,7 @@ const { validationResult } = require("express-validator")
 const ArtistServices = require("../services/ArtistServices")
 const AppError = require('../utils/AppError')
 const TrackServices = require("../services/TrackServices")
-const { uploadFromSoundcloud } = require("../config/multer")
+const { uploadFromSoundcloud, deleteImg } = require("../config/multer")
 const axios = require('axios')
 
 class ArtistControllers {
@@ -32,11 +32,11 @@ class ArtistControllers {
                 const { data } = await axios.get(
                     `https://api-v2.soundcloud.com/resolve?url=${url}&client_id=${clientId}`
                 )
-                const avatarUrl = await uploadFromSoundcloud(data.avatar_url.replace(/-large(\.(jpg|png|jpeg|gif))$/i, '-t200x200$1'))
+
                 res.status(200).json({
                     name: data.username,
                     soundcloudUrl: data.permalink_url,
-                    avatarUrl: avatarUrl
+                    avatarUrl: data.avatar_url
                 })
             } else {
                 res.status(200).json({ artist })
@@ -112,6 +112,7 @@ class ArtistControllers {
             const artistUpdated = await ArtistServices.updateArtist(artistId, [name, avatarUrl, soundcloudUrl])
             if (artistUpdated.status === 'artist_taken') throw new AppError('Артист уже существует', 405, 'name')
             const artist = artistUpdated.artist
+            await deleteImg(artist.oldAvatarUrl)
 
             res.status(200).json({ artist })
         } catch (err) {
@@ -135,7 +136,8 @@ class ArtistControllers {
     async delete(req, res, next) {
         try {
             const artistId = req.params.id
-            await ArtistServices.deleteArtist(artistId)
+            const artist = await ArtistServices.deleteArtist(artistId)
+            await deleteImg(artist.avatarUrl)
 
             res.status(200).json({ message: 'Артист удален' })
         } catch (err) {

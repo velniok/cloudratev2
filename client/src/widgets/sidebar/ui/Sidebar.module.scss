@@ -20,10 +20,9 @@
         transform: translateX(-100%);
         top: 53px;
         width: 100%;
-        overflow: hidden;
+        overflow: auto;
         height: calc(100dvh - 51px);
         padding-top: 0;
-        padding-bottom: 12px;
     }
 
     &.active {
@@ -202,6 +201,7 @@
 
     @media (max-width: $mobile) {
         padding: 0 16px;
+        padding-bottom: 8px;
     }
 
     &__inner {

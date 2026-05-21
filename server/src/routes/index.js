@@ -14,19 +14,32 @@ const { upload } = require('../config/multer')
 const getUser = require('../middlewares/getUser')
 const NotificationControllers = require('../controllers/NotificationControllers')
 
+const cloudinary = require('cloudinary').v2
 const Router = require('express').Router
 const router = new Router()
 
-router.post('/upload', upload.single('image'), (req, res) => {
+router.post('/upload', upload.single('image'), (req, res, next) => {
     try {
         res.status(200).json({
             url: req.file.path
         })
     } catch (err) {
         console.log(err)
-        res.status(500).json({
-            message: 'Не удалось загрузить изображение'
+        next(err)
+    }
+})
+
+router.post('/upload/url', upload.single('image'), async (req, res, next) => {
+    try {
+        const { url, folder } = req.body
+        const result = await cloudinary.uploader.upload(url.replace(/-large(\.(jpg|png|jpeg|gif))$/i, '-t200x200$1'), { folder: folder })
+
+        res.status(200).json({
+            url: result.secure_url
         })
+    } catch (err) {
+        console.log(err)
+        next(err)
     }
 })
 

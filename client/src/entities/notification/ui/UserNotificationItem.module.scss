@@ -63,6 +63,7 @@
         font-size: 12px;
         margin-left: auto;
         padding-right: 18px;
+        text-wrap: nowrap;
 
         &.notRead:before {
             position: absolute;
