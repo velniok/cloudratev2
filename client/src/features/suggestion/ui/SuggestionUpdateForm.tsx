@@ -33,6 +33,8 @@ export const SuggestionUpdateForm: FC<SuggestionUpdateFormProps> = ({ suggestion
     }
     const [errors, setErrors] = useState(initialErrors)
 
+    const [coverFile, setCoverFile] = useState<File | null>(null)
+
     useEffect(() => {
         setValues(prev => ({ ...prev, title: suggestion.title ?? '' }))
         setValues(prev => ({ ...prev, coverUrl: suggestion.coverUrl ?? '' }))
@@ -43,8 +45,8 @@ export const SuggestionUpdateForm: FC<SuggestionUpdateFormProps> = ({ suggestion
     const hundleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.[0]) {
             const file = e.target.files?.[0]
-            const { data } = await updateAvatarApi(file)
-            setValues(prev => ({ ...prev, coverUrl: data.url }))
+            setCoverFile(file)
+            setValues(prev => ({ ...prev, coverUrl: URL.createObjectURL(file) }))
         }
     }
 
@@ -63,7 +65,14 @@ export const SuggestionUpdateForm: FC<SuggestionUpdateFormProps> = ({ suggestion
         setValues(prev => ({ ...prev, releaseData: e.target.value }))
     }
 
-    const onSubmit = (e: MouseEvent<HTMLButtonElement>) => {
+    const onSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+
+        let coverUrl: string = ''
+        if (coverFile) {
+            const { data } = await updateAvatarApi(coverFile, 'track')
+            coverUrl = data.url
+        }
 
         if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
         if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
@@ -74,7 +83,7 @@ export const SuggestionUpdateForm: FC<SuggestionUpdateFormProps> = ({ suggestion
             id: suggestion.id,
             req: {
                 title: values.title,
-                coverUrl: values.coverUrl,
+                coverUrl: coverUrl,
                 soundcloudUrl: values.soundcloudUrl,
                 releaseData: values.releaseData,
             }
