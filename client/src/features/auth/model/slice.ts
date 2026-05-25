@@ -67,6 +67,14 @@ const authSlice = createSlice({
             state.error = null,
             state.token = null,
             localStorage.removeItem('isAuth')
+        },
+        readNotify: (state, action: PayloadAction<{ id: number }>) => {
+            if (state.notifications) state.notifications = state.notifications.map((notify) => {
+                if (notify.id === action.payload.id) {
+                    notify.isRead = true
+                }
+                return notify
+            })
         }
     },
     extraReducers: (builder) => {
@@ -76,7 +84,7 @@ const authSlice = createSlice({
             })
             .addCase(registerThunk.fulfilled, (state, action) => {
                 state.user = action.payload.user,
-                state.notifications = action.payload.notifications,
+                state.notifications = action.payload.notifications.notifications,
                 state.token = action.payload.token,
                 state.status = 'success',
                 state.error = null
@@ -93,7 +101,7 @@ const authSlice = createSlice({
             })
             .addCase(loginThunk.fulfilled, (state, action) => {
                 state.user = action.payload.user,
-                state.notifications = action.payload.notifications,
+                state.notifications = action.payload.notifications.notifications,
                 state.token = action.payload.token,
                 state.status = 'success',
                 state.error = null
@@ -110,7 +118,7 @@ const authSlice = createSlice({
             })
             .addCase(authThunk.fulfilled, (state, action) => {
                 state.user = action.payload.user,
-                state.notifications = action.payload.notifications,
+                state.notifications = action.payload.notifications.notifications,
                 state.token = action.payload.token,
                 state.status = 'success',
                 state.error = null
@@ -123,6 +131,6 @@ const authSlice = createSlice({
     }
 })
 
-export const { clearError, logout, setToken } = authSlice.actions
+export const { clearError, logout, setToken, readNotify } = authSlice.actions
 
 export const AuthReducer = authSlice.reducer

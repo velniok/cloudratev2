@@ -15,8 +15,6 @@ interface SuggestionRowProps {
 
 export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, openModalHundler, admin, error }) => {
 
-    const navigate = useNavigate()
-
     return (
         <li className={`${styles.item} ${error ? styles.error : ''}`}>
             <div className={styles.item__left}>

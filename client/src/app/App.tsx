@@ -29,6 +29,7 @@ import { UserFollowsPage } from "@/pages/user-follows-page"
 import { TrackSuggestionPage } from "@/pages/track-suggestion-page"
 import { AdminTrackSuggestionsPage } from "@/pages/admin-track-suggestions-page"
 import { UserSuggestionsPage } from "@/pages/user-suggestions-page"
+import { NotificationsPage } from "@/pages/notifications-page"
 
 function App() {
 
@@ -83,7 +84,8 @@ function App() {
                             <Route path="/user/:username/edit" element={<EditProfilePage />} />
                             <Route path="/user/:username/reviews" element={<UserReviewsPage />} />
                             <Route path="/user/:username/follows" element={<UserFollowsPage />} />
-                            <Route path="/user/:username/track-suggestions" element={<UserSuggestionsPage />} />
+                            <Route path="/user/track-suggestions" element={<UserSuggestionsPage />} />
+                            <Route path="/user/notifications" element={<NotificationsPage />} />
         
                             <Route path="/registration" element={<RegPage />} />
                             <Route path="/login" element={<LoginPage />} />

@@ -4,7 +4,7 @@ import { FC, useState } from 'react'
 import { IUser } from '@/entities/user'
 import { getUserSuggestionsThunk, selectUserSuggestions, selectUserSuggestionsPagination, selectUserSuggestionsStatus } from '@/features/user'
 import { useAppSelector, usePagination } from '@/shared/lib'
-import { SuggestionFilter, SuggestionRow } from '@/entities/suggestion'
+import { SuggestionFilter, SuggestionRow, SuggestionRowSkeleton } from '@/entities/suggestion'
 
 interface UserSuggestionsPaginationProps {
     user: IUser
@@ -35,7 +35,7 @@ export const UserSuggestionsPagination: FC<UserSuggestionsPaginationProps> = ({ 
                 <Title>МОИ ЗАЯВКИ</Title>
                 <SuggestionFilter filterStatus={filter} setFilterStatus={(status: string) => hundleFilter(status)} />
                 {
-                    suggestionsListStatus === 'success' && suggestionsList && suggestionsListPagination &&
+                    suggestionsListStatus === 'success' && suggestionsList && suggestionsListPagination ?
                     <>
                     {
                         suggestionsList.length > 0 ?
@@ -61,6 +61,14 @@ export const UserSuggestionsPagination: FC<UserSuggestionsPaginationProps> = ({ 
                         <p className={styles.none}>Заявок нет</p>
                     }
                     </>
+                    :
+                    <ul className={styles.list}>
+                        {
+                            Array.from({ length: 5 }).map((_, index) => {
+                                return <SuggestionRowSkeleton key={index} />
+                            })
+                        }
+                    </ul>
                 }
             </div>
         </div>

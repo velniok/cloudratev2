@@ -31,7 +31,6 @@ export const Slider: FC<SliderProps> = ({ children, columns }) => {
         if (!list) return
         const step = columns ? listWidth + +getComputedStyle(list).columnGap.replace('px', '') : list.clientWidth / 2
         setOffset(prev => Math.min(prev + step, maxOffset))
-        console.log(list.scrollWidth)
     }
 
     const hundlePrev = () => {

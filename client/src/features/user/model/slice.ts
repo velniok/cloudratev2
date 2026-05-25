@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteUserApi, getUserFollowsApi, getUserListApi, getUserProfileApi, getUserReviewsApi, getUserSuggestionsApi, updateUserApi, updateUserRoleApi } from "../api/userApi";
+import { deleteUserApi, getUserFollowsApi, getUserListApi, getUserNotificationsApi, getUserProfileApi, getUserReviewsApi, getUserSuggestionsApi, updateUserApi, updateUserRoleApi } from "../api/userApi";
 import axios from "axios";
 import type { IUserState } from "./userSliceTypes";
 import type { IUser } from "@/entities/user";
@@ -9,6 +9,7 @@ import { IArtist } from "@/entities/artist";
 import { IReview } from "@/entities/review";
 import { toggleFollowApi } from "@/features/artist";
 import { ISuggestion } from "@/entities/suggestion";
+import { IUserNotification } from "@/entities/notification";
 
 export const getUserProfileThunk = createAsyncThunk<{ user: IUser }, { username: string }, { rejectValue: IApiError }>('user/getUserProfileThunk', async (params, { rejectWithValue }) => {
     try {
@@ -82,6 +83,18 @@ export const getUserSuggestionsThunk = createAsyncThunk<{ suggestions: ISuggesti
     }
 })
 
+export const getUserNotificationsThunk = createAsyncThunk<{ notifications: IUserNotification[], pagination: IPagination }, { page: number, limit: number }, { rejectValue: IApiError }>('user/getUserNotificationsThunk', async (params, { rejectWithValue }) => {
+    try {
+        const { data } = await getUserNotificationsApi(params)
+        return data
+    } catch (err) {
+        if (axios.isAxiosError(err) && err.response) {
+            return rejectWithValue(err.response.data)
+        }
+        return rejectWithValue({ message: 'Непредвиденная ошибка' })
+    }
+})
+
 export const updateUserThunk = createAsyncThunk<{ user: IUser }, IUpdateUserReq, { rejectValue: IApiError }>('user/updateUserThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await updateUserApi(params)
@@ -137,6 +150,10 @@ const initialState: IUserState = {
     suggestions: null,
     suggestionsPagination: null,
     suggestionsStatus: 'idle',
+
+    notifications: null,
+    notificationsStatus: 'idle',
+    notificationsPagination: null,
 
     userList: null,
     userListStatus: 'idle',
@@ -252,6 +269,22 @@ const userSlice = createSlice({
             })
             .addCase(getUserSuggestionsThunk.rejected, (state, action) => {
                 state.suggestionsStatus = 'error',
+                state.userError = action.payload?.message ?? 'Непредвиденная ошибка'
+            })
+
+            .addCase(getUserNotificationsThunk.pending, (state) => {
+                state.notifications = null,
+                state.notificationsStatus = 'loading'
+                state.notificationsPagination = null
+
+            })
+            .addCase(getUserNotificationsThunk.fulfilled, (state, action) => {
+                state.notificationsStatus = 'success',
+                state.notifications = action.payload.notifications
+                state.notificationsPagination = action.payload.pagination
+            })
+            .addCase(getUserNotificationsThunk.rejected, (state, action) => {
+                state.notificationsStatus = 'error',
                 state.userError = action.payload?.message ?? 'Непредвиденная ошибка'
             })
 

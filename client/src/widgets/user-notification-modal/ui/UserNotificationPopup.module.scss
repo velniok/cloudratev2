@@ -1,7 +1,10 @@
 @use '@/shared/styles/breakpoints' as *;
 
 .popup {
+    opacity: 0;
+    visibility: hidden;
     position: fixed;
+    overflow-y: auto;
     left: 290px;
     top: 50%;
     transform: translateY(-50%);
@@ -15,9 +18,17 @@
     @media (max-width: $mobile) {
         display: none;
     }
+
+    transition: opacity 0.3s, visibility 0.3s;
+
+    &.open {
+        opacity: 1;
+        visibility: visible;
+    }
 }
 
 .header {
+    position: relative;
     display: flex;
     align-items: center;
     column-gap: 12px;
@@ -40,6 +51,18 @@
         font-size: 18px;
         font-family: var(--second-family);
         font-weight: 700;
+    }
+
+    &__link {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 20px;
+        color: var(--accent-color);
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 

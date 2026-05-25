@@ -19,6 +19,10 @@ export const selectUserSuggestions = (state: RootState) => state.user.suggestion
 export const selectUserSuggestionsPagination = (state: RootState) => state.user.suggestionsPagination
 export const selectUserSuggestionsStatus = (state: RootState) => state.user.suggestionsStatus
 
+export const selectUserNotifications = (state: RootState) => state.user.notifications
+export const selectUserNotificationsPagination = (state: RootState) => state.user.notificationsPagination
+export const selectUserNotificationsStatus = (state: RootState) => state.user.notificationsStatus
+
 export const selectUserList = (state: RootState) => state.user.userList
 export const selectUserListStatus = (state: RootState) => state.user.userListStatus
 export const selectUserListError = (state: RootState) => state.user.userListError

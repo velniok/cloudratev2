@@ -1,4 +1,5 @@
 import { IArtist } from "@/entities/artist";
+import { IUserNotification } from "@/entities/notification";
 import { IReview } from "@/entities/review";
 import { ISuggestion } from "@/entities/suggestion";
 import type { IUser } from "@/entities/user";
@@ -23,6 +24,10 @@ export interface IUserState {
     suggestions: ISuggestion[] | null
     suggestionsPagination: IPagination | null
     suggestionsStatus: TStatus
+
+    notifications: IUserNotification[] | null
+    notificationsStatus: TStatus
+    notificationsPagination: IPagination | null
 
     userList: IUser[] | null
     userListStatus: TStatus

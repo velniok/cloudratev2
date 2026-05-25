@@ -9,7 +9,7 @@ export interface IRegisterReq {
 
 export interface IAuthRes {
   user: IUser
-  notifications: IUserNotification[]
+  notifications: { notifications: IUserNotification[] }
   token: string
 }
 

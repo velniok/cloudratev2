@@ -7,6 +7,7 @@ const UserDto = require("../dtos/UserDto")
 const ArtistServices = require("../services/ArtistServices")
 const SuggestionServices = require("../services/SuggestionServices")
 const { deleteImg } = require("../config/multer")
+const NotificationServices = require("../services/NotificationServices")
 
 class UserControllers {
 
@@ -85,6 +86,28 @@ class UserControllers {
 
             res.status(200).json({
                 suggestions,
+                pagination: {
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async getNotifications(req, res, next) {
+        try {
+            const userId = req.userId
+            const { page, limit } = req.query
+
+            const { notifications, total } = await NotificationServices.get(userId, page, limit)
+
+            res.status(200).json({
+                notifications,
                 pagination: {
                     page: Number(page),
                     limit: Number(limit),

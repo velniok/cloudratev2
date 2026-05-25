@@ -27,9 +27,9 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
     const pathname = useLocation().pathname
 
     useEffect(() => {
-        document.addEventListener('click', () => setOpenUser(false))
+        document.addEventListener('click', () => {setOpenUser(false), setOpenNotification(false)})
         return () => {
-            document.addEventListener('click', () => setOpenUser(false))
+            document.addEventListener('click', () => {setOpenUser(false), setOpenNotification(false)})
         }
     }, [])
 
@@ -63,7 +63,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                         <ul className={styles.nav__list}>
                             <li className={`${styles.nav__item} ${ pathname === '/admin' ? styles.active : ''}`}>
                                 <Link to={'/admin'} className={styles.nav__link} onClick={setSidebar}>
-                                    <i className={`ph${pathname === '/admin' ? '-fill' : ''} ph-shield`}></i>
+                                    <i className={`ph${pathname === '/admin' ? '-fill' : ''} ph-shield-checkered`}></i>
                                     Админ-панель
                                 </Link>
                             </li>
@@ -83,8 +83,9 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                             </li>
                             <li className={`${styles.nav__item} ${ openNotification ? styles.active : ''}`}>
                                 {
+                                    window.innerWidth > 767 ?
                                     <>
-                                        <div className={`${styles.notifications} ${((userNotifications?.filter((obj) => obj.isRead === false).length ?? 0) >= 1) ? styles.have : ''}`} onClick={() => setOpenNotification(!openNotification)}>
+                                        <div className={`${styles.notifications} ${((userNotifications?.filter((obj) => obj.isRead === false).length ?? 0) >= 1) ? styles.have : ''}`} onClick={(e) => {e.stopPropagation(), setOpenNotification(!openNotification)}}>
                                             <i className={`ph${openNotification ? '-fill' : ''} ph-bell`}></i>
                                             Уведомления
                                             {
@@ -93,9 +94,18 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                                             }
                                         </div>
                                         {
-                                            openNotification && userNotifications && <UserNotificationPopup closeNotification={() => setOpenNotification(false)} notifications={userNotifications} />
+                                            userNotifications && <UserNotificationPopup open={openNotification} closeNotification={() => setOpenNotification(false)} notifications={userNotifications} />
                                         }
                                     </>
+                                    :
+                                    <Link to={`/user/notifications`} onClick={setSidebar} className={`${styles.nav__link} ${((userNotifications?.filter((obj) => obj.isRead === false).length ?? 0) >= 1) ? styles.have : ''}`}>
+                                        <i className={`ph${openNotification ? '-fill' : ''} ph-bell`}></i>
+                                        Уведомления
+                                        {
+                                            (userNotifications?.filter((obj) => obj.isRead === false).length ?? 0) >= 1 &&
+                                            <span className={styles.notifications__number}>{userNotifications?.filter((obj) => obj.isRead === false).length}</span>
+                                        }
+                                    </Link>
                                 }
                             </li>
                             <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.username}/reviews` ? styles.active : ''}`}>
@@ -110,9 +120,9 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                                     Мои подписки
                                 </Link>
                             </li>
-                            <li className={`${styles.nav__item} ${ pathname === `/user/${authUser?.username}/track-suggestions` ? styles.active : ''}`}>
-                                <Link to={`/user/${authUser?.username}/track-suggestions`} className={styles.nav__link} onClick={setSidebar}>
-                                    <i className={`ph${pathname === `/user/${authUser?.username}/track-suggestions` ? '-fill' : ''} ph-file-text`}></i>
+                            <li className={`${styles.nav__item} ${ pathname === `/user/track-suggestions` ? styles.active : ''}`}>
+                                <Link to={`/user/track-suggestions`} className={styles.nav__link} onClick={setSidebar}>
+                                    <i className={`ph${pathname === `/user/track-suggestions` ? '-fill' : ''} ph-file-text`}></i>
                                     Мои заявки
                                 </Link>
                             </li>

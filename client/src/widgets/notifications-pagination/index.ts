@@ -1,0 +1,1 @@
+export { NotificationsPagination } from './ui/NotificationsPagination'

@@ -3,7 +3,7 @@ import styles from './AdminTrackSuggestions.module.scss'
 import { useAppSelector, usePagination } from '@/shared/lib'
 import { useState } from 'react'
 import { getSuggestionList, selectSuggestionList, selectSuggestionListPagination, selectSuggestionListStatus, SuggestionUpdateForm, TrackSuggestionActions } from '@/features/suggestion'
-import { ISuggestion, SuggestionFilter, SuggestionRow } from '@/entities/suggestion'
+import { ISuggestion, SuggestionFilter, SuggestionRow, SuggestionRowSkeleton } from '@/entities/suggestion'
 import { ArtistCreateForm } from '@/features/artist'
 
 export const AdminTrackSuggestions = () => {
@@ -37,7 +37,7 @@ export const AdminTrackSuggestions = () => {
                 <Title>ЗАЯВКИ НА ТРЕКИ</Title>
                 <SuggestionFilter filterStatus={filter} setFilterStatus={(status: string) => hundleFilter(status)} />
                 {
-                    suggestionListStatus === 'success' && suggestionList && suggestionListPagination &&
+                    suggestionListStatus === 'success' && suggestionList && suggestionListPagination ?
                     <>
                     {
                         suggestionList.length === 0 ?
@@ -79,6 +79,14 @@ export const AdminTrackSuggestions = () => {
                         </>
                     }
                     </>
+                    :
+                    <ul className={styles.list}>
+                        {
+                            Array.from({ length: 5 }).map((_, index) => {
+                                return <SuggestionRowSkeleton key={index} />
+                            })
+                        }
+                    </ul>
                 }
             </div>
             <Modal

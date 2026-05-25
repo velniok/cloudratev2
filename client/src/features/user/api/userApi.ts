@@ -5,6 +5,7 @@ import { IArtist } from "@/entities/artist"
 import { IPagination } from "@/shared/types"
 import { IReview } from "@/entities/review"
 import { ISuggestion } from "@/entities/suggestion"
+import { IUserNotification } from "@/entities/notification"
 
 export const getUserProfileApi = (params: { username: string }) => {
     return axios.get<{ user: IUser }>(`/user/profile/${params.username}`)
@@ -24,6 +25,10 @@ export const getUserFollowsApi = (params: { page: number, limit: number, id: num
 
 export const getUserSuggestionsApi = (params: { id: number, filter: string | null, page: number, limit: number }) => {
     return axios.get<{ suggestions: ISuggestion[], pagination: IPagination }>(`/user/suggestions/${params.id}`, { params: { status: params.filter, page: params.page, limit: params.limit } })
+}
+
+export const getUserNotificationsApi = (params: { page: number, limit: number }) => {
+    return axios.get<{ notifications: IUserNotification[], pagination: IPagination }>(`/user/notifications`, { params: { page: params.page, limit: params.limit } })
 }
 
 export const updateUserApi = (params: IUpdateUserReq) => {
