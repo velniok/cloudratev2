@@ -36,22 +36,29 @@ export const NotificationsPagination: FC<NotificationsPaginationProps> = ({ user
                 {
                     notificationsListStatus === 'success' && notificationsList && notificationsListPagination &&
                     <>
-                        <ul className={styles.list}>
-                            {
-                                notificationsList.map((notification) => {
-                                    return <UserNotificationItem key={notification.id} notification={notification} />
-                                })
-                            }
-                        </ul>
-                        <div className={styles.bottom}>
-                            <PaginationButtons
-                                page={notificationsListPagination.page}
-                                totalPages={notificationsListPagination.totalPages}
-                                hundleNextPage={hundleNextPage}
-                                hundlePrevPage={hundlePrevPage}
-                                hundlePage={hundlePage}
-                            />
-                        </div>
+                        {
+                            notificationsList.length > 0 ?
+                            <>
+                                <ul className={styles.list}>
+                                    {
+                                        notificationsList.map((notification) => {
+                                            return <UserNotificationItem key={notification.id} notification={notification} />
+                                        })
+                                    }
+                                </ul>
+                                <div className={styles.bottom}>
+                                    <PaginationButtons
+                                        page={notificationsListPagination.page}
+                                        totalPages={notificationsListPagination.totalPages}
+                                        hundleNextPage={hundleNextPage}
+                                        hundlePrevPage={hundlePrevPage}
+                                        hundlePage={hundlePage}
+                                    />
+                                </div>
+                            </>
+                            :
+                            <p className={styles.none}>Уведомлений нет</p>
+                        }
                     </>
                 }
             </div>
