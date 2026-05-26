@@ -16,10 +16,9 @@ const storage = new CloudinaryStorage({
     params: async (req, file) => {
         const { folder } = req.query
         return {
-            folder: folder,
+            folder: `${process.env.IS_DEV ? `dev/${folder}` : folder}`,
             allowed_formats: ['jpg', 'png', 'jpeg']
         }
-
     },
 })
 

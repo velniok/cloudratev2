@@ -38,6 +38,7 @@ class AuthControllers {
             if (createdUser.status === 'email_taken') throw new AppError('Пользователь с таким email уже существует', 409, 'email')
             const user = createdUser.user
             const userDto = new UserDto(user)
+            const notifications = await NotificationServices.get(user.id)
 
             const { accessToken, refreshToken } = TokenServices.generateTokens({ id: userDto.id, role: userDto.role })
             res.cookie('refreshToken', refreshToken, {
@@ -47,7 +48,7 @@ class AuthControllers {
                 maxAge: 30 * 24 * 60 * 60 * 1000
             })
 
-            res.status(201).json({ user, token: accessToken })
+            res.status(201).json({ user, notifications: notifications, token: accessToken })
         } catch (err) {
             console.log(err)
             next(err)
@@ -65,6 +66,7 @@ class AuthControllers {
             if (!isValidPassword) throw new AppError('Неправильный email или пароль', 401)
 
             const userDto = new UserDto(user)
+            const notifications = await NotificationServices.get(user.id)
 
             const { accessToken, refreshToken } = TokenServices.generateTokens({ id: userDto.id, role: userDto.role })
             res.cookie('refreshToken', refreshToken, {
@@ -74,7 +76,7 @@ class AuthControllers {
                 maxAge: 30 * 24 * 60 * 60 * 1000
             })
 
-            res.status(200).json({ user: userDto, token: accessToken })
+            res.status(200).json({ user: userDto, notifications: notifications, token: accessToken })
         } catch (err) {
             console.log(err)
             next(err)

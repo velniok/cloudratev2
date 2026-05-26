@@ -17,6 +17,7 @@ const NotificationControllers = require('../controllers/NotificationControllers'
 const cloudinary = require('cloudinary').v2
 const Router = require('express').Router
 const router = new Router()
+require('dotenv').config()
 
 router.post('/upload', upload.single('image'), (req, res, next) => {
     try {
@@ -32,7 +33,7 @@ router.post('/upload', upload.single('image'), (req, res, next) => {
 router.post('/upload/url', upload.single('image'), async (req, res, next) => {
     try {
         const { url, folder } = req.body
-        const result = await cloudinary.uploader.upload(url.replace(/-large(\.(jpg|png|jpeg|gif))$/i, '-t200x200$1'), { folder: folder })
+        const result = await cloudinary.uploader.upload(url.replace(/-large(\.(jpg|png|jpeg|gif))$/i, '-t200x200$1'), { folder: `${process.env.IS_DEV ? `dev/${folder}` : folder}` })
 
         res.status(200).json({
             url: result.secure_url

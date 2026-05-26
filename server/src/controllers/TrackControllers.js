@@ -37,7 +37,7 @@ class TrackControllers {
 
             res.status(200).json({
                 title: data.title,
-                coverUrl: data.artwork_url,
+                coverUrl: data.artwork_url.replace(/-large(\.(jpg|png|jpeg|gif))$/i, '-t200x200$1'),
                 releaseData: data.created_at,
                 soundcloudUrl: data.permalink_url
             })
