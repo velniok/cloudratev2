@@ -83,7 +83,7 @@ export const getUserSuggestionsThunk = createAsyncThunk<{ suggestions: ISuggesti
     }
 })
 
-export const getUserNotificationsThunk = createAsyncThunk<{ notifications: IUserNotification[], pagination: IPagination }, { page: number, limit: number }, { rejectValue: IApiError }>('user/getUserNotificationsThunk', async (params, { rejectWithValue }) => {
+export const getUserNotificationsThunk = createAsyncThunk<{ notifications: IUserNotification[], pagination: IPagination }, { id: number, page: number, limit: number }, { rejectValue: IApiError }>('user/getUserNotificationsThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getUserNotificationsApi(params)
         return data

@@ -1,4 +1,4 @@
-import { PaginationButtons, Table, Title } from '@/shared/ui'
+import { PaginationButtons, Title } from '@/shared/ui'
 import styles from './ArtistReleases.module.scss'
 import { FC } from 'react'
 import { TrackRow, TrackRowSkelton } from '@/entities/track'
