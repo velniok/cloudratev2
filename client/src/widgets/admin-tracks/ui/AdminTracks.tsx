@@ -1,7 +1,7 @@
-import { Button, DeleteIcon, EditIcon, Input, Modal, PaginationButtons, PlusIcon, Table, Title } from '@/shared/ui'
+import { Button, Modal, PaginationButtons, PlusIcon, Title } from '@/shared/ui'
 import styles from './AdminTracks.module.scss'
 import { useEffect, useState } from 'react'
-import { ITrack } from '@/entities/track'
+import { ITrack, TrackRowAdmin } from '@/entities/track'
 import { getTrackListThunk, selectTrackList, selectTrackListPagination, selectTrackListStatus, TrackCreateForm, TrackDeleteModal, TrackUpdateForm } from '@/features/track'
 import { useAppSelector, usePagination, useSearch } from '@/shared/lib'
 import { TStatus } from '@/shared/types'
@@ -50,11 +50,11 @@ export const AdminTracks = () => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
-                <Title>ТРЕКИ</Title>
                 <div className={styles.top}>
-                    {
+                    <Title>ТРЕКИ</Title>
+                    {/* {
                         trackListStatus === 'success' && trackListPagination ? <p className={styles.count}>Всего: {trackListPagination.total} артистов</p> : <>Загрузка</>
-                    }
+                    } */}
                     <Button color='accent' padding='10px 20px 10px 20px' onClick={() => setCreateTrack(true)}>
                         <div className={styles.buttonInner}>
                             <PlusIcon />
@@ -62,36 +62,36 @@ export const AdminTracks = () => {
                         </div>
                     </Button>
                 </div>
-                <Input
+                {/* <Input
                     placeholder='Поиск по названию трека...'
                     type='text'
                     isGray={true}
                     onChange={onChangeSearch}
                     value={search}
-                />
-                <Table
-                    header={ ['трек', 'артист(-ы)', 'рейтинг', 'дата релиза', 'действия'] }
-                    data={data}
-                    dataStatus={dataStatus}
-                    actions={[
+                /> */}
+                <ul className={styles.header}>
+                    <li className={styles.header__item}>ID</li>
+                    <li className={styles.header__item}>ТРЕК</li>
+                    <li className={styles.header__item}>АРТИСТ(-Ы)</li>
+                    <li className={styles.header__item}>РЕЙТИНГ</li>
+                    <li className={styles.header__item}>ДАТА РЕЛИЗА</li>
+                    <li className={styles.header__item} style={{ textAlign: 'right' }}>ДЕЙСТВИЯ</li>
+                </ul>
+                {
+                    trackListStatus === 'success' && trackList &&
+                    <ul className={styles.list}>
                         {
-                            name: 'edit',
-                            func: (id) => (
-                            <div onClick={() => hundleUpdateTrack(id)}>
-                                <EditIcon />
-                            </div>
-                            )
-                        },
-                        {
-                            name: 'delete',
-                            func: (id) => (
-                            <div onClick={() => hundleDeleteTrack(id)}>
-                                <DeleteIcon />
-                            </div>
-                            )
-                        },
-                    ]}
-                />
+                            trackList.map((track) => {
+                                return <TrackRowAdmin
+                                    key={track.id}
+                                    track={track}
+                                    hundleUpdateTrack={(id: number) => hundleUpdateTrack(id)}
+                                    hundleDeleteTrack={(id: number) => hundleDeleteTrack(id)}
+                                />
+                            })
+                        }
+                    </ul>
+                }
                 {
                     trackListStatus === 'success' && trackListPagination &&
                         <div className={styles.bottom}>

@@ -23,6 +23,24 @@
     }
 }
 
+.header {
+    display: grid;
+    grid-template-columns: 80px 1.5fr 1fr 1fr 120px;
+    padding: 12px 24px;
+
+    &__item {
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 700;
+    }
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+}
+
 .count {
     color: var(--text-secondary);
 

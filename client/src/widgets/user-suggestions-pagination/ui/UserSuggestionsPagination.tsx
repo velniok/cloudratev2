@@ -12,7 +12,7 @@ interface UserSuggestionsPaginationProps {
 
 export const UserSuggestionsPagination: FC<UserSuggestionsPaginationProps> = ({ user }) => {
 
-    const { hundleNextPage, hundlePrevPage, hundlePage, hundleFilter, filter } = usePagination(getUserSuggestionsThunk, `/user/${user.username}/track-suggestions`, 5, user.id, true)
+    const { hundleNextPage, hundlePrevPage, hundlePage, hundleFilter, filter } = usePagination(getUserSuggestionsThunk, `/user/track-suggestions`, 5, user.id, true)
     const suggestionsList = useAppSelector(selectUserSuggestions)
     const suggestionsListStatus = useAppSelector(selectUserSuggestionsStatus)
     const suggestionsListPagination = useAppSelector(selectUserSuggestionsPagination)

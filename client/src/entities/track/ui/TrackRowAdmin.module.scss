@@ -1,0 +1,142 @@
+.item {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 80px 1.5fr 1.5fr 1fr 1fr 120px;
+    padding: 16px 24px;
+    background-color: var(--gray-color);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+
+    transition: transform 0.3s, background-color 0.3s ease-in;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--hover-white);
+            transform: translateY(-2px);
+        }
+    }
+}
+
+.id {
+    padding-top: 2px;
+    color: var(--text-secondary);
+    font-family: var(--second-family);
+}
+
+.track {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    column-gap: 12px;
+    padding: 4px 6px;
+    border-radius: 12px;
+
+    transition: background-color 0.3s ease-in;
+
+    @media (hover: hover) {
+        &:hover {
+            background-color: var(--bg-secondary);
+        }
+    }
+    
+    &__title {
+        font-family: var(--second-family);
+    }
+}
+
+.artists {
+    
+    &__item {
+        display: inline-flex;
+        column-gap: 8px;
+        align-items: center;
+        padding: 4px 6px;
+        border-radius: 12px;
+
+        transition: background-color 0.3s ease-in;
+
+        @media (hover: hover) {
+            &:hover {
+                background-color: var(--bg-secondary);
+            }
+        }
+    }
+
+    &__name {
+        padding-top: 4px;
+        font-family: var(--second-family);
+
+        &Feat {
+            padding-top: 2px;
+            font-family: var(--second-family);
+            color: var(--text-secondary);
+
+            @media (hover: hover) {
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    &__feat {
+        margin-left: 8px;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+    }
+
+    &__text {
+        font-size: 16px;
+    }
+
+    &__list {
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+    }
+}
+
+.release {
+    color: var(--text-secondary);
+}
+
+.actions {
+    display: flex;
+    column-gap: 12px;
+    font-size: 18px;
+    color: var(--text-secondary);
+    justify-content: flex-end;
+
+    & i {
+        cursor: pointer;
+        background-color: var(--bg-secondary);
+        width: 28px;
+        height: 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 6px;
+        border: 1px solid var(--border-subtle);
+
+        transition: border 0.3s, color 0.3s ease-in;
+    }
+
+    @media (hover: hover) {
+        &__edit:hover {
+            border: 1px solid var(--yellow-color);
+            color: var(--yellow-color);
+        }
+
+        &__role:hover {
+            border: 1px solid var(--purple-color);
+            color: var(--purple-color);
+        }
+
+        &__delete:hover {
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+        }
+    }
+}

@@ -1,8 +1,8 @@
-import { Button, DeleteIcon, EditIcon, Input, Modal, PaginationButtons, PlusIcon, Table, Title } from '@/shared/ui'
+import { Button, Modal, PaginationButtons, PlusIcon, Title } from '@/shared/ui'
 import styles from './AdminArtists.module.scss'
 import { useAppSelector, usePagination, useSearch } from '@/shared/lib'
-import { IArtist } from '@/entities/artist'
-import { useEffect, useState } from 'react'
+import { ArtistRowAdmin, IArtist } from '@/entities/artist'
+import { MouseEvent, useEffect, useState } from 'react'
 import { TStatus } from '@/shared/types'
 import { ArtistCreateForm, ArtistDeleteModal, getArtistListThunk, selectArtistList, selectArtistListPagination, selectArtistListStatus } from '@/features/artist'
 import { ArtistUpdateForm } from '@/features/artist/ui/ArtistUpdateForm'
@@ -36,14 +36,16 @@ export const AdminArtists = () => {
     const [artistId, setArtistId] = useState<number | null>(null)
     const [artist, setArtist] = useState<IArtist | null>(null)
 
-    const hundleUpdateArtist = (id: number) => {
+    const hundleUpdateArtist = (e: MouseEvent, id: number) => {
+        e.preventDefault()
         if (artistList) {
             setArtist(prev => prev = artistList.filter(artist => artist.id === id)[0])
             setUpdateArtist(true)
         }
     }
 
-    const hundleDeleteArtist = (id: number) => {
+    const hundleDeleteArtist = (e: MouseEvent, id: number) => {
+        e.preventDefault()
         setArtistId((prev) => prev = id)
         setDeleteArtist(true)
     }
@@ -51,16 +53,16 @@ export const AdminArtists = () => {
     return (
         <div className={styles.wrapper}>
             <div className="container">
-                <Title>АРТИСТЫ</Title>
                 <div className={styles.top}>
-                    {
+                    <Title>АРТИСТЫ</Title>
+                    {/* {
                         artistListStatus === 'success' && artistListPagination ?
                             <p className={styles.count}>
                                 Всего: {artistListPagination.total} артистов
                             </p>
                         :
                             <>Загрузка</>
-                    }
+                    } */}
                     <Button color='accent' padding='10px 20px 10px 20px' onClick={() => setCreateArtist(true)}>
                         <div className={styles.buttonInner}>
                             <PlusIcon />
@@ -68,39 +70,38 @@ export const AdminArtists = () => {
                         </div>
                     </Button>
                 </div>
-                <Input
+                {/* <Input
                     placeholder='Поиск по никнейму артисту...'
                     type='text'
                     isGray={true}
                     onChange={onChangeSearch}
                     value={search}
-                />
-                <Table
-                    header={ ['артист', 'треки', 'рейтинг', 'действия'] }
-                    data={data}
-                    dataStatus={dataStatus}
-                    actions={[
-                        {
-                            name: 'edit',
-                            func: (id) => (
-                            <div onClick={() => hundleUpdateArtist(id)}>
-                                <EditIcon />
-                            </div>
-                            )
-                        },
-                        {
-                            name: 'delete',
-                            func: (id) => (
-                            <div onClick={() => hundleDeleteArtist(id)}>
-                                <DeleteIcon />
-                            </div>
-                            )
-                        },
-                    ]}
-                />
+                /> */}
+                <ul className={styles.header}>
+                    <li className={styles.header__item}>ID</li>
+                    <li className={styles.header__item}>АРТИСТ</li>
+                    <li className={styles.header__item}>РЕЙТИНГ</li>
+                    <li className={styles.header__item}>ТРЕКИ</li>
+                    <li className={styles.header__item} style={{ textAlign: 'right' }}>ДЕЙСТВИЯ</li>
+                </ul>
                 {
-                    result?.artists?.length === 0 && <p className={styles.text}>Ничего не найдено</p>
+                    artistListStatus === 'success' && artistList && 
+                    <ul className={styles.list}>
+                        {
+                            artistList.map((artist) => {
+                                return <ArtistRowAdmin
+                                    key={artist.id}
+                                    artist={artist}
+                                    hundleUpdateArtist={(e: MouseEvent, id: number) => hundleUpdateArtist(e, id)}
+                                    hundleDeleteArtist={(e: MouseEvent, id: number) => hundleDeleteArtist(e, id)}
+                                />
+                            })
+                        }
+                    </ul>
                 }
+                {/* {
+                    result?.artists?.length === 0 && <p className={styles.text}>Ничего не найдено</p>
+                } */}
                 {
                     artistListStatus === 'success' && artistListPagination &&
                         <div className={styles.bottom}>

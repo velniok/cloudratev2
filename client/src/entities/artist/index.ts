@@ -4,4 +4,5 @@ export { ArtistCard } from './ui/ArtistCard'
 export { ArtistCardSkeleton } from './ui/ArtistCardSkeleton'
 export { ArtistRow } from './ui/ArtistRow'
 export { ArtistRowSkeleton } from './ui/ArtistRowSkeleton'
+export { ArtistRowAdmin } from './ui/ArtistRowAdmin'
 export type * from "./model/types"

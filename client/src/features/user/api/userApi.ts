@@ -27,8 +27,8 @@ export const getUserSuggestionsApi = (params: { id: number, filter: string | nul
     return axios.get<{ suggestions: ISuggestion[], pagination: IPagination }>(`/user/suggestions/${params.id}`, { params: { status: params.filter, page: params.page, limit: params.limit } })
 }
 
-export const getUserNotificationsApi = (params: { page: number, limit: number }) => {
-    return axios.get<{ notifications: IUserNotification[], pagination: IPagination }>(`/user/notifications`, { params: { page: params.page, limit: params.limit } })
+export const getUserNotificationsApi = (params: { id: number, page: number, limit: number }) => {
+    return axios.get<{ notifications: IUserNotification[], pagination: IPagination }>(`/user/notifications/${params.id}`, { params: { page: params.page, limit: params.limit } })
 }
 
 export const updateUserApi = (params: IUpdateUserReq) => {

@@ -79,7 +79,7 @@ class UserControllers {
 
     async getSuggestions(req, res, next) {
         try {
-            const userId = req.params.userId
+            const userId = req.userId
             const { status, page, limit } = req.query
             
             const { suggestions, total } = await SuggestionServices.getSuggestionsByUser(userId, status, page, limit)

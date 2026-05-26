@@ -1,7 +1,7 @@
-import { DeleteIcon, EditIcon, Modal, ProfileIcon, Table, Title } from '@/shared/ui'
+import { Modal, Title } from '@/shared/ui'
 import styles from './AdminUsers.module.scss'
-import { useEffect, useState } from 'react'
-import { IUser } from '@/entities/user'
+import { MouseEvent, useEffect, useState } from 'react'
+import { IUser, UserRowAdmin } from '@/entities/user'
 import { DeleteUserModal, getUserListThunk, selectUserList, selectUserListStatus, UpdateRoleModal } from '@/features/user'
 import { useAppDispatch, useAppSelector } from '@/shared/lib'
 
@@ -21,14 +21,16 @@ export const AdminUsers= () => {
     const [userId, setUserId] = useState<number | null>(null)
     const [user, setUser] = useState<IUser | null>(null)
 
-    const hundleUpdateRole = (id: number) => {
+    const hundleUpdateRole = (e: MouseEvent, id: number) => {
+        e.preventDefault()
         if (userList) {
             setUser(prev => prev = userList.filter(user => user.id === id)[0])
             setUpdateRole(true)
         }
     }
 
-    const hundleDeleteUser = (id: number) => {
+    const hundleDeleteUser = (e: MouseEvent, id: number) => {
+        e.preventDefault()
         setUserId((prev) => prev = id)
         setDeleteUser(true)
     }
@@ -37,38 +39,29 @@ export const AdminUsers= () => {
         <div className={styles.wrapper}>
             <div className="container">
                 <Title>ПОЛЬЗОВАТЕЛИ</Title>
-                <Table
-                    header={ ['пользователь', 'регистрация', 'роль', 'действия'] }
-                    data={userList}
-                    dataStatus={userListStatus}
-                    actions={[
+                <ul className={styles.header}>
+                    <li className={styles.header__item}>ID</li>
+                    <li className={styles.header__item}>ПОЛЬЗОВАТЕЛЬ</li>
+                    <li className={styles.header__item}>EMAIL</li>
+                    <li className={styles.header__item}>РОЛЬ</li>
+                    <li className={styles.header__item}>ДАТА РЕГ.</li>
+                    <li className={styles.header__item} style={{ textAlign: 'right' }}>ДЕЙСТВИЯ</li>
+                </ul>
+                {
+                    userListStatus === 'success' && userList &&
+                    <ul className={styles.list}>
                         {
-                            name: 'role',
-                            func: (id) => (
-                            <div onClick={() => hundleUpdateRole(id)}>
-                                <ProfileIcon />
-                                <span>РОЛЬ</span>
-                            </div>
-                            )
-                        },
-                        {
-                            name: 'edit',
-                            func: (id) => (
-                            <div>
-                                <EditIcon />
-                            </div>
-                            )
-                        },
-                        {
-                            name: 'delete',
-                            func: (id) => (
-                            <div onClick={() => hundleDeleteUser(id)}>
-                                <DeleteIcon />
-                            </div>
-                            )
-                        },
-                    ]}
-                />
+                            userList.map((user) => {
+                                return <UserRowAdmin
+                                    key={user.id}
+                                    user={user}
+                                    hundleUpdateRole={(e: MouseEvent, id: number) => hundleUpdateRole(e, id)}
+                                    hundleDeleteUser={(e: MouseEvent, id: number) => hundleDeleteUser(e, id)}
+                                />
+                            }) 
+                        }
+                    </ul>
+                }
                 <Modal
                     width='420px'
                     modalTitle='Изменить роль'

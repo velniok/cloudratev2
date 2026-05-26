@@ -11,6 +11,7 @@
     border-radius: 999px;
     font-weight: 700;
     letter-spacing: 0.1rem;
+    width: fit-content;
 
     @media (max-width: $mobile) {
         font-size: 8px;
