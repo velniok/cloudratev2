@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import styles from './TrackHeaderInfo.module.scss'
 import type { ITrack } from '../model/types'
-import { Cover, CriteriasPopup, CriteriasTooltip, LinkIcon, Rating, Tooltip } from '@/shared/ui'
-import { MouseEvent, useState, type FC } from 'react'
+import { Cover, CriteriasTooltip, Rating, Tooltip } from '@/shared/ui'
+import { type FC } from 'react'
 import { getOptimizedAvatar, pluralize } from '@/shared/lib'
 
 interface TrackHeaderInfoProps {
