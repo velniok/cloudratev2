@@ -9,7 +9,7 @@ interface CriteriasTooltipProps {
 
 export const CriteriasTooltip: FC<CriteriasTooltipProps> = ({ avgCriterias, isComment }) => {
 
-    const criteriaTitles = ['Продакшн', 'Текст', 'Подача', 'Мелодия', 'Оригинальность']
+    const criteriaTitles = ['Текст', 'Бит и Ритм', 'Подача', 'Аранжировка', 'Атмосфера и Эмоции']
 
     return (
         <div className={styles.wrapper}>

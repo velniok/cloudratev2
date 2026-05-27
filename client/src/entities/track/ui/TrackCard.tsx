@@ -16,6 +16,7 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
     const navigate = useNavigate()
 
     const [isHovered, setIsHovered] = useState<boolean>(false)
+    const [isTooltip, setIsTooltip] = useState<boolean>(false)
 
     return (
         <div className={styles.card} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
@@ -53,8 +54,9 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
                         track.avgCriterias ?
                             <Tooltip
                                 tooltip={ <CriteriasTooltip avgCriterias={Object.values(track.avgCriterias)} /> }
+                                setIsTooltip={setIsTooltip}
                             >
-                                <Rating>{track.avgRating}</Rating>
+                                <Rating isHover={isTooltip}>{track.avgRating}</Rating>
                             </Tooltip>
                         :
                         track.avgRating && <Rating>{track.avgRating}</Rating>
@@ -63,8 +65,9 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
                     : review ?
                     <Tooltip
                         tooltip={ <CriteriasTooltip isComment={!!review.text} avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} /> }
+                        setIsTooltip={setIsTooltip}
                     >
-                        <Rating>{review.rating}</Rating>
+                        <Rating isHover={isTooltip}>{review.rating}</Rating>
                     </Tooltip>
                     :
                     <span className={styles.rating__text}>Оценок нет</span>

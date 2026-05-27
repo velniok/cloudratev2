@@ -65,7 +65,18 @@ class TrackServices {
                         SELECT json_agg(row_to_json(a))
                         FROM artists a
                         WHERE a.id = ANY(t.feat_artist_ids)
-                    ) as feat_artists
+                    ) as feat_artists,
+                    (
+                        SELECT json_build_object(
+                            'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
+                            'criteria2', ROUND(AVG(r.criteria2)::numeric, 1),
+                            'criteria3', ROUND(AVG(r.criteria3)::numeric, 1),
+                            'criteria4', ROUND(AVG(r.criteria4)::numeric, 1),
+                            'criteria5', ROUND(AVG(r.criteria5)::numeric, 1)
+                        )
+                        FROM reviews r
+                        WHERE r.track_id = t.id
+                    ) as avg_criterias
                 FROM tracks t
                 WHERE
                     REPLACE(LOWER(title), 'ё', 'е')
@@ -157,7 +168,18 @@ class TrackServices {
                     SELECT json_agg(row_to_json(a))
                     FROM artists a
                     WHERE a.id = ANY(t.feat_artist_ids)
-                ) as feat_artists
+                ) as feat_artists,
+                (
+                    SELECT json_build_object(
+                        'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
+                        'criteria2', ROUND(AVG(r.criteria2)::numeric, 1),
+                        'criteria3', ROUND(AVG(r.criteria3)::numeric, 1),
+                        'criteria4', ROUND(AVG(r.criteria4)::numeric, 1),
+                        'criteria5', ROUND(AVG(r.criteria5)::numeric, 1)
+                    )
+                    FROM reviews r
+                    WHERE r.track_id = t.id
+                ) as avg_criterias
             FROM tracks t
             ORDER BY t.release_data DESC
             LIMIT 15

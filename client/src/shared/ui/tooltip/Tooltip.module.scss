@@ -1,6 +1,9 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .wrapper {
     position: relative;
     z-index: 99999;
+    width: fit-content;
 }
 
 .content {
@@ -11,13 +14,13 @@
     bottom: 125%;
     padding: 6px 12px;
     border-radius: 12px;
-    border: 1px solid var(--border-subtle);
+    border: 1px solid var(--border-highlight);
     width: fit-content;
     height: fit-content;
     background-color: var(--gray-color);
     transform: translateY(-100%);
 
-    transition: opacity 0.3s, visibility 0.3s ease-in;
+    transition: opacity 0.2s, visibility 0.2s ease-in;
 
     &.show {
         opacity: 1;
@@ -26,20 +29,25 @@
 }
 
 .arrow {
-    z-index: -1;
     position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: var(--gray-color);
-    transform: rotate(45deg);
+    width: 0;
+    height: 0;
 
-    &[data-placement="top"] {
-        bottom: -5px;
-        left: 10px;
+    &[data-placement='top'] {
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid var(--border-highlight);
     }
 
-    &[data-placement="left"] {
-        bottom: -5px;
-        right: 15px;
+    &[data-placement='bottom'] {
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid var(--border-highlight);
     }
 }

@@ -5,35 +5,47 @@ import { createPortal } from 'react-dom'
 interface TooltipProps {
     children: ReactNode
     tooltip: ReactNode
+    place?: string
+    setIsTooltip?: (boolean: boolean) => void
 }
 
-export const Tooltip: FC<TooltipProps> = ({ children, tooltip }) => {
+export const Tooltip: FC<TooltipProps> = ({ children, tooltip, place, setIsTooltip }) => {
 
     const [show, setShow] = useState<boolean>(false)
-    const [cords, setCords] = useState({ top: 0, left: 0 })
-    const [pos, setPos] = useState('top')
+    const [cords, setCords] = useState<{ top: number, left: number, arrowLeft: string | number }>({ top: 0, left: 0, arrowLeft: '50%' })
+    const [pos, setPos] = useState(place || 'top')
     const triggerRef = useRef<HTMLDivElement | null>(null)
+    const tooltipRef = useRef<HTMLDivElement | null>(null)
 
     const updatePosition = () => {
         if (!triggerRef.current) return
+
         const rect = triggerRef.current.getBoundingClientRect()
         const scrollY = window.scrollY
-
-        let top = rect.top + scrollY
-        let left = rect.left
-
-        top = rect.top + scrollY - 8
-
-        const tooltipWidth = 200
         const viewportWidth = window.innerWidth
-        if (left + tooltipWidth > viewportWidth) {
-            setPos('left')
-        } else if (left - tooltipWidth < 0) {
-            setPos('top')
-        }
 
-        setCords({ top, left })
+        const tooltipWidth = tooltipRef.current?.offsetWidth ?? 200
+        const tooltipHeight = tooltipRef.current?.offsetHeight ?? 40
+        const GAP = 8
+
+        let left = rect.left + rect.width / 2 - tooltipWidth / 2
+        let top = pos === 'bottom'
+            ? rect.top + scrollY + rect.height + GAP + 2
+            : rect.top + scrollY - tooltipHeight - GAP - 2
+
+        if (left < GAP) left = GAP
+        if (left + tooltipWidth > viewportWidth - GAP) left = viewportWidth - tooltipWidth - GAP
+
+        const arrowLeft = rect.left + rect.width / 2 - left - 1
+        if (setIsTooltip) setIsTooltip(show)
+        setCords({ top, left, arrowLeft })
     }
+
+    useEffect(() => {
+        if (show) {
+            setTimeout(updatePosition, 0)
+        }
+    }, [show])
 
     useEffect(() => {
         if (!show) return
@@ -51,6 +63,11 @@ export const Tooltip: FC<TooltipProps> = ({ children, tooltip }) => {
         }
     }, [show])
 
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+    }
+
     const handleTouchStart = (e: React.TouchEvent) => {
         e.stopPropagation()
         setShow(prev => !prev)
@@ -63,23 +80,26 @@ export const Tooltip: FC<TooltipProps> = ({ children, tooltip }) => {
             onMouseEnter={() => setShow(true)}
             onMouseLeave={() => setShow(false)}
             onTouchStart={handleTouchStart}
+            onClick={handleClick}
         >
             {children}
             {
                 createPortal(
                     <div
+                        ref={tooltipRef}
                         className={`${styles.content} ${show ? styles.show : ''}`}
                         style={{
                             position: 'absolute',
                             top: cords.top,
                             left: cords.left,
-                            transform: pos === 'left' ? 'translateX(-85%) translateY(-100%)' : 'translateY(-100%)'
+                            transform: 'none'
                         }}
                     >
                         {tooltip}
                         <div
                             className={styles.arrow}
                             data-placement={pos}
+                            style={{ left: cords.arrowLeft, transform: 'translateX(-50%)' }}
                         />
                     </div>,
                     document.body

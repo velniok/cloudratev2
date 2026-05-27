@@ -28,8 +28,7 @@
     }
 
     &.isHover {
-        cursor: pointer;
-
+        cursor: default;
         transition: border 0.3s, color 0.3s, opacity 0.3s;
 
         @media (hover: hover) {

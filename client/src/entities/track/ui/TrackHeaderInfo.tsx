@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import styles from './TrackHeaderInfo.module.scss'
 import type { ITrack } from '../model/types'
-import { Cover, CriteriasPopup, LinkIcon, Rating } from '@/shared/ui'
+import { Cover, CriteriasPopup, CriteriasTooltip, LinkIcon, Rating, Tooltip } from '@/shared/ui'
 import { MouseEvent, useState, type FC } from 'react'
 import { getOptimizedAvatar, pluralize } from '@/shared/lib'
 
@@ -12,16 +12,6 @@ interface TrackHeaderInfoProps {
 export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
 
     const navigate = useNavigate()
-
-    const [criterias, setCriterias] = useState<boolean>(false)
-
-    const handleOpenCriterias = (e: MouseEvent) => {
-        e.stopPropagation()
-        if (true) {
-            document.dispatchEvent(new Event('closePopups'))
-        }
-        setCriterias(!criterias)
-    }
 
     return (
         <div className={styles.inner}>
@@ -54,14 +44,18 @@ export const TrackHeaderInfo: FC<TrackHeaderInfoProps> = ({ track }) => {
                     track.avgRating
                     ?
                         <div className={styles.rating__wrapper}>
-                            <div className={`${styles.rating} ${criterias ? styles.open : ''}`} onClick={(e) => handleOpenCriterias(e)}>
-                                <Rating>{track.avgRating}</Rating>
-                                <div className={styles.rating__info}>
-                                    <p className={styles.rating__title}>СРЕДНИЙ БАЛЛ</p>
-                                    <p className={styles.rating__desc}>На основе {track.reviewsCount} {pluralize(track.reviewsCount, 'оценки', 'оценок', 'оценок')}</p>
+                            <Tooltip
+                                tooltip={ <CriteriasTooltip avgCriterias={Object.values(track.avgCriterias)} /> }
+                                place='bottom'
+                            >
+                                <div className={styles.rating}>
+                                    <Rating>{track.avgRating}</Rating>
+                                    <div className={styles.rating__info}>
+                                        <p className={styles.rating__title}>СРЕДНИЙ БАЛЛ</p>
+                                        <p className={styles.rating__desc}>На основе {track.reviewsCount} {pluralize(track.reviewsCount, 'оценки', 'оценок', 'оценок')}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <CriteriasPopup close={() => setCriterias(false)} position='bottom' show={criterias} avgCriterias={Object.values(track.avgCriterias)} />
+                            </Tooltip>
                         </div>
                     :
                         <p className={styles.text}>Оценок нет</p>

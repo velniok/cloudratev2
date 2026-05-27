@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import styles from './TrackRowAdmin.module.scss'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { ITrack } from '../model/types'
-import { Cover, Rating } from '@/shared/ui'
+import { Cover, CriteriasTooltip, Rating, Tooltip } from '@/shared/ui'
 import { getMonth, getOptimizedAvatar } from '@/shared/lib'
 
 interface TrackRowAdminProps {
@@ -12,6 +12,9 @@ interface TrackRowAdminProps {
 }
 
 export const TrackRowAdmin: FC<TrackRowAdminProps> = ({ track, hundleUpdateTrack, hundleDeleteTrack }) => {
+
+    const [isTooltip, setIsTooltip] = useState<boolean>(false)
+
     return (
         <li className={styles.item}>
             <span className={styles.id}>#{track.id}</span>
@@ -55,7 +58,15 @@ export const TrackRowAdmin: FC<TrackRowAdminProps> = ({ track, hundleUpdateTrack
                 }
             </div>
             {
-                track.avgRating ? <Rating>{track.avgRating}</Rating> : <Rating>-</Rating>
+                track.avgRating ?
+                <Tooltip
+                    tooltip={ <CriteriasTooltip avgCriterias={Object.values(track.avgCriterias)} /> }
+                    setIsTooltip={setIsTooltip}
+                >
+                    <Rating isHover={isTooltip}>{track.avgRating}</Rating>
+                </Tooltip>
+                :
+                <Rating>-</Rating>
             }
             <p className={styles.release}>{new Date(track.releaseData).getUTCDate()} {getMonth(track.releaseData, 'pluralize')} {new Date(track.releaseData).getUTCFullYear()}г.</p>
             <div className={styles.actions}>

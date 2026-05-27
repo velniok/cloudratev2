@@ -7,12 +7,11 @@
     border: 1px solid var(--border-subtle);
     border-radius: 12px;
 
-    transition: transform 0.3s, background-color 0.3s ease-in;
+    transition: background-color 0.3s ease-in;
 
     @media (hover: hover) {
         &:hover {
             background-color: var(--hover-white);
-            transform: translateY(-2px);
         }
     }
 }

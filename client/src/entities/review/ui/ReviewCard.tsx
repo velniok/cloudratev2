@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import styles from "./ReviewCard.module.scss"
 import type { IReview } from "../model/types"
 import { MouseEvent, ReactNode, useState, type FC } from "react"
-import { Cover, CriteriasPopup, EyeIcon, Rating } from "@/shared/ui"
+import { Cover, CriteriasPopup, CriteriasTooltip, EyeIcon, Rating, Tooltip } from "@/shared/ui"
 import { getMonth, getOptimizedAvatar, useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
 import { ITrack } from "@/entities/track"
@@ -20,16 +20,8 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
 
     const authUser = useAppSelector(selectAuthUser)
 
-    const [criterias, setCriterias] = useState<boolean>(false)
     const [more, setMore] = useState<boolean>(false)
-
-    const handleOpenCriterias = (e: MouseEvent) => {
-        e.stopPropagation()
-        if (true) {
-            document.dispatchEvent(new Event('closePopups'))
-        }
-        setCriterias(!criterias)
-    }
+    const [isTooltip, setIsTooltip] = useState<boolean>(false)
 
     return (
         <div className={`${styles.inner} ${review.userId === authUser?.id ? styles.your : ''}`}>
@@ -39,8 +31,12 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
                         <Cover width="32px" height="32px" borderRadius="50%" url={getOptimizedAvatar(user.avatarUrl ?? '', 32, 32)} />
                         <p className={styles.nickname}>{user.nickname}</p>
                     </Link>
-                    <Rating active={criterias} isHover={true} onClick={(e) => handleOpenCriterias(e)}>{review.rating}</Rating>
-                    <CriteriasPopup column close={() => setCriterias(false)} show={criterias} position="right" avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
+                    <Tooltip
+                        tooltip={ <CriteriasTooltip avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]}  /> }
+                        setIsTooltip={setIsTooltip}
+                    >
+                        <Rating isHover={isTooltip}>{review.rating}</Rating>
+                    </Tooltip>
                     {
                         review.userId === authUser?.id && <p className={styles.yourText}>Ваша рецензия</p>
                     }

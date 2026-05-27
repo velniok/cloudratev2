@@ -1,1 +1,0 @@
-export { CriteriasPopup } from './CriteriasPopup'

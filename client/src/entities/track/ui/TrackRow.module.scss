@@ -1,11 +1,19 @@
 @use '@/shared/styles/breakpoints' as *;
 
-.row {
-    cursor: pointer;
+.link {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 12px;
+
+    @media (max-width: $mobile) {
+        padding: 0;
+        padding-bottom: 15px;
+    }
+}
+
+.row {
+    cursor: pointer;
     border-radius: 12px;
 
     transition: background-color 0.3s;
@@ -17,9 +25,7 @@
     }
 
     @media (max-width: $mobile) {
-        padding: 0;
         border-bottom: 1px solid var(--border-subtle);
-        padding-bottom: 15px;
         border-radius: 0;
 
         &:nth-last-child(1) {
