@@ -1,0 +1,45 @@
+.wrapper {
+    position: relative;
+    z-index: 99999;
+}
+
+.content {
+    position: absolute;
+    z-index: 99999;
+    opacity: 0;
+    visibility: hidden;
+    bottom: 125%;
+    padding: 6px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    width: fit-content;
+    height: fit-content;
+    background-color: var(--gray-color);
+    transform: translateY(-100%);
+
+    transition: opacity 0.3s, visibility 0.3s ease-in;
+
+    &.show {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+.arrow {
+    z-index: -1;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--gray-color);
+    transform: rotate(45deg);
+
+    &[data-placement="top"] {
+        bottom: -5px;
+        left: 10px;
+    }
+
+    &[data-placement="left"] {
+        bottom: -5px;
+        right: 15px;
+    }
+}

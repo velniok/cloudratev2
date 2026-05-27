@@ -11,5 +11,5 @@ export const getNewReviewsApi = () => {
 }
 
 export const getLatestTracksApi = () => {
-    return axios.get<{ tracks: ITrack[] }>('/review/latest-tracks')
+    return axios.get<{ tracks: ITrack[] }>('/track/latest-tracks')
 }

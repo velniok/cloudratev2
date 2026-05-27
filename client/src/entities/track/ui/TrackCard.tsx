@@ -1,8 +1,8 @@
-import { MouseEvent, useState, type FC } from "react"
+import { useState, type FC } from "react"
 import styles from "./TrackCard.module.scss"
 import { Link, useNavigate } from "react-router-dom"
 import type { ITrack } from "../model/types"
-import { Cover, CriteriasPopup, Rating } from "@/shared/ui"
+import { Cover, CriteriasTooltip, Rating, Tooltip } from "@/shared/ui"
 import { IReview } from "@/entities/review"
 import { getOptimizedAvatar } from "@/shared/lib"
 
@@ -16,18 +16,9 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
     const navigate = useNavigate()
 
     const [isHovered, setIsHovered] = useState<boolean>(false)
-    const [criterias, setCriterias] = useState<boolean>(false)
-    const handleOpenCriterias = (e: MouseEvent) => {
-        e.stopPropagation()
-
-        if (true) {
-            document.dispatchEvent(new Event('closePopups'))
-        }
-        setCriterias(!criterias)
-    }
 
     return (
-        <div className={styles.card} style={{ zIndex: `${criterias ? '1' : '0'}` }} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+        <div className={styles.card} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <Link to={`/track/${track.id}`}>
                 <Cover
                     isHovered={isHovered}
@@ -56,30 +47,27 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
             </ul>
             <div className={styles.rating}>
                 {
-                    review ?
+                    track.avgRating ?
                     <>
-                        <Rating active={criterias} isHover={true} onClick={(e: MouseEvent) => handleOpenCriterias(e)}>{review.rating}</Rating>
-                        <CriteriasPopup review={Boolean(review.text)} close={() => setCriterias(false)} position={'top'} show={criterias} avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} />
-                    </>
-                    :
-                    <>
-                        {
-                        track.avgRating ?
-                        <>
-                            {
-                                track.avgCriterias ?
-                                <Rating active={criterias} isHover={true} onClick={(e: MouseEvent) => handleOpenCriterias(e)}>{track.avgRating}</Rating>
-                                :
+                    {
+                        track.avgCriterias ?
+                            <Tooltip
+                                tooltip={ <CriteriasTooltip avgCriterias={Object.values(track.avgCriterias)} /> }
+                            >
                                 <Rating>{track.avgRating}</Rating>
-                            }
-                            {
-                                track.avgCriterias &&
-                                <CriteriasPopup close={() => setCriterias(false)} position={'top'} show={criterias} avgCriterias={Object.values(track.avgCriterias)} />
-                            }
-                        </>
-                        : <span className={styles.rating__text}>Оценок нет</span>
-                        }
+                            </Tooltip>
+                        :
+                        track.avgRating && <Rating>{track.avgRating}</Rating>
+                    }
                     </>
+                    : review ?
+                    <Tooltip
+                        tooltip={ <CriteriasTooltip isComment={!!review.text} avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]} /> }
+                    >
+                        <Rating>{review.rating}</Rating>
+                    </Tooltip>
+                    :
+                    <span className={styles.rating__text}>Оценок нет</span>
                 }
             </div>
         </div>

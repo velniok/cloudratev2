@@ -45,7 +45,7 @@ class TrackServices {
         return mapToCamelCase(newTrackRes.rows[0])
     }
 
-    async getTrackList(page, limit) {
+    async getTrackList(page, limit, search) {
         const offset = (+page - 1) * +limit
         const [tracksRes, countRes] = await Promise.all([
             pool.query(`
@@ -67,13 +67,23 @@ class TrackServices {
                         WHERE a.id = ANY(t.feat_artist_ids)
                     ) as feat_artists
                 FROM tracks t
+                WHERE
+                    REPLACE(LOWER(title), 'ё', 'е')
+                ILIKE
+                    REPLACE(LOWER($3), 'ё', 'е')
                 ORDER BY id
                 LIMIT $1
                 OFFSET $2
-            `, [limit, offset]),
+            `, [limit, offset, `%${search}%`]),
             pool.query(`
-                SELECT COUNT(*) AS total FROM tracks
-            `)
+                SELECT
+                    COUNT(*) AS total
+                FROM tracks
+                WHERE
+                    REPLACE(LOWER(title), 'ё', 'е')
+                ILIKE
+                    REPLACE(LOWER($1), 'ё', 'е')
+            `, [`%${search}%`])
         ])
         return {
             tracks: tracksRes.rows.map(mapToCamelCase),
@@ -173,7 +183,18 @@ class TrackServices {
                     SELECT json_agg(row_to_json(a))
                     FROM artists a
                     WHERE a.id = ANY(t.feat_artist_ids)
-                ) as feat_artists
+                ) as feat_artists,
+                (
+                    SELECT json_build_object(
+                        'criteria1', ROUND(AVG(r.criteria1)::numeric, 1),
+                        'criteria2', ROUND(AVG(r.criteria2)::numeric, 1),
+                        'criteria3', ROUND(AVG(r.criteria3)::numeric, 1),
+                        'criteria4', ROUND(AVG(r.criteria4)::numeric, 1),
+                        'criteria5', ROUND(AVG(r.criteria5)::numeric, 1)
+                    )
+                    FROM reviews r
+                    WHERE r.track_id = t.id
+                ) as avg_criterias
             FROM tracks t
             ORDER BY t.created_at DESC
             LIMIT 15

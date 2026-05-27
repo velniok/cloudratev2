@@ -8,7 +8,7 @@ import { IApiError, IPagination } from "@/shared/types";
 import { IReview } from "@/entities/review";
 import { toggleLikeReviewApi } from "@/features/review";
 
-export const getTrackListThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, { page: number, limit: number }, { rejectValue: IApiError }>('/track/getTrackListThunk', async (params, { rejectWithValue }) => {
+export const getTrackListThunk = createAsyncThunk<{ tracks: ITrack[], pagination: IPagination }, { page: number, limit: number, search: string }, { rejectValue: IApiError }>('/track/getTrackListThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getTrackListApi(params)
         return data

@@ -33,6 +33,8 @@
 
         @media (max-width: $mobile) {
             overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
 
             &::-webkit-scrollbar {
                 display: none;

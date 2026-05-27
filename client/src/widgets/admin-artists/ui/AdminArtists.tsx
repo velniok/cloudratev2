@@ -1,9 +1,8 @@
-import { Button, Modal, PaginationButtons, PlusIcon, Title } from '@/shared/ui'
+import { Button, Input, Modal, PaginationButtons, PlusIcon, Skeleton, Title } from '@/shared/ui'
 import styles from './AdminArtists.module.scss'
-import { useAppSelector, usePagination, useSearch } from '@/shared/lib'
+import { useAppSelector, usePagination } from '@/shared/lib'
 import { ArtistRowAdmin, IArtist } from '@/entities/artist'
-import { MouseEvent, useEffect, useState } from 'react'
-import { TStatus } from '@/shared/types'
+import { ChangeEvent, MouseEvent, useState } from 'react'
 import { ArtistCreateForm, ArtistDeleteModal, getArtistListThunk, selectArtistList, selectArtistListPagination, selectArtistListStatus } from '@/features/artist'
 import { ArtistUpdateForm } from '@/features/artist/ui/ArtistUpdateForm'
 
@@ -13,21 +12,10 @@ export const AdminArtists = () => {
     const artistListPagination = useAppSelector(selectArtistListPagination)
     const artistListStatus = useAppSelector(selectArtistListStatus)
 
-    const { result, resultStatus, search, onChangeSearch } = useSearch('artists')
-    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getArtistListThunk, '/admin/artists', 10)
-
-    useEffect(() => {
-        if (!result || search === '') {
-            setData(artistList)
-            setDataStatus(artistListStatus)
-        } else {
-            setData(result.artists)
-            setDataStatus(resultStatus)
-        }
-    }, [artistListStatus, artistList, result])
-
-    const [data, setData] = useState<IArtist[] | null>(null)
-    const [dataStatus, setDataStatus] = useState<TStatus>('idle')
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit, hundleSearch, search } = usePagination(getArtistListThunk, '/admin/artists', 10, undefined, undefined, true)
+    const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+        hundleSearch(e.target.value)
+    }
 
     const [createArtist, setCreateArtist] = useState<boolean>(false)
     const [updateArtist, setUpdateArtist] = useState<boolean>(false)
@@ -55,14 +43,6 @@ export const AdminArtists = () => {
             <div className="container">
                 <div className={styles.top}>
                     <Title>АРТИСТЫ</Title>
-                    {/* {
-                        artistListStatus === 'success' && artistListPagination ?
-                            <p className={styles.count}>
-                                Всего: {artistListPagination.total} артистов
-                            </p>
-                        :
-                            <>Загрузка</>
-                    } */}
                     <Button color='accent' padding='10px 20px 10px 20px' onClick={() => setCreateArtist(true)}>
                         <div className={styles.buttonInner}>
                             <PlusIcon />
@@ -70,13 +50,13 @@ export const AdminArtists = () => {
                         </div>
                     </Button>
                 </div>
-                {/* <Input
+                <Input
                     placeholder='Поиск по никнейму артисту...'
                     type='text'
                     isGray={true}
                     onChange={onChangeSearch}
                     value={search}
-                /> */}
+                />
                 <ul className={styles.header}>
                     <li className={styles.header__item}>ID</li>
                     <li className={styles.header__item}>АРТИСТ</li>
@@ -85,25 +65,20 @@ export const AdminArtists = () => {
                     <li className={styles.header__item} style={{ textAlign: 'right' }}>ДЕЙСТВИЯ</li>
                 </ul>
                 {
-                    artistListStatus === 'success' && artistList && 
-                    <ul className={styles.list}>
-                        {
-                            artistList.map((artist) => {
-                                return <ArtistRowAdmin
-                                    key={artist.id}
-                                    artist={artist}
-                                    hundleUpdateArtist={(e: MouseEvent, id: number) => hundleUpdateArtist(e, id)}
-                                    hundleDeleteArtist={(e: MouseEvent, id: number) => hundleDeleteArtist(e, id)}
-                                />
-                            })
-                        }
-                    </ul>
-                }
-                {/* {
-                    result?.artists?.length === 0 && <p className={styles.text}>Ничего не найдено</p>
-                } */}
-                {
-                    artistListStatus === 'success' && artistListPagination &&
+                    artistListStatus === 'success' && artistList && artistListPagination ?
+                    <>
+                        <ul className={styles.list}>
+                            {
+                                artistList.map((artist) => {
+                                    return <ArtistRowAdmin
+                                        key={artist.id}
+                                        artist={artist}
+                                        hundleUpdateArtist={(e: MouseEvent, id: number) => hundleUpdateArtist(e, id)}
+                                        hundleDeleteArtist={(e: MouseEvent, id: number) => hundleDeleteArtist(e, id)}
+                                    />
+                                })
+                            }
+                        </ul>
                         <div className={styles.bottom}>
                             <div className={styles.left}>
                                 <p className={styles.text}>Показано {((artistListPagination.page - 1) * limit) + 1}-{limit * artistListPagination.page} из {artistListPagination.total}</p>
@@ -116,6 +91,15 @@ export const AdminArtists = () => {
                                 hundlePage={hundlePage}
                             />
                         </div>
+                    </>
+                    :
+                    <ul className={styles.list}>
+                        {
+                            Array.from({ length: 10 }).map((_, index) => {
+                                return <Skeleton key={index} isBlack width='100%' height='64px' borderRadius='12px' />
+                            })
+                        }
+                    </ul>
                 }
                 <Modal
                     width='520px'

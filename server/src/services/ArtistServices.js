@@ -1,4 +1,5 @@
 const pool = require("../config/db");
+const { search } = require("../controllers/SearchControllers");
 const mapToCamelCase = require("../utils/toCamelCase");
 
 class ArtistServices {
@@ -34,7 +35,8 @@ class ArtistServices {
         return mapToCamelCase(newArtistRes.rows[0])
     }
 
-    async getArtistList(limit, page) {
+    async getArtistList(limit, page, search) {
+        if (!search) search = ''
         const offset = (+page - 1) * +limit
         const [artistsRes, countRes] = await Promise.all([
             pool.query(`
@@ -51,11 +53,23 @@ class ArtistServices {
                         WHERE r.track_id = t.id AND (a.id = ANY(t.feat_artist_ids) OR a.id = t.artist_id)
                     ) as avg_rating
                 FROM artists a
+                WHERE
+                    REPLACE(LOWER(name), 'ё', 'е')
+                ILIKE
+                    REPLACE(LOWER($3), 'ё', 'е')
                 ORDER BY id
                 LIMIT $1
                 OFFSET $2
-            `, [limit, offset]),
-            pool.query(`SELECT COUNT(*) AS total FROM artists`)
+            `, [limit, offset, `%${search}%`]),
+            pool.query(`
+                SELECT
+                    COUNT(*) AS total
+                FROM artists
+                WHERE
+                    REPLACE(LOWER(name), 'ё', 'е')
+                ILIKE
+                    REPLACE(LOWER($1), 'ё', 'е')
+            `, [`%${search}%`])
         ])
         return {
             artists: artistsRes.rows.map(mapToCamelCase),

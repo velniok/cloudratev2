@@ -1,0 +1,1 @@
+export { CriteriasTooltip } from './CriteriasTooltip'

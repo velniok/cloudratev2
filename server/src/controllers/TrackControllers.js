@@ -49,8 +49,8 @@ class TrackControllers {
 
     async getList(req, res, next) {
         try {
-            const { page, limit } = req.query
-            const { tracks, total } = await TrackServices.getTrackList(page, limit)
+            const { page, limit, search } = req.query
+            const { tracks, total } = await TrackServices.getTrackList(page, limit, search)
 
             res.status(200).json({
                 tracks,

@@ -49,8 +49,8 @@ class ArtistControllers {
 
     async getList(req, res, next) {
         try {
-            const { limit, page } = req.query
-            const { artists, total } = await ArtistServices.getArtistList(limit, page)
+            const { limit, page, search } = req.query
+            const { artists, total } = await ArtistServices.getArtistList(limit, page, search)
             
             res.status(200).json({
                 artists,

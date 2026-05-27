@@ -6,14 +6,6 @@
     transform: translateZ(0);
     width: 175px;
 
-    transition: transform 0.3s, z-index 0.3s;
-
-    @media (hover: hover) {
-        &:hover {
-            transform: translateY(-4px);
-        }
-    }
-
     @media (max-width: $mobile) {
         height: 250px;
         width: 135px;
@@ -68,6 +60,7 @@
 }
 
 .rating {
+    cursor: default;
     position: absolute;
     bottom: 0;
     left: 0;

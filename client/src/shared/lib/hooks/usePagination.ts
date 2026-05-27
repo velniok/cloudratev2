@@ -5,38 +5,49 @@ import { useNotification } from "./useNotification"
 
 export const usePagination = (
         thunk: (params: any) => any,
-        path: string, limit: number, id?: number, isFilter?: boolean
+        path: string, limit: number, id?: number, isFilter?: boolean, isSearch?: boolean
     ) => {
 
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
     const navigate = useNavigate()
-    const search = useLocation().search
-    const params = new URLSearchParams(search)
+    const urlSearch = useLocation().search
+    const params = new URLSearchParams(urlSearch)
     const page = Number(params.get('page') || 1)
     const filter = params.get('filter') || 'all'
+    const search = params.get('search') || ''
 
     useEffect(() => {
-        const query = {page: page, limit: limit, id: id, filter: filter}
-        dispatch(thunk(query)).unwrap()
-            .then()
-            .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
-    }, [page, limit, id, filter])
+        const query = {page: page, limit: limit, id: id, filter: filter, search: search}
+        if (search) {
+            const timer = setTimeout(() => {
+                dispatch(thunk(query))
+            }, 500)
+            return () => clearTimeout(timer)
+        } else {
+            dispatch(thunk(query)).unwrap()
+                .then()
+                .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
+        }
+    }, [page, limit, id, filter, search])
 
     const hundleNextPage = () => {
         if (isFilter) return navigate(`${path}?page=${page + 1}&limit=${limit}&filter=${filter}`)
+        if (isSearch) return navigate(`${path}?page=${page + 1}&limit=${limit}&search=${search}`)
         navigate(`${path}?page=${page + 1}&limit=${limit}`)
     }
 
     const hundlePrevPage = () => {
         if (page <= 1) return false
         if (isFilter) return navigate(`${path}?page=${page - 1}&limit=${limit}&filter=${filter}`)
+        if (isSearch) return navigate(`${path}?page=${page - 1}&limit=${limit}&search=${search}`)
         navigate(`${path}?page=${page - 1}&limit=${limit}`)
     }
 
     const hundlePage = (fixPage: number) => {
         if (fixPage <= 0) return
         if (isFilter) return navigate(`${path}?page=${fixPage}&limit=${limit}&filter=${filter}`)
+        if (isSearch) return navigate(`${path}?page=${fixPage}&limit=${limit}&search=${search}`)
         navigate(`${path}?page=${fixPage}&limit=${limit}`)
     }
 
@@ -44,5 +55,9 @@ export const usePagination = (
         navigate(`${path}?page=1&limit=${limit}&filter=${filter}`)
     }
 
-    return { hundleNextPage, hundlePrevPage, hundlePage, hundleFilter, filter, page, limit }
+    const hundleSearch = (search: string) => {
+        navigate(`${path}?page=1&limit=${limit}&search=${search}`)
+    }
+
+    return { hundleNextPage, hundlePrevPage, hundlePage, hundleFilter, hundleSearch, search, filter, page, limit }
 } 

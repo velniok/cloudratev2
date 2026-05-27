@@ -1,10 +1,9 @@
-import { Button, Modal, PaginationButtons, PlusIcon, Title } from '@/shared/ui'
+import { Button, Input, Modal, PaginationButtons, PlusIcon, Skeleton, Title } from '@/shared/ui'
 import styles from './AdminTracks.module.scss'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { ITrack, TrackRowAdmin } from '@/entities/track'
 import { getTrackListThunk, selectTrackList, selectTrackListPagination, selectTrackListStatus, TrackCreateForm, TrackDeleteModal, TrackUpdateForm } from '@/features/track'
-import { useAppSelector, usePagination, useSearch } from '@/shared/lib'
-import { TStatus } from '@/shared/types'
+import { useAppSelector, usePagination } from '@/shared/lib'
 
 export const AdminTracks = () => {
 
@@ -12,21 +11,10 @@ export const AdminTracks = () => {
     const trackListPagination = useAppSelector(selectTrackListPagination)
     const trackListStatus = useAppSelector(selectTrackListStatus)
 
-    const { result, resultStatus, search, onChangeSearch } = useSearch('tracks')
-    const { hundleNextPage, hundlePrevPage, hundlePage, limit } = usePagination(getTrackListThunk, '/admin/tracks', 10)
-
-    useEffect(() => {
-        if (!result || search === '') {
-            setData(trackList)
-            setDataStatus(trackListStatus)
-        } else {
-            setData(result.tracks)
-            setDataStatus(resultStatus)
-        }
-    }, [trackListStatus, trackList, result])
-
-    const [data, setData] = useState<ITrack[] | null>(null)
-    const [dataStatus, setDataStatus] = useState<TStatus>('idle')
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit, hundleSearch, search } = usePagination(getTrackListThunk, '/admin/tracks', 10, undefined, undefined, true)
+    const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
+        hundleSearch(e.target.value)
+    }
 
     const [createTrack, setCreateTrack] = useState<boolean>(false)
     const [updateTrack, setUpdateTrack] = useState<boolean>(false)
@@ -52,9 +40,6 @@ export const AdminTracks = () => {
             <div className="container">
                 <div className={styles.top}>
                     <Title>ТРЕКИ</Title>
-                    {/* {
-                        trackListStatus === 'success' && trackListPagination ? <p className={styles.count}>Всего: {trackListPagination.total} артистов</p> : <>Загрузка</>
-                    } */}
                     <Button color='accent' padding='10px 20px 10px 20px' onClick={() => setCreateTrack(true)}>
                         <div className={styles.buttonInner}>
                             <PlusIcon />
@@ -62,13 +47,13 @@ export const AdminTracks = () => {
                         </div>
                     </Button>
                 </div>
-                {/* <Input
+                <Input
                     placeholder='Поиск по названию трека...'
                     type='text'
                     isGray={true}
                     onChange={onChangeSearch}
                     value={search}
-                /> */}
+                />
                 <ul className={styles.header}>
                     <li className={styles.header__item}>ID</li>
                     <li className={styles.header__item}>ТРЕК</li>
@@ -78,22 +63,20 @@ export const AdminTracks = () => {
                     <li className={styles.header__item} style={{ textAlign: 'right' }}>ДЕЙСТВИЯ</li>
                 </ul>
                 {
-                    trackListStatus === 'success' && trackList &&
-                    <ul className={styles.list}>
-                        {
-                            trackList.map((track) => {
-                                return <TrackRowAdmin
-                                    key={track.id}
-                                    track={track}
-                                    hundleUpdateTrack={(id: number) => hundleUpdateTrack(id)}
-                                    hundleDeleteTrack={(id: number) => hundleDeleteTrack(id)}
-                                />
-                            })
-                        }
-                    </ul>
-                }
-                {
-                    trackListStatus === 'success' && trackListPagination &&
+                    trackListStatus === 'success' && trackList && trackListPagination ?
+                    <>
+                        <ul className={styles.list}>
+                            {
+                                trackList.map((track) => {
+                                    return <TrackRowAdmin
+                                        key={track.id}
+                                        track={track}
+                                        hundleUpdateTrack={(id: number) => hundleUpdateTrack(id)}
+                                        hundleDeleteTrack={(id: number) => hundleDeleteTrack(id)}
+                                    />
+                                })
+                            }
+                        </ul>
                         <div className={styles.bottom}>
                             <div className={styles.left}>
                                 <p className={styles.text}>Показано {((trackListPagination.page - 1) * limit) + 1}-{limit * trackListPagination.page} из {trackListPagination.total}</p>
@@ -106,6 +89,15 @@ export const AdminTracks = () => {
                                 hundlePage={hundlePage}
                             />
                         </div>
+                    </>
+                    :
+                    <ul className={styles.list}>
+                        {
+                            Array.from({ length: 10 }).map((_, index) => {
+                                return <Skeleton key={index} isBlack width='100%' height='64px' borderRadius='12px' />
+                            })
+                        }
+                    </ul>
                 }
                 <Modal
                     modalTitle='Добавить трек'

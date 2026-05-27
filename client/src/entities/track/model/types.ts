@@ -11,11 +11,11 @@ export interface ITrack {
     releaseData: string
     avgRating: number | null
     avgCriterias: {
-        criteria1: number | null
-        criteria2: number | null
-        criteria3: number | null
-        criteria4: number | null
-        criteria5: number | null
+        criteria1: number 
+        criteria2: number
+        criteria3: number
+        criteria4: number
+        criteria5: number
     }
     artistId: number
     artist: IArtist

@@ -7,7 +7,7 @@ import type { IArtistReq } from "../api/artistApiTypes";
 import type { IApiError, IPagination } from "@/shared/types";
 import { ITrack } from "@/entities/track";
 
-export const getArtistListThunk = createAsyncThunk<{ artists: IArtist[], pagination: IPagination}, {page: number, limit: number}, { rejectValue: IApiError }>('artist/getArtistListThunk', async (params, { rejectWithValue }) => {
+export const getArtistListThunk = createAsyncThunk<{ artists: IArtist[], pagination: IPagination}, {page: number, limit: number, search: string}, { rejectValue: IApiError }>('artist/getArtistListThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await getArtistListApi(params)
         return data
