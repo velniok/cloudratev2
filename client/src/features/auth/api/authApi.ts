@@ -20,3 +20,11 @@ export const refreshApi = () => {
 export const logoutApi = () => {
     return axios.get('auth/logout')
 }
+
+export const forgotPasswordApi = (params: { email: string }) => {
+    return axios.post('auth/forgot-password', params)
+}
+
+export const resetPasswordApi = (params: { token: string | null, newPassword: string }) => {
+    return axios.post(`auth/reset-password?token=${params.token}`, {newPassword: params.newPassword})
+}

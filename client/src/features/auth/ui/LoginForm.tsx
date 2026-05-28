@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { Button, Input } from "@/shared/ui"
 import { clearError, loginThunk } from "../model/slice"
 import { selectAuthError } from "../model/selectors"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import styles from './Auth.module.scss'
 
 export const LoginForm = () => {
 
@@ -61,6 +62,7 @@ export const LoginForm = () => {
                 eyeIcon={true}
                 icon={<i className="ph ph-password"></i>}
             />
+            <Link to='/forgot-password' className={styles.forgot}>Забыли пароль?</Link>
             <Button color="accent" padding="20px 16px 16px 16px" onClick={handleSubmit}>Войти</Button>
         </>
     )

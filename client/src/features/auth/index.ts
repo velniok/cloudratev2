@@ -1,5 +1,7 @@
 export { RegForm } from "./ui/RegForm"
 export { LoginForm } from "./ui/LoginForm"
+export { ForgotPasswordForm } from "./ui/ForgotPasswordForm"
+export { ResetPasswordForm } from "./ui/ResetPasswordForm"
 export { selectAuthStatus, selectAuthUser, selectAuthError } from "./model/selectors"
 export { AuthReducer, authThunk, loginThunk, registerThunk } from './model/slice'
 export { clearError, logout, setToken } from "./model/slice"

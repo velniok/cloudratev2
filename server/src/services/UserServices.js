@@ -1,6 +1,8 @@
 const pool = require("../config/db")
 const bcrypt = require('bcrypt')
 const mapToCamelCase = require("../utils/toCamelCase")
+const crypto = require('crypto')
+const AppError = require('../utils/AppError');
 
 class UserServices {
 
@@ -105,6 +107,30 @@ class UserServices {
             FROM users
             WHERE id = $1
         `, [id])
+    }
+
+    async resetPassword(newPassword, token) {
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        const userRes = await pool.query(`
+            SELECT *
+            FROM users
+            WHERE reset_token = $1 AND reset_token_expiry > NOW()
+        `, [hashedToken])
+
+        if (!userRes.rows[0]) throw new AppError('Токен недействителен или истёк', 409, 'token')
+
+        const salt = await bcrypt.genSalt(10)
+        const hashPassword = await bcrypt.hash(newPassword, salt)
+
+        await pool.query(`
+            UPDATE users 
+            SET
+                password = $1,
+                reset_token = NULL,
+                reset_token_expiry = NULL 
+            WHERE id = $2
+        `, [hashPassword, userRes.rows[0].id])
     }
 }
 

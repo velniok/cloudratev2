@@ -1,7 +1,7 @@
-import { useLocation } from "react-router-dom"
 import { AuthForm } from "@/widgets/auth-forms"
+import { useLocation } from "react-router-dom"
 
-export const RegPage = () => {
+export const ResetPasswordPage = () => {
 
     const pathname = useLocation().pathname.slice(1)
 

@@ -11,6 +11,17 @@
     }
 }
 
+.forgot {
+    color: var(--accent-color);
+    margin-left: auto;
+    
+    @media (hover: hover) {
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
 .retry {
     display: flex;
     justify-content: center;

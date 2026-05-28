@@ -30,6 +30,8 @@ import { TrackSuggestionPage } from "@/pages/track-suggestion-page"
 import { AdminTrackSuggestionsPage } from "@/pages/admin-track-suggestions-page"
 import { UserSuggestionsPage } from "@/pages/user-suggestions-page"
 import { NotificationsPage } from "@/pages/notifications-page"
+import { ForgotPasswordPage } from "@/pages/forgot-password"
+import { ResetPasswordPage } from "@/pages/reset-password"
 
 function App() {
 
@@ -89,6 +91,8 @@ function App() {
         
                             <Route path="/registration" element={<RegPage />} />
                             <Route path="/login" element={<LoginPage />} />
+                            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                            <Route path="/reset-password" element={<ResetPasswordPage />} />
         
                             <Route path="/admin" element={<AdminPanelPage role={authUser?.role ?? 'user'} />} />
                             <Route path="/admin/artists" element={<AdminArtistsPage role={authUser?.role ?? 'user'} />} />

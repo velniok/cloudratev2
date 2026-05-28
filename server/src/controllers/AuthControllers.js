@@ -6,6 +6,7 @@ const MailServices = require('../services/MailServices');
 const TokenServices = require('../services/TokenServices');
 const UserDto = require('../dtos/UserDto');
 const NotificationServices = require('../services/NotificationServices');
+const UserServices = require('../services/UserServices');
 require('dotenv').config()
 
 class AuthControllers {
@@ -116,6 +117,32 @@ class AuthControllers {
         try {
             res.clearCookie('refreshToken')
             res.status(200).json({ message: 'Пользователь успешно вышел из аккаунта' })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async forgotPassword(req, res, next) {
+        try {
+            const { email } = req.body
+            await MailServices.forgotPassword(email)
+
+            res.status(200).json({ success: true })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
+
+    async resetPassword(req, res, next) {
+        try {
+            const { newPassword } = req.body
+            const { token } = req.query
+
+            await UserServices.resetPassword(newPassword, token)
+
+            res.status(200).json({ success: true })
         } catch (err) {
             console.log(err)
             next(err)

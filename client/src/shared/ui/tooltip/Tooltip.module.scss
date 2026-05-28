@@ -2,13 +2,13 @@
 
 .wrapper {
     position: relative;
-    z-index: 99999;
+    z-index: 999;
     width: fit-content;
 }
 
 .content {
     position: absolute;
-    z-index: 99999;
+    z-index: 999;
     opacity: 0;
     visibility: hidden;
     bottom: 125%;

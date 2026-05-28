@@ -1,9 +1,8 @@
 import { Link } from "react-router-dom"
-import { RegForm } from "@/features/auth"
+import { ForgotPasswordForm, RegForm, LoginForm, ResetPasswordForm } from "@/features/auth"
 import { LogoIcon } from "@/shared/ui"
 import styles from "./AuthForm.module.scss"
-import { useEffect, useState, type FC } from "react"
-import { LoginForm } from "@/features/auth"
+import { type FC } from "react"
 
 interface AuthFormProps {
     pathname: string
@@ -16,11 +15,29 @@ export const AuthForm: FC<AuthFormProps> = ({ pathname }) => {
             <div className={styles.wrapper}>
                 <div className={styles.top}>
                     <LogoIcon width="40px" height="40px" />
-                    <h2 className={styles.title}>{`${pathname === 'registration' ? 'СОЗДАТЬ АККАУНТ' : 'С ВОЗВРАЩЕНИЕМ'}`}</h2>
+                    <h2 className={styles.title}>
+                        {`
+                            ${pathname === 'registration' ?
+                                'СОЗДАТЬ АККАУНТ'
+                            : pathname === 'forgot-password' ?
+                                'ВОССТАНОВЛЕНИЕ ПАРОЛЯ'
+                            : pathname === 'reset-password' ?
+                                'ВОССТАНОВЛЕНИЕ ПАРОЛЯ'
+                            :
+                                'С ВОЗВРАЩЕНИЕМ'}
+                        `}
+                    </h2>
                 </div>
                 <form className={styles.form}>
                     {
-                        pathname === 'registration' ? <RegForm /> : <LoginForm />
+                        pathname === 'registration' ?
+                            <RegForm />
+                        : pathname === 'forgot-password' ?
+                            <ForgotPasswordForm />
+                        : pathname === 'reset-password' ?
+                            <ResetPasswordForm />
+                        :
+                            <LoginForm />
                     }
                 </form>
                 <div className={styles.bottom}>
@@ -30,7 +47,7 @@ export const AuthForm: FC<AuthFormProps> = ({ pathname }) => {
                             Уже есть аккаунт?
                             <Link to={'/login'} className={styles.link}>Войти</Link>
                         </p>
-                        :
+                        : pathname === 'login' &&
                         <p className={styles.text}>
                             Нет аккаунта?
                             <Link to={'/registration'} className={styles.link}>Создать</Link>
