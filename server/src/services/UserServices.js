@@ -101,7 +101,7 @@ class UserServices {
                 SET
                     email = $1,
                     nickname = $2,
-                    username = $3,
+                    username = COALESCE($3, username),
                     avatar_url = $4,
                     soundcloud_url = $5
                 WHERE id = $6

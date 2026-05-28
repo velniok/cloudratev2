@@ -10,6 +10,7 @@ const userValidation = [
         .trim().isLength({ min: 4 }).withMessage("Никнейм должен содержать минимум 4 символа")
         .matches(/^[a-zA-Z0-9_#@ -]+$/).withMessage("Никнейм может содержать только латинские буквы, цифры, _, @, - и #"),
     body('username')
+        .optional({ nullable: true })
         .trim().isLength({ min: 4 }).withMessage("Уник. никнейм должен содержать минимум 4 символа")
         .matches(/^[a-zA-Z]/).withMessage("Уник. никнейм должен начинаться с латинской буквы")
         .matches(/^[a-zA-Z0-9_]+$/).withMessage("Никнейм может содержать только латинские буквы, цифры и _"),
