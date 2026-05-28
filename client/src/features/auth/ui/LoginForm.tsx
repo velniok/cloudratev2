@@ -62,7 +62,7 @@ export const LoginForm = () => {
                 eyeIcon={true}
                 icon={<i className="ph ph-password"></i>}
             />
-            <Link to='/forgot-password' className={styles.forgot}>Забыли пароль?</Link>
+            {/* <Link to='/forgot-password' className={styles.forgot}>Забыли пароль?</Link> */}
             <Button color="accent" padding="20px 16px 16px 16px" onClick={handleSubmit}>Войти</Button>
         </>
     )

@@ -5,7 +5,7 @@ import type { IAuthState } from "./authSliceTypes";
 import axios from "axios";
 import { IApiError } from "@/shared/types";
 
-export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq & { verifyCode: string }, { rejectValue: IApiError }>('auth/registerThunk', async (params, { rejectWithValue }) => {
+export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq & { verifyCode?: string }, { rejectValue: IApiError }>('auth/registerThunk', async (params, { rejectWithValue }) => {
     try {
         const { data } = await registerUser(params)
         localStorage.setItem('isAuth', 'true')

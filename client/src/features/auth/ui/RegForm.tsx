@@ -98,13 +98,13 @@ export const RegForm = () => {
     const hundleRegister = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
 
-        if (values.verifyCode.length < 6) return setErrors(prev => ({ ...prev, verifyCode: 'Код должен содержать минимум 6 символа' }))
+        // if (values.verifyCode.length < 6) return setErrors(prev => ({ ...prev, verifyCode: 'Код должен содержать минимум 6 символа' }))
 
         dispatch(registerThunk({
             nickname: values.nickname,
             email: values.email,
             password: values.password,
-            verifyCode: values.verifyCode,
+            // verifyCode: values.verifyCode,
         })).unwrap()
             .then(() => {
                 notify('Аккаунт зарегистрирован', 'Вы успешно зарегистрировали аккаунт', 'success')
@@ -181,7 +181,7 @@ export const RegForm = () => {
                     eyeIcon={true}
                     icon={<i className="ph ph-password"></i>}
                 />
-                <Button color="accent" padding="20px 16px 16px 16px" onClick={handleSendVerifyCode}>Зарегистрироваться</Button>
+                <Button color="accent" padding="20px 16px 16px 16px" onClick={hundleRegister}>Зарегистрироваться</Button>
             </>
         }
         </>

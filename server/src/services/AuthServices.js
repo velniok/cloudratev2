@@ -9,12 +9,12 @@ class AuthServices {
         const salt = await bcrypt.genSalt(10)
         const hashPassword = await bcrypt.hash(password, salt)
 
-        const verifyCodeRes = await pool.query(`
-            SELECT * FROM verify_codes
-            WHERE email = $1 AND code = $2 AND expires_at > NOW()
-        `, [values[0], verifyCode])
+        // const verifyCodeRes = await pool.query(`
+        //     SELECT * FROM verify_codes
+        //     WHERE email = $1 AND code = $2 AND expires_at > NOW()
+        // `, [values[0], verifyCode])
 
-        if (!verifyCodeRes.rows[0]) throw new AppError('Код неверный или истёк', 409, 'verifyCode')
+        // if (!verifyCodeRes.rows[0]) throw new AppError('Код неверный или истёк', 409, 'verifyCode')
 
         const newUserRes = await pool.query(`
             WITH email_check AS (

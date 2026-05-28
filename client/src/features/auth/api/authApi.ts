@@ -5,7 +5,7 @@ export const sendVerifyCodeApi = (params: IRegisterReq) => {
     return axios.post<IAuthRes>('auth/send-verify-code', params)
 }
 
-export const registerUser = (params: IRegisterReq & { verifyCode: string }) => {
+export const registerUser = (params: IRegisterReq & { verifyCode?: string }) => {
     return axios.post<IAuthRes>('auth/register', params)
 }
 
