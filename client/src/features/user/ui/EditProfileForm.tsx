@@ -94,9 +94,9 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
 
         if (values.nickname.length < 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
         if (!/^[a-zA-Z0-9_#@ -]+$/.test(values.nickname)) return setErrors(prev => ({ ...prev, nickname: 'Никнейм может содержать только латинские буквы, цифры, _, @, - и #' }))
-        if (values.username.length < 4) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм должен содержать минимум 4 символа' }))
-        if (!/^[a-zA-Z]/.test(values.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм должен начинаться с латинской буквы' }))
-        if (!/^[a-zA-Z0-9_]+$/.test(values.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм может содержать только латинские буквы, цифры и _' }))
+        if (values.username.length < 4 && !(values.username === user.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм должен содержать минимум 4 символа' }))
+        if (!/^[a-zA-Z]/.test(values.username) && !(values.username === user.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм должен начинаться с латинской буквы' }))
+        if (!/^[a-zA-Z0-9_]+$/.test(values.username) && !(values.username === user.username)) return setErrors(prev => ({ ...prev, username: 'Уник. никнейм может содержать только латинские буквы, цифры и _' }))
         if (!/\S+@\S+\.\S+/.test(values.email)) return setErrors(prev => ({ ...prev, email: 'Неверный формат email' }))
         if (values.soundcloudUrl !== '' && !URL.canParse(values.soundcloudUrl)) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Неверный формат ссылки' }))
         if (values.password && values.password.length < 6) return setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 6 символа' }))
