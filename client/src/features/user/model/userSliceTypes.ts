@@ -32,4 +32,5 @@ export interface IUserState {
     userList: IUser[] | null
     userListStatus: TStatus
     userListError: string | null
+    userListPagination: IPagination | null
 }

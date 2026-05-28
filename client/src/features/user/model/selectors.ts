@@ -25,4 +25,5 @@ export const selectUserNotificationsStatus = (state: RootState) => state.user.no
 
 export const selectUserList = (state: RootState) => state.user.userList
 export const selectUserListStatus = (state: RootState) => state.user.userListStatus
+export const selectUserListPagination = (state: RootState) => state.user.userListPagination
 export const selectUserListError = (state: RootState) => state.user.userListError

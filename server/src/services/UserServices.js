@@ -6,13 +6,35 @@ const AppError = require('../utils/AppError');
 
 class UserServices {
 
-    async getUserList() {
-        const usersRes = await pool.query(`
-            SELECT *
-            FROM users
-            ORDER BY id
-        `)
-        return usersRes.rows.map(mapToCamelCase)
+    async getUserList(limit, page, search) {
+        const offset = (+page - 1) * +limit
+        const [usersRes, countRes] = await Promise.all([
+            pool.query(`
+                SELECT *
+                FROM users
+                WHERE
+                    REPLACE(LOWER(nickname), 'ё', 'е')
+                ILIKE
+                    REPLACE(LOWER($3), 'ё', 'е')
+                ORDER BY id
+                LIMIT $1
+                OFFSET $2
+            `, [limit, offset, `%${search}%`]),
+            pool.query(`
+                SELECT
+                    COUNT(*) AS total
+                FROM users
+                WHERE
+                    REPLACE(LOWER(nickname), 'ё', 'е')
+                ILIKE
+                    REPLACE(LOWER($1), 'ё', 'е')
+            `, [`%${search}%`])
+        ])
+            
+        return {
+            users: usersRes.rows.map(mapToCamelCase),
+            total: countRes.rows[0].total,
+        }
     }
 
     async getUserById(id) {

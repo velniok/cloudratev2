@@ -13,9 +13,18 @@ class UserControllers {
 
     async getList(req, res, next) {
         try {
-            const users = await UserServices.getUserList()
+            const { limit, page, search } = req.query
+            const { users, total } = await UserServices.getUserList(limit, page, search)
 
-            res.status(200).json({users})
+            res.status(200).json({
+                users,
+                pagination: {
+                    page: Number(page),
+                    limit: Number(limit),
+                    total: Number(total),
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
         } catch (err) {
             console.log(err)
             next(err)

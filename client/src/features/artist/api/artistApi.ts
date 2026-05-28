@@ -5,7 +5,7 @@ import { IPagination } from "@/shared/types"
 import { ITrack } from "@/entities/track"
 
 export const getArtistListApi = (params: { page: number, limit: number, search: string }) => {
-    return axios.get<{ artists: IArtist[], pagination: IPagination}>('/artist/list', { params: { page: params.page, limit: params.limit, search: params.search } })
+    return axios.get<{ artists: IArtist[], pagination: IPagination }>('/artist/list', { params: { page: params.page, limit: params.limit, search: params.search } })
 }
 
 export const getSoundсloudArtist = (params: { url: string }) => {

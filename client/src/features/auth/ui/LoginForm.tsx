@@ -3,8 +3,7 @@ import { useAppDispatch, useAppSelector, useNotification } from "@/shared/lib"
 import { Button, Input } from "@/shared/ui"
 import { clearError, loginThunk } from "../model/slice"
 import { selectAuthError } from "../model/selectors"
-import { Link, useNavigate } from "react-router-dom"
-import styles from './Auth.module.scss'
+import { useNavigate } from "react-router-dom"
 
 export const LoginForm = () => {
 

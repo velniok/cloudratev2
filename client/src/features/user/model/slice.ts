@@ -23,9 +23,9 @@ export const getUserProfileThunk = createAsyncThunk<{ user: IUser }, { username:
     }
 })
 
-export const getUserListThunk = createAsyncThunk<{ users: IUser[] }, void, { rejectValue: IApiError }>('user/getUserListThunk', async (_, { rejectWithValue }) => {
+export const getUserListThunk = createAsyncThunk<{ users: IUser[], pagination: IPagination }, { page: number, limit: number, search: string }, { rejectValue: IApiError }>('user/getUserListThunk', async (params, { rejectWithValue }) => {
     try {
-        const { data } = await getUserListApi()
+        const { data } = await getUserListApi(params)
         return data
     } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -157,6 +157,7 @@ const initialState: IUserState = {
 
     userList: null,
     userListStatus: 'idle',
+    userListPagination: null,
     userListError: null
 }
 
@@ -191,11 +192,13 @@ const userSlice = createSlice({
             .addCase(getUserListThunk.pending, (state) => {
                 state.userList = null,
                 state.userListStatus = 'loading',
-                state.userListError = null
+                state.userListError = null,
+                state.userListPagination = null
             })
             .addCase(getUserListThunk.fulfilled, (state, action) => {
                 state.userListStatus = 'success',
-                state.userList = action.payload.users
+                state.userList = action.payload.users,
+                state.userListPagination = action.payload.pagination
             })
             .addCase(getUserListThunk.rejected, (state, action) => {
                 state.userListStatus = 'error',

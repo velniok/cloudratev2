@@ -51,7 +51,7 @@ export const Cover: FC<CoverProps> = ({ isHovered, mb, url, width, height, borde
                 }}
             >
                 {
-                    isInput && <ProfileIcon />
+                    isInput ? <ProfileIcon /> : <i className="ph ph-image-square"></i>
                 }
             </div>
         }

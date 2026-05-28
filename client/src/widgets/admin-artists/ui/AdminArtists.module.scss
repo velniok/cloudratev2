@@ -51,6 +51,10 @@
 
 .text {
     color: var(--text-secondary);
+
+    @media (max-width: $mobile) {
+        font-size: 12px;
+    }
 }
 
 .buttonInner {
@@ -72,11 +76,4 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.text {
-
-    @media (max-width: $mobile) {
-        font-size: 12px;
-    }
 }

@@ -36,7 +36,6 @@ class ArtistServices {
     }
 
     async getArtistList(limit, page, search) {
-        if (!search) search = ''
         const offset = (+page - 1) * +limit
         const [artistsRes, countRes] = await Promise.all([
             pool.query(`

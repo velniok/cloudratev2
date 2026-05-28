@@ -48,7 +48,7 @@ const initialState: IAuthState = {
     token: null,
     notifications: null,
     status: 'idle',
-    error: null,
+    error: null
 }
 
 const authSlice = createSlice({

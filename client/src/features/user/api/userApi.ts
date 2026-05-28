@@ -11,8 +11,8 @@ export const getUserProfileApi = (params: { username: string }) => {
     return axios.get<{ user: IUser }>(`/user/profile/${params.username}`)
 }
 
-export const getUserListApi = () => {
-    return axios.get<{ users: IUser[] }>('/user/list')
+export const getUserListApi = (params: { page: number, limit: number, search: string }) => {
+    return axios.get<{ users: IUser[], pagination: IPagination }>('/user/list', { params: { page: params.page, limit: params.limit, search: params.search } })
 }
 
 export const getUserReviewsApi = (params: { page: number, limit: number, id: number }) => {

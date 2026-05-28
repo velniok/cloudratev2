@@ -61,10 +61,10 @@ class AuthControllers {
             const { email, password } = req.body
 
             const user = await AuthServices.login(email)
-            if (!user) throw new AppError('Неправильный email или пароль', 401)
+            if (!user) throw new AppError('Неправильный email или пароль', 409)
 
             const isValidPassword = await bcrypt.compare(password, user.password)
-            if (!isValidPassword) throw new AppError('Неправильный email или пароль', 401)
+            if (!isValidPassword) throw new AppError('Неправильный email или пароль', 409)
 
             const userDto = new UserDto(user)
             const notifications = await NotificationServices.get(user.id)

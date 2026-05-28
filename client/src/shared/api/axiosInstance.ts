@@ -21,7 +21,9 @@ instance.interceptors.response.use(
     async (err) => {
         const original = err.config
 
-        if (err.response?.status === 401 && !original._retry && !original.url.includes('/auth/refresh')) {
+        const skipUrls = ['/auth/refresh', 'auth/login', 'auth/register']
+        const isSkipped = skipUrls.some(url => original.url.includes(url))
+        if (err.response?.status === 401 && !original._retry && !isSkipped) {
             original._retry = true
 
             try {
