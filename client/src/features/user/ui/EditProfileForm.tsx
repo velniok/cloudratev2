@@ -27,7 +27,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const initialValues = {
         nickname: `${user.nickname}`,
         username: `${user.username}`,
-        avatarUrl: `${user.avatarUrl ?? ''}`,
+        avatarUrl: `${user.avatarUrl}`,
         email: `${user.email}`,
         password: '',
         confirmPassword: '',
@@ -86,7 +86,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const hundleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
 
-        let avatarUrl: string = ''
+        let avatarUrl: string = user.avatarUrl ?? ''
         if (avatarFile) {
             const { data } = await updateAvatarApi(avatarFile, 'user')
             avatarUrl = data.url
