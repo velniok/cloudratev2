@@ -32,6 +32,7 @@ import { UserSuggestionsPage } from "@/pages/user-suggestions-page"
 import { NotificationsPage } from "@/pages/notifications-page"
 import { ForgotPasswordPage } from "@/pages/forgot-password"
 import { ResetPasswordPage } from "@/pages/reset-password"
+import { Footer } from "@/widgets/footer"
 
 function App() {
 
@@ -72,35 +73,38 @@ function App() {
                     {
                         pathname.slice(0, 6) !== '/admin' || authUser?.role !== 'admin' ?  <Sidebar setSidebar={() => setSidebar(false)} sidebar={sidebar} /> : <AdminSidebar setSidebar={() => setSidebar(false)} sidebar={sidebar} />
                     }
-                    <main>
-                        <Routes>
-                            <Route path="/" element={<HomePage />} />
-                            <Route path="/search" element={<SearchPage />} />
-        
-                            <Route path="/track/:id" element={<TrackPage />} />
-                            <Route path="/track-suggestion" element={<TrackSuggestionPage />} />
+                    <div className="main-wrapper">
+                        <main>
+                            <Routes>
+                                <Route path="/" element={<HomePage />} />
+                                <Route path="/search" element={<SearchPage />} />
+            
+                                <Route path="/track/:id" element={<TrackPage />} />
+                                <Route path="/track-suggestion" element={<TrackSuggestionPage />} />
 
-                            <Route path="/artist/:id" element={<ArtistPage />} />
-        
-                            <Route path="/user/:username" element={<UserPage />} />
-                            <Route path="/user/:username/edit" element={<EditProfilePage />} />
-                            <Route path="/user/:username/reviews" element={<UserReviewsPage />} />
-                            <Route path="/user/:username/follows" element={<UserFollowsPage />} />
-                            <Route path="/user/track-suggestions" element={<UserSuggestionsPage />} />
-                            <Route path="/user/notifications" element={<NotificationsPage />} />
-        
-                            <Route path="/registration" element={<RegPage />} />
-                            <Route path="/login" element={<LoginPage />} />
-                            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                            <Route path="/reset-password" element={<ResetPasswordPage />} />
-        
-                            <Route path="/admin" element={<AdminPanelPage role={authUser?.role ?? 'user'} />} />
-                            <Route path="/admin/artists" element={<AdminArtistsPage role={authUser?.role ?? 'user'} />} />
-                            <Route path="/admin/tracks" element={<AdminTracksPage role={authUser?.role ?? 'user'} />} />
-                            <Route path="/admin/users" element={<AdminUsersPage role={authUser?.role ?? 'user'} />} />
-                            <Route path="/admin/suggestions-tracks" element={<AdminTrackSuggestionsPage role={authUser?.role ?? 'user'} />} />
-                        </Routes>
-                    </main>
+                                <Route path="/artist/:id" element={<ArtistPage />} />
+            
+                                <Route path="/user/:username" element={<UserPage />} />
+                                <Route path="/user/:username/edit" element={<EditProfilePage />} />
+                                <Route path="/user/:username/reviews" element={<UserReviewsPage />} />
+                                <Route path="/user/:username/follows" element={<UserFollowsPage />} />
+                                <Route path="/user/track-suggestions" element={<UserSuggestionsPage />} />
+                                <Route path="/user/notifications" element={<NotificationsPage />} />
+            
+                                <Route path="/registration" element={<RegPage />} />
+                                <Route path="/login" element={<LoginPage />} />
+                                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                                <Route path="/reset-password" element={<ResetPasswordPage />} />
+            
+                                <Route path="/admin" element={<AdminPanelPage role={authUser?.role ?? 'user'} />} />
+                                <Route path="/admin/artists" element={<AdminArtistsPage role={authUser?.role ?? 'user'} />} />
+                                <Route path="/admin/tracks" element={<AdminTracksPage role={authUser?.role ?? 'user'} />} />
+                                <Route path="/admin/users" element={<AdminUsersPage role={authUser?.role ?? 'user'} />} />
+                                <Route path="/admin/suggestions-tracks" element={<AdminTrackSuggestionsPage role={authUser?.role ?? 'user'} />} />
+                            </Routes>
+                        </main>
+                        <Footer />
+                    </div>
                     <Notification />
                 </>
             }

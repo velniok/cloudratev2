@@ -103,19 +103,26 @@ body {
     font-family: var(--font-family);
     color: var(--text-primary);
     height: 100%;
-    margin-bottom: 32px;
 }
 
 .no-scroll {
     overflow: hidden;
 }
 
-main {
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
     margin-left: 280px;
+    min-height: 100vh;
 
     @media (max-width: $mobile) {
         margin-left: 0;
+        min-height: calc(100vh - 53px);
     }
+}
+
+main {
+    flex: 1 0 auto;
 }
 
 h1, h2, h3, h4, h5, h6, p {

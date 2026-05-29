@@ -1,0 +1,103 @@
+@use '@/shared/styles/breakpoints' as *;
+
+.wrapper {
+    margin-top: 64px;
+    margin-bottom: 48px;
+    flex-shrink: 0;
+
+    @media (max-width: $mobile) {
+        margin-top: 32px;
+        margin-bottom: 24px;
+    }
+}
+
+.top {
+    margin-bottom: 16px;
+
+    @media (max-width: $mobile) {
+        margin-bottom: 4px;
+    }
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    @media (max-width: $mobile) {
+        & div {
+            width: 20px !important;
+            height: 20px !important;
+        }
+    }
+
+    &__text {
+        padding-top: 4px;
+        font-family: var(--second-family);
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: 0.05em;
+
+        @media (max-width: $mobile) {
+            font-size: 18px;
+        }
+    }
+}
+
+.bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 16px;
+
+    @media (max-width: $mobile) {
+        flex-direction: column;
+        row-gap: 12px;
+        align-items: flex-start;
+        border: none;
+        padding-top: 0;
+    }
+}
+
+.copyright {
+    color: var(--text-secondary);
+
+    @media (max-width: $mobile) {
+        font-size: 12px;
+    }
+}
+
+.legal {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+    color: var(--text-secondary);
+
+    @media (max-width: $mobile) {
+        width: 100%;
+        padding-top: 12px;
+        border-top: 1px solid var(--border-subtle);
+        row-gap: 6px;
+        flex-direction: column;
+        align-items: flex-start;
+
+    }
+
+    &__item {
+        position: relative;
+        cursor: pointer;
+
+        transition: color 0.3s ease-in;
+
+        @media (hover: hover) {
+            &:hover {
+                color: var(--accent-color);
+            }
+        }
+
+        @media (max-width: $mobile) {
+            font-size: 12px;
+        }
+    }
+}
