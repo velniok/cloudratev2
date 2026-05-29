@@ -1,4 +1,4 @@
-import { Input, Modal, PaginationButtons, Title } from '@/shared/ui'
+import { Input, Modal, PaginationButtons, Skeleton, Title } from '@/shared/ui'
 import styles from './AdminUsers.module.scss'
 import { ChangeEvent, MouseEvent, useEffect, useState } from 'react'
 import { IUser, UserRowAdmin } from '@/entities/user'
@@ -10,7 +10,7 @@ export const AdminUsers= () => {
     const userListStatus = useAppSelector(selectUserListStatus)
     const userListPagination = useAppSelector(selectUserListPagination)
 
-    const { hundleNextPage, hundlePrevPage, hundlePage, limit, hundleSearch, search } = usePagination(getUserListThunk, '/admin/users', 10, undefined, undefined, true)
+    const { hundleNextPage, hundlePrevPage, hundlePage, limit, hundleSearch, search, isLoadingPagination } = usePagination(getUserListThunk, '/admin/users', 10, undefined, undefined, true)
     const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
         hundleSearch(e.target.value)
     }
@@ -55,7 +55,7 @@ export const AdminUsers= () => {
                     <li className={styles.header__item} style={{ textAlign: 'right' }}>ДЕЙСТВИЯ</li>
                 </ul>
                 {
-                    userListStatus === 'success' && userList && userListPagination &&
+                    !isLoadingPagination && userListStatus === 'success' && userList && userListPagination ?
                     <>
                         <ul className={styles.list}>
                             {
@@ -82,6 +82,14 @@ export const AdminUsers= () => {
                             />
                         </div>
                     </>
+                    :
+                    <ul className={styles.list}>
+                        {
+                            Array.from({ length: 10 }).map((_, index) => {
+                                return <Skeleton key={index} isBlack width='100%' height='64px' borderRadius='12px' />
+                            })
+                        }
+                    </ul>
                 }
                 <Modal
                     width='420px'

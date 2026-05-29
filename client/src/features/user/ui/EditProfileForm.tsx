@@ -85,12 +85,8 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
 
     const hundleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+        if (updateUserLoading) return false
 
-        let avatarUrl: string = user.avatarUrl ?? ''
-        if (avatarFile) {
-            const { data } = await updateAvatarApi(avatarFile, 'user')
-            avatarUrl = data.url
-        }
         let username = null
 
         if (values.nickname.length < 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
@@ -107,6 +103,13 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
         if (values.password !== values.confirmPassword) return setErrors(prev => ({ ...prev, confirmPassword: 'Пароли не совпадают' }))
 
         setUpdateUserLoading(true)
+
+        let avatarUrl: string = user.avatarUrl ?? ''
+        if (avatarFile) {
+            const { data } = await updateAvatarApi(avatarFile, 'user')
+            avatarUrl = data.url
+        }
+
         dispatch(updateUserThunk({
             id: user.id,
             req: {
@@ -221,11 +224,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                     />
                 </div>
                 <div className={styles.bottom}>
-                    <Button color='accent' padding='16px 24px 12px 24px' onClick={hundleSubmit}>
-                        {
-                            updateUserLoading ? 'Загрузка...' : 'Сохранить изменения'
-                        }
-                    </Button>
+                    <Button isLoading={updateUserLoading} color='accent' padding='16px 24px 12px 24px' onClick={hundleSubmit}>Сохранить изменения</Button>
                     <Button color='default' padding='16px 24px 12px 24px' onClick={hundleCancel}>Отмена</Button>
                 </div>
             </form>

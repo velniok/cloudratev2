@@ -30,8 +30,15 @@ export const Button: FC<ButtonProps> = ({ children, padding, icon, isLoading, on
             `}
             style={ { padding: `${padding}`, fontSize: `${fontSize}` } }
             onClick={onClick}>
-                {icon}
-                {children}
+                {
+                    isLoading ?
+                    'Загрузка...'
+                    :
+                    <>
+                        {icon}
+                        {children}
+                    </>
+                }
         </button>
     )
 }

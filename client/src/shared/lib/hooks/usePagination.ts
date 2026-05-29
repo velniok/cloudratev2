@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useAppDispatch } from "./useAppDispatch"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useNotification } from "./useNotification"
@@ -17,16 +17,20 @@ export const usePagination = (
     const filter = params.get('filter') || 'all'
     const search = params.get('search') || ''
 
+    const [isLoadingPagination, setIsLoadingPagination] = useState<boolean>(false)
+
     useEffect(() => {
+        setIsLoadingPagination(true)
         const query = {page: page, limit: limit, id: id, filter: filter, search: search}
         if (search) {
             const timer = setTimeout(() => {
                 dispatch(thunk(query))
+                    .then(() => setIsLoadingPagination(false))
             }, 500)
             return () => clearTimeout(timer)
         } else {
             dispatch(thunk(query)).unwrap()
-                .then()
+                .then(() => setIsLoadingPagination(false))
                 .catch((err: { message: string }) => notify(err.message, 'Попробуйте еще раз', 'error'))
         }
     }, [page, limit, id, filter, search])
@@ -59,5 +63,5 @@ export const usePagination = (
         navigate(`${path}?page=1&limit=${limit}&search=${search}`)
     }
 
-    return { hundleNextPage, hundlePrevPage, hundlePage, hundleFilter, hundleSearch, search, filter, page, limit }
+    return { hundleNextPage, hundlePrevPage, hundlePage, hundleFilter, hundleSearch, isLoadingPagination, search, filter, page, limit }
 } 

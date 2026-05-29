@@ -4,6 +4,7 @@ import { loginUser, refreshApi, registerUser } from "../api/authApi";
 import type { IAuthState } from "./authSliceTypes";
 import axios from "axios";
 import { IApiError } from "@/shared/types";
+import { updateUserThunk } from "@/features/user";
 
 export const registerThunk = createAsyncThunk<IAuthRes, IRegisterReq & { verifyCode?: string }, { rejectValue: IApiError }>('auth/registerThunk', async (params, { rejectWithValue }) => {
     try {
@@ -45,6 +46,7 @@ export const authThunk = createAsyncThunk<IAuthRes, void, { rejectValue: IApiErr
 
 const initialState: IAuthState = {
     user: null,
+    userStatus: 'idle',
     token: null,
     notifications: null,
     status: 'idle',
@@ -79,6 +81,15 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(updateUserThunk.pending, (state, action) => {
+                state.userStatus = 'loading'
+                state.user = null
+            })
+            .addCase(updateUserThunk.fulfilled, (state, action) => {
+                state.userStatus = 'success'
+                state.user = action.payload.user
+            })
+
             .addCase(registerThunk.pending, (state) => {
                 state.error = null
             })
@@ -88,7 +99,6 @@ const authSlice = createSlice({
                 state.token = action.payload.token,
                 state.status = 'success',
                 state.error = null
-                state.status = 'success'
             })
             .addCase(registerThunk.rejected, (state, action) => {
                 state.status = 'error',
@@ -96,7 +106,6 @@ const authSlice = createSlice({
             })
 
             .addCase(loginThunk.pending, (state) => {
-                state.status = 'loading',
                 state.error = null
             })
             .addCase(loginThunk.fulfilled, (state, action) => {
@@ -105,7 +114,6 @@ const authSlice = createSlice({
                 state.token = action.payload.token,
                 state.status = 'success',
                 state.error = null
-                state.status = 'success'
             })
             .addCase(loginThunk.rejected, (state, action) => {
                 state.status = 'error',
@@ -114,6 +122,7 @@ const authSlice = createSlice({
 
             .addCase(authThunk.pending, (state) => {
                 state.status = 'loading',
+                state.userStatus = 'loading'
                 state.error = null
             })
             .addCase(authThunk.fulfilled, (state, action) => {
@@ -121,8 +130,8 @@ const authSlice = createSlice({
                 state.notifications = action.payload.notifications.notifications,
                 state.token = action.payload.token,
                 state.status = 'success',
+                state.userStatus = 'success'
                 state.error = null
-                state.status = 'success'
             })
             .addCase(authThunk.rejected, (state, action) => {
                 state.status = 'error',

@@ -1,12 +1,12 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import styles from "./Sidebar.module.scss"
-import { Badges, Button, Cover, LogoIcon } from "../../../shared/ui"
+import { Badges, Button, Cover, LogoIcon, Skeleton } from "../../../shared/ui"
 import { getOptimizedAvatar, useAppDispatch, useAppSelector } from "../../../shared/lib"
 import { logoutApi, selectAuthStatus, selectAuthUser } from "../../../features/auth"
 import { logout } from "../../../features/auth"
 import { FC, useEffect, useState } from "react"
 import { UserNotificationPopup } from "@/widgets/user-notification-modal"
-import { selectAuthNotifications } from "@/features/auth/model/selectors"
+import { selectAuthNotifications, selectAuthUserStatus } from "@/features/auth/model/selectors"
 
 interface SidebarProps {
     sidebar: boolean
@@ -18,6 +18,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const authStatus = useAppSelector(selectAuthStatus)
+    const authUserStatus = useAppSelector(selectAuthUserStatus)
     const authUser = useAppSelector(selectAuthUser)
     const userNotifications = useAppSelector(selectAuthNotifications)
 
@@ -137,7 +138,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
             }
             <div className={styles.bottom}>
                 {
-                    authStatus === 'success' && authUser ?
+                    authUserStatus === 'success' && authUser ?
                     <>
                         <div className={`${styles.user__info} ${openUser ? styles.open : ''}`}>
                             <ul className={styles.user__infoList}>
@@ -168,6 +169,12 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                             <i className={`ph ph-dots-three ${styles.user__more}`}></i>
                         </div>
                     </>
+                    : authUserStatus === 'loading' ?
+                    <div className={styles.bottom__inner}>
+                        <div className={styles.user}>
+                            <Skeleton isBlack width="220px" height="72px" borderRadius="12px" />
+                        </div>
+                    </div>
                     :
                     <div className={styles.nonAuth}>
                         <i className="ph ph-info"></i>
@@ -176,7 +183,6 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                             <Button color="accent" padding="14px 20px 10px 20px">Войти</Button>
                         </Link>
                     </div>
-                    
                 }
             </div>
         </aside>

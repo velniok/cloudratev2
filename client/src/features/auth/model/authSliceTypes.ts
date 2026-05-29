@@ -8,4 +8,5 @@ export interface IAuthState {
     notifications: IUserNotification[] | null
     user: IUser | null
     error: string | null
+    userStatus: TStatus
 }

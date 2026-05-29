@@ -15,6 +15,7 @@ export const TrackSuggestionForm = () => {
     const { result, resultStatus, search, onChangeSearch, setSearch } = useSearch('artists')
     const [searchList, setSearchList] = useState<boolean>(false)
 
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [soundcloudUrl, setSoundcloudUrl] = useState<string>('')
     const [soundcloudUrlError, setSoundcloudUrlError] = useState<string>('')
     const [soundcloudLoading, setSoundcloudLoading] = useState<boolean>(false)
@@ -65,6 +66,17 @@ export const TrackSuggestionForm = () => {
 
     const onSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+        if (isLoading) return false
+
+        if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
+        if (!values.soundcloudUrl) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Укажите ссылку на SoundCloud трека' }))
+        if (!URL.canParse(values.soundcloudUrl)) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Неверный формат ссылки' }))
+        if (!values.coverUrl) return setErrors(prev => ({ ...prev, coverUrl: 'Выберите обложку для трека' }))
+        if (artists.length === 0) return setErrors(prev => ({ ...prev, artistIds: 'Укажите хотя бы одного артиста' }))
+        if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
+        if (!values.coverUrl) return setErrors(prev => ({ ...prev, coverUrl: 'Добавьте обложку трека' }))
+        
+        setIsLoading(true)
 
         let coverUrl: string = ''
         if (coverFile) {
@@ -74,14 +86,6 @@ export const TrackSuggestionForm = () => {
             const { data } = await updateAvatarUrlApi(values.coverUrl, 'track')
             coverUrl = data.url
         }
-
-        if (!values.title) return setErrors(prev => ({ ...prev, title: 'Укажите название трека' }))
-        if (!values.soundcloudUrl) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Укажите ссылку на SoundCloud трека' }))
-        if (!URL.canParse(values.soundcloudUrl)) return setErrors(prev => ({ ...prev, soundcloudUrl: 'Неверный формат ссылки' }))
-        if (!values.coverUrl) return setErrors(prev => ({ ...prev, coverUrl: 'Выберите обложку для трека' }))
-        if (artists.length === 0) return setErrors(prev => ({ ...prev, artistIds: 'Укажите хотя бы одного артиста' }))
-        if (!values.releaseData) return setErrors(prev => ({ ...prev, releaseData: 'Укажите дату релиза трека' }))
-        if (!values.coverUrl) return setErrors(prev => ({ ...prev, coverUrl: 'Добавьте обложку трека' }))
 
         let tempArtist:ITempArtist | null = null
         const tempFeatArtists:ITempArtist[] = []
@@ -98,8 +102,6 @@ export const TrackSuggestionForm = () => {
             return null
         })
 
-        console.log(artists)
-
         trackSuggestionApi({
             title: values.title,
             coverUrl: coverUrl,
@@ -111,20 +113,24 @@ export const TrackSuggestionForm = () => {
             tempFeatArtists: tempFeatArtists
         })
             .then(() => {
+                setIsLoading(false)
                 notify('Заявка отправлена', 'Заявка успешно была отправлена', 'success')
                 setValues(initValues)
                 setSoundcloudUrl('')
                 setArtists([])
             })
-            .catch((err: { response: {data: IApiError} }) => setErrors(prev => ({ ...prev, [err.response.data.field ?? '']: err.response.data.message })))
+            .catch((err: { response: {data: IApiError} }) => {
+                setErrors(prev => ({ ...prev, [err.response.data.field ?? '']: err.response.data.message }))
+                setIsLoading(false)
+            })
     }
 
     const getInfo = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-
         if (soundcloudLoading) return false
-        if (!soundcloudUrl) return setSoundcloudUrlError('Укажите ссылку на SoundCloud трека')
-        if (!URL.canParse(soundcloudUrl)) return setSoundcloudUrlError('Неверный формат ссылки')
+
+        // if (!soundcloudUrl) return setSoundcloudUrlError('Укажите ссылку на SoundCloud трека')
+        // if (!URL.canParse(soundcloudUrl)) return setSoundcloudUrlError('Неверный формат ссылки')
         
         setSoundcloudLoading(true)
         getSoundсloudTrack({ url: soundcloudUrl })
@@ -278,7 +284,7 @@ export const TrackSuggestionForm = () => {
                     }
                 </div>
                 <div className={styles.form__footer}>
-                    <Button onClick={onSubmit} icon={<i className='ph ph-paper-plane-tilt'></i>} color='accent' padding='16px 24px 14px 24px'>Отправить на модерацию</Button>
+                    <Button isLoading={isLoading} onClick={onSubmit} icon={<i className='ph ph-paper-plane-tilt'></i>} color='accent' padding='16px 24px 14px 24px'>Отправить на модерацию</Button>
                 </div>
             </form>
         </div>

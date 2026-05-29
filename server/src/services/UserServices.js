@@ -90,11 +90,11 @@ class UserServices {
             WITH email_check AS (
                 SELECT id
                 FROM users
-                WHERE email = $1 AND id != $6
+                WHERE LOWER(email) = LOWER($1) AND id != $6
             ),
             username_check AS (
                 SELECT id FROM users
-                WHERE username = $3 AND id != $6
+                WHERE LOWER(username) = LOWER($3) AND id != $6
             ),
             updated AS (
                 UPDATE users

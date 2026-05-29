@@ -58,9 +58,13 @@ export const TrackReviews: FC<TrackReviewsProps> = ({ trackId }) => {
                     }
                     </>
                     :
-                    Array.from({ length: 3 }).map((_, index) => {
-                        return <ReviewCardSkeleton key={index} />
-                    })
+                    <ul className={styles.list}>
+                        {
+                        Array.from({ length: 3 }).map((_, index) => {
+                            return <ReviewCardSkeleton key={index} />
+                        })
+                        }
+                    </ul>
                 }
             </div>
         </div>

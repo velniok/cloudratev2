@@ -13,7 +13,8 @@ export const RegForm = () => {
     const dispatch = useAppDispatch()
     const { notify } = useNotification()
     const navigate = useNavigate()
-
+    
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [verifyPage, setVerifyPage] = useState<boolean>(false)
     const [seconds, setSeconds] = useState<number>(60)
 
@@ -97,8 +98,17 @@ export const RegForm = () => {
 
     const hundleRegister = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+        if (isLoading) return false
 
         // if (values.verifyCode.length < 6) return setErrors(prev => ({ ...prev, verifyCode: 'Код должен содержать минимум 6 символа' }))
+        if (values.nickname.length <= 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
+        if (!/^[a-zA-Z0-9_#@-]+$/.test(values.nickname)) return setErrors(prev => ({ ...prev, nickname: 'Уник. никнейм может содержать только латинские буквы, цифры, _, @, - и #' }))
+        if (!values.email) return setErrors(prev => ({ ...prev, email: 'Email не может быть пустым' }))
+        if (!/\S+@\S+\.\S+/.test(values.email)) return setErrors(prev => ({ ...prev, email: 'Неверный формат email' }))
+        if (values.password.length < 6) return setErrors(prev => ({ ...prev, password: 'Пароль должен содержать минимум 6 символов' }))
+        if (values.password !== values.confirmPassword) return setErrors(prev => ({ ...prev, confirmPassword: 'Пароли должны совпадать' }))
+
+        setIsLoading(true)
 
         dispatch(registerThunk({
             nickname: values.nickname,
@@ -107,11 +117,13 @@ export const RegForm = () => {
             // verifyCode: values.verifyCode,
         })).unwrap()
             .then(() => {
+                setIsLoading(false)
                 notify('Аккаунт зарегистрирован', 'Вы успешно зарегистрировали аккаунт', 'success')
                 navigate('/')
             })
             .catch((err: IApiError) => {
                 setErrors(prev => ({ ...prev, [err.field ?? '']: err.message }))
+                setIsLoading(false)
             })
     }
 
@@ -181,7 +193,7 @@ export const RegForm = () => {
                     eyeIcon={true}
                     icon={<i className="ph ph-password"></i>}
                 />
-                <Button color="accent" padding="20px 16px 16px 16px" onClick={hundleRegister}>Зарегистрироваться</Button>
+                <Button color="accent" padding="20px 16px 16px 16px" isLoading={isLoading} onClick={hundleRegister}>Зарегистрироваться</Button>
             </>
         }
         </>

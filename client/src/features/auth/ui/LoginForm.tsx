@@ -12,6 +12,8 @@ export const LoginForm = () => {
     const { notify } = useNotification()
     const navigate = useNavigate()
 
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
     const initialValues = {
         email: '',
         password: '',
@@ -30,14 +32,18 @@ export const LoginForm = () => {
 
     const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+        if (isLoading) return false
+        setIsLoading(true)
         dispatch(loginThunk({
             email: values.email,
             password: values.password,
         })).unwrap()
             .then(() => {
+                setIsLoading(false)
                 notify('Вы вошли в аккаунт', 'Вы успешно вошли в свой аккаунт', 'success')
                 navigate('/')
             })
+            .catch(() => setIsLoading(false))
     }
 
     return (
@@ -62,7 +68,7 @@ export const LoginForm = () => {
                 icon={<i className="ph ph-password"></i>}
             />
             {/* <Link to='/forgot-password' className={styles.forgot}>Забыли пароль?</Link> */}
-            <Button color="accent" padding="20px 16px 16px 16px" onClick={handleSubmit}>Войти</Button>
+            <Button color="accent" padding="20px 16px 16px 16px" isLoading={isLoading} onClick={handleSubmit}>Войти</Button>
         </>
     )
 }
