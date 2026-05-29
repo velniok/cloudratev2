@@ -24,7 +24,7 @@ export const UserFollowsPage = () => {
     }, [username])
 
     return (
-        userStatus === 'success' && user ?
+        userStatus === 'success' && user && user.username === username ?
         <UserFollowsPagination user={user} />
         :
         <Loading />

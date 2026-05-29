@@ -23,7 +23,7 @@ export const ArtistPage = () => {
     return (
         <>
         {
-            artistStatus === 'success' && artist ?
+            artistStatus === 'success' && artist && artist.id === Number(id) ?
             <>
                 <ArtistHeader artist={artist} />
                 <ArtistTopTracks artist={artist} />

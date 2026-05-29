@@ -23,7 +23,7 @@ export const TrackPage = () => {
     return (
         <>
         {
-            trackStatus === 'success' && track ?
+            trackStatus === 'success' && track && track.id === Number(id) ?
             <>
                 <TrackHeader track={track} />
                 <TrackGrade track={track} />

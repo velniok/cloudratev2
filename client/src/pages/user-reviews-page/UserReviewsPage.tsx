@@ -24,7 +24,7 @@ export const UserReviewsPage = () => {
     }, [username])
 
     return (
-        userStatus === 'success' && user ?
+        userStatus === 'success' && user && user.username === username ?
         <UserReviewsPagination user={user} />
         :
         <Loading />
