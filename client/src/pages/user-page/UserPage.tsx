@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { UserReviews } from "@/widgets/user-reviews"
 import { UserHeader } from "@/widgets/user-header"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector, useDocumentTitle, useNotification } from "@/shared/lib"
 import { getUserProfileThunk, selectUser, selectUserStatus } from "@/features/user"
 import { UserFollows } from "@/widgets/user-follows"
@@ -28,7 +28,7 @@ export const UserPage = () => {
     return (
         <>
         {
-            userStatus === 'success' && user ?
+            userStatus === 'success' && user && user.username === username ?
             <>
                 <UserHeader user={user} />
                 <UserReviews user={user} />
