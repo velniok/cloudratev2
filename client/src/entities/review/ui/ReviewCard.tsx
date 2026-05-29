@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import styles from "./ReviewCard.module.scss"
 import type { IReview } from "../model/types"
-import { ReactNode, useState, type FC } from "react"
+import { ReactNode, useEffect, useRef, useState, type FC } from "react"
 import { Cover, CriteriasTooltip, EyeIcon, Rating, Tooltip } from "@/shared/ui"
 import { getMonth, getOptimizedAvatar, useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
@@ -19,9 +19,26 @@ interface ReviewCardProps {
 export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMore, user }) => {
 
     const authUser = useAppSelector(selectAuthUser)
+    const reviewRef = useRef<HTMLParagraphElement>(null)
 
     const [more, setMore] = useState<boolean>(false)
     const [isTooltip, setIsTooltip] = useState<boolean>(false)
+    const [isOverflow, setIsOverflow] = useState<boolean>(false)
+
+    useEffect(() => {
+        const check = () => {
+            if (reviewRef.current && !more) {
+                const { scrollHeight, clientHeight } = reviewRef.current
+                setIsOverflow(scrollHeight > clientHeight)
+            }
+        }
+        check()
+
+        const observer = new ResizeObserver(check)
+        if (reviewRef.current) observer.observe(reviewRef.current)
+
+        return () => observer.disconnect()
+    }, [review.text])
 
     return (
         <div className={`${styles.inner} ${review.userId === authUser?.id ? styles.your : ''}`}>
@@ -45,10 +62,13 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
                     track && <p className={styles.track}>о треке <Link to={`/track/${track.id}`}>{track.title}</Link></p>
                 }
             </div>
-            <p className={`${styles.review} ${showMore ? styles.visible : ''} ${more ? styles.more : ''}`}>{review.text}</p>
-            <div className={`${styles.show} ${showMore ? styles.visible : ''} ${more ? styles.more : ''}`} onClick={() => setMore(!more)}>
-                <EyeIcon />
-            </div>
+            <p className={`${styles.review} ${showMore ? styles.visible : ''} ${more ? styles.more : ''}`} ref={reviewRef}>{review.text}</p>
+            {
+                (isOverflow || more) &&
+                <div className={`${styles.show} ${showMore ? styles.visible : ''} ${more ? styles.more : ''}`} onClick={() => setMore(!more)}>
+                    <EyeIcon />
+                </div>
+            }
             <div className={styles.bottom}>
                 <p className={styles.createdAt}>{new Date(review.createdAt).getUTCDate()} {getMonth(review.createdAt, 'pluralize')} {new Date(review.createdAt).getUTCFullYear()}</p>
                 {
