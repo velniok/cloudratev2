@@ -16,7 +16,7 @@ export const Footer = () => {
                     <ul className={styles.legal}>
                         <li className={styles.legal__item}>Политика конфиденциальности</li>
                         <li className={styles.legal__item}>Условия использования</li>
-                        <li className={styles.legal__item}>Обратная связь</li>
+                        <a className={styles.legal__item} href="https://t.me/cloudrate_support">Обратная связь</a>
                     </ul>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import { getMonth, getOptimizedAvatar, useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
 import { ITrack } from "@/entities/track"
 import { IUser } from "@/entities/user"
+import { deleteReviewApi } from "@/features/review"
 
 interface ReviewCardProps {
     review: IReview
@@ -42,6 +43,10 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
 
     return (
         <div className={`${styles.inner} ${review.userId === authUser?.id ? styles.your : ''}`}>
+            {
+                authUser?.role === 'admin' &&
+                <i className={`ph ph-trash ${styles.delete}`} onClick={() => deleteReviewApi({ id: review.id })}></i>
+            }
             <div className={styles.top}>
                 <div className={styles.info}>
                     <Link to={`/user/${user.username}`} className={styles.user}>

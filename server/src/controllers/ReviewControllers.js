@@ -53,6 +53,18 @@ class ReviewControllers {
             next(err)
         }
     }
+
+    async delete(req, res, next) {
+        try {
+            const reviewId = req.params.id
+            await ReviewServices.delete(reviewId)
+
+            res.status(200).json({ success: true })
+        } catch (err) {
+            console.log(err)
+            next(err)
+        }
+    }
 }
 
 module.exports = new ReviewControllers()

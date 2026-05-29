@@ -1,6 +1,7 @@
 @use '@/shared/styles/breakpoints' as *;
 
 .inner {
+    position: relative;
     background-color: var(--gray-color);
     padding: 20px;
     border-radius: 12px;
@@ -9,6 +10,25 @@
 
     @media (max-width: $mobile) {
         min-height: 118px;
+    }
+}
+
+.delete {
+    z-index: 10;
+    display: block;
+    top: 20px;
+    right: 20px;
+    position: absolute;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 18px;
+
+    transition: color 0.2s ease-in;
+
+    @media (hover: hover) {
+        &:hover {
+            color: var(--accent-color);
+        }
     }
 }
 

@@ -12,3 +12,7 @@ export const addTextReviewApi = (params: { id: number, req: { text: string, user
 export const toggleLikeReviewApi = (params: { reviewId: number, userId: number }) => {
     return axios.post('/review/toggle-like', params)
 }
+
+export const deleteReviewApi = (params: { id: number }) => {
+    return axios.delete(`/review/delete/${params.id}`)
+}

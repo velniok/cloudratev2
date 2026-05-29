@@ -162,6 +162,14 @@ class ReviewServices {
             RETURNING id
         `, [reviewId, userId])
     }
+
+    async delete(reviewId) {
+        await pool.query(`
+            DELETE
+            FROM reviews
+            WHERE id = $1
+        `, [reviewId])
+    }
 }
 
 module.exports = new ReviewServices()
