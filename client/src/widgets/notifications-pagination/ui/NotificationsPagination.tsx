@@ -1,4 +1,4 @@
-import { LinksList, PaginationButtons, Title } from '@/shared/ui'
+import { LinksList, PaginationButtons, Skeleton, Title } from '@/shared/ui'
 import styles from './NotificationsPagination.module.scss'
 import { FC, useEffect } from 'react'
 import { IUser } from '@/entities/user'
@@ -34,7 +34,7 @@ export const NotificationsPagination: FC<NotificationsPaginationProps> = ({ user
                 <LinksList links={links} />
                 <Title>УВЕДОМЛЕНИЯ</Title>
                 {
-                    notificationsListStatus === 'success' && notificationsList && notificationsListPagination &&
+                    notificationsListStatus === 'success' && notificationsList && notificationsListPagination ?
                     <>
                         {
                             notificationsList.length > 0 ?
@@ -60,6 +60,14 @@ export const NotificationsPagination: FC<NotificationsPaginationProps> = ({ user
                             <p className={styles.none}>Уведомлений нет</p>
                         }
                     </>
+                    :
+                    <ul className={styles.list}>
+                        {
+                        Array.from({ length: 5 }).map((_, index) => {
+                            return <Skeleton key={index} width='100%' height='64px' borderRadius='12px' />
+                        })
+                        }
+                    </ul>
                 }
             </div>
         </div>

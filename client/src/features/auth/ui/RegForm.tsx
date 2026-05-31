@@ -101,7 +101,7 @@ export const RegForm = () => {
         if (isLoading) return false
 
         // if (values.verifyCode.length < 6) return setErrors(prev => ({ ...prev, verifyCode: 'Код должен содержать минимум 6 символа' }))
-        if (values.nickname.length <= 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
+        if (values.nickname.length < 4) return setErrors(prev => ({ ...prev, nickname: 'Никнейм должен содержать минимум 4 символа' }))
         if (!/^[a-zA-Z0-9_#@-]+$/.test(values.nickname)) return setErrors(prev => ({ ...prev, nickname: 'Уник. никнейм может содержать только латинские буквы, цифры, _, @, - и #' }))
         if (!values.email) return setErrors(prev => ({ ...prev, email: 'Email не может быть пустым' }))
         if (!/\S+@\S+\.\S+/.test(values.email)) return setErrors(prev => ({ ...prev, email: 'Неверный формат email' }))

@@ -98,6 +98,7 @@ const authSlice = createSlice({
                 state.notifications = action.payload.notifications.notifications,
                 state.token = action.payload.token,
                 state.status = 'success',
+                state.userStatus = 'success'
                 state.error = null
             })
             .addCase(registerThunk.rejected, (state, action) => {
@@ -113,6 +114,7 @@ const authSlice = createSlice({
                 state.notifications = action.payload.notifications.notifications,
                 state.token = action.payload.token,
                 state.status = 'success',
+                state.userStatus = 'success'
                 state.error = null
             })
             .addCase(loginThunk.rejected, (state, action) => {

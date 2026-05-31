@@ -27,7 +27,7 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
     const initialValues = {
         nickname: `${user.nickname}`,
         username: `${user.username}`,
-        avatarUrl: `${user.avatarUrl}`,
+        avatarUrl: `${user.avatarUrl ?? ''}`,
         email: `${user.email}`,
         password: '',
         confirmPassword: '',
@@ -145,7 +145,14 @@ export const EditProfileForm: FC<EditProfileFormProps> = ({ user }) => {
                 <h3 className={styles.title}>ОСНОВНАЯ ИНФОРМАЦИЯ</h3>
                 <div className={styles.formWrapper}>
                     <div className={styles.editAvatar}>
-                        <Cover url={getOptimizedAvatar(values.avatarUrl, 200, 200)} className={styles.avatar} width='150px' height='150px' borderRadius='12px' isInput={true} />
+                        <Cover
+                            url={getOptimizedAvatar(values.avatarUrl, 200, 200)}
+                            className={styles.avatar}
+                            width='150px'
+                            height='150px'
+                            borderRadius='12px'
+                            isInput={true}
+                        />
                         <div className={styles.content}>
                             <input ref={inputRef} hidden type="file" onChange={hundleAvatarChange} />
                             <Button className={styles.editButton} color='default' padding='14px 20px 10px 20px' onClick={() => inputRef.current?.click()}>Загрузить новое фото</Button>
