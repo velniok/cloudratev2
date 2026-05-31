@@ -1,13 +1,14 @@
 @use '@/shared/styles/breakpoints' as *;
 
 .badges {
+    cursor: default;
     position: relative;
     text-transform: uppercase;
     font-size: 10px;
     color: #3B82F6;
     background-color: var(--blue-color-dim);
     border: 1px solid var(--blue-border-dim);
-    padding: 4px 10px 4px 18px;
+    padding: 5px 10px 4px 18px;
     border-radius: 999px;
     font-weight: 700;
     letter-spacing: 0.1rem;
@@ -15,6 +16,7 @@
 
     @media (max-width: $mobile) {
         font-size: 8px;
+        padding: 4px 10px 4px 18px;
     }
 
     &::before {
@@ -31,7 +33,7 @@
 
     &.small {
         font-size: 8px;
-        padding: 4px 8px 4px 16px;
+        padding: 3px 8px 4px 16px;
     }
 
     &.admin {
@@ -41,6 +43,16 @@
 
         &::before {
             background-color: var(--accent-color);
+        }
+    }
+
+    &.beta {
+        background-color: var(--purple-color-dim);
+        border: 1px solid var(--purple-color);
+        color: var(--purple-color);
+
+        &::before {
+            background-color: var(--purple-color);
         }
     }
 }

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import styles from "./ReviewCard.module.scss"
 import type { IReview } from "../model/types"
 import { ReactNode, useEffect, useRef, useState, type FC } from "react"
-import { Cover, CriteriasTooltip, EyeIcon, Rating, Tooltip } from "@/shared/ui"
+import { Badges, Cover, CriteriasTooltip, EyeIcon, Rating, Tooltip } from "@/shared/ui"
 import { getMonth, getOptimizedAvatar, useAppSelector } from "@/shared/lib"
 import { selectAuthUser } from "@/features/auth"
 import { ITrack } from "@/entities/track"
@@ -52,6 +52,9 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
                     <Link to={`/user/${user.username}`} className={styles.user}>
                         <Cover width="32px" height="32px" borderRadius="50%" url={getOptimizedAvatar(user.avatarUrl ?? '', 32, 32)} />
                         <p className={styles.nickname}>{user.nickname}</p>
+                        {
+                            <Badges badge={user.badges.find(badge => badge.isSelected)?.badgeName ?? null} />
+                        }
                     </Link>
                     <Tooltip
                         tooltip={ <CriteriasTooltip avgCriterias={[review.criteria1, review.criteria2, review.criteria3, review.criteria4, review.criteria5]}  /> }
@@ -59,12 +62,12 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review, actions, track, showMo
                     >
                         <Rating isHover={isTooltip}>{review.rating}</Rating>
                     </Tooltip>
-                    {
-                        review.userId === authUser?.id && <p className={styles.yourText}>Ваша рецензия</p>
-                    }
                 </div> 
                 {
                     track && <p className={styles.track}>о треке <Link to={`/track/${track.id}`}>{track.title}</Link></p>
+                }
+                {
+                    review.userId === authUser?.id && <p className={styles.yourText}>Ваша рецензия</p>
                 }
             </div>
             <p className={`${styles.review} ${showMore ? styles.visible : ''} ${more ? styles.more : ''}`} ref={reviewRef}>{review.text}</p>

@@ -1,6 +1,3 @@
-import { IArtist } from "@/entities/artist"
-import { IReview } from "@/entities/review"
-
 export interface IUser {
     kind: 'user'
     id: number
@@ -13,4 +10,9 @@ export interface IUser {
     soundcloudUrl: string | null
     reviewsCount: number
     reviewsTextCount: number
+    badges: {
+        badgeName: string
+        isSelected: boolean
+        createdAt?: string
+    }[]
 }

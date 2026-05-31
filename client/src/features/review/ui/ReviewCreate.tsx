@@ -28,7 +28,10 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
 
         setCreateReviewLoading(true)
         await createReviewApi(req)
-            .then(() => {
+            .then((res) => {
+                if (res.data.badge) {
+                    notify('Новый бейджик!', 'Вы получили бейджик "Участник беты"', 'badge')
+                }
                 notify('Трек оценён', 'Вы успешно оставили оценку', 'success')
                 dispatch(getTrackProfileThunk({ trackId: track.id }))
                 setCreateReviewLoading(false)
@@ -42,7 +45,10 @@ export const ReviewCreate: FC<ReviewCreateProps> = ({ track, review }) => {
 
         setCreateReviewLoading(true)
         await addTextReviewApi(req)
-            .then(() => {
+            .then((res) => {
+                if (res.data.badge) {
+                    notify('Новый бейджик!', 'Вы получили бейджик "Участник беты"', 'badge')
+                }
                 notify('Отзыв оставлен', 'Вы успешно оставили отзыв к оценке', 'success')
                 dispatch(getTrackProfileThunk({ trackId: track.id }))
                 setCreateReviewLoading(false)

@@ -29,7 +29,7 @@ export const UserRowAdmin: FC<UserRowAdminProps> = ({ user, hundleUpdateRole, hu
                     </div>
                 </div>
                 <p className={styles.email}>{user.email}</p>
-                <Badges role={user.role} />
+                <Badges badge={user.badges.find(badge => badge.isSelected)?.badgeName ?? 'user'} />
                 <p className={styles.created}>{new Date(user.createdAt).getUTCDate()} {getMonth(user.createdAt, 'pluralize')} {new Date(user.createdAt).getUTCFullYear()}г.</p>
                 <div className={styles.actions}>
                     <i className={`ph ph-pencil-simple ${styles.actions__edit}`} onClick={(e) => e.preventDefault()}></i>

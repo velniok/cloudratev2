@@ -8,6 +8,7 @@ const ArtistServices = require("../services/ArtistServices")
 const SuggestionServices = require("../services/SuggestionServices")
 const { deleteImg } = require("../config/multer")
 const NotificationServices = require("../services/NotificationServices")
+const BadgesServices = require("../services/BadgesServices")
 
 class UserControllers {
 

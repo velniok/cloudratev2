@@ -36,6 +36,8 @@ export const NotificationItem: FC<NotificationItemProps> = ({ notification }) =>
                     ? <EditIcon />
                     : notification.type === 'error'
                     ? <InfoIcon />
+                    : notification.type === 'badge'
+                    ? <i className="ph ph-trophy"></i>
                     : <InfoIcon />
                 }
             </div>

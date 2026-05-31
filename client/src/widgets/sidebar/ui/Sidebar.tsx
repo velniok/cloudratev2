@@ -162,7 +162,7 @@ export const Sidebar: FC<SidebarProps> = ({ sidebar, setSidebar }) => {
                                 <div className={styles.user__bio}>
                                     <h3 className={styles.user__nickname}>{authUser.nickname}</h3>
                                     {
-                                        authUser.role !== 'user' && <Badges size='small' role={authUser.role} />
+                                        <Badges size="small" badge={authUser.badges.find(badge => badge.isSelected)?.badgeName ?? null} />
                                     }
                                 </div>
                             </div>

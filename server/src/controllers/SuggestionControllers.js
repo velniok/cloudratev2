@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator')
 const SuggestionServices = require('../services/SuggestionServices')
 const TrackServices = require('../services/TrackServices')
 const AppError = require('../utils/AppError')
+const BadgesServices = require('../services/BadgesServices')
 
 class SuggestionControllers {
     async create(req, res, next) {
@@ -14,7 +15,9 @@ class SuggestionControllers {
             if (!userId) throw new AppError(`Нужно авторизоваться`, 401)
             
             await SuggestionServices.createSuggestion([title, coverUrl, soundcloudUrl, artistId, featArtistIds, releaseData, tempArtist, tempFeatArtists], userId)
-            res.status(201).json({ message: 'Заявка отправлена' })
+            const badge = await BadgesServices.awardBetaBadge(userId)
+            
+            res.status(201).json({ message: 'Заявка отправлена', badge: badge })
         } catch (err) {
             console.log(err)
             next(err)

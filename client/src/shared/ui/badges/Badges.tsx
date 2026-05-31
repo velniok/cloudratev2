@@ -1,19 +1,25 @@
-import type { FC, ReactNode } from 'react'
+import type { FC } from 'react'
 import styles from './Badges.module.scss'
 
 interface BadgesProps {
-    role: string
+    badge: string | null
     size?: string
 }
 
-export const Badges: FC<BadgesProps> = ({ role, size }) => {
+export const Badges: FC<BadgesProps> = ({ badge, size }) => {
 
-    const roleLables = {
+    const badgeLables: Record<string, string> = {
         admin: 'Админ',
-        user: 'Пользователь'
+        user: 'Пользователь',
+        beta: 'Участник беты',
     }
 
     return (
-        <span className={`${styles.badges} ${role ? styles[role] : ''} ${size ? styles[size] : ''}`}>{roleLables[role]}</span>
+        <>
+            {
+                badge &&
+                <span className={`${styles.badges} ${badge ? styles[badge] : ''} ${size ? styles[size] : ''}`}>{badgeLables[badge]}</span>
+            }
+        </>
     )
 }

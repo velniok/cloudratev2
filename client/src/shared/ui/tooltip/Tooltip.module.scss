@@ -4,6 +4,8 @@
     position: relative;
     z-index: 999;
     width: fit-content;
+    display: flex;
+    align-items: center;
 }
 
 .content {

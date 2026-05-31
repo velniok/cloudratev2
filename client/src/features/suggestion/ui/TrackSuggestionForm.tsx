@@ -112,8 +112,11 @@ export const TrackSuggestionForm = () => {
             tempArtist: tempArtist,
             tempFeatArtists: tempFeatArtists
         })
-            .then(() => {
+            .then((res) => {
                 setIsLoading(false)
+                if (res.data.badge) {
+                    notify('Новый бейджик!', 'Вы получили бейджик "Участник беты"', 'badge')
+                }
                 notify('Заявка отправлена', 'Заявка успешно была отправлена', 'success')
                 setValues(initValues)
                 setSoundcloudUrl('')

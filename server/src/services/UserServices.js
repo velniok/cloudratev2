@@ -10,8 +10,20 @@ class UserServices {
         const offset = (+page - 1) * +limit
         const [usersRes, countRes] = await Promise.all([
             pool.query(`
-                SELECT *
-                FROM users
+                SELECT
+                    *,
+                    (
+                        SELECT
+                            COALESCE(json_agg(
+                                json_build_object(
+                                    'badge_name', ub.badge_name,
+                                    'is_selected', ub.is_selected
+                                )
+                            ), '[]')
+                        FROM user_badges ub
+                        WHERE user_id = u.id
+                    ) as badges
+                FROM users u
                 WHERE
                     REPLACE(LOWER(nickname), 'ё', 'е')
                 ILIKE
@@ -59,7 +71,19 @@ class UserServices {
                     SELECT COUNT(*)::int
                     FROM reviews r
                     WHERE r.user_id = u.id AND r.text != ''
-                ) as reviews_text_count
+                ) as reviews_text_count,
+                (
+                    SELECT
+                        COALESCE(json_agg(
+                            json_build_object(
+                                'badge_name', ub.badge_name,
+                                'is_selected', ub.is_selected,
+                                'created_at', ub.created_at
+                            )
+                        ), '[]')
+                    FROM user_badges ub
+                    WHERE user_id = u.id
+                ) as badges
             FROM users u
             WHERE username = $1
         `, [username])

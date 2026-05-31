@@ -47,7 +47,24 @@ class ReviewServices {
             pool.query(`
                 SELECT
                     r.*,
-                    row_to_json(u) as user,
+                    (
+                        SELECT row_to_json(u_with_badges)
+                        FROM (
+                            SELECT
+                            u.*,
+                            (
+                                SELECT
+                                    COALESCE(json_agg(
+                                        json_build_object(
+                                            'badge_name', ub.badge_name,
+                                            'is_selected', ub.is_selected
+                                        )
+                                    ), '[]')
+                                FROM user_badges ub
+                                WHERE user_id = u.id
+                            ) as badges
+                        ) as u_with_badges
+                    ) as user,
                     (SELECT COUNT(*) FROM review_likes rl WHERE rl.review_id = r.id) as likes_count,
                     (SELECT EXISTS (
                         SELECT 1 FROM review_likes rl2
@@ -129,7 +146,24 @@ class ReviewServices {
         const reviewsRes = await pool.query(`
             SELECT
                 r.*,
-                row_to_json(u) as user,
+                (
+                    SELECT row_to_json(u_with_badges)
+                    FROM (
+                        SELECT
+                        u.*,
+                        (
+                            SELECT
+                                COALESCE(json_agg(
+                                    json_build_object(
+                                        'badge_name', ub.badge_name,
+                                        'is_selected', ub.is_selected
+                                    )
+                                ), '[]')
+                            FROM user_badges ub
+                            WHERE user_id = u.id
+                        ) as badges
+                    ) as u_with_badges
+                ) as user,
                 row_to_json(t) as track
             FROM reviews r
             JOIN users u ON r.user_id = u.id

@@ -1,9 +1,9 @@
 import { Input, Modal, PaginationButtons, Skeleton, Title } from '@/shared/ui'
 import styles from './AdminUsers.module.scss'
-import { ChangeEvent, MouseEvent, useEffect, useState } from 'react'
+import { ChangeEvent, MouseEvent, useState } from 'react'
 import { IUser, UserRowAdmin } from '@/entities/user'
 import { DeleteUserModal, getUserListThunk, selectUserList, selectUserListPagination, selectUserListStatus, UpdateRoleModal } from '@/features/user'
-import { useAppDispatch, useAppSelector, usePagination } from '@/shared/lib'
+import { useAppSelector, usePagination } from '@/shared/lib'
 
 export const AdminUsers= () => {
     const userList = useAppSelector(selectUserList)

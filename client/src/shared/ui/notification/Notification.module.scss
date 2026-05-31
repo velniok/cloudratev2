@@ -76,12 +76,23 @@
             background-color: var(--accent-color-dim);
         }
     }
+
+    &.badge {
+        border: 1px solid var(--yellow-color);
+        box-shadow: 0 0 24px var(--yellow-color-dim);
+        color: var(--yellow-color);
+
+        & .icon {
+            background-color: var(--yellow-color-dim);
+        }
+    }
 }
 
 .icon {
     min-width: 28px;
     min-height: 28px;
     border-radius: 50%;
+    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;

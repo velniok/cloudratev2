@@ -1,3 +1,4 @@
+const BadgesServices = require("../services/BadgesServices")
 const ReviewServices = require("../services/ReviewServices")
 const AppError = require('../utils/AppError')
 
@@ -10,7 +11,9 @@ class ReviewControllers {
             if (createdReview.status === 'user_taken') throw new AppError('Вы уже оставили отзыв на этот трек', 409)
             const review = createdReview.review
 
-            res.status(201).json({ review })
+            const badge = await BadgesServices.awardBetaBadge(userId)
+
+            res.status(201).json({ review, badge: badge })
         } catch (err) {
             console.log(err)
             next(err)
@@ -31,11 +34,14 @@ class ReviewControllers {
     async addText(req, res, next) {
         try {
             const reviewId = req.params.id
+            const userId = req.userId
             const { text } = req.body
 
             await ReviewServices.addTextReview(reviewId, text)
 
-            res.status(200).json({ message: 'Отзыв к оценке успешно добавлен' })
+            const badge = await BadgesServices.awardBetaBadge(userId)
+
+            res.status(200).json({ message: 'Отзыв к оценке успешно добавлен', badge: badge })
         } catch (err) {
             console.log(err)
             next(err)

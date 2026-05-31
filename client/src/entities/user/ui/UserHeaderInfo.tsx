@@ -1,5 +1,5 @@
 import { type FC } from "react"
-import { Badges, Button, CalendarIcon, Cover, EditIcon, LinkIcon } from "@/shared/ui"
+import { Badges, Button, CalendarIcon, Cover, EditIcon, LinkIcon, Tooltip } from "@/shared/ui"
 import type { IUser } from "../model/types"
 import styles from "./UserHeaderInfo.module.scss"
 import { useNavigate } from "react-router-dom"
@@ -21,9 +21,21 @@ export const UserHeaderInfo: FC<UserHeaderInfoProps> = ({ user }) => {
             <div className={styles.info}>
                 <h2 className={styles.nickname}>
                     {user.nickname}
-                    {
-                        user?.role !== 'user' && <Badges role={user.role} />
-                    }
+                    <Tooltip
+                        place='bottom'
+                        tooltip={
+                            <p className={styles.badge}>
+                                Получен:&nbsp;
+                                {new Date(user.badges.find(badge => badge.isSelected)?.createdAt ?? '').getDate()}&nbsp;
+                                {getMonth(user.badges.find(badge => badge.isSelected)?.createdAt ?? '', 'pluralize')}&nbsp;
+                                {new Date(user.badges.find(badge => badge.isSelected)?.createdAt ?? '').getUTCFullYear()}г.
+                            </p>
+                        }
+                    >
+                        {
+                            <Badges badge={user.badges.find(badge => badge.isSelected)?.badgeName ?? null} />
+                        }
+                    </Tooltip>
                     </h2>
                 <p className={styles.username}>@{user.username}</p>
                 <div className={styles.created}>

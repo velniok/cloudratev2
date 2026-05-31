@@ -57,7 +57,19 @@ class AuthServices {
 
     async auth(id) {
         const userRes = await pool.query(`
-            SELECT *
+            SELECT
+                *,
+                (
+                    SELECT
+                        COALESCE(json_agg(
+                            json_build_object(
+                                'badge_name', ub.badge_name,
+                                'is_selected', ub.is_selected
+                            )
+                        ), '[]')
+                    FROM user_badges ub
+                    WHERE user_id = $1
+                ) as badges
             FROM users
             WHERE id = $1
         `, [id])
