@@ -2,12 +2,12 @@
 
 .card {
     position: relative;
-    height: 310px;
+    height: 320px;
     transform: translateZ(0);
     width: 175px;
 
     @media (max-width: $mobile) {
-        height: 250px;
+        height: 270px;
         width: 135px;
     }
 }
@@ -16,6 +16,8 @@
     @media (max-width: $mobile) {
         width: 135px !important;
         height: 135px !important;
+        min-width: 135px !important;
+        min-height: 135px !important;
     }
 }
 
@@ -37,24 +39,33 @@
 
     &__list {
         margin-bottom: 12px;
-        display: flex;
-        flex-direction: column;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
+        line-height: 1.2em;
+        max-height: 6em;
+        text-overflow: ellipsis;
     }
 
     &__item {
-        cursor: pointer;
         color: var(--text-secondary);
-    
+
+        @media (max-width: $mobile) {
+            font-size: 12px;
+        }
+    }
+
+    &__link {
+        cursor: pointer;
+        display: inline-block;
+
         transition: opacity 0.3s;
     
         @media (hover: hover) {
             &:hover {
                 opacity: 0.7;
             }
-        }
-
-        @media (max-width: $mobile) {
-            font-size: 12px;
         }
     }
 }

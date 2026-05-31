@@ -2,7 +2,7 @@ import { LinksList, PaginationButtons, Title } from '@/shared/ui'
 import styles from './UserReviewsPagination.module.scss'
 import { FC } from 'react'
 import { IUser } from '@/entities/user'
-import { useAppSelector, usePagination } from '@/shared/lib'
+import { useAppSelector, usePagination, useWindowWidth } from '@/shared/lib'
 import { TrackCard, TrackCardSekelton, TrackRow, TrackRowSkelton } from '@/entities/track'
 import { getUserReviewsThunk, selectUserReviews, selectUserReviewsPagination, selectUserReviewsStatus } from '@/features/user'
 
@@ -16,6 +16,7 @@ export const UserReviewsPagination: FC<UserReviewsPaginationProps> = ({ user }) 
     const reviewList = useAppSelector(selectUserReviews)
     const reviewListPagination = useAppSelector(selectUserReviewsPagination)
     const reviewListStatus = useAppSelector(selectUserReviewsStatus)
+    const { isMobile } = useWindowWidth()
 
     const links = [
         {
@@ -40,13 +41,13 @@ export const UserReviewsPagination: FC<UserReviewsPaginationProps> = ({ user }) 
                             reviewList.length > 0 ?
                             <>
                             <p className={styles.text}>Показано {((reviewListPagination.page - 1) * limit) + 1}-{(limit * reviewListPagination.page)} из {reviewListPagination.total}</p>
-                            <ul className={`${styles.list} ${window.innerWidth <= 767 ? styles.row : ''}`}>
+                            <ul className={`${styles.list} ${isMobile ? styles.row : ''}`}>
                             {
                                 reviewList.map((review) => {
-                                    if (window.innerWidth > 767) {
-                                        if (review.track) return <TrackCard track={review.track} key={review.id} review={review} />
-                                    } else {
+                                    if (isMobile) {
                                         if (review.track) return <TrackRow track={review.track} key={review.id} review={review} />
+                                    } else {
+                                        if (review.track) return <TrackCard track={review.track} key={review.id} review={review} />
                                     }
                                 })
                             }
@@ -66,13 +67,13 @@ export const UserReviewsPagination: FC<UserReviewsPaginationProps> = ({ user }) 
                         }
                         </>
                         :
-                        <ul className={`${styles.list} ${window.innerWidth <= 767 ? styles.row : ''}`}>
+                        <ul className={`${styles.list} ${isMobile ? styles.row : ''}`}>
                             {
                                 Array.from({ length: 10 }).map((_, index) => {
-                                    if (window.innerWidth > 767) {
-                                        return <TrackCardSekelton key={index} />
-                                    } else {
+                                    if (isMobile) {
                                         return <TrackRowSkelton key={index} review />
+                                    } else {
+                                        return <TrackCardSekelton key={index} />
                                     }
                                 })
                             }

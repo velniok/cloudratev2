@@ -33,6 +33,8 @@ export const Cover: FC<CoverProps> = ({ isHovered, mb, url, width, height, borde
                 style={{
                     width: width,
                     height: height,
+                    minWidth: width,
+                    minHeight: height,
                     borderRadius: borderRadius,
                 }}
             />
@@ -43,6 +45,7 @@ export const Cover: FC<CoverProps> = ({ isHovered, mb, url, width, height, borde
                     ${mb ? styles[mb] : ''}
                     ${isHovered ? styles.hovered : ''}
                     ${isInput ? styles.input : ''}
+                    ${className ?? ''}
                 `}
                 style={{
                     width: width,

@@ -2,7 +2,7 @@ import { FC } from 'react'
 import styles from './UserFollowsPagination.module.scss'
 import { IUser } from '@/entities/user'
 import { LinksList, PaginationButtons, Title } from '@/shared/ui'
-import { useAppSelector, usePagination } from '@/shared/lib'
+import { useAppSelector, usePagination, useWindowWidth } from '@/shared/lib'
 import { getUserFollowsThunk, selectUserFollows, selectUserFollowsPagination, selectUserFollowsStatus, toggleFollowThunk } from '@/features/user'
 import { ArtistCard, ArtistCardSkeleton, ArtistRow, ArtistRowSkeleton } from '@/entities/artist'
 import { FollowArtistToggle } from '@/features/artist'
@@ -18,6 +18,7 @@ export const UserFollowsPagination: FC<UserFollowsPaginationProps> = ({ user }) 
     const follows = useAppSelector(selectUserFollows)
     const followsStatus = useAppSelector(selectUserFollowsStatus)
     const followsPagination = useAppSelector(selectUserFollowsPagination)
+    const { isMobile } = useWindowWidth()
 
     const links = [
         {
@@ -42,13 +43,13 @@ export const UserFollowsPagination: FC<UserFollowsPaginationProps> = ({ user }) 
                             follows.length > 0 ?
                             <>
                             <p className={styles.text}>Показано {((followsPagination.page - 1) * limit) + 1}-{(limit * followsPagination.page)} из {followsPagination.total}</p>
-                            <ul className={`${styles.list} ${window.innerWidth <= 767 ? styles.row : ''}`}>
+                            <ul className={`${styles.list} ${isMobile ? styles.row : ''}`}>
                             {
                                 follows.map((artist) => {
-                                    if (window.innerWidth > 767) {
-                                        return <ArtistCard artist={artist} key={artist.id} />
-                                    } else {
+                                    if (isMobile) {
                                         return <ArtistRow artist={artist} key={artist.id} action={<FollowArtistToggle thunk={toggleFollowThunk} isFollowed={artist.follow?.isFollowed ?? false} artistId={artist.id} />} />
+                                    } else {
+                                        return <ArtistCard artist={artist} key={artist.id} />
                                     }
                                 })
                             }
@@ -68,13 +69,13 @@ export const UserFollowsPagination: FC<UserFollowsPaginationProps> = ({ user }) 
                         }
                         </>
                         :
-                        <ul className={`${styles.list} ${window.innerWidth <= 767 ? styles.row : ''}`}>
+                        <ul className={`${styles.list} ${isMobile ? styles.row : ''}`}>
                             {
                                 Array.from({ length: 10 }).map((_, index) => {
-                                    if (window.innerWidth > 767) {
-                                        return <ArtistCardSkeleton key={index} />
-                                    } else {
+                                    if (isMobile) {
                                         return <ArtistRowSkeleton key={index} />
+                                    } else {
+                                        return <ArtistCardSkeleton key={index} />
                                     }
                                 })
                             }

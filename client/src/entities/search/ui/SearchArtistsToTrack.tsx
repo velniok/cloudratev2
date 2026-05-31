@@ -90,8 +90,9 @@ export const SearchArtistListToTrack: FC<SearchArtistListToTrackProps> = ({ arti
                                 width='32px'
                                 height='32px'
                                 url={getOptimizedAvatar(artist.avatarUrl ?? '', 32, 32)}
+                                className={styles.search__artistCover}
                             />
-                            <p className={styles.search_artistName}>{artist.name}</p>
+                            <p className={styles.search__artistName}>{artist.name}</p>
                             <i className="ph ph-x-circle"></i>
                         </li>
                     )

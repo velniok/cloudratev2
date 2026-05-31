@@ -9,12 +9,6 @@
 
     transition: transform 0.3s;
 
-    @media (hover: hover) {
-        &:hover {
-            transform: translateY(-4px);
-        }
-    }
-
     @media (max-width: $mobile) {
         width: 135px;
     }
@@ -25,6 +19,8 @@
     @media (max-width: $mobile) {
         width: 135px !important;
         height: 135px !important;
+        min-width: 135px !important;
+        min-height: 135px !important;
     }
 }
 

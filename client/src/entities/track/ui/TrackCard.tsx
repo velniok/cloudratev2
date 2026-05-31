@@ -1,6 +1,6 @@
 import { useState, type FC } from "react"
 import styles from "./TrackCard.module.scss"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import type { ITrack } from "../model/types"
 import { Cover, CriteriasTooltip, Rating, Tooltip } from "@/shared/ui"
 import { IReview } from "@/entities/review"
@@ -12,8 +12,6 @@ interface TrackCardProps {
 }
 
 export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
-
-    const navigate = useNavigate()
 
     const [isHovered, setIsHovered] = useState<boolean>(false)
     const [isTooltip, setIsTooltip] = useState<boolean>(false)
@@ -32,15 +30,19 @@ export const TrackCard: FC<TrackCardProps> = ({ track, review }) => {
                 />
             </Link>
             <h3 className={styles.title}>{track.title}</h3>
-            <p className={styles.artist__item} onClick={() => navigate(`/artist/${track.artist.id}`)}>
-                {track.artist.name}
-            </p>
             <ul className={styles.artist__list}>
+                <p className={styles.artist__item}>
+                    <Link className={styles.artist__link} to={`/artist/${track.artist.id}`}>
+                        {track.artist.name}
+                    </Link>
+                </p>
                 {
                     track.featArtists?.map((artist) => {
                         return (
-                            <li key={artist.id} className={styles.artist__item} onClick={() => navigate(`/artist/${artist.id}`)}>
-                                {artist.name}
+                            <li key={artist.id} className={styles.artist__item}>
+                                <Link className={styles.artist__link} to={`/artist/${artist.id}`}>
+                                    {artist.name}
+                                </Link>
                             </li>
                         )
                     })

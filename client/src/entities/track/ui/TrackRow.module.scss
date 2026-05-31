@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    column-gap: 12px;
     padding: 12px;
 
     @media (max-width: $mobile) {
@@ -47,19 +48,31 @@
     }
 
     &__title {
+        max-width: 250px;
         font-family: var(--second-family);
         margin-bottom: 2px;
+        text-wrap: nowrap;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     &__artist {
 
         &List {
             display: flex;
-            column-gap: 4px;
             flex-wrap: wrap;
+            column-gap: 4px;
         }
 
-        &Item {
+        &Text {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            line-height: 1.2em;
+            max-height: 2.4em;
+            text-overflow: ellipsis;
             color: var(--text-secondary);
             font-size: 12px;
         }

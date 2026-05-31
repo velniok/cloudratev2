@@ -3,7 +3,8 @@
 .button {
     
     @media (max-width: $mobile) {
-        padding: 10px 24px 8px 24px !important;
+        padding: 8px 18px 6px 18px !important;
+        font-size: 8px;
     }
 
     &__desc {
@@ -24,7 +25,8 @@
         display: none;
 
         @media (max-width: $mobile) {
-            padding: 10px 24px 8px 24px !important;
+            padding: 8px 18px 6px 18px !important;
+            font-size: 8px;
         }
 
         @media (hover: none) {

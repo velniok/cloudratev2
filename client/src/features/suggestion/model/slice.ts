@@ -179,6 +179,8 @@ const suggestionSlice = createSlice({
                                 soundcloudUrl: action.meta.arg.req.soundcloudUrl,
                                 createdAt: action.meta.arg.req.createdAt,
                             }]
+
+                            suggestion.tempFeatArtists = suggestion.tempFeatArtists.filter((obj) => obj.id !== action.meta.arg.tempId)
                         }
                         return suggestion
                     })

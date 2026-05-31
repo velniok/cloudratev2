@@ -54,6 +54,7 @@
 
         &List {
             display: flex;
+            flex-wrap: wrap;
             margin-bottom: 8px;
             column-gap: 8px;
         }
@@ -83,6 +84,11 @@
                 font-size: 18px;
                 color: var(--accent-color);
             }
+        }
+
+        &Cover {
+            min-width: 32px;
+            min-height: 32px;
         }
 
         &Name {
