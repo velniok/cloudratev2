@@ -5,7 +5,7 @@ import { IArtist } from "@/entities/artist"
 import { IPagination } from "@/shared/types"
 
 export const trackSuggestionApi = (params: ISuggestionTrackReq) => {
-    return axios.post<{ message: string }>('/suggestion/create', params)
+    return axios.post<{ message: string, badge: boolean }>('/suggestion/create', params)
 }
 
 export const getSuggestionListApi = (params: { page: number, limit: number, filter: string }) => {

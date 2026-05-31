@@ -94,7 +94,7 @@ export const SuggestionRow: FC<SuggestionRowProps> = ({ suggestion, actions, ope
                             />
                             <h4 className={styles.item__userNickname}>
                                 {suggestion.user.nickname}
-                                <Badges role={suggestion.user.role} size='small' />
+                                <Badges badge={suggestion.user.badges.find(badge => badge.isSelected)?.badgeName ?? 'user'} size='small' />
                             </h4>
                         </Link>
                         <p className={styles.item__userCreated}>

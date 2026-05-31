@@ -31,9 +31,24 @@ class SuggestionServices {
                 SELECT
                     s.*,
                     (
-                        SELECT (row_to_json(u)::jsonb - 'password')::json
-                        FROM users u
-                        WHERE u.id = s.user_id
+                        SELECT row_to_json(u_with_badges)
+                        FROM (
+                            SELECT
+                            u.*,
+                            (
+                                SELECT
+                                    COALESCE(json_agg(
+                                        json_build_object(
+                                            'badge_name', ub.badge_name,
+                                            'is_selected', ub.is_selected
+                                        )
+                                    ), '[]')
+                                FROM user_badges ub
+                                WHERE user_id = u.id
+                            ) as badges
+                            FROM users u
+                            WHERE u.id = s.user_id
+                        ) as u_with_badges
                     ) as user,
                     (
                         SELECT row_to_json(a)
