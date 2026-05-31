@@ -48,8 +48,21 @@ class AuthServices {
 
     async login(email) {
         const userRes = await pool.query(`
-            SELECT *
-            FROM users
+            SELECT
+                u.*,
+                (
+                    SELECT
+                        COALESCE(json_agg(
+                            json_build_object(
+                                'badge_name', ub.badge_name,
+                                'is_selected', ub.is_selected,
+                                'created_at', ub.created_at
+                            )
+                        ), '[]')
+                    FROM user_badges ub
+                    WHERE user_id = u.id
+                ) as badges
+            FROM users u
             WHERE email = $1
         `, [email])
         return mapToCamelCase(userRes.rows[0])
